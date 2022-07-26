@@ -1,0 +1,16 @@
+
+This preprocessor is compliant with ANSI C89/ISO C90, except there is
+no support for wide-character constants/string literals or trigraphs.
+
+When given the -x flag, C++ mode is enabled; BCPL-style comments
+are honored and :: ->* .* are treated as single tokens. This is
+sufficient to comply with preprocessing as described in the ARM,
+but keyword operators and digraphs from C++98 are not supported.
+
+This code has not been rigorously tested, though it does properly process
+the included examples from the Standard. There are doubtless lurking bugs.
+No performance tuning has been done, either, and there is certainly room
+for improvement here: in particular, a superimposed code should probably
+be introduced to reduce the frequency of scans of the macro table.
+
+							- cey 1/1/22

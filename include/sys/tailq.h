@@ -1,0 +1,114 @@
+/*****************************************************************************
+
+  sys/tailq.h                                       tahoe/64 standard library
+
+        Copyright (c) 1980-1995, The Regents of the University of California.
+     Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.
+
+*****************************************************************************/
+
+#ifndef _SYS_TAILQ_H
+#define _SYS_TAILQ_H
+
+/* a tail queue is headed by a pair of pointers, one to the head of the
+   list and the other to the tail of the list. the elements are doubly
+   linked so that an arbitrary element can be removed without a need to
+   traverse the list. new elements can be added to the list before or
+   after an existing element, at the head of the list, or at the end of
+   the list. a tail queue may be traversed in either direction. */
+
+#define TAILQ_HEAD(name, type)                                          \
+    struct name {                                                       \
+        struct type *tqh_first;         /* first element */             \
+        struct type **tqh_last;         /* addr of last next element */ \
+    }
+
+#define TAILQ_HEAD_INITIALIZER(head)    { 0, &(head).tqh_first }
+
+#define TAILQ_ENTRY(type)                                               \
+    struct {                                                            \
+        struct type *tqe_next;          /* next element */              \
+        struct type **tqe_prev; /* address of previous next element */  \
+    }
+
+#define TAILQ_INIT(head)                                                \
+    do {                                                                \
+        (head)->tqh_first = 0;                                          \
+        (head)->tqh_last = &(head)->tqh_first;                          \
+    } while (0)
+
+#define TAILQ_INSERT_HEAD(head, elm, field)                             \
+    do {                                                                \
+        if (((elm)->field.tqe_next = (head)->tqh_first) != 0)           \
+            (head)->tqh_first->field.tqe_prev =                         \
+                &(elm)->field.tqe_next;                                 \
+        else                                                            \
+            (head)->tqh_last = &(elm)->field.tqe_next;                  \
+        (head)->tqh_first = (elm);                                      \
+        (elm)->field.tqe_prev = &(head)->tqh_first;                     \
+    } while (0)
+
+#define TAILQ_INSERT_TAIL(head, elm, field)                             \
+    do {                                                                \
+        (elm)->field.tqe_next = 0;                                      \
+        (elm)->field.tqe_prev = (head)->tqh_last;                       \
+        *(head)->tqh_last = (elm);                                      \
+        (head)->tqh_last = &(elm)->field.tqe_next;                      \
+    } while (0)
+
+#define TAILQ_INSERT_AFTER(head, listelm, elm, field)                   \
+    do {                                                                \
+        if (((elm)->field.tqe_next = (listelm)->field.tqe_next) != 0)   \
+            (elm)->field.tqe_next->field.tqe_prev =                     \
+                &(elm)->field.tqe_next;                                 \
+        else                                                            \
+            (head)->tqh_last = &(elm)->field.tqe_next;                  \
+        (listelm)->field.tqe_next = (elm);                              \
+        (elm)->field.tqe_prev = &(listelm)->field.tqe_next;             \
+    } while (0)
+
+#define TAILQ_INSERT_BEFORE(listelm, elm, field)                        \
+    do {                                                                \
+        (elm)->field.tqe_prev = (listelm)->field.tqe_prev;              \
+        (elm)->field.tqe_next = (listelm);                              \
+        *(listelm)->field.tqe_prev = (elm);                             \
+        (listelm)->field.tqe_prev = &(elm)->field.tqe_next;             \
+    } while (0)
+
+#define TAILQ_REMOVE(head, elm, field)                                  \
+    do {                                                                \
+        if (((elm)->field.tqe_next) != 0)                               \
+            (elm)->field.tqe_next->field.tqe_prev =                     \
+                (elm)->field.tqe_prev;                                  \
+        else                                                            \
+            (head)->tqh_last = (elm)->field.tqe_prev;                   \
+        *(elm)->field.tqe_prev = (elm)->field.tqe_next;                 \
+    } while (0)
+
+#define TAILQ_CONCAT(head1, head2, field)                               \
+    do {                                                                \
+        if (!TAILQ_EMPTY(head2)) {                                      \
+            *(head1)->tqh_last = (head2)->tqh_first;                    \
+            (head2)->tqh_first->field.tqe_prev = (head1)->tqh_last;     \
+            (head1)->tqh_last = (head2)->tqh_last;                      \
+            TAILQ_INIT((head2));                                        \
+        }                                                               \
+    } while (0)
+
+#define TAILQ_EMPTY(head)               ((head)->tqh_first == 0)
+#define TAILQ_FIRST(head)               ((head)->tqh_first)
+#define TAILQ_NEXT(elm, field)          ((elm)->field.tqe_next)
+
+#define TAILQ_LAST(head, headname) \
+    (*(((struct headname *)((head)->tqh_last))->tqh_last))
+#define TAILQ_PREV(elm, headname, field) \
+    (*(((struct headname *)((elm)->field.tqe_prev))->tqh_last))
+
+#define TAILQ_FOREACH(var, head, field)                                 \
+    for ((var) = ((head)->tqh_first);                                   \
+        (var);                                                          \
+        (var) = ((var)->field.tqe_next))
+
+#endif /* _SYS_TAILQ_H */
+
+/* vi: set ts=4 expandtab: */

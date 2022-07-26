@@ -1,0 +1,40 @@
+LIR
+
+[ ] LICM
+[ ] strength reduction (need bounds analysis, non-trivial!)
+
+[ ] div/mod pairing (dvn.c, lower.c) - use todo/convert.c
+[ ] div/mod by constant through multiplication
+[ ] prepopulate reload frame with zeros (dvn.c)
+     * BE CAREFUL. mark these entries so actual
+       stores of zeros to those locations stick!
+     * will also need to process BLK ops properly
+
+BACK END
+
+[ ] sign/zero extension (MCH)
+[ ] limited (G)CSE esp. loads/stores, redundant MOVs (MCH)
+
+[ ] OPT_MCH_LATE
+
+    (and long with only 32-bit constant -> andl )
+        this will look like movabs val, %T; andq %T, %R
+
+NERDLIES
+
+[ ] deal with webs that appear LIVE IN to the function (OPT_MCH_UNDEF)
+[ ] use Sethi-Ullman numbering to order subexpression generation - gen.c
+[ ] builtins for BT/BTC/BTR etc. and clean up the ULONG/FLOAT cast sequence
+
+[ ] non-constant reassociation - reassoc.c
+[ ] reassoc should allow rewrite of SHL children of MUL as MUL, etc.
+
+[ ] fix BLKSET for initializers to skip initialized elements - init.c
+
+[ ] condition propagation (LIR) OPT_LIR_COND
+
+	e.g, if we test x > 3 in block A, proceed
+	to block B, and test x > 3 again, we can
+	eliminate the test and instead project the
+	result into block B.
+

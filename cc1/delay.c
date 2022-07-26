@@ -1,0 +1,103 @@
+/*****************************************************************************
+
+  delay.c                                                 tahoe/64 c compiler
+
+     Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.
+
+*****************************************************************************/
+
+#include "cc1.h"
+#include "block.h"
+#include "delay.h"
+
+/* in a basic block, we attempt to shuffle LOAD/STORE instructions
+   to their earliest possible points. for LOADs in particular, the
+   intent is to allow the CPU as much time as possible to fetch the
+   value before we attempt to use it. STOREs can benefit, too; there
+   is no reason not to tell the memory subsystem as soon as possible
+   that we have something for it to do. (at least, in theory.)
+
+   there's another benefit to this shuffling, which explains why we
+   call this OPT_LIR_DELAY: it has the effect of pushing post-inc or
+   post-dec ops past a memory op which uses the affected variable in
+   its address calculations. by delaying the increment/decrement this
+   way, it eases register pressure and avoids unnecessary copies by
+   leaving the prior value available before it's modified.
+
+   the delay optimization is nearly as old as c is, appearing in s.c.
+   johnson's pcc (and perhaps in dmr's compiler; i should look...) */
+
+static void delay0(struct block *b)
+{
+    struct insn *insn;
+    int invalidated;
+    int i, j;
+
+again:
+    dep_analyze(b);
+
+    FOR_EACH_INSN(b, i, insn) {
+        switch (insn->op)
+        {
+        case I_LIR_LOAD:
+        case I_LIR_STORE:   goto eligible;
+
+        case I_LIR_CAST:
+            /* if we're casting the result of a LOAD, we want to move
+               it along with that LOAD. among other things, it prevents
+               OPT_MCH_FUSE from undoing our work by moving the memory
+               operation forward again (by fusing it to the cast...). */
+
+            for (j = (i - 1); j >= 0; --j) {
+                /* we can avoid doing full live analysis:
+                   the only possible dependency an I_LIR_CAST
+                   has is on the insn which DEFs its source. */
+
+                if (deps(b, i, j) && (INSN(b, j)->op == I_LIR_LOAD))
+                    goto eligible;
+            }
+
+        default:            continue;
+        }
+
+        /* if the insn we're moving does not depend on the previous
+           insn, swap them to put it first. then continue to the next
+           previous. at each point, j+1 is the insn in motion, j is
+           its predecessor. i remains the unchanged, ORIGINAL index
+           of the insn in motion, used for deps interrogation. */
+
+eligible:
+        invalidated = 0;
+
+        for (j = (i - 1); j >= 0; --j) {
+            switch (INSN(b, j)->op)
+            {
+            default:            if (!deps(b, i, j))
+                                    break;
+
+            /* we don't cross insns, partly to avoid
+               unnecessary reordering, but mostly to
+               ensure this function terminates... */
+
+            case I_LIR_CAST:
+            case I_LIR_LOAD:
+            case I_LIR_STORE:   goto next_i;
+            }
+
+            SWAP(struct insn *, INSN(b, j), INSN(b, j + 1));
+            invalidated = 1;
+        }
+
+next_i:
+        if (invalidated)        /* if we made any changes, */
+            goto again;         /* we need to recheck deps */
+    }
+}
+
+void opt_lir_delay(void)
+{
+    struct block *b;
+    FOR_ALL_BLOCKS(b) delay0(b);
+}
+
+/* vi: set ts=4 expandtab: */

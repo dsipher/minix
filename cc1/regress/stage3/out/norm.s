@@ -1,0 +1,1072 @@
+.text
+
+_shl1:
+L1:
+	pushq %rbp
+	movq %rsp,%rbp
+	subq $8,%rsp
+L2:
+	movq %rdi,%rax
+	movl $-1275068396,(%rax)
+	movq $1,-8(%rbp)
+	movl 72(%rax),%ecx
+	andl $-8,%ecx
+	orl $2,%ecx
+	movl %ecx,72(%rax)
+	movq -8(%rbp),%rcx
+	movq %rcx,88(%rax)
+	movq $0,96(%rax)
+	movl $_char_type,%ecx
+	testq %rcx,%rcx
+	jz L3
+L13:
+	movq _char_type(%rip),%rdx
+	andl $131071,%edx
+	shll $5,%edx
+	movl 72(%rax),%ecx
+	andl $-4194273,%ecx
+	orl %edx,%ecx
+	movl %ecx,72(%rax)
+L3:
+	movq %rbp,%rsp
+	popq %rbp
+	ret 
+
+
+_mod2:
+L23:
+L24:
+	movl $-1275068395,(%rdi)
+	decq 88(%rdi)
+	movq %rdi,%rax
+L25:
+	ret 
+
+
+_pow2:
+L27:
+	pushq %rbp
+	movq %rsp,%rbp
+	subq $8,%rsp
+L28:
+	movq %rdi,%rax
+	movl %esi,(%rax)
+	bsrq 88(%rax),%rdx
+	xorl $63,%edx
+	movslq %edx,%rdx
+	movl $63,%ecx
+	subq %rdx,%rcx
+	movq %rcx,-8(%rbp)
+	movl 72(%rax),%ecx
+	andl $-8,%ecx
+	orl $2,%ecx
+	movl %ecx,72(%rax)
+	movq -8(%rbp),%rcx
+	movq %rcx,88(%rax)
+	movq $0,96(%rax)
+	movl $_char_type,%ecx
+	testq %rcx,%rcx
+	jz L29
+L39:
+	movq _char_type(%rip),%rdx
+	andl $131071,%edx
+	shll $5,%edx
+	movl 72(%rax),%ecx
+	andl $-4194273,%ecx
+	orl %edx,%ecx
+	movl %ecx,72(%rax)
+L29:
+	movq %rbp,%rsp
+	popq %rbp
+	ret 
+
+
+_move0:
+L49:
+	pushq %rbp
+	movq %rsp,%rbp
+	subq $16,%rsp
+	pushq %rbx
+	pushq %r12
+L50:
+	movq %rdi,%r12
+	movl %esi,%ebx
+	orl $8,_opt_request(%rip)
+	xorl %esi,%esi
+	movl $-1610612727,%edi
+	call _new_insn
+	movl $32,%ecx
+	leaq 8(%r12),%rsi
+	leaq 8(%rax),%rdi
+	rep 
+	movsb 
+	movl $32,%ecx
+	leaq 40(%r12),%rsi
+	leaq 40(%rax),%rdi
+	rep 
+	movsb 
+	testl %ebx,%ebx
+	jz L55
+L103:
+	cmpl $1,%ebx
+	jz L58
+L104:
+	cmpl $2,%ebx
+	jnz L53
+L78:
+	movq $1,-16(%rbp)
+	movl 40(%rax),%ecx
+	andl $-8,%ecx
+	orl $2,%ecx
+	movl %ecx,40(%rax)
+	movq -16(%rbp),%rcx
+	movq %rcx,56(%rax)
+	movq $0,64(%rax)
+	jmp L53
+L58:
+	movq $0,-8(%rbp)
+	movl 40(%rax),%ecx
+	andl $-8,%ecx
+	orl $2,%ecx
+	movl %ecx,40(%rax)
+	movq -8(%rbp),%rcx
+	movq %rcx,56(%rax)
+	movq $0,64(%rax)
+L53:
+	testl $229376,8(%rax)
+	jz L99
+L97:
+	cvtsi2sdq 56(%rax),%xmm0
+	movsd %xmm0,56(%rax)
+L99:
+	orl $80,_opt_request(%rip)
+	jmp L51
+L55:
+	orl $4,_opt_request(%rip)
+L51:
+	popq %r12
+	popq %rbx
+	movq %rbp,%rsp
+	popq %rbp
+	ret 
+
+.data
+.align 8
+_norms:
+	.quad 131071
+	.int -1342177266
+	.byte 0
+	.byte 1
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1342177266
+	.byte 0
+	.byte 0
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _shl1
+	.quad 131071
+	.int -1342177265
+	.byte 0
+	.byte 1
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 131071
+	.int -1342177265
+	.byte 0
+	.byte 0
+	.fill 2, 1, 0
+	.int 1
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 131071
+	.int -1342177264
+	.byte 0
+	.byte 1
+	.fill 2, 1, 0
+	.int 1
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 131071
+	.int -1342177264
+	.byte 0
+	.byte 2
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1342177264
+	.byte 0
+	.byte 3
+	.fill 2, 1, 0
+	.int -1275068396
+	.fill 4, 1, 0
+	.quad _pow2
+	.quad 1022
+	.int -1275068398
+	.byte 0
+	.byte 2
+	.fill 2, 1, 0
+	.int 1
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068398
+	.byte 0
+	.byte 0
+	.fill 2, 1, 0
+	.int 1
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 680
+	.int -1275068398
+	.byte 0
+	.byte 3
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _mod2
+	.quad 131071
+	.int -1342177263
+	.byte 0
+	.byte 2
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 131071
+	.int -1342177263
+	.byte 0
+	.byte 0
+	.fill 2, 1, 0
+	.int 2
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 680
+	.int -1342177263
+	.byte 0
+	.byte 3
+	.fill 2, 1, 0
+	.int -1275068397
+	.fill 4, 1, 0
+	.quad _pow2
+	.quad 1022
+	.int -1275068395
+	.byte 0
+	.byte 1
+	.fill 2, 1, 0
+	.int 1
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068395
+	.byte 0
+	.byte 0
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068395
+	.byte 0
+	.byte 4
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068394
+	.byte 0
+	.byte 1
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068394
+	.byte 0
+	.byte 0
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068393
+	.byte 0
+	.byte 1
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068393
+	.byte 0
+	.byte 0
+	.fill 2, 1, 0
+	.int 1
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068396
+	.byte 1
+	.byte 5
+	.fill 2, 1, 0
+	.int 1
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068396
+	.byte 0
+	.byte 1
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068397
+	.byte 1
+	.byte 5
+	.fill 2, 1, 0
+	.int 1
+	.fill 4, 1, 0
+	.quad _move0
+	.quad 1022
+	.int -1275068397
+	.byte 0
+	.byte 1
+	.fill 2, 1, 0
+	.int 0
+	.fill 4, 1, 0
+	.quad _move0
+.text
+L373:
+	.quad 0x3ff0000000000000
+.align 2
+L374:
+	.short L187-_norm
+	.short L197-_norm
+	.short L219-_norm
+	.short L249-_norm
+	.short L267-_norm
+	.short L185-_norm
+
+_norm:
+L107:
+	pushq %rbp
+	movq %rsp,%rbp
+	subq $16,%rsp
+	pushq %rbx
+	pushq %r12
+	pushq %r13
+	pushq %r14
+	pushq %r15
+L108:
+	movslq _norm_0s+4(%rip),%rcx
+	movq %rdi,%r15
+	shlq $3,%rcx
+	movq _norm_0s+8(%rip),%rdi
+	xorl %eax,%eax
+	rep 
+	stosb 
+	movslq _norm_1s+4(%rip),%rcx
+	shlq $3,%rcx
+	movq _norm_1s+8(%rip),%rdi
+	xorl %eax,%eax
+	rep 
+	stosb 
+	xorl %r14d,%r14d
+L110:
+	cmpl 12(%r15),%r14d
+	jge L109
+L114:
+	movq 16(%r15),%rcx
+	movslq %r14d,%rax
+	movq (%rcx,%rax,8),%r13
+	testq %r13,%r13
+	jz L109
+L115:
+	movl (%r13),%eax
+	movl %eax,%ecx
+	andl $805306368,%ecx
+	sarl $28,%ecx
+	cmpl $3,%ecx
+	jnz L282
+L125:
+	testl $2147483648,%eax
+	jz L282
+L126:
+	testl $1073741824,%eax
+	jnz L282
+L122:
+	xorl %r12d,%r12d
+L130:
+	movslq %r12d,%rax
+	shlq $5,%rax
+	movl _norms+8(%rax),%eax
+	cmpl (%r13),%eax
+	jz L132
+L135:
+	incl %r12d
+	cmpl $24,%r12d
+	jl L130
+L132:
+	movl 72(%r13),%eax
+	andl $7,%eax
+	cmpl $1,%eax
+	jnz L140
+L137:
+	movq %r13,%rdi
+	call _commute_insn
+L140:
+	cmpl $24,%r12d
+	jge L282
+L144:
+	movslq %r12d,%rbx
+	shlq $5,%rbx
+	movl _norms+8(%rbx),%eax
+	cmpl (%r13),%eax
+	jnz L282
+L145:
+	movl 40(%r13),%edi
+	movl %edi,%eax
+	shll $10,%eax
+	shrl $15,%eax
+	testq %rax,_norms(%rbx)
+	jz L142
+L150:
+	movzbl _norms+12(%rbx),%esi
+	testb %sil,%sil
+	jnz L157
+L155:
+	movl %edi,%eax
+	andl $7,%eax
+	cmpl $1,%eax
+	jnz L142
+L157:
+	movq _norm_0s+8(%rip),%rdx
+	movl 48(%r13),%eax
+	movl %eax,%ecx
+	andl $1073725440,%ecx
+	movl %ecx,%r8d
+	sarl $20,%r8d
+	movslq %r8d,%r8
+	movq (%rdx,%r8,8),%r9
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%r8d
+	shlq %cl,%r8
+	testq %r9,%r8
+	setnz %cl
+	movzbl %cl,%ecx
+	cmpb $1,%sil
+	jnz L165
+L167:
+	andl $7,%edi
+	cmpl $2,%edi
+	jnz L173
+L175:
+	cmpq $0,64(%r13)
+	jnz L173
+L176:
+	cmpq $0,56(%r13)
+	jz L165
+L173:
+	cmpl $1,%edi
+	jnz L142
+L179:
+	testl %ecx,%ecx
+	jz L142
+L165:
+	movzbl _norms+13(%rbx),%ecx
+	cmpb $0,%cl
+	jl L185
+L372:
+	cmpb $5,%cl
+	jg L185
+L370:
+	movzbl %cl,%ecx
+	movzwl L374(,%rcx,2),%ecx
+	addl $_norm,%ecx
+	jmp *%rcx
+L267:
+	movl 72(%r13),%eax
+	andl $7,%eax
+	cmpl $2,%eax
+	jnz L142
+L271:
+	cmpq $0,96(%r13)
+	jnz L142
+L272:
+	movq $-1,-8(%rbp)
+	movl 72(%r13),%edi
+	shll $10,%edi
+	shrl $15,%edi
+	leaq -8(%rbp),%rsi
+	call _normalize_con
+	movq 88(%r13),%rax
+	cmpq -8(%rbp),%rax
+	jnz L142
+	jz L185
+L249:
+	movl 72(%r13),%eax
+	andl $7,%eax
+	cmpl $2,%eax
+	jnz L142
+L257:
+	cmpq $0,96(%r13)
+	jnz L142
+L258:
+	movq 88(%r13),%rcx
+	cmpq $0,%rcx
+	jbe L142
+L261:
+	movq %rcx,%rax
+	decq %rax
+	testq %rcx,%rax
+	jnz L142
+	jz L185
+L219:
+	movq _norm_1s+8(%rip),%rdx
+	movl 80(%r13),%ecx
+	andl $1073725440,%ecx
+	movl %ecx,%eax
+	sarl $20,%eax
+	movslq %eax,%rax
+	movq (%rdx,%rax,8),%rdx
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%eax
+	shlq %cl,%rax
+	testq %rdx,%rax
+	setnz %dl
+	movzbl %dl,%edx
+	movl 72(%r13),%eax
+	movl %eax,%ecx
+	andl $7,%ecx
+	cmpl $2,%ecx
+	jnz L229
+L231:
+	cmpq $0,96(%r13)
+	jnz L229
+L232:
+	testl $229376,%eax
+	jz L241
+L239:
+	movsd 88(%r13),%xmm0
+	ucomisd L373(%rip),%xmm0
+	jz L185
+L241:
+	cmpq $1,88(%r13)
+	jz L185
+L229:
+	cmpl $1,%ecx
+	jnz L142
+L243:
+	testl %edx,%edx
+	jz L142
+	jnz L185
+L197:
+	movl 80(%r13),%ecx
+	andl $1073725440,%ecx
+	movl %ecx,%eax
+	sarl $20,%eax
+	movslq %eax,%rax
+	movq (%rdx,%rax,8),%rdx
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%eax
+	shlq %cl,%rax
+	testq %rdx,%rax
+	setnz %cl
+	movzbl %cl,%ecx
+	movl 72(%r13),%eax
+	andl $7,%eax
+	cmpl $2,%eax
+	jnz L207
+L209:
+	cmpq $0,96(%r13)
+	jnz L207
+L210:
+	cmpq $0,88(%r13)
+	jz L185
+L207:
+	cmpl $1,%eax
+	jnz L142
+L213:
+	testl %ecx,%ecx
+	jz L142
+	jnz L185
+L187:
+	movl 72(%r13),%ecx
+	andl $7,%ecx
+	cmpl $1,%ecx
+	jnz L142
+L191:
+	cmpl 80(%r13),%eax
+	jnz L142
+L185:
+	movl _norms+16(%rbx),%esi
+	movq _norms+24(%rbx),%rax
+	movq %r13,%rdi
+	call *%rax
+	movq %rax,%r13
+	movq 16(%r15),%rdx
+	movslq %r14d,%rcx
+	movq %rax,(%rdx,%rcx,8)
+	jmp L282
+L142:
+	incl %r12d
+	jmp L140
+L282:
+	leaq -16(%rbp),%rdx
+	leaq -12(%rbp),%rsi
+	movq %r13,%rdi
+	call _insn_is_copy
+	testl %eax,%eax
+	jz L285
+L284:
+	movq _norm_0s+8(%rip),%rdi
+	movl -16(%rbp),%ecx
+	andl $1073725440,%ecx
+	movl %ecx,%eax
+	sarl $20,%eax
+	movslq %eax,%rax
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%esi
+	shlq %cl,%rsi
+	andq (%rdi,%rax,8),%rsi
+	movl -12(%rbp),%eax
+	andl $1073725440,%eax
+	movl %eax,%ecx
+	sarl $14,%ecx
+	sarl $20,%eax
+	movslq %eax,%rax
+	andl $63,%ecx
+	movl $1,%edx
+	shlq %cl,%rdx
+	movq (%rdi,%rax,8),%rcx
+	testq %rsi,%rsi
+	jz L293
+L290:
+	orq %rdx,%rcx
+	movq %rcx,(%rdi,%rax,8)
+	jmp L289
+L293:
+	notq %rdx
+	andq %rcx,%rdx
+	movq %rdx,(%rdi,%rax,8)
+L289:
+	movq _norm_1s+8(%rip),%rdi
+	movl -16(%rbp),%ecx
+	andl $1073725440,%ecx
+	movl %ecx,%eax
+	sarl $20,%eax
+	movslq %eax,%rax
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%esi
+	shlq %cl,%rsi
+	andq (%rdi,%rax,8),%rsi
+	movl -12(%rbp),%eax
+	andl $1073725440,%eax
+	movl %eax,%ecx
+	sarl $14,%ecx
+	sarl $20,%eax
+	movslq %eax,%rax
+	andl $63,%ecx
+	movl $1,%edx
+	shlq %cl,%rdx
+	movq (%rdi,%rax,8),%rcx
+	testq %rsi,%rsi
+	jz L302
+L299:
+	orq %rdx,%rcx
+	movq %rcx,(%rdi,%rax,8)
+	jmp L286
+L302:
+	notq %rdx
+	andq %rcx,%rdx
+	movq %rdx,(%rdi,%rax,8)
+	jmp L286
+L285:
+	cmpl $2684354569,(%r13)
+	jz L305
+L350:
+	cmpl $0,_norm_regs(%rip)
+	jl L354
+L353:
+	movl $0,_norm_regs+4(%rip)
+	jmp L355
+L354:
+	movl _norm_regs+4(%rip),%esi
+	xorl %edx,%edx
+	subl %esi,%edx
+	movl $4,%ecx
+	movl $_norm_regs,%edi
+	call _vector_insert
+L355:
+	xorl %edx,%edx
+	movl $_norm_regs,%esi
+	movq %r13,%rdi
+	call _insn_defs
+	xorl %esi,%esi
+L356:
+	cmpl _norm_regs+4(%rip),%esi
+	jge L286
+L360:
+	movq _norm_regs+8(%rip),%rcx
+	movslq %esi,%rax
+	movl (%rcx,%rax,4),%eax
+	movl %eax,-12(%rbp)
+	testl %eax,%eax
+	jz L286
+L361:
+	andl $1073725440,%eax
+	movl %eax,%ecx
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%edx
+	shlq %cl,%rdx
+	notq %rdx
+	movq _norm_0s+8(%rip),%rcx
+	sarl $20,%eax
+	movslq %eax,%rax
+	andq %rdx,(%rcx,%rax,8)
+	movl -12(%rbp),%eax
+	andl $1073725440,%eax
+	movl %eax,%ecx
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%edx
+	shlq %cl,%rdx
+	notq %rdx
+	movq _norm_1s+8(%rip),%rcx
+	sarl $20,%eax
+	movslq %eax,%rax
+	andq %rdx,(%rcx,%rax,8)
+	incl %esi
+	jmp L356
+L305:
+	movl 16(%r13),%eax
+	movl %eax,-12(%rbp)
+	movl 40(%r13),%ecx
+	andl $7,%ecx
+	cmpl $2,%ecx
+	jnz L313
+L315:
+	cmpq $0,64(%r13)
+	jnz L313
+L316:
+	cmpq $0,56(%r13)
+	jnz L313
+L312:
+	andl $1073725440,%eax
+	movl %eax,%ecx
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%edx
+	shlq %cl,%rdx
+	movq _norm_0s+8(%rip),%rcx
+	sarl $20,%eax
+	movslq %eax,%rax
+	orq %rdx,(%rcx,%rax,8)
+	jmp L310
+L313:
+	andl $1073725440,%eax
+	movl %eax,%ecx
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%edx
+	shlq %cl,%rdx
+	notq %rdx
+	movq _norm_0s+8(%rip),%rcx
+	sarl $20,%eax
+	movslq %eax,%rax
+	andq %rdx,(%rcx,%rax,8)
+L310:
+	movl 40(%r13),%eax
+	movl %eax,%ecx
+	andl $7,%ecx
+	cmpl $2,%ecx
+	jnz L330
+L332:
+	cmpq $0,64(%r13)
+	jnz L330
+L333:
+	testl $229376,%eax
+	jz L342
+L340:
+	movsd 56(%r13),%xmm0
+	ucomisd L373(%rip),%xmm0
+	jz L337
+L342:
+	cmpq $1,56(%r13)
+	jz L337
+L330:
+	movl -12(%rbp),%eax
+	andl $1073725440,%eax
+	movl %eax,%ecx
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%edx
+	shlq %cl,%rdx
+	notq %rdx
+	movq _norm_1s+8(%rip),%rcx
+	sarl $20,%eax
+	movslq %eax,%rax
+	andq %rdx,(%rcx,%rax,8)
+	jmp L286
+L337:
+	movl -12(%rbp),%eax
+	andl $1073725440,%eax
+	movl %eax,%ecx
+	sarl $14,%ecx
+	andl $63,%ecx
+	movl $1,%edx
+	shlq %cl,%rdx
+	movq _norm_1s+8(%rip),%rcx
+	sarl $20,%eax
+	movslq %eax,%rax
+	orq %rdx,(%rcx,%rax,8)
+L286:
+	incl %r14d
+	jmp L110
+L109:
+	popq %r15
+	popq %r14
+	popq %r13
+	popq %r12
+	popq %rbx
+	movq %rbp,%rsp
+	popq %rbp
+	ret 
+
+
+_cmp:
+L375:
+	pushq %rbp
+	movq %rsp,%rbp
+	subq $32,%rsp
+	pushq %rbx
+	pushq %r12
+	pushq %r13
+	pushq %r14
+L376:
+	movq %rdi,%r14
+	xorl %r13d,%r13d
+L378:
+	cmpl 12(%r14),%r13d
+	jge L377
+L382:
+	movq 16(%r14),%rcx
+	movslq %r13d,%rax
+	movq (%rcx,%rax,8),%r12
+	testq %r12,%r12
+	jz L377
+L383:
+	cmpl $603979787,(%r12)
+	jnz L380
+L388:
+	movl %r13d,%edx
+	movl $1074266112,%esi
+	movq %r14,%rdi
+	call _range_by_def
+	movl %eax,%ebx
+	movl %eax,%esi
+	movq %r14,%rdi
+	call _range_span
+	cmpl $2147483646,%eax
+	jg L380
+L392:
+	movl 8(%r12),%ecx
+	andl $7,%ecx
+	cmpl $2,%ecx
+	jnz L399
+L397:
+	movl 40(%r12),%eax
+	andl $7,%eax
+	cmpl $2,%eax
+	jz L380
+L399:
+	cmpl $1,%ecx
+	jnz L407
+L409:
+	movl 40(%r12),%eax
+	andl $7,%eax
+	cmpl $1,%eax
+	jnz L407
+L410:
+	movl 16(%r12),%eax
+	cmpl 48(%r12),%eax
+	jb L380
+L407:
+	movl 40(%r12),%eax
+	andl $7,%eax
+	cmpl $2,%eax
+	jz L380
+L418:
+	movl $32,%ecx
+	leaq 8(%r12),%rsi
+	leaq -32(%rbp),%rdi
+	rep 
+	movsb 
+	movl $32,%ecx
+	leaq 40(%r12),%rsi
+	leaq 8(%r12),%rdi
+	rep 
+	movsb 
+	movl $32,%ecx
+	leaq -32(%rbp),%rsi
+	leaq 40(%r12),%rdi
+	rep 
+	movsb 
+L421:
+	incl %ebx
+	movq 296(%r14),%rcx
+	movslq %ebx,%rax
+	leaq (%rax,%rax,2),%rax
+	shlq $2,%rax
+	cmpl (%rcx,%rax),%r13d
+	jnz L380
+L428:
+	cmpl $1074266112,4(%rcx,%rax)
+	jnz L380
+L430:
+	movl 8(%rcx,%rax),%eax
+	cmpl $2147483646,%eax
+	jnz L434
+L433:
+	movq %r14,%rdi
+	call _commute_succs
+	jmp L421
+L434:
+	movq 16(%r14),%rcx
+	movslq %eax,%rax
+	movq (%rcx,%rax,8),%rcx
+	movl (%rcx),%eax
+	subl $2550136856,%eax
+	movslq %eax,%rax
+	movsbl _commuted_cc(%rax),%eax
+	addl $2550136856,%eax
+	movl %eax,(%rcx)
+	jmp L421
+L380:
+	incl %r13d
+	jmp L378
+L377:
+	popq %r14
+	popq %r13
+	popq %r12
+	popq %rbx
+	movq %rbp,%rsp
+	popq %rbp
+	ret 
+
+
+_opt_lir_norm:
+L436:
+	pushq %rbx
+L437:
+	movl $2,%edi
+	call _live_analyze
+	movl $0,_norm_regs(%rip)
+	movl $0,_norm_regs+4(%rip)
+	movq $0,_norm_regs+8(%rip)
+	movq $_local_arena,_norm_regs+16(%rip)
+	movl $0,_norm_0s(%rip)
+	movl $0,_norm_0s+4(%rip)
+	movq $0,_norm_0s+8(%rip)
+	movq $_local_arena,_norm_0s+16(%rip)
+	movl $0,_norm_1s(%rip)
+	movl $0,_norm_1s+4(%rip)
+	movq $0,_norm_1s+8(%rip)
+	movq $_local_arena,_norm_1s+16(%rip)
+	movl _nr_assigned_regs(%rip),%edx
+	addl $63,%edx
+	sarl $6,%edx
+	cmpl $0,%edx
+	jg L461
+L460:
+	movl %edx,_norm_0s+4(%rip)
+	jmp L462
+L461:
+	movl $8,%ecx
+	xorl %esi,%esi
+	movl $_norm_0s,%edi
+	call _vector_insert
+L462:
+	movl _nr_assigned_regs(%rip),%edx
+	addl $63,%edx
+	sarl $6,%edx
+	cmpl _norm_1s(%rip),%edx
+	jg L470
+L469:
+	movl %edx,_norm_1s+4(%rip)
+	jmp L471
+L470:
+	movl _norm_1s+4(%rip),%esi
+	subl %esi,%edx
+	movl $8,%ecx
+	movl $_norm_1s,%edi
+	call _vector_insert
+L471:
+	movq _all_blocks(%rip),%rbx
+L472:
+	testq %rbx,%rbx
+	jz L475
+L473:
+	movq %rbx,%rdi
+	call _cmp
+	movq 112(%rbx),%rbx
+	jmp L472
+L475:
+	movq _all_blocks(%rip),%rbx
+L476:
+	testq %rbx,%rbx
+	jz L480
+L477:
+	movq %rbx,%rdi
+	call _norm
+	movq 112(%rbx),%rbx
+	jmp L476
+L480:
+	movq _local_arena(%rip),%rax
+	movq %rax,_local_arena+8(%rip)
+L438:
+	popq %rbx
+	ret 
+
+.local _norm_0s
+.comm _norm_0s, 24, 8
+.local _norm_1s
+.comm _norm_1s, 24, 8
+.local _norm_regs
+.comm _norm_regs, 24, 8
+
+.globl _all_blocks
+.globl _range_span
+.globl _commute_succs
+.globl _range_by_def
+.globl _norms
+.globl _char_type
+.globl _opt_lir_norm
+.globl _live_analyze
+.globl _insn_is_copy
+.globl _commute_insn
+.globl _normalize_con
+.globl _opt_request
+.globl _nr_assigned_regs
+.globl _local_arena
+.globl _new_insn
+.globl _vector_insert
+.globl _pow2
+.globl _insn_defs
+.globl _commuted_cc

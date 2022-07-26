@@ -1655,9 +1655,8 @@ int insn_substitute_con(struct insn *insn, int reg,
    number of substitutions made. unlike the above, works for LIR or MCH.
    in MCH insns, a reg need only meet one criterion to be replaced (if it
    is both USEd and DEFd, it will always match one of the flags). dst can
-   be either a pseudo reg or a machine reg; src must always be a pseudo
-   reg to guarantee success: not all machine registers can be replaced,
-   because some register operands are inherent (e.g., IDIV).
+   be either a pseudo reg or a machine reg, but src must always be a pseudo
+   reg: some machine registers are inherent to an insn and can't be replaced.
 
    if tp is not null, it will be filled with the type of the operand in
    which dst appeared. if it appeared in multiple operands, the `largest'

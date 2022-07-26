@@ -628,7 +628,8 @@ L182:
 	addq %rbx,%rsi
 	movq 40(%r12),%rax
 	movl 28(%r12),%edx
-	subq %rdx,%rax
+	movl %edx,%ecx
+	subq %rcx,%rax
 	cmpq %rax,%rsi
 	jnz L184
 L183:

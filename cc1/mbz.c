@@ -88,87 +88,6 @@ static int mbz0(struct block *b)
         return ITERATE_AGAIN;
 }
 
-/* we've encountered a zero-extension instruction, but the source
-   operand is known to be zero-extended into bits [63:32] already.
-   if the source and destination regs are the, this is easy: just
-   nuke the MOVZLQ. if they are different, we attempt a localized
-   copy propagation to eliminate all uses of the dst and so render
-   the MOVZLQ useless. returns non-zero if any insns were altered. */
-
-static int replace0(struct block *b, int i)
-{
-    struct insn *insn = INSN(b, i);
-    int src = insn->operand[1].reg;
-    int dst = insn->operand[0].reg;
-
-    if (src != dst) {
-        int src_r = range_by_use(b, src, i);
-        int dst_r = range_by_def(b, dst, i);
-        int src_span = range_span(b, src_r);
-        int dst_span = range_span(b, dst_r);
-        struct insn *use;
-        int count;
-
-        /* if the destination is live out of
-           the block, then don't even try. */
-
-        if (dst_span > INSN_INDEX_LAST)
-            return 0;
-
-        /* if the destination is DEFd in the last insn (the only
-           possible insn, given the definition of a live range),
-           then we won't be able to substitute it in general, as
-           it may be an update operand (i.e., we can't replace it
-           without overwriting the source), so we don't even try.
-           this is conservative, since not every DEF involves an
-           update operand, so we can loosen this test up in the
-           future, if we think it would yield significant gains */
-
-        TRUNC_VECTOR(regs);
-        insn_defs(INSN(b, dst_span), &regs, 0);
-        if (contains_reg(&regs, dst)) return 0;
-
-        /* if the destination outlives the source, we can't safely
-           substitute since its value may change before we're done.
-           this, again, is conservative; if the source isn't DEFd
-           again we *could* use it, but we'd extend its lifetime. */
-
-        if (dst_span > src_span)
-            return 0;
-
-        /* okay, attempt to replace. we may still fail; it might be that
-           a USE is inherent to the insn (e.g. REG_RAX in I_MCH_IDIVQ).
-           if we only replace partway, we can't kill the MOVZLQ, but no
-           harm done. we do need to track if we made any changes, though,
-           because we will invalidate the live data in doing so, and the
-           outer loop must be informed of this. */
-
-        count = 0;
-
-        while (NEXT_IN_RANGE(b, dst_r)) {
-            ++dst_r;    /* skip the DEF itself */
-
-            use = INSN(b, RANGE(b, dst_r).use);
-
-            if (insn_substitute_reg(use, dst, src, INSN_SUBSTITUTE_USES, 0))
-                ++count;
-
-            /* if the insn claims to still use dst, then it
-               is an inherent operand, and we've failed. */
-
-            TRUNC_VECTOR(regs);
-            insn_uses(use, &regs, 0);
-            if (contains_reg(&regs, dst)) return count;
-        }
-    }
-
-    /* if we get here, it means the dst register's live range has
-       completely disappeared, and we can safely discard the MOVZLQ. */
-
-    INSN(b, i) = &nop_insn;
-    return 1;
-}
-
 /* perform a final meet, and nuke unnecessary zero extensions. */
 
 static int mbz1(struct block *b)
@@ -182,10 +101,11 @@ static int mbz1(struct block *b)
         if ((insn->op == I_MCH_MOVL)
           && OPERAND_REG(&insn->operand[0])
           && OPERAND_REG(&insn->operand[1])
+          && insn->operand[0].reg == insn->operand[1].reg
           && MBZ(b->mbz, insn->operand[1].reg))
         {
-            if (replace0(b, i))
-                return 1;
+            INSN(b, i) = &nop_insn;
+            return 1;
         }
 
         update0(b, i);

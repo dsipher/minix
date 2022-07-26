@@ -906,19 +906,6 @@ int insn_substitute_reg(struct insn *insn, int src,
             break;
         }
 
-    case I_MCH_SHLB:    case I_MCH_SHRB:    case I_MCH_SARB:
-    case I_MCH_SHLW:    case I_MCH_SHRW:    case I_MCH_SARW:
-    case I_MCH_SHLL:    case I_MCH_SHRL:    case I_MCH_SARL:
-    case I_MCH_SHLQ:    case I_MCH_SHRQ:    case I_MCH_SARQ:
-
-        /* %cl looks substitutable, but it isn't. luckily,
-           the compiler will never have %cl as a src with
-           REG_RCX as dst, so we don't need to deal with a
-           nightmare mess of special cases. */
-
-        if (OPERAND_REG(&insn->operand[1]) && (src == REG_RCX))
-           break;
-
     default:
         {
             int i, n;

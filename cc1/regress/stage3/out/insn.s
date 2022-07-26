@@ -518,8 +518,9 @@ L295:
 	testl %eax,%eax
 	jz L283
 L296:
+	movl %r9d,%ecx
 	movl $5,%eax
-	imulb %r9b
+	imulb %cl
 	leal 8(%rax),%ecx
 	movl %r8d,%eax
 	sarl %cl,%eax

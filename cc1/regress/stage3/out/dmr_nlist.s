@@ -145,7 +145,8 @@ L37:
 	jmp L36
 L39:
 	andl $127,%r13d
-	movq _nlist(,%r13,8),%r14
+	movl %r13d,%eax
+	movq _nlist(,%rax,8),%r14
 L40:
 	testq %r14,%r14
 	jz L42

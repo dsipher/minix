@@ -114,7 +114,19 @@ L22:
 	subl _tm+24(%rip),%edx
 	addl %edx,%eax
 	cmpl $0,%ecx
-	jg L27
+	jle L33
+L27:
+	cmpl $0,%eax
+	jg L28
+L30:
+	addl $7,%eax
+	decl %ecx
+	cmpl $0,%ecx
+	jg L30
+	ret
+L28:
+	subl $7,%eax
+	jmp L27
 L33:
 	movslq _tm+16(%rip),%rdx
 	movsbl _dpm(%rdx),%edx
@@ -124,324 +136,311 @@ L36:
 	subl $7,%eax
 	incl %ecx
 	js L36
-	ret
+L19:
+	ret 
 L34:
 	addl $7,%eax
 	jmp L33
-L27:
-	cmpl $0,%eax
-	jle L30
-L28:
-	subl $7,%eax
-	cmpl $0,%eax
-	jg L28
-L30:
-	addl $7,%eax
-	decl %ecx
-	cmpl $0,%ecx
-	jg L30
-L19:
-	ret 
 
 
 _isdaylight:
+L40:
 L41:
-L42:
 	movq _tzname+8(%rip),%rax
 	cmpb $0,(%rax)
-	jz L89
-L46:
+	jz L88
+L45:
 	movl _tm+16(%rip),%edx
 	movsbl _dsttimes+2(%rip),%ecx
 	movsbl _dsttimes+5(%rip),%eax
 	cmpl %eax,%ecx
-	jg L51
-L55:
+	jg L50
+L54:
 	cmpl %ecx,%edx
-	jl L89
-L59:
+	jl L88
+L58:
 	cmpl %eax,%edx
-	jg L89
-L51:
+	jg L88
+L50:
 	cmpl %eax,%ecx
-	jle L49
-L63:
+	jle L48
+L62:
 	cmpl %ecx,%edx
-	jge L49
-L67:
+	jge L48
+L66:
 	cmpl %eax,%edx
-	jle L49
-L89:
+	jle L48
+L88:
 	xorl %eax,%eax
 	ret
-L49:
+L48:
 	cmpl %ecx,%edx
-	jnz L73
-L72:
+	jnz L72
+L71:
 	movl $_dsttimes,%edi
 	call _nthday
 	cmpl _tm+12(%rip),%eax
-	jnz L75
-L77:
+	jnz L74
+L76:
 	movsbl _dsthour(%rip),%eax
 	cmpl %eax,_tm+8(%rip)
 	setge %al
 	movzbl %al,%eax
 	ret
-L75:
+L74:
 	setl %al
 	movzbl %al,%eax
 	ret
-L73:
+L72:
 	cmpl %eax,%edx
-	jnz L81
-L80:
+	jnz L80
+L79:
 	movl $_dsttimes+3,%edi
 	call _nthday
 	cmpl _tm+12(%rip),%eax
-	jnz L83
-L85:
+	jnz L82
+L84:
 	movsbl _dsthour(%rip),%eax
 	decl %eax
 	cmpl %eax,_tm+8(%rip)
 	setl %al
 	movzbl %al,%eax
 	ret
-L83:
+L82:
 	setg %al
 	movzbl %al,%eax
 	ret
-L81:
+L80:
 	movl $1,%eax
-L43:
+L42:
 	ret 
 
 
 _setdst:
-L90:
+L89:
 	pushq %rbx
-L91:
+L90:
 	movq %rdi,%rbx
 	cmpb $0,(%rbx)
-	jz L95
-L93:
+	jz L94
+L92:
 	movq %rbx,%rdi
 	call _atoi
 	movb %al,_dsttimes(%rip)
-L96:
+L95:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L98
-L99:
+	jz L97
+L98:
 	incq %rbx
 	cmpb $46,%al
-	jnz L96
-L98:
+	jnz L95
+L97:
 	movq %rbx,%rdi
 	call _atoi
 	decb %al
 	movb %al,_dsttimes+1(%rip)
-L103:
+L102:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L105
-L106:
+	jz L104
+L105:
 	incq %rbx
 	cmpb $46,%al
-	jnz L103
-L105:
+	jnz L102
+L104:
 	movq %rbx,%rdi
 	call _atoi
 	decb %al
 	movb %al,_dsttimes+2(%rip)
-L110:
+L109:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L95
-L113:
+	jz L94
+L112:
 	incq %rbx
 	cmpb $58,%al
-	jnz L110
-L95:
+	jnz L109
+L94:
 	cmpb $0,(%rbx)
-	jz L119
-L117:
+	jz L118
+L116:
 	movq %rbx,%rdi
 	call _atoi
 	movb %al,_dsttimes+3(%rip)
-L120:
+L119:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L122
-L123:
+	jz L121
+L122:
 	incq %rbx
 	cmpb $46,%al
-	jnz L120
-L122:
+	jnz L119
+L121:
 	movq %rbx,%rdi
 	call _atoi
 	decb %al
 	movb %al,_dsttimes+4(%rip)
-L127:
+L126:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L129
-L130:
+	jz L128
+L129:
 	incq %rbx
 	cmpb $46,%al
-	jnz L127
-L129:
+	jnz L126
+L128:
 	movq %rbx,%rdi
 	call _atoi
 	decb %al
 	movb %al,_dsttimes+5(%rip)
-L134:
+L133:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L119
-L137:
+	jz L118
+L136:
 	incq %rbx
 	cmpb $58,%al
-	jnz L134
-L119:
+	jnz L133
+L118:
 	cmpb $0,(%rbx)
-	jz L143
-L141:
+	jz L142
+L140:
 	movq %rbx,%rdi
 	call _atoi
 	movb %al,_dsthour(%rip)
-L144:
+L143:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L143
-L147:
+	jz L142
+L146:
 	incq %rbx
 	cmpb $58,%al
-	jnz L144
-L143:
+	jnz L143
+L142:
 	cmpb $0,(%rbx)
-	jz L92
-L151:
+	jz L91
+L150:
 	movq %rbx,%rdi
 	call _atoi
 	imull $60,%eax,%eax
 	movl %eax,_dstadjust(%rip)
-L92:
+L91:
 	popq %rbx
 	ret 
 
 .data
 .align 4
-L157:
+L156:
 	.int 0
 .text
 
 _tzset:
-L154:
+L153:
 	pushq %rbx
-L155:
-	cmpl $0,L157(%rip)
-	jnz L156
-L160:
-	movl $1,L157(%rip)
-	movl $L165,%edi
+L154:
+	cmpl $0,L156(%rip)
+	jnz L155
+L159:
+	movl $1,L156(%rip)
+	movl $L164,%edi
 	call _getenv
 	movq %rax,%rbx
 	testq %rax,%rax
-	jz L156
-L164:
+	jz L155
+L163:
 	movq $0,_timezone(%rip)
 	movq _tzname(%rip),%rdx
-L167:
+L166:
 	movzbl (%rbx),%ecx
 	testb %cl,%cl
-	jz L172
-L174:
+	jz L171
+L173:
 	cmpb $58,%cl
-	jz L172
-L175:
+	jz L171
+L174:
 	movq _tzname(%rip),%rax
 	addq $31,%rax
 	cmpq %rax,%rdx
-	jae L172
-L171:
+	jae L171
+L170:
 	incq %rbx
 	movb %cl,(%rdx)
 	incq %rdx
-	jmp L167
-L172:
+	jmp L166
+L171:
 	movb $0,(%rdx)
-L178:
+L177:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L183
-L181:
+	jz L182
+L180:
 	incq %rbx
 	cmpb $58,%al
-	jnz L178
-L183:
+	jnz L177
+L182:
 	movq %rbx,%rdi
 	call _atoi
 	movslq %eax,%rax
 	imulq $60,%rax,%rax
 	movq %rax,_timezone(%rip)
-L185:
+L184:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L190
-L188:
+	jz L189
+L187:
 	incq %rbx
 	cmpb $58,%al
-	jnz L185
-L190:
+	jnz L184
+L189:
 	movq _tzname+8(%rip),%rdx
-L192:
+L191:
 	movzbl (%rbx),%ecx
 	testb %cl,%cl
-	jz L197
-L199:
+	jz L196
+L198:
 	cmpb $58,%cl
-	jz L197
-L200:
+	jz L196
+L199:
 	movq _tzname+8(%rip),%rax
 	addq $31,%rax
 	cmpq %rax,%rdx
-	jae L197
-L196:
+	jae L196
+L195:
 	incq %rbx
 	movb %cl,(%rdx)
 	incq %rdx
-	jmp L192
-L197:
+	jmp L191
+L196:
 	movb $0,(%rdx)
-L203:
+L202:
 	movzbl (%rbx),%eax
 	testb %al,%al
-	jz L208
-L206:
+	jz L207
+L205:
 	incq %rbx
 	cmpb $58,%al
-	jnz L203
-L208:
+	jnz L202
+L207:
 	movq _tzname+8(%rip),%rax
 	cmpb $0,(%rax)
-	jz L156
-L212:
+	jz L155
+L211:
 	movl $_tzdstdef,%edi
 	call _setdst
 	movq %rbx,%rdi
 	call _setdst
-L156:
+L155:
 	popq %rbx
 	ret 
 
 
 _gmtime:
-L214:
+L213:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L215:
+L214:
 	movq (%rdi),%rsi
 	cmpq $0,%rsi
 	movl $0,%eax
@@ -482,7 +481,7 @@ L215:
 	divl %ecx
 	movl %edx,%r12d
 	movl $1970,%ebx
-L220:
+L219:
 	movl %ebx,%edi
 	call _isleap
 	testl %eax,%eax
@@ -490,12 +489,12 @@ L220:
 	movl $366,%ecx
 	cmovzl %eax,%ecx
 	cmpl %ecx,%r13d
-	jb L227
-L229:
+	jb L226
+L228:
 	incl %ebx
 	subl %ecx,%r13d
-	jmp L220
-L227:
+	jmp L219
+L226:
 	movl %ebx,%eax
 	subl $1900,%eax
 	movl %eax,_tm+20(%rip)
@@ -504,33 +503,32 @@ L227:
 	movl %ebx,%edi
 	call _isleap
 	testl %eax,%eax
-	jz L232
-L231:
+	jz L231
+L230:
 	movb $29,_dpm+1(%rip)
-	jmp L233
-L232:
+	jmp L232
+L231:
 	movb $28,_dpm+1(%rip)
-L233:
+L232:
 	movl $_dpm,%eax
-L234:
+L233:
 	cmpq $_dpm+12,%rax
-	jae L237
-L238:
+	jae L236
+L237:
 	movsbl (%rax),%ecx
 	cmpl %ecx,%r13d
-	jb L237
-L235:
+	jb L236
+L234:
 	subl %ecx,%r13d
 	incq %rax
-	cmpq $_dpm+12,%rax
-	jb L238
-L237:
+	jmp L233
+L236:
 	subq $_dpm,%rax
 	movl %eax,_tm+16(%rip)
 	incl %r13d
 	movl %r13d,_tm+12(%rip)
 	movl $_tm,%eax
-L216:
+L215:
 	popq %r13
 	popq %r12
 	popq %rbx
@@ -538,12 +536,12 @@ L216:
 
 
 _localtime:
-L244:
+L242:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $8,%rsp
 	pushq %rbx
-L245:
+L243:
 	movq %rdi,%rbx
 	call _tzset
 	movq (%rbx),%rax
@@ -553,8 +551,8 @@ L245:
 	call _gmtime
 	call _isdaylight
 	testl %eax,%eax
-	jz L248
-L247:
+	jz L246
+L245:
 	movslq _dstadjust(%rip),%rax
 	movq (%rbx),%rcx
 	subq _timezone(%rip),%rcx
@@ -563,12 +561,12 @@ L247:
 	leaq -8(%rbp),%rdi
 	call _gmtime
 	movl $1,_tm+32(%rip)
-	jmp L249
-L248:
-	movl $0,_tm+32(%rip)
-L249:
-	movl $_tm,%eax
+	jmp L247
 L246:
+	movl $0,_tm+32(%rip)
+L247:
+	movl $_tm,%eax
+L244:
 	popq %rbx
 	movq %rbp,%rsp
 	popq %rbp
@@ -576,8 +574,8 @@ L246:
 
 
 _asctime:
-L251:
-L252:
+L249:
+L250:
 	movl 24(%rdi),%ecx
 	cmpl $7,%ecx
 	movl $0,%eax
@@ -604,18 +602,18 @@ L252:
 	movb $32,_timestr+7(%rip)
 	movl 12(%rdi),%esi
 	cmpl $10,%esi
-	jb L261
-L260:
+	jb L259
+L258:
 	movl $10,%ecx
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
 	addl $48,%eax
 	movb %al,_timestr+8(%rip)
-	jmp L262
-L261:
+	jmp L260
+L259:
 	movb $32,_timestr+8(%rip)
-L262:
+L260:
 	movl $10,%ecx
 	movl %esi,%eax
 	xorl %edx,%edx
@@ -703,20 +701,20 @@ L262:
 	movb $10,_timestr+24(%rip)
 	movb $0,_timestr+25(%rip)
 	movl $_timestr,%eax
-L253:
+L251:
 	ret 
 
 
 _ctime:
-L264:
-L265:
+L262:
+L263:
 	call _localtime
 	movq %rax,%rdi
 	call _asctime
-L266:
+L264:
 	ret 
 
-L165:
+L164:
  .byte 84,73,77,69,90,79,78,69
  .byte 0
 .comm _timezone, 8, 8

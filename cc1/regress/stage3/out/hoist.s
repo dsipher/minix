@@ -466,8 +466,7 @@ L187:
 	movq $0,560(%rax)
 	movq $_local_arena,568(%rax)
 	movq 112(%rax),%rax
-	testq %rax,%rax
-	jnz L187
+	jmp L183
 L186:
 	movl $_hoist0,%edx
 	xorl %esi,%esi

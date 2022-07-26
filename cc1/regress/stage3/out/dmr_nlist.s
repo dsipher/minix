@@ -142,8 +142,7 @@ L37:
 	movzbl (%rdx),%eax
 	incq %rdx
 	addl %eax,%r13d
-	cmpq %rcx,%rdx
-	jb L37
+	jmp L36
 L39:
 	andl $127,%r13d
 	movq _nlist(,%r13,8),%r14

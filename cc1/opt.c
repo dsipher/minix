@@ -362,7 +362,6 @@ static struct { int bit; void (*pass)(void); char *name; } passes[] =
             OPT_LIR_FOLD,       opt_lir_fold,       "lir_fold",
             OPT_LIR_HOIST,      opt_lir_hoist,      "lir_hoist",
             OPT_LIR_DVN,        opt_lir_dvn,        "lir_dvn",
-            OPT_LIR_LICM,       opt_lir_licm,       "lir_licm",
             OPT_LIR_MASK,       opt_lir_mask,       "lir_mask",
             OPT_LIR_CMP,        opt_lir_cmp,        "lir_cmp",
             OPT_LIR_PEEP,       opt_lir_peep,       "lir_peep",

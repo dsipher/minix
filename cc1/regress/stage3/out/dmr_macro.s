@@ -1191,8 +1191,7 @@ L467:
 	jnz L466
 L465:
 	movq 56(%rdx),%rdx
-	testq %rdx,%rdx
-	jnz L467
+	jmp L464
 L466:
 	testq %rdx,%rdx
 	jnz L473
@@ -1214,16 +1213,16 @@ L476:
 	leaq 1(%r12),%rdi
 	cmpl $13,%esi
 	jz L480
-L501:
+L500:
 	cmpl $14,%esi
 	jz L482
-L502:
+L501:
 	cmpl $15,%esi
 	jz L490
-L503:
+L502:
 	cmpl $16,%esi
 	jz L492
-L504:
+L503:
 	pushq $L494
 	pushq $1
 	call _error

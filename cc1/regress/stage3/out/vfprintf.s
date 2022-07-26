@@ -80,7 +80,7 @@ L3:
 	ret 
 
 .align 2
-L313:
+L311:
 	.short L164-_vfprintf
 	.short L103-_vfprintf
 	.short L162-_vfprintf
@@ -164,17 +164,17 @@ L31:
 	cmpl $32,%edi
 	jz L42
 	jl L36
-L298:
+L296:
 	cmpl $48,%edi
 	jz L46
 	jg L36
-L299:
+L297:
 	cmpb $35,%dil
 	jz L44
-L300:
+L298:
 	cmpb $43,%dil
 	jz L40
-L301:
+L299:
 	cmpb $45,%dil
 	jnz L36
 L38:
@@ -224,8 +224,7 @@ L61:
 	movl %eax,-608(%rbp)
 	movsbl (%r14),%edi
 	incq %r14
-	cmpl $48,%edi
-	jge L60
+	jmp L56
 L52:
 	cmpl $46,%edi
 	jnz L65
@@ -258,9 +257,7 @@ L78:
 	subl $48,%ebx
 	movsbl (%r14),%edi
 	incq %r14
-	cmpl $48,%edi
-	jge L77
-	jl L66
+	jmp L73
 L65:
 	movl $-1,%ebx
 L66:
@@ -297,13 +294,13 @@ L83:
 	xorl %r12d,%r12d
 	movl $0,-524(%rbp)
 	cmpl $99,%edi
-	jl L305
-L307:
+	jl L303
+L305:
 	cmpl $120,%edi
-	jg L305
-L304:
+	jg L303
+L302:
 	leal -99(%rdi),%eax
-	movzwl L313(,%rax,2),%eax
+	movzwl L311(,%rax,2),%eax
 	addl $_vfprintf,%eax
 	jmp *%rax
 L118:
@@ -402,13 +399,13 @@ L164:
 	leaq -511(%rbp),%rax
 	movq %rax,-584(%rbp)
 	jmp L100
-L305:
+L303:
 	cmpl $69,%edi
 	jz L162
-L309:
+L307:
 	cmpl $71,%edi
 	jz L162
-L310:
+L308:
 	cmpl $88,%edi
 	jz L121
 L99:

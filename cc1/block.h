@@ -11,7 +11,6 @@
 
 #include "heap.h"
 #include "live.h"
-#include "licm.h"
 #include "fold.h"
 #include "prop.h"
 #include "dvn.h"
@@ -73,7 +72,6 @@ DEFINE_VECTOR(succ, struct succ);
 #define B_DENSE         0x00000008      /* dense switch block (switch.c) */
 #define B_TABLE         0x00000010      /* table switch block (switch.c) */
 #define B_IMMORTAL      0x00000020      /* block can't be pruned */
-#define B_LICM          0x00000040      /* used internally by LICM (licm.c) */
 
 DEFINE_VECTOR(block, struct block *);
 
@@ -108,7 +106,6 @@ struct block
     struct reach reach;             /* reaching definitions (reach.c) */
     struct dvn dvn;                 /* value numbering data (dvn.c) */
     struct lower lower;             /* lowering data (lower.c) */
-    struct licm licm;               /* loop optimizations (licm.c) */
     struct insn *cmp;               /* last I_LIR_CMP on path (cmp.c) */
     struct mask mask;               /* register masks (mask.c) */
 

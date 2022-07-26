@@ -46,8 +46,7 @@ L12:
 	movq %rsi,_buckets(,%rdx,8)
 	addq %rbx,%rsi
 	incl %eax
-	cmpl %eax,%r12d
-	jg L12
+	jmp L11
 L14:
 	movl %r12d,%eax
 L3:
@@ -58,63 +57,63 @@ L3:
 
 
 _malloc:
-L17:
+L16:
 	pushq %rbx
 	pushq %r12
-L18:
+L17:
 	addq $8,%rdi
 	xorl %r12d,%r12d
-L21:
+L20:
 	leal 5(%r12),%ecx
 	movl $1,%eax
 	shlq %cl,%rax
 	cmpq %rax,%rdi
-	jbe L23
-L26:
+	jbe L22
+L25:
 	incl %r12d
 	cmpl $26,%r12d
-	jl L21
-L23:
+	jl L20
+L22:
 	cmpl $26,%r12d
-	jz L40
-L30:
+	jz L39
+L29:
 	movslq %r12d,%rbx
 	cmpq $0,_buckets(,%rbx,8)
-	jnz L34
-L32:
+	jnz L33
+L31:
 	movl %r12d,%edi
 	call _refill
 	testl %eax,%eax
-	jnz L34
-L40:
+	jnz L33
+L39:
 	xorl %eax,%eax
-	jmp L19
-L34:
+	jmp L18
+L33:
 	movq _buckets(,%rbx,8),%rax
 	movq (%rax),%rcx
 	movq %rcx,_buckets(,%rbx,8)
 	movl %r12d,4(%rax)
 	movl $1265200743,(%rax)
 	addq $8,%rax
-L19:
+L18:
 	popq %r12
 	popq %rbx
 	ret 
 
 
 _free:
+L40:
 L41:
-L42:
 	movq %rdi,%rdx
 	subq $8,%rdx
 	cmpl $1265200743,-8(%rdi)
-	jnz L43
-L44:
+	jnz L42
+L43:
 	movslq -4(%rdi),%rcx
 	movq _buckets(,%rcx,8),%rax
 	movq %rax,-8(%rdi)
 	movq %rdx,_buckets(,%rcx,8)
-L43:
+L42:
 	ret 
 
 .local _buckets

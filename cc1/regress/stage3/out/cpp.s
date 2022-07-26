@@ -111,14 +111,13 @@ L39:
 L37:
 	movq 32(%rsi),%rsi
 	incl %eax
-	testq %rsi,%rsi
-	jnz L39
+	jmp L36
 L38:
 	testq %rsi,%rsi
 	jz L43
 L45:
 	cmpl $536870927,(%rsi)
-	jnz L74
+	jnz L73
 L55:
 	testq %rsi,%rsi
 	jz L58
@@ -157,11 +156,11 @@ L43:
 	xorl %edi,%edi
 	call _input_tokens
 	cmpl $-1,%eax
-	jz L74
+	jz L73
 L48:
 	movl $-1,%r12d
 	jmp L32
-L74:
+L73:
 	movl %r12d,%eax
 L30:
 	popq %r14
@@ -172,7 +171,7 @@ L30:
 
 
 _replace:
-L75:
+L74:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $16,%rsp
@@ -180,7 +179,7 @@ L75:
 	pushq %r12
 	pushq %r13
 	pushq %r14
-L76:
+L75:
 	movq %rdi,%r14
 	leaq -16(%rbp),%r13
 	xorl %eax,%eax
@@ -191,34 +190,34 @@ L76:
 	xorl %r12d,%r12d
 	movq (%r14),%rbx
 	cmpl $52,(%rbx)
-	jnz L116
-L80:
+	jnz L115
+L79:
 	leaq 8(%rbx),%rdi
 	call _macro_lookup
 	testq %rax,%rax
-	jz L116
-L85:
+	jz L115
+L84:
 	movl 24(%rax),%eax
 	testl $1,%eax
-	jz L87
-L116:
+	jz L86
+L115:
 	xorl %eax,%eax
-	jmp L77
-L87:
+	jmp L76
+L86:
 	testl $2147483648,%eax
-	jz L97
-L90:
+	jz L96
+L89:
 	movq %rbx,%rsi
 	movq %r14,%rdi
 	call _parentheses
 	movl %eax,%r12d
 	cmpl $0,%eax
-	jle L77
-L97:
+	jle L76
+L96:
 	movq (%r14),%rcx
 	testq %rcx,%rcx
-	jz L102
-L100:
+	jz L101
+L99:
 	movq -8(%rbp),%rax
 	movq %rcx,(%rax)
 	movq -8(%rbp),%rcx
@@ -228,7 +227,7 @@ L100:
 	movq %rax,-8(%rbp)
 	movq $0,(%r14)
 	movq %r14,8(%r14)
-L102:
+L101:
 	leal 1(%r12),%edx
 	leaq -16(%rbp),%rsi
 	movq %r14,%rdi
@@ -237,8 +236,8 @@ L102:
 	call _macro_replace
 	movq -16(%rbp),%rcx
 	testq %rcx,%rcx
-	jz L111
-L109:
+	jz L110
+L108:
 	movq 8(%r14),%rax
 	movq %rcx,(%rax)
 	movq 8(%r14),%rcx
@@ -248,9 +247,9 @@ L109:
 	movq %rax,8(%r14)
 	movq $0,-16(%rbp)
 	movq %r13,-8(%rbp)
-L111:
+L110:
 	movl $1,%eax
-L77:
+L76:
 	popq %r14
 	popq %r13
 	popq %r12
@@ -261,143 +260,143 @@ L77:
 
 
 _output:
-L117:
+L116:
 	pushq %rbx
-L118:
+L117:
 	movq (%rdi),%rbx
 	movq 32(%rbx),%rcx
 	movq 40(%rbx),%rax
 	testq %rcx,%rcx
-	jz L124
-L123:
+	jz L123
+L122:
 	movq %rax,40(%rcx)
-	jmp L125
-L124:
+	jmp L124
+L123:
 	movq %rax,8(%rdi)
-L125:
+L124:
 	movq 32(%rbx),%rcx
 	movq 40(%rbx),%rax
 	movq %rcx,(%rax)
 	movl (%rbx),%eax
 	testl $2147483648,%eax
-	jz L128
-L126:
+	jz L127
+L125:
 	pushq %rax
-	pushq $L129
+	pushq $L128
 	call _error
 	addq $16,%rsp
-L128:
+L127:
 	movl _last_class(%rip),%edi
 	testl %edi,%edi
-	jz L132
-L133:
+	jz L131
+L132:
 	movl (%rbx),%esi
 	call _token_separate
 	testl %eax,%eax
-	jz L132
-L134:
+	jz L131
+L133:
 	movq _out_fp(%rip),%rsi
 	movl $32,%edi
 	call _fputc
-L132:
+L131:
 	movl 8(%rbx),%eax
 	movl %eax,%ecx
 	andl $1,%ecx
-	jz L141
-L140:
+	jz L140
+L139:
 	shll $24,%eax
 	sarl $25,%eax
 	movslq %eax,%rax
-	jmp L142
-L141:
+	jmp L141
+L140:
 	movq 16(%rbx),%rax
-L142:
+L141:
 	testq %rax,%rax
-	jz L139
-L137:
+	jz L138
+L136:
 	testl %ecx,%ecx
-	jz L144
-L143:
+	jz L143
+L142:
 	leaq 9(%rbx),%rdi
-	jmp L145
-L144:
+	jmp L144
+L143:
 	movq 24(%rbx),%rdi
-L145:
+L144:
 	movq _out_fp(%rip),%rsi
 	call _fputs
 	movl (%rbx),%eax
 	movl %eax,_last_class(%rip)
-L139:
+L138:
 	movq %rbx,%rdi
 	call _token_free
-L119:
+L118:
 	popq %rbx
 	ret 
 
 .data
 .align 4
-L149:
+L148:
 	.int 1
 .text
 
 _resync:
+L145:
 L146:
-L147:
 	cmpb $0,_need_resync(%rip)
-	jnz L154
-L157:
+	jnz L153
+L156:
 	movq _input_stack(%rip),%rax
 	movl 32(%rax),%eax
-	movl L149(%rip),%ecx
+	movl L148(%rip),%ecx
 	cmpl %ecx,%eax
-	jl L154
-L159:
+	jl L153
+L158:
 	subl $20,%eax
 	cmpl %eax,%ecx
-	jge L165
-L154:
+	jge L164
+L153:
 	movq _input_stack(%rip),%rcx
 	movl 32(%rcx),%eax
-	movl %eax,L149(%rip)
+	movl %eax,L148(%rip)
 	testl $1,8(%rcx)
-	jz L163
-L162:
+	jz L162
+L161:
 	addq $9,%rcx
-	jmp L164
-L163:
+	jmp L163
+L162:
 	movq 24(%rcx),%rcx
-L164:
+L163:
 	pushq %rcx
 	pushq %rax
-	pushq $L161
+	pushq $L160
 	pushq _out_fp(%rip)
 	call _fprintf
 	addq $32,%rsp
 	movb $0,_need_resync(%rip)
-L168:
+L167:
 	movl $0,_last_class(%rip)
-L165:
+L164:
 	movq _input_stack(%rip),%rax
 	movl 32(%rax),%eax
-	cmpl %eax,L149(%rip)
-	jl L166
-L148:
+	cmpl %eax,L148(%rip)
+	jl L165
+L147:
 	ret 
-L166:
+L165:
 	movq _out_fp(%rip),%rsi
 	movl $10,%edi
 	call _fputc
-	incl L149(%rip)
-	jmp L168
+	incl L148(%rip)
+	jmp L167
 
 
 _loop:
-L169:
+L168:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $16,%rsp
 	pushq %rbx
-L170:
+L169:
 	leaq -16(%rbp),%rcx
 	xorl %eax,%eax
 	movq %rax,-16(%rbp)
@@ -406,55 +405,55 @@ L170:
 	movq %rcx,-8(%rbp)
 	movq _input_stack(%rip),%rax
 	testl $1,8(%rax)
-	jz L174
-L173:
+	jz L173
+L172:
 	addq $9,%rax
-	jmp L175
-L174:
+	jmp L174
+L173:
 	movq 24(%rax),%rax
-L175:
+L174:
 	pushq %rax
-	pushq $L172
+	pushq $L171
 	pushq _out_fp(%rip)
 	call _fprintf
 	addq $24,%rsp
 	movb $0,_need_resync(%rip)
-L176:
+L175:
 	cmpq $0,-16(%rbp)
-	jnz L188
-L183:
+	jnz L187
+L182:
 	leaq -16(%rbp),%rsi
 	movl $1,%edi
 	call _input_tokens
 	cmpl $-1,%eax
-	jz L184
-L188:
+	jz L183
+L187:
 	cmpq $0,-16(%rbp)
-	jz L176
-L189:
+	jz L175
+L188:
 	leaq -16(%rbp),%rdi
 	call _directive
-L191:
+L190:
 	cmpq $0,-16(%rbp)
-	jz L188
-L192:
+	jz L187
+L191:
 	call _resync
 	leaq -16(%rbp),%rdi
 	call _replace
 	movl %eax,%ebx
 	cmpl $1,%ebx
-	jz L191
-L196:
+	jz L190
+L195:
 	leaq -16(%rbp),%rdi
 	call _output
 	cmpl $-1,%ebx
-	jnz L191
-	jz L188
-L184:
+	jnz L190
+	jz L187
+L183:
 	movq _out_fp(%rip),%rsi
 	movl $10,%edi
 	call _fputc
-L171:
+L170:
 	popq %rbx
 	movq %rbp,%rsp
 	popq %rbp
@@ -462,62 +461,62 @@ L171:
 
 
 _main:
-L202:
+L201:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L203:
+L202:
 	movl %edi,%r13d
 	movq %rsi,%rbx
 	call _macro_predef
-L205:
-	movl $L208,%edx
+L204:
+	movl $L207,%edx
 	movq %rbx,%rsi
 	movl %r13d,%edi
 	call _getopt
 	cmpl $-1,%eax
-	jz L207
-L206:
+	jz L206
+L205:
 	cmpl $120,%eax
-	jz L212
-L233:
+	jz L211
+L232:
 	cmpl $73,%eax
-	jz L214
-L234:
+	jz L213
+L233:
 	cmpl $68,%eax
-	jnz L218
-L216:
+	jnz L217
+L215:
 	movq _optarg(%rip),%rdi
 	call _macro_cmdline
-	jmp L205
-L214:
+	jmp L204
+L213:
 	movq _optarg(%rip),%rdi
 	call _input_dir
-	jmp L205
-L212:
+	jmp L204
+L211:
 	movb $1,_cxx_mode(%rip)
-	jmp L205
-L207:
+	jmp L204
+L206:
 	movl _optind(%rip),%eax
 	subl %eax,%r13d
 	cmpl $2,%r13d
-	jnz L220
-L222:
+	jnz L219
+L221:
 	incl %eax
 	movslq %eax,%rax
 	movq (%rbx,%rax,8),%rdi
 	movq %rdi,_out_path(%rip)
-	movl $L225,%esi
+	movl $L224,%esi
 	call _fopen
 	movq %rax,_out_fp(%rip)
 	testq %rax,%rax
-	jnz L228
-L226:
+	jnz L227
+L225:
 	pushq _out_path(%rip)
-	pushq $L229
+	pushq $L228
 	call _error
 	addq $16,%rsp
-L228:
+L227:
 	movslq _optind(%rip),%rax
 	xorl %esi,%esi
 	movq (%rbx,%rax,8),%rdi
@@ -526,34 +525,34 @@ L228:
 	movq _out_fp(%rip),%rdi
 	call _fclose
 	xorl %r12d,%r12d
-	jmp L204
-L220:
-	pushq $L223
+	jmp L203
+L219:
+	pushq $L222
 	pushq $___stderr
 	call _fprintf
 	addq $16,%rsp
-L218:
-	pushq $L231
+L217:
+	pushq $L230
 	pushq $___stderr
 	call _fprintf
 	addq $16,%rsp
 	movl $1,%edi
 	call _exit
-L204:
+L203:
 	movl %r12d,%eax
 	popq %r13
 	popq %r12
 	popq %rbx
 	ret 
 
-L208:
+L207:
  .byte 120,73,58,68,58,0
-L161:
+L160:
  .byte 10,35,32,37,100,32,34,37
  .byte 115,34,10,0
 L15:
  .byte 99,112,112,0
-L229:
+L228:
  .byte 99,97,110,39,116,32,111,112
  .byte 101,110,32,111,117,116,112,117
  .byte 116,32,39,37,115,39,0
@@ -566,7 +565,7 @@ L64:
 L26:
  .byte 111,117,116,32,111,102,32,109
  .byte 101,109,111,114,121,0
-L129:
+L128:
  .byte 67,80,80,32,73,78,84,69
  .byte 82,78,65,76,58,32,97,116
  .byte 116,101,109,112,116,32,116,111
@@ -574,17 +573,17 @@ L129:
  .byte 110,111,110,45,116,101,120,116
  .byte 32,116,111,107,101,110,32,37
  .byte 120,0
-L225:
+L224:
  .byte 119,0
 L14:
  .byte 32,40,37,100,41,0
-L223:
+L222:
  .byte 99,112,112,58,32,105,110,99
  .byte 111,114,114,101,99,116,32,110
  .byte 117,109,98,101,114,32,111,102
  .byte 32,97,114,103,117,109,101,110
  .byte 116,115,10,0
-L172:
+L171:
  .byte 35,32,49,32,34,37,115,34
  .byte 10,0
 L16:
@@ -592,7 +591,7 @@ L16:
  .byte 0
 L7:
  .byte 39,37,115,39,0
-L231:
+L230:
  .byte 117,115,97,103,101,58,32,99
  .byte 112,112,32,123,60,111,112,116
  .byte 105,111,110,62,125,32,60,105

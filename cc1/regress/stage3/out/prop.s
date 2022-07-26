@@ -474,18 +474,17 @@ L189:
 	movq 536(%rbx),%rax
 	orq %rcx,(%rax,%rdx,8)
 	incl %esi
-	cmpl %esi,%edi
-	jg L189
+	jmp L188
 L156:
 	popq %rbx
 	ret 
 
 
 _global0:
-L193:
+L192:
 	pushq %rbx
 	pushq %r12
-L194:
+L193:
 	movslq _tmp_bits+4(%rip),%rcx
 	movq %rdi,%r12
 	shlq $3,%rcx
@@ -494,58 +493,55 @@ L194:
 	rep 
 	stosb 
 	xorl %ebx,%ebx
-L196:
+L195:
 	cmpl 36(%r12),%ebx
-	jge L199
-L197:
+	jge L198
+L196:
 	movq 40(%r12),%rcx
 	movslq %ebx,%rax
 	movq (%rcx,%rax,8),%rsi
 	testl %ebx,%ebx
-	jnz L206
-L203:
+	jnz L205
+L202:
 	movl $8,%edx
 	addq $528,%rsi
 	movl $_tmp_bits,%edi
 	call _dup_vector
-	jmp L202
-L206:
+	jmp L201
+L205:
 	movl _tmp_bits+4(%rip),%r8d
 	xorl %edi,%edi
-L209:
+L208:
 	cmpl %edi,%r8d
-	jle L202
-L210:
+	jle L201
+L209:
 	movq 536(%rsi),%rax
 	movslq %edi,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq _tmp_bits+8(%rip),%rax
 	andq %rcx,(%rax,%rdx,8)
 	incl %edi
-	cmpl %edi,%r8d
-	jg L210
-L202:
+	jmp L208
+L201:
 	incl %ebx
-	jmp L196
-L199:
+	jmp L195
+L198:
 	movl _tmp_bits+4(%rip),%edi
 	xorl %esi,%esi
-L216:
+L215:
 	cmpl %esi,%edi
-	jle L219
-L217:
+	jle L218
+L216:
 	movq _tmp_bits+8(%rip),%rax
 	movslq %esi,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq 512(%r12),%rax
 	cmpq (%rax,%rdx,8),%rcx
-	jnz L220
-L222:
+	jnz L219
+L221:
 	incl %esi
-	cmpl %esi,%edi
-	jg L217
-	jle L219
-L220:
+	jmp L215
+L219:
 	movl $8,%edx
 	movl $_tmp_bits,%esi
 	leaq 504(%r12),%rdi
@@ -556,10 +552,10 @@ L220:
 	call _dup_vector
 	movl 532(%r12),%edi
 	xorl %esi,%esi
-L234:
+L233:
 	cmpl %esi,%edi
-	jle L237
-L235:
+	jle L236
+L234:
 	movq 488(%r12),%rax
 	movslq %esi,%rdx
 	movq (%rax,%rdx,8),%rcx
@@ -567,57 +563,56 @@ L235:
 	movq 536(%r12),%rax
 	andq %rcx,(%rax,%rdx,8)
 	incl %esi
-	jmp L234
-L237:
+	jmp L233
+L236:
 	movl 532(%r12),%edi
 	xorl %esi,%esi
-L241:
+L240:
 	cmpl %esi,%edi
-	jle L244
-L242:
+	jle L243
+L241:
 	movq 464(%r12),%rax
 	movslq %esi,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq 536(%r12),%rax
 	orq %rcx,(%rax,%rdx,8)
 	incl %esi
-	cmpl %esi,%edi
-	jg L242
-L244:
+	jmp L240
+L243:
 	movl $1,%eax
-	jmp L195
-L219:
+	jmp L194
+L218:
 	xorl %eax,%eax
-L195:
+L194:
 	popq %r12
 	popq %rbx
 	ret 
 
 
 _import0:
-L249:
+L245:
 	pushq %rbx
 	pushq %r12
-L250:
+L246:
 	movq %rdi,%r12
 	cmpl $0,408(%r12)
-	jl L256
-L255:
+	jl L252
+L251:
 	movl $0,412(%r12)
-	jmp L257
-L256:
+	jmp L253
+L252:
 	movl 412(%r12),%esi
 	xorl %edx,%edx
 	subl %esi,%edx
 	movl $16,%ecx
 	leaq 408(%r12),%rdi
 	call _vector_insert
-L257:
+L253:
 	xorl %ebx,%ebx
-L258:
+L254:
 	cmpl _u_card(%rip),%ebx
-	jge L251
-L259:
+	jge L247
+L255:
 	movq 512(%r12),%rcx
 	movl %ebx,%eax
 	sarl $6,%eax
@@ -628,21 +623,21 @@ L259:
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
-	jz L264
-L265:
+	jz L260
+L261:
 	movl 412(%r12),%esi
 	leal 1(%rsi),%eax
 	cmpl 408(%r12),%eax
-	jge L269
-L268:
+	jge L265
+L264:
 	movl %eax,412(%r12)
-	jmp L270
-L269:
+	jmp L266
+L265:
 	movl $16,%ecx
 	movl $1,%edx
 	leaq 408(%r12),%rdi
 	call _vector_insert
-L270:
+L266:
 	movq 416(%r12),%rdi
 	movl 412(%r12),%esi
 	decl %esi
@@ -655,19 +650,19 @@ L270:
 	movq %rax,(%rdi,%rsi)
 	movq 8(%rdx,%rcx),%rax
 	movq %rax,8(%rdi,%rsi)
-L264:
+L260:
 	incl %ebx
-	jmp L258
-L251:
+	jmp L254
+L247:
 	popq %r12
 	popq %rbx
 	ret 
 
 
 _opt_lir_prop:
-L271:
+L267:
 	pushq %rbx
-L274:
+L270:
 	movl $0,_u(%rip)
 	movl $0,_u+4(%rip)
 	movq $0,_u+8(%rip)
@@ -685,49 +680,59 @@ L274:
 	movq $0,_tmp_regs+8(%rip)
 	movq $_local_arena,_tmp_regs+16(%rip)
 	movq _all_blocks(%rip),%rbx
+L285:
+	testq %rbx,%rbx
+	jz L288
+L286:
+	movq %rbx,%rdi
+	call _alloc0
+	movq 112(%rbx),%rbx
+	jmp L285
+L288:
+	movq _all_blocks(%rip),%rbx
 L289:
 	testq %rbx,%rbx
 	jz L292
 L290:
 	movq %rbx,%rdi
-	call _alloc0
+	call _local0
 	movq 112(%rbx),%rbx
 	jmp L289
 L292:
-	movq _all_blocks(%rip),%rbx
-L293:
-	testq %rbx,%rbx
-	jz L296
-L294:
-	movq %rbx,%rdi
-	call _local0
-	movq 112(%rbx),%rbx
-	jmp L293
-L296:
 	movl $0,_u_card(%rip)
 	movl $0,_next_u(%rip)
 	movq _all_blocks(%rip),%rcx
-L297:
+L293:
 	movl _u_card(%rip),%edx
 	testq %rcx,%rcx
-	jz L301
-L298:
+	jz L297
+L294:
 	addl 412(%rcx),%edx
 	movl %edx,_u_card(%rip)
 	movq 112(%rcx),%rcx
-	jmp L297
-L301:
+	jmp L293
+L297:
 	cmpl %edx,_u(%rip)
-	jl L305
-L304:
+	jl L301
+L300:
 	movl %edx,_u+4(%rip)
-	jmp L306
-L305:
+	jmp L302
+L301:
 	movl _u+4(%rip),%esi
 	subl %esi,%edx
 	movl $16,%ecx
 	movl $_u,%edi
 	call _vector_insert
+L302:
+	movq _all_blocks(%rip),%rbx
+L303:
+	testq %rbx,%rbx
+	jz L306
+L304:
+	movq %rbx,%rdi
+	call _gen0
+	movq 112(%rbx),%rbx
+	jmp L303
 L306:
 	movq _all_blocks(%rip),%rbx
 L307:
@@ -735,72 +740,62 @@ L307:
 	jz L310
 L308:
 	movq %rbx,%rdi
-	call _gen0
+	call _kill0
 	movq 112(%rbx),%rbx
 	jmp L307
 L310:
 	movq _all_blocks(%rip),%rbx
 L311:
 	testq %rbx,%rbx
-	jz L314
+	jz L315
 L312:
-	movq %rbx,%rdi
-	call _kill0
-	movq 112(%rbx),%rbx
-	jmp L311
-L314:
-	movq _all_blocks(%rip),%rbx
-L315:
-	testq %rbx,%rbx
-	jz L319
-L316:
 	movq %rbx,%rdi
 	call _init0
 	movq 112(%rbx),%rbx
-	jmp L315
-L319:
+	jmp L311
+L315:
 	movl _u_card(%rip),%edx
 	addl $63,%edx
 	sarl $6,%edx
 	cmpl _tmp_bits(%rip),%edx
-	jg L326
-L325:
+	jg L322
+L321:
 	movl %edx,_tmp_bits+4(%rip)
-	jmp L327
-L326:
+	jmp L323
+L322:
 	movl _tmp_bits+4(%rip),%esi
 	subl %esi,%edx
 	movl $8,%ecx
 	movl $_tmp_bits,%edi
 	call _vector_insert
-L327:
+L323:
 	xorl %edi,%edi
 	call _sequence_blocks
 	movl $_global0,%edi
 	call _iterate_blocks
 	movq _all_blocks(%rip),%rbx
-L328:
+L324:
 	testq %rbx,%rbx
-	jz L331
-L329:
+	jz L327
+L325:
 	movq %rbx,%rdi
 	call _import0
 	movq 112(%rbx),%rbx
-	jmp L328
-L331:
+	jmp L324
+L327:
 	movq _all_blocks(%rip),%rbx
-L332:
+L328:
 	testq %rbx,%rbx
-	jz L336
-L333:
+	jz L332
+L329:
 	movq %rbx,%rdi
 	call _local0
 	movq 112(%rbx),%rbx
-	jmp L332
-L336:
+	jmp L328
+L332:
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)
-L273:
+L269:
 	popq %rbx
 	ret 
 

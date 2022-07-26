@@ -18,16 +18,16 @@ clean:
 HDRS=	cc1.h block.h builtin.h cmov.h cmp.h dealias.h 			\
 	decl.h delay.h dep.h dom.h dvn.h expr.h fold.h 			\
 	func.h fuse.h gen.h graph.h heap.h hoist.h init.h 		\
-	insn.h lex.h licm.h live.h lower.h mask.h mbz.h 		\
-	norm.h opt.h peep.h prop.h reach.h reassoc.h reg.h 		\
-	stmt.h  string.h switch.h symbol.h tree.h type.h
+	insn.h lex.h live.h lower.h mask.h mbz.h norm.h 		\
+	opt.h peep.h prop.h reach.h reassoc.h reg.h stmt.h 		\
+	string.h switch.h symbol.h tree.h type.h
 
 OBJS=	cc1.o block.o builtin.o cmov.o cmp.o dealias.o 			\
 	decl.o delay.o dep.o dom.o dvn.o expr.o fold.o 			\
 	func.o fuse.o gen.o graph.o heap.o hoist.o init.o 		\
-	insn.o lex.o licm.o live.o lower.o mask.o mbz.o 		\
-	norm.o opt.o peep.o prop.o reach.o reassoc.o reg.o 		\
-	stmt.o string.o switch.o symbol.o tree.o type.o
+	insn.o lex.o live.o lower.o mask.o mbz.o norm.o 		\
+	opt.o peep.o prop.o reach.o reassoc.o reg.o stmt.o		\
+	string.o switch.o symbol.o tree.o type.o
 
 cc1.o: 		cc1.c $(HDRS)
 block.o:	block.c $(HDRS)
@@ -51,7 +51,6 @@ hoist.o:	hoist.c $(HDRS)
 init.o:		init.c $(HDRS)
 insn.o:		insn.c $(HDRS)
 lex.o:		lex.c $(HDRS)
-licm.o:		licm.c $(HDRS)
 live.o:		live.c $(HDRS)
 lower.o:	lower.c $(HDRS)
 mask.o:		mask.c $(HDRS)

@@ -520,34 +520,34 @@ L78:
 	pushq %rbx
 	pushq %r12
 L79:
-	xorl %ebx,%ebx
+	xorl %r12d,%r12d
 L82:
-	movslq %ebx,%rax
-	movq _buckets(,%rax,8),%r12
+	movslq %r12d,%rax
+	movq _buckets(,%rax,8),%rbx
 L85:
-	testq %r12,%r12
+	testq %rbx,%rbx
 	jz L88
 L86:
-	cmpl $0,16(%r12)
+	cmpl $0,16(%rbx)
 	jz L91
 L89:
 	movl $1,%edi
 	call _seg
-	movl 16(%r12),%eax
+	movl 16(%rbx),%eax
 	pushq %rax
 	pushq $L92
 	call _out
 	addq $16,%rsp
-	movl 4(%r12),%esi
+	movl 4(%rbx),%esi
 	incl %esi
-	movq %r12,%rdi
+	movq %rbx,%rdi
 	call _out_literal
 L91:
-	movq 24(%r12),%r12
+	movq 24(%rbx),%rbx
 	jmp L85
 L88:
-	incl %ebx
-	cmpl $256,%ebx
+	incl %r12d
+	cmpl $256,%r12d
 	jl L82
 L80:
 	popq %r12

@@ -61,7 +61,7 @@ L16:
 	jae L15
 L22:
 	movq -16(%rbp),%r14
-	movq -8(%rbp),%r13
+	movq -8(%rbp),%r12
 	movq -8(%rbp),%rax
 	subq -16(%rbp),%rax
 	movq %r15,%rcx
@@ -72,25 +72,25 @@ L22:
 	imulq %r15,%rax
 	movq -16(%rbp),%rbx
 	addq %rax,%rbx
-	movq %rbx,%r12
+	movq %rbx,%r13
 L25:
-	cmpq %r12,%r14
+	cmpq %r13,%r14
 	jae L35
 L28:
 	movq _qcompar(%rip),%rax
-	movq %r12,%rsi
+	movq %r13,%rsi
 	movq %r14,%rdi
 	call *%rax
 	cmpl $0,%eax
 	jz L33
 	jl L32
 L35:
-	cmpq %rbx,%r13
+	cmpq %rbx,%r12
 	jbe L37
 L36:
 	movq _qcompar(%rip),%rax
 	movq %rbx,%rsi
-	movq %r13,%rdi
+	movq %r12,%rdi
 	call *%rax
 	cmpl $0,%eax
 	jl L38
@@ -99,46 +99,46 @@ L45:
 	addq %r15,%rbx
 	movq %r15,%rdx
 	movq %rbx,%rsi
-	movq %r13,%rdi
+	movq %r12,%rdi
 	call _qexchange
 	jmp L35
 L46:
-	subq %r15,%r13
+	subq %r15,%r12
 	jmp L35
 L38:
-	cmpq %r12,%r14
+	cmpq %r13,%r14
 	jb L41
 L43:
 	addq %r15,%rbx
 	movq %r15,%rcx
-	movq %r13,%rdx
+	movq %r12,%rdx
 	movq %rbx,%rsi
 	movq %r14,%rdi
 	call _q3exchange
-	addq %r15,%r12
-	movq %r12,%r14
+	addq %r15,%r13
+	movq %r13,%r14
 	jmp L35
 L41:
 	movq %r15,%rdx
-	movq %r13,%rsi
+	movq %r12,%rsi
 	movq %r14,%rdi
 	call _qexchange
 	addq %r15,%r14
-	subq %r15,%r13
+	subq %r15,%r12
 	jmp L25
 L37:
-	movq %r12,%rsi
+	movq %r13,%rsi
 	subq %r15,%rsi
-	cmpq %r12,%r14
+	cmpq %r13,%r14
 	jae L50
 L48:
-	movq %rsi,%r12
+	movq %rsi,%r13
 	movq %r15,%rcx
 	movq %r14,%rdx
-	movq %r13,%rdi
+	movq %r12,%rdi
 	call _q3exchange
 	subq %r15,%rbx
-	movq %rbx,%r13
+	movq %rbx,%r12
 	jmp L25
 L50:
 	movq %r15,%rdx
@@ -151,9 +151,9 @@ L32:
 	addq %r15,%r14
 	jmp L25
 L33:
-	subq %r15,%r12
+	subq %r15,%r13
 	movq %r15,%rdx
-	movq %r12,%rsi
+	movq %r13,%rsi
 	movq %r14,%rdi
 	call _qexchange
 	jmp L25

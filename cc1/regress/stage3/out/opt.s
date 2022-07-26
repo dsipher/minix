@@ -479,7 +479,8 @@ L223:
 	movl %ebx,%esi
 	movq %r12,%rdi
 	call _live_kill_dead
-	orl %eax,%r13d
+	orl %r13d,%eax
+	movl %eax,%r13d
 	orl $32,_opt_request(%rip)
 	jmp L186
 L192:
@@ -771,24 +772,24 @@ L332:
 	andl _opt_request(%rip),%esi
 	jz L331
 L333:
-	xorl %eax,%eax
+	xorl %edx,%edx
 L336:
-	movslq %eax,%rcx
-	leaq (%rcx,%rcx,2),%rdx
-	shlq $3,%rdx
-	movl _passes(%rdx),%ecx
-	testl %esi,%ecx
+	movslq %edx,%rax
+	leaq (%rax,%rax,2),%rcx
+	shlq $3,%rcx
+	movl _passes(%rcx),%eax
+	testl %esi,%eax
 	jnz L339
 L341:
-	incl %eax
-	cmpl $11,%eax
+	incl %edx
+	cmpl $11,%edx
 	jl L336
 	jge L332
 L339:
-	notl %ecx
-	andl _opt_request(%rip),%ecx
-	movl %ecx,_opt_request(%rip)
-	movq _passes+8(%rdx),%rax
+	notl %eax
+	andl _opt_request(%rip),%eax
+	movl %eax,_opt_request(%rip)
+	movq _passes+8(%rcx),%rax
 	call *%rax
 	jmp L332
 L331:

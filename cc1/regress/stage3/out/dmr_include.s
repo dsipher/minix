@@ -119,32 +119,32 @@ L46:
 	jmp L48
 L47:
 	xorl %r14d,%r14d
-	movl $31,%ebx
+	movl $31,%r13d
 L51:
-	movslq %ebx,%r13
-	shlq $4,%r13
-	cmpq $0,_includelist+8(%r13)
+	movslq %r13d,%r12
+	shlq $4,%r12
+	cmpq $0,_includelist+8(%r12)
 	jz L52
 L61:
-	cmpb $0,_includelist(%r13)
+	cmpb $0,_includelist(%r12)
 	jnz L52
 L57:
 	cmpl $0,-520(%rbp)
 	jz L56
 L65:
-	cmpb $0,_includelist+1(%r13)
+	cmpb $0,_includelist+1(%r12)
 	jz L52
 L56:
 	leaq -256(%rbp),%rdi
 	call _strlen
-	movq %rax,%r12
-	movq _includelist+8(%r13),%rdi
+	movq %rax,%rbx
+	movq _includelist+8(%r12),%rdi
 	call _strlen
-	leaq 2(%r12,%rax),%rax
+	leaq 2(%rbx,%rax),%rax
 	cmpq $256,%rax
 	ja L52
 L72:
-	movq _includelist+8(%r13),%rsi
+	movq _includelist+8(%r12),%rsi
 	leaq -512(%rbp),%rdi
 	call _strcpy
 	movl $L74,%esi
@@ -160,7 +160,7 @@ L72:
 	testq %rax,%rax
 	jnz L48
 L52:
-	decl %ebx
+	decl %r13d
 	jns L51
 L48:
 	movl _Mflag(%rip),%eax

@@ -100,18 +100,18 @@ L46:
 	movq %r14,%rax
 	jmp L3
 L44:
-	xorl %eax,%eax
+	xorl %ecx,%ecx
 L48:
-	movslq %eax,%rcx
-	cmpq ___iotab(,%rcx,8),%r14
+	movslq %ecx,%rax
+	cmpq ___iotab(,%rax,8),%r14
 	jz L51
 L53:
-	incl %eax
-	cmpl $20,%eax
+	incl %ecx
+	cmpl $20,%ecx
 	jl L48
 	jge L50
 L51:
-	movq $0,___iotab(,%rcx,8)
+	movq $0,___iotab(,%rax,8)
 L50:
 	cmpq $___stdin,%r14
 	jz L68

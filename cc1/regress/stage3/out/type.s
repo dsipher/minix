@@ -141,15 +141,15 @@ _map_type:
 L1:
 	pushq %rbx
 L2:
-	xorl %eax,%eax
+	xorl %ecx,%ecx
 L5:
-	movslq %eax,%rcx
-	shlq $4,%rcx
-	cmpl _map(%rcx),%edi
+	movslq %ecx,%rax
+	shlq $4,%rax
+	cmpl _map(%rax),%edi
 	jz L8
 L10:
-	incl %eax
-	cmpl $24,%eax
+	incl %ecx
+	cmpl $24,%ecx
 	jl L5
 L7:
 	pushq $L12
@@ -159,7 +159,7 @@ L7:
 	addq $24,%rsp
 	jmp L3
 L8:
-	movq _map+8(%rcx),%rbx
+	movq _map+8(%rax),%rbx
 L3:
 	movq %rbx,%rax
 	popq %rbx
@@ -317,7 +317,8 @@ L58:
 	xorq %rsi,%rax
 	jmp L54
 L56:
-	xorq %rsi,%rax
+	xorq %rax,%rsi
+	movq %rsi,%rax
 L54:
 	sarq $5,%rdx
 	xorq %rdx,%rax

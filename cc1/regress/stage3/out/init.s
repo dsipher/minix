@@ -1124,9 +1124,9 @@ L415:
 	pushq %r12
 	pushq %r13
 L416:
-	movq %rdi,%r13
 	movsd %xmm0,%xmm8
-	andq $-393217,%r13
+	andq $-393217,%rdi
+	movq %rdi,%r13
 	movq _fcons(%rip),%r12
 L418:
 	testq %r12,%r12

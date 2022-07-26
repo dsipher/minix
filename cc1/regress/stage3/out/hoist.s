@@ -290,8 +290,8 @@ L126:
 	testl %r13d,%r13d
 	jz L107
 L132:
-	decl %r13d
-	movl %r13d,%eax
+	leal -1(%r13),%eax
+	movl %eax,%r13d
 	movq 16(%r15),%rcx
 	movslq %eax,%rax
 	movq (%rcx,%rax,8),%rbx

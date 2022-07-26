@@ -7,20 +7,20 @@ L1:
 L2:
 	movq %rdi,%r12
 	xorl %ebx,%ebx
-	xorl %eax,%eax
+	xorl %ecx,%ecx
 L5:
-	movslq %eax,%rcx
-	cmpq ___iotab(,%rcx,8),%r12
+	movslq %ecx,%rax
+	cmpq ___iotab(,%rax,8),%r12
 	jz L8
 L10:
-	incl %eax
-	cmpl $20,%eax
+	incl %ecx
+	cmpl $20,%ecx
 	jl L5
 	jge L7
 L8:
-	movq $0,___iotab(,%rcx,8)
+	movq $0,___iotab(,%rax,8)
 L7:
-	cmpl $20,%eax
+	cmpl $20,%ecx
 	jge L12
 L14:
 	movq %r12,%rdi

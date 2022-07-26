@@ -158,9 +158,9 @@ _union_cc:
 L14:
 L15:
 	movl %edi,%eax
-	movl %esi,%ecx
-	xorl $1,%ecx
-	cmpl %ecx,%eax
+	movl %esi,%edx
+	xorl $1,%edx
+	cmpl %edx,%eax
 	jz L62
 L19:
 	cmpl %esi,%eax
@@ -181,32 +181,32 @@ L62:
 	movl $12,%eax
 	ret
 L35:
-	xorl %ecx,%ecx
+	xorl %r9d,%r9d
 L42:
-	movslq %ecx,%r9
-	movsbl _ccops(,%r9,4),%r8d
-	cmpl %r8d,%eax
+	movslq %r9d,%r8
+	movsbl _ccops(,%r8,4),%edi
+	cmpl %edi,%eax
 	jnz L48
 L52:
-	movsbl _ccops+1(,%r9,4),%edi
-	cmpl %edi,%esi
+	movsbl _ccops+1(,%r8,4),%edx
+	cmpl %edx,%esi
 	jz L45
 L48:
-	cmpl %r8d,%esi
+	cmpl %edi,%esi
 	jnz L47
 L56:
-	movsbl _ccops+1(,%r9,4),%edi
-	cmpl %edi,%eax
+	movsbl _ccops+1(,%r8,4),%edx
+	cmpl %edx,%eax
 	jz L45
 L47:
-	incl %ecx
-	cmpl $30,%ecx
+	incl %r9d
+	cmpl $30,%r9d
 	jl L42
 	jge L44
 L45:
-	movsbl _ccops+2(,%r9,4),%edx
+	movsbl _ccops+2(,%r8,4),%ecx
 L44:
-	movl %edx,%eax
+	movl %ecx,%eax
 	ret
 L25:
 	movl %esi,%eax
@@ -218,9 +218,9 @@ _intersect_cc:
 L64:
 L65:
 	movl %edi,%eax
-	movl %esi,%ecx
-	xorl $1,%ecx
-	cmpl %ecx,%eax
+	movl %esi,%edx
+	xorl $1,%edx
+	cmpl %edx,%eax
 	jz L112
 L69:
 	cmpl %esi,%eax
@@ -241,32 +241,32 @@ L112:
 	movl $13,%eax
 	ret
 L85:
-	xorl %ecx,%ecx
+	xorl %r9d,%r9d
 L92:
-	movslq %ecx,%r9
-	movsbl _ccops(,%r9,4),%r8d
-	cmpl %r8d,%eax
+	movslq %r9d,%r8
+	movsbl _ccops(,%r8,4),%edi
+	cmpl %edi,%eax
 	jnz L98
 L102:
-	movsbl _ccops+1(,%r9,4),%edi
-	cmpl %edi,%esi
+	movsbl _ccops+1(,%r8,4),%edx
+	cmpl %edx,%esi
 	jz L95
 L98:
-	cmpl %r8d,%esi
+	cmpl %edi,%esi
 	jnz L97
 L106:
-	movsbl _ccops+1(,%r9,4),%edi
-	cmpl %edi,%eax
+	movsbl _ccops+1(,%r8,4),%edx
+	cmpl %edx,%eax
 	jz L95
 L97:
-	incl %ecx
-	cmpl $30,%ecx
+	incl %r9d
+	cmpl $30,%r9d
 	jl L92
 	jge L94
 L95:
-	movsbl _ccops+3(,%r9,4),%edx
+	movsbl _ccops+3(,%r8,4),%ecx
 L94:
-	movl %edx,%eax
+	movl %ecx,%eax
 	ret
 L75:
 	movl %esi,%eax
@@ -475,7 +475,7 @@ _insn_text:
 _new_insn:
 L273:
 L274:
-	movl %edi,%r8d
+	movl %edi,%r9d
 	movq _func_arena+8(%rip),%rdx
 	movq %rdx,%rcx
 	andl $7,%ecx
@@ -486,88 +486,88 @@ L279:
 	addq %rax,%rdx
 	movq %rdx,_func_arena+8(%rip)
 L281:
-	movq _func_arena+8(%rip),%rdx
-	cmpl $8388609,%r8d
+	movq _func_arena+8(%rip),%r8
+	cmpl $8388609,%r9d
 	jz L285
 L303:
-	cmpl $58720258,%r8d
+	cmpl $58720258,%r9d
 	jz L293
 L304:
-	movl %r8d,%r9d
-	andl $805306368,%r9d
-	sarl $28,%r9d
-	leal (%r9,%rsi),%ecx
+	movl %r9d,%edx
+	andl $805306368,%edx
+	sarl $28,%edx
+	leal (%rdx,%rsi),%ecx
 	movslq %ecx,%rcx
 	shlq $5,%rcx
-	leaq 8(%rdx,%rcx),%rax
+	leaq 8(%r8,%rcx),%rax
 	movq %rax,_func_arena+8(%rip)
 	addq $8,%rcx
-	movq %rdx,%rdi
+	movq %r8,%rdi
 	xorl %eax,%eax
 	rep 
 	stosb 
 	andl $63,%esi
 	shll $5,%esi
-	movl 4(%rdx),%eax
+	movl 4(%r8),%eax
 	andl $-2017,%eax
 	orl %esi,%eax
-	movl %eax,4(%rdx)
+	movl %eax,4(%r8)
 L295:
-	movl %r9d,%eax
-	decl %r9d
+	movl %edx,%eax
+	decl %edx
 	testl %eax,%eax
 	jz L283
 L296:
-	movl %r9d,%ecx
+	movl %edx,%ecx
 	movl $5,%eax
 	imulb %cl
 	leal 8(%rax),%ecx
-	movl %r8d,%eax
+	movl %r9d,%eax
 	sarl %cl,%eax
 	andl $31,%eax
 	movl %eax,%ecx
 	movl $1,%esi
 	shll %cl,%esi
-	movslq %r9d,%rcx
+	movslq %edx,%rcx
 	shlq $5,%rcx
 	andl $131071,%esi
 	shll $5,%esi
-	movl 8(%rdx,%rcx),%eax
+	movl 8(%r8,%rcx),%eax
 	andl $-4194273,%eax
 	orl %esi,%eax
-	movl %eax,8(%rdx,%rcx)
+	movl %eax,8(%r8,%rcx)
 	jmp L295
 L293:
-	leaq 24(%rdx),%rax
+	leaq 24(%r8),%rax
 	movq %rax,_func_arena+8(%rip)
 	xorl %eax,%eax
-	movq %rax,(%rdx)
-	movq %rax,8(%rdx)
-	movq %rax,16(%rdx)
+	movq %rax,(%r8)
+	movq %rax,8(%r8)
+	movq %rax,16(%r8)
 	movq _path(%rip),%rax
-	movq %rax,8(%rdx)
+	movq %rax,8(%r8)
 	movl _line_no(%rip),%eax
-	movl %eax,16(%rdx)
+	movl %eax,16(%r8)
 	jmp L283
 L285:
-	leaq 64(%rdx),%rax
+	leaq 64(%r8),%rax
 	movq %rax,_func_arena+8(%rip)
 	movl $64,%ecx
-	movq %rdx,%rdi
+	movq %r8,%rdi
 	xorl %eax,%eax
 	rep 
 	stosb 
-	movl $0,16(%rdx)
-	movl $0,20(%rdx)
-	movq $0,24(%rdx)
-	movq $_func_arena,32(%rdx)
-	movl $0,40(%rdx)
-	movl $0,44(%rdx)
-	movq $0,48(%rdx)
-	movq $_func_arena,56(%rdx)
+	movl $0,16(%r8)
+	movl $0,20(%r8)
+	movq $0,24(%r8)
+	movq $_func_arena,32(%r8)
+	movl $0,40(%r8)
+	movl $0,44(%r8)
+	movq $0,48(%r8)
+	movq $_func_arena,56(%r8)
 L283:
-	movl %r8d,(%rdx)
-	movq %rdx,%rax
+	movl %r9d,(%r8)
+	movq %r8,%rax
 L275:
 	ret 
 

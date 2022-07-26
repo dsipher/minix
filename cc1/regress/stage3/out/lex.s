@@ -422,27 +422,27 @@ L127:
 	pushq %r12
 	pushq %r13
 L128:
-	xorl %ebx,%ebx
+	xorl %r13d,%r13d
 L131:
-	movslq %ebx,%r13
-	shlq $4,%r13
-	movq _keywords(%r13),%r12
-	movq %r12,%rdi
+	movslq %r13d,%r12
+	shlq $4,%r12
+	movq _keywords(%r12),%rbx
+	movq %rbx,%rdi
 	call _strlen
 	xorl %edx,%edx
 	movq %rax,%rsi
-	movq %r12,%rdi
+	movq %rbx,%rdi
 	call _string
 	movq %rax,%rdi
-	movl _keywords+8(%r13),%eax
+	movl _keywords+8(%r12),%eax
 	movl %eax,20(%rdi)
 	testl $262144,%eax
 	jz L136
 L134:
 	call _seed_builtin
 L136:
-	incl %ebx
-	cmpl $73,%ebx
+	incl %r13d
+	cmpl $73,%r13d
 	jl L131
 L129:
 	popq %r13
@@ -470,19 +470,19 @@ L153:
 	xorl %edx,%edx
 	jmp L154
 L141:
-	xorl %eax,%eax
+	xorl %ecx,%ecx
 L144:
-	movslq %eax,%rcx
-	shlq $4,%rcx
-	cmpl _keywords+8(%rcx),%esi
+	movslq %ecx,%rax
+	shlq $4,%rax
+	cmpl _keywords+8(%rax),%esi
 	jz L147
 L149:
-	incl %eax
-	cmpl $73,%eax
+	incl %ecx
+	cmpl $73,%ecx
 	jl L144
 	jge L146
 L147:
-	movq _keywords(%rcx),%r8
+	movq _keywords(%rax),%r8
 L146:
 	movl $1,%eax
 L152:

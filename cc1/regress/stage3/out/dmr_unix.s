@@ -56,39 +56,39 @@ L43:
 	incl _verbose(%rip)
 	jmp L4
 L11:
-	xorl %eax,%eax
+	xorl %ecx,%ecx
 L13:
-	movslq %eax,%rcx
-	shlq $4,%rcx
-	cmpb $1,_includelist+1(%rcx)
+	movslq %ecx,%rax
+	shlq $4,%rax
+	cmpb $1,_includelist+1(%rax)
 	jnz L18
 L16:
-	movb $1,_includelist(%rcx)
+	movb $1,_includelist(%rax)
 L18:
-	incl %eax
-	cmpl $32,%eax
+	incl %ecx
+	cmpl $32,%ecx
 	jl L13
 	jge L4
 L38:
 	incl _Mflag(%rip)
 	jmp L4
 L20:
-	movl $30,%eax
+	movl $30,%edx
 L22:
-	movslq %eax,%rdx
-	shlq $4,%rdx
-	cmpq $0,_includelist+8(%rdx)
+	movslq %edx,%rcx
+	shlq $4,%rcx
+	cmpq $0,_includelist+8(%rcx)
 	jz L25
 L27:
-	decl %eax
+	decl %edx
 	jns L22
 	js L24
 L25:
-	movb $1,_includelist+1(%rdx)
-	movq _optarg(%rip),%rcx
-	movq %rcx,_includelist+8(%rdx)
+	movb $1,_includelist+1(%rcx)
+	movq _optarg(%rip),%rax
+	movq %rax,_includelist+8(%rcx)
 L24:
-	cmpl $0,%eax
+	cmpl $0,%edx
 	jge L4
 L29:
 	pushq $L32

@@ -105,36 +105,36 @@ L3:
 _nthday:
 L17:
 L18:
-	movsbl (%rdi),%ecx
+	movsbl (%rdi),%edx
 	movsbl 1(%rdi),%eax
-	testl %ecx,%ecx
+	testl %edx,%edx
 	jz L19
 L22:
-	movl _tm+12(%rip),%edx
-	subl _tm+24(%rip),%edx
-	addl %edx,%eax
-	cmpl $0,%ecx
+	movl _tm+12(%rip),%ecx
+	subl _tm+24(%rip),%ecx
+	addl %ecx,%eax
+	cmpl $0,%edx
 	jle L33
 L27:
 	cmpl $0,%eax
 	jg L28
 L30:
 	addl $7,%eax
-	decl %ecx
-	cmpl $0,%ecx
+	decl %edx
+	cmpl $0,%edx
 	jg L30
 	ret
 L28:
 	subl $7,%eax
 	jmp L27
 L33:
-	movslq _tm+16(%rip),%rdx
-	movsbl _dpm(%rdx),%edx
-	cmpl %edx,%eax
+	movslq _tm+16(%rip),%rcx
+	movsbl _dpm(%rcx),%ecx
+	cmpl %ecx,%eax
 	jl L34
 L36:
 	subl $7,%eax
-	incl %ecx
+	incl %edx
 	js L36
 L19:
 	ret 
@@ -449,7 +449,7 @@ L214:
 	movq %rsi,%rax
 	cqto 
 	idivq %rcx
-	movl %eax,%r13d
+	movl %eax,%ebx
 	movl $86400,%ecx
 	movq %rsi,%rax
 	cqto 
@@ -476,31 +476,31 @@ L214:
 	idivq %rcx
 	movl %edx,_tm(%rip)
 	movl $7,%ecx
-	leal 4(%r13),%eax
+	leal 4(%rbx),%eax
 	xorl %edx,%edx
 	divl %ecx
-	movl %edx,%r12d
-	movl $1970,%ebx
+	movl %edx,%r13d
+	movl $1970,%r12d
 L219:
-	movl %ebx,%edi
+	movl %r12d,%edi
 	call _isleap
 	testl %eax,%eax
 	movl $365,%eax
 	movl $366,%ecx
 	cmovzl %eax,%ecx
-	cmpl %ecx,%r13d
+	cmpl %ecx,%ebx
 	jb L226
 L228:
-	incl %ebx
-	subl %ecx,%r13d
+	incl %r12d
+	subl %ecx,%ebx
 	jmp L219
 L226:
-	movl %ebx,%eax
+	movl %r12d,%eax
 	subl $1900,%eax
 	movl %eax,_tm+20(%rip)
-	movl %r13d,_tm+28(%rip)
-	movl %r12d,_tm+24(%rip)
-	movl %ebx,%edi
+	movl %ebx,_tm+28(%rip)
+	movl %r13d,_tm+24(%rip)
+	movl %r12d,%edi
 	call _isleap
 	testl %eax,%eax
 	jz L231
@@ -516,17 +516,17 @@ L233:
 	jae L236
 L237:
 	movsbl (%rax),%ecx
-	cmpl %ecx,%r13d
+	cmpl %ecx,%ebx
 	jb L236
 L234:
-	subl %ecx,%r13d
+	subl %ecx,%ebx
 	incq %rax
 	jmp L233
 L236:
 	subq $_dpm,%rax
 	movl %eax,_tm+16(%rip)
-	incl %r13d
-	movl %r13d,_tm+12(%rip)
+	incl %ebx
+	movl %ebx,_tm+12(%rip)
 	movl $_tm,%eax
 L215:
 	popq %r13

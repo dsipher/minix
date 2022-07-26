@@ -9,10 +9,6 @@
 #ifndef PEEP_H
 #define PEEP_H
 
-/* LIR peephole substitutions */
-
-void opt_lir_peep(void);
-
 /* early MCH peephole substitutions */
 
 void opt_mch_early(void);

@@ -113,10 +113,10 @@ L60:
 L61:
 	movl %edi,%r15d
 	movsd (%rsi),%xmm8
-	movl %edx,%r12d
+	movl %edx,%ebx
 	movq %rcx,-24(%rbp)
 	movq %r8,%r14
-	movq %r14,%rbx
+	movq %r14,%r13
 	ucomisd L128(%rip),%xmm8
 	jz L66
 L65:
@@ -137,8 +137,8 @@ L68:
 	subsd L130(%rip),%xmm0
 	movsd %xmm0,-16(%rbp)
 L70:
-	cvttsd2sil -16(%rbp),%r13d
-	movl %r13d,%edi
+	cvttsd2sil -16(%rbp),%r12d
+	movl %r12d,%edi
 	negl %edi
 	call ___pow10
 	mulsd %xmm8,%xmm0
@@ -146,27 +146,27 @@ L70:
 	ucomisd L127(%rip),%xmm0
 	jb L73
 L71:
-	incl %r13d
+	incl %r12d
 	movsd L129(%rip),%xmm1
 	mulsd %xmm0,%xmm1
 L73:
 	movq -24(%rbp),%rax
-	movl %r13d,(%rax)
+	movl %r12d,(%rax)
 	cmpl $101,%r15d
 	jz L74
 L77:
 	cmpl $69,%r15d
 	jnz L75
 L74:
-	incl %r12d
+	incl %ebx
 	jmp L76
 L75:
 	cmpl $102,%r15d
 	jnz L76
 L81:
-	leal 1(%r13,%r12),%r12d
+	leal 1(%r12,%rbx),%ebx
 L76:
-	cmpl $0,%r12d
+	cmpl $0,%ebx
 	jg L85
 	jl L66
 L90:
@@ -179,13 +179,13 @@ L66:
 	movb $0,1(%r14)
 	jmp L62
 L85:
-	cmpl $15,%r12d
+	cmpl $15,%ebx
 	movl $15,%eax
-	cmovgl %eax,%r12d
+	cmovgl %eax,%ebx
 L100:
-	movslq %r12d,%rax
+	movslq %ebx,%rax
 	addq %r14,%rax
-	cmpq %rax,%rbx
+	cmpq %rax,%r13
 	jae L103
 L104:
 	ucomisd L128(%rip),%xmm1
@@ -193,8 +193,8 @@ L104:
 L101:
 	cvttsd2sil %xmm1,%ecx
 	leal 48(%rcx),%eax
-	movb %al,(%rbx)
-	incq %rbx
+	movb %al,(%r13)
+	incq %r13
 	cvtsi2sdl %ecx,%xmm0
 	subsd %xmm0,%xmm1
 	movsd L127(%rip),%xmm0
@@ -202,43 +202,43 @@ L101:
 	movsd %xmm0,%xmm1
 	jmp L100
 L103:
-	movb $0,(%rbx)
+	movb $0,(%r13)
 	ucomisd L126(%rip),%xmm1
 	ja L119
 L111:
-	decq %rbx
-	cmpq %rbx,%r14
+	decq %r13
+	cmpq %r13,%r14
 	jz L62
 L114:
-	cmpb $48,(%rbx)
+	cmpb $48,(%r13)
 	jnz L62
 L112:
-	movb $0,(%rbx)
+	movb $0,(%r13)
 	jmp L111
 L119:
-	movq %rbx,%rax
-	decq %rbx
+	movq %r13,%rax
+	decq %r13
 	cmpq %rax,%r14
 	jz L121
 L120:
-	movzbl (%rbx),%eax
+	movzbl (%r13),%eax
 	incb %al
-	movb %al,(%rbx)
+	movb %al,(%r13)
 	cmpb $57,%al
 	jle L62
 L124:
-	movb $0,(%rbx)
+	movb $0,(%r13)
 	jmp L119
 L121:
-	incq %rbx
+	incq %r13
 L94:
 	movq -24(%rbp),%rax
 	movl (%rax),%ecx
 	incl %ecx
 	movq -24(%rbp),%rax
 	movl %ecx,(%rax)
-	movb $49,(%rbx)
-	movb $0,1(%rbx)
+	movb $49,(%r13)
+	movb $0,1(%r13)
 L62:
 	popq %r15
 	popq %r14

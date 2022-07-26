@@ -19,7 +19,8 @@ L2:
 	xorl %ebx,%ebx
 L4:
 	movsbl (%r13),%r8d
-	incq %r13
+	leaq 1(%r13),%r9
+	movq %r9,%r13
 	movl %r8d,%r11d
 	movslq %r8d,%rdx
 	testb $8,___ctype+1(%rdx)
@@ -34,9 +35,9 @@ L131:
 L10:
 	movl $1,-8(%rbp)
 L11:
-	movsbl (%r13),%edx
-	leaq 1(%r13),%r8
-	movq %r8,%r13
+	movsbl (%r9),%edx
+	incq %r9
+	movq %r9,%r13
 	movl %edx,%r11d
 L8:
 	testl %r14d,%r14d
@@ -82,7 +83,7 @@ L16:
 	movl %r11d,%edx
 	subl $48,%edx
 	cmpl $10,%edx
-	jae L26
+	jae L28
 L25:
 	movl $10,%r14d
 L32:
@@ -124,6 +125,7 @@ L72:
 	movq $-1,%rax
 	xorl %edx,%edx
 	divq %rdi
+	movq %rdx,%rax
 	jmp L75
 L73:
 	movslq %r14d,%rdi
@@ -134,80 +136,77 @@ L73:
 	movq $9223372036854775807,%rax
 	cqto 
 	idivq %rdi
+	movq %rdx,%rax
 L75:
-	movl %r11d,%eax
-	subl $48,%eax
-	cmpl $10,%eax
+	movl %r11d,%edx
+	subl $48,%edx
+	cmpl $10,%edx
 	jae L84
 L82:
 	cmpl %r10d,%r11d
-	jge L84
-L83:
-	movl %eax,%r11d
-	jmp L81
+	jl L81
 L84:
-	movl %r11d,%eax
-	subl $65,%eax
-	cmpl $26,%eax
+	movl %r11d,%edx
+	subl $65,%edx
+	cmpl $26,%edx
 	jae L91
 L89:
 	cmpl %r9d,%r11d
 	jge L91
 L90:
-	subl $55,%r11d
+	movl %r11d,%edx
+	subl $55,%edx
 	jmp L81
 L91:
-	movl %r11d,%eax
-	subl $97,%eax
-	cmpl $26,%eax
+	movl %r11d,%edx
+	subl $97,%edx
+	cmpl $26,%edx
 	jae L98
 L96:
 	cmpl %r8d,%r11d
 	jge L98
 L97:
-	subl $87,%r11d
+	movl %r11d,%edx
+	subl $87,%edx
 L81:
 	cmpq %r15,%rbx
 	jb L105
 	ja L110
 L108:
-	movslq %r11d,%rax
-	cmpq %rax,%rdx
+	movslq %edx,%rdi
+	cmpq %rdi,%rax
 	jae L105
 L110:
-	incl %r12d
+	leal 1(%r12),%edx
+	movl %edx,%r12d
 	jmp L103
 L105:
-	movslq %r14d,%rax
-	movq %rbx,%rdi
-	imulq %rax,%rdi
-	movslq %r11d,%rax
-	addq %rax,%rdi
-	movq %rdi,%rbx
+	movslq %r14d,%rdi
+	movq %rbx,%r11
+	imulq %rdi,%r11
+	movslq %edx,%rdx
+	addq %rdx,%r11
+	movq %r11,%rbx
 L103:
-	movsbl (%r13),%eax
-	incq %r13
-	movl %eax,%r11d
+	movsbl (%r13),%edx
+	leaq 1(%r13),%rdi
+	movq %rdi,%r13
+	movl %edx,%r11d
 	jmp L75
 L98:
-	decq %r13
+	leaq -1(%r13),%rdi
 	jmp L28
 L66:
 	testl %eax,%eax
-	jz L70
+	jz L28
 L68:
 	movq %r13,%rdi
 	subq $2,%rdi
-L70:
-	movq %rdi,%r13
-	jmp L28
-L26:
-	movq %rdi,%r13
 L28:
 	testq %rsi,%rsi
 	jz L114
 L112:
-	movq %r13,(%rsi)
+	movq %rdi,(%rsi)
 L114:
 	testl %r12d,%r12d
 	jnz L115

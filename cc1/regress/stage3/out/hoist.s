@@ -75,29 +75,29 @@ L20:
 	testl $2,%eax
 	jnz L21
 L25:
-	movl (%rbx),%ecx
-	cmpl $-1275068398,%ecx
+	movl (%rbx),%eax
+	cmpl $-1275068398,%eax
 	jl L76
 L78:
-	cmpl $-1275068393,%ecx
+	cmpl $-1275068393,%eax
 	jg L76
 L75:
-	addl $1275068398,%ecx
-	movzwl L84(,%rcx,2),%eax
+	addl $1275068398,%eax
+	movzwl L84(,%rax,2),%eax
 	addl $_eval,%eax
 	jmp *%rax
 L76:
-	xorl %eax,%eax
+	xorl %ecx,%ecx
 L79:
-	cmpl L82(,%rax,4),%ecx
+	cmpl L82(,%rcx,4),%eax
 	jz L80
 L81:
-	incl %eax
-	cmpl $12,%eax
+	incl %ecx
+	cmpl $12,%ecx
 	jb L79
 	jae L21
 L80:
-	movzwl L83(,%rax,2),%eax
+	movzwl L83(,%rcx,2),%eax
 	addl $_eval,%eax
 	jmp *%rax
 L50:

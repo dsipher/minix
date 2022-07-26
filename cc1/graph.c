@@ -276,6 +276,18 @@ static int merge0(int r1, int r2)
     if (MACHINE_REG(n2->reg))           /* if machine reg is present, */
         SWAP(struct node *, n1, n2);    /* make sure we merge into it */
 
+    /* if merging two non-machine nodes, the nodes may have different types
+       (though they will be in the same cast class, of course). in that case,
+       we must merge into the larger of the two, since no appearance of a reg
+       in the IR can have a size larger than its associated symbol's type. */
+
+    if (!MACHINE_REG(n1->reg) && !MACHINE_REG(n2->reg)
+      && (size_of(REG_TO_SYMBOL(n2->reg)->type, 0) >
+          size_of(REG_TO_SYMBOL(n1->reg)->type, 0)))
+    {
+        SWAP(struct node *, n1, n2);
+    }
+
     /* now, populate our dummy node with the union of
        edges from the proposed merged nodes, and count
        how many significant neighbors it would have. */

@@ -322,60 +322,60 @@ L128:
 	pushq %r12
 	pushq %r13
 L129:
-	movq %rdi,%rbx
+	movq %rdi,%r12
 	movl _u_card(%rip),%edx
 	addl $63,%edx
 	sarl $6,%edx
-	cmpl 480(%rbx),%edx
+	cmpl 480(%r12),%edx
 	jg L138
 L137:
-	movl %edx,484(%rbx)
+	movl %edx,484(%r12)
 	jmp L139
 L138:
-	movl 484(%rbx),%esi
+	movl 484(%r12),%esi
 	subl %esi,%edx
 	movl $8,%ecx
-	leaq 480(%rbx),%rdi
+	leaq 480(%r12),%rdi
 	call _vector_insert
 L139:
-	movslq 484(%rbx),%rcx
+	movslq 484(%r12),%rcx
 	shlq $3,%rcx
-	movq 488(%rbx),%rdi
+	movq 488(%r12),%rdi
 	xorl %eax,%eax
 	rep 
 	stosb 
-	xorl %r12d,%r12d
+	xorl %ebx,%ebx
 L140:
-	cmpl _u+4(%rip),%r12d
+	cmpl _u+4(%rip),%ebx
 	jge L130
 L141:
 	movq _u+8(%rip),%rax
-	movslq %r12d,%r13
+	movslq %ebx,%r13
 	shlq $4,%r13
 	movl 8(%rax,%r13),%esi
-	leaq 432(%rbx),%rdi
+	leaq 432(%r12),%rdi
 	call _contains_reg
 	testl %eax,%eax
 	jnz L148
 L147:
 	movq _u+8(%rip),%rax
 	movl 12(%r13,%rax),%esi
-	leaq 432(%rbx),%rdi
+	leaq 432(%r12),%rdi
 	call _contains_reg
 	testl %eax,%eax
 	jz L146
 L148:
-	movl %r12d,%ecx
+	movl %ebx,%ecx
 	andl $63,%ecx
 	movl $1,%edx
 	shlq %cl,%rdx
-	movq 488(%rbx),%rcx
-	movl %r12d,%eax
+	movq 488(%r12),%rcx
+	movl %ebx,%eax
 	sarl $6,%eax
 	movslq %eax,%rax
 	orq %rdx,(%rcx,%rax,8)
 L146:
-	incl %r12d
+	incl %ebx
 	jmp L140
 L130:
 	popq %r13

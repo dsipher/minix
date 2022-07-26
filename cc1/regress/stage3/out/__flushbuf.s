@@ -44,13 +44,13 @@ L12:
 	pushq %r12
 	pushq %r13
 L13:
-	movl %edi,%ebx
-	movq %rsi,%r12
+	movl %edi,%r12d
+	movq %rsi,%rbx
 	movq $___stdio_cleanup,___exit_cleanup(%rip)
-	cmpl $0,4(%r12)
+	cmpl $0,4(%rbx)
 	jl L15
 L17:
-	movl 8(%r12),%eax
+	movl 8(%rbx),%eax
 	testl $2,%eax
 	jz L105
 L21:
@@ -62,14 +62,14 @@ L26:
 L28:
 	andl $-129,%eax
 	orl $256,%eax
-	movl %eax,8(%r12)
+	movl %eax,8(%rbx)
 	testl $4,%eax
 	jnz L33
 L31:
-	cmpq $0,16(%r12)
+	cmpq $0,16(%rbx)
 	jnz L33
 L34:
-	cmpq $___stdout,%r12
+	cmpq $___stdout,%rbx
 	jnz L42
 L40:
 	movl ___stdout+4(%rip),%edi
@@ -79,128 +79,128 @@ L40:
 L41:
 	movl $1024,%edi
 	call _malloc
-	movq %rax,16(%r12)
-	movl 8(%r12),%ecx
+	movq %rax,16(%rbx)
+	movl 8(%rbx),%ecx
 	testq %rax,%rax
 	jnz L45
 L44:
 	orl $4,%ecx
-	movl %ecx,8(%r12)
+	movl %ecx,8(%rbx)
 	jmp L39
 L45:
 	orl $72,%ecx
-	movl %ecx,8(%r12)
-	movl $1024,12(%r12)
+	movl %ecx,8(%rbx)
+	movl $1024,12(%rbx)
 	jmp L104
 L42:
 	movl $1024,%edi
 	call _malloc
-	movq %rax,16(%r12)
-	movl 8(%r12),%ecx
+	movq %rax,16(%rbx)
+	movl 8(%rbx),%ecx
 	testq %rax,%rax
 	jnz L48
 L47:
 	orl $4,%ecx
-	movl %ecx,8(%r12)
+	movl %ecx,8(%rbx)
 	jmp L39
 L48:
 	orl $8,%ecx
-	movl %ecx,8(%r12)
-	movl $1024,12(%r12)
+	movl %ecx,8(%rbx)
+	movl $1024,12(%rbx)
 	testl $64,%ecx
 	jz L50
 L104:
-	movl $-1,(%r12)
+	movl $-1,(%rbx)
 	jmp L39
 L50:
-	movl $1023,(%r12)
+	movl $1023,(%rbx)
 L39:
-	movq 16(%r12),%rax
-	movq %rax,24(%r12)
+	movq 16(%rbx),%rax
+	movq %rax,24(%rbx)
 L33:
-	movl 8(%r12),%edx
+	movl 8(%rbx),%edx
 	testl $4,%edx
 	jz L54
 L53:
-	movb %bl,-1(%rbp)
-	movl $0,(%r12)
-	testl $512,8(%r12)
+	movb %r12b,-1(%rbp)
+	movl $0,(%rbx)
+	testl $512,8(%rbx)
 	jz L58
 L56:
 	movl $2,%edx
 	xorl %esi,%esi
-	movl 4(%r12),%edi
+	movl 4(%rbx),%edi
 	call _lseek
 	cmpq $-1,%rax
 	jz L59
 L58:
 	movl $1,%edx
 	leaq -1(%rbp),%rsi
-	movl 4(%r12),%edi
+	movl 4(%rbx),%edi
 	call _write
 	cmpq $1,%rax
 	jnz L63
 L65:
-	movzbl %bl,%eax
+	movzbl %r12b,%eax
 	jmp L14
 L63:
-	orl $32,8(%r12)
+	orl $32,8(%rbx)
 	jmp L105
 L59:
-	orl $32,8(%r12)
+	orl $32,8(%rbx)
 	jmp L105
 L54:
 	testl $64,%edx
-	movq 24(%r12),%r13
+	movq 24(%rbx),%r13
 	jz L69
 L68:
 	leaq 1(%r13),%rax
-	movq %rax,24(%r12)
-	movb %bl,(%r13)
-	cmpl $10,%ebx
+	movq %rax,24(%rbx)
+	movb %r12b,(%r13)
+	cmpl $10,%r12d
 	jz L75
 L74:
-	movl (%r12),%ecx
-	movl 12(%r12),%eax
+	movl (%rbx),%ecx
+	movl 12(%rbx),%eax
 	negl %eax
 	cmpl %eax,%ecx
 	jnz L55
 L75:
-	movl (%r12),%r13d
+	movl (%rbx),%r13d
 	negl %r13d
-	movq 16(%r12),%rax
-	movq %rax,24(%r12)
-	movl $0,(%r12)
-	testl $512,8(%r12)
+	movq 16(%rbx),%rax
+	movq %rax,24(%rbx)
+	movl $0,(%rbx)
+	testl $512,8(%rbx)
 	jz L80
 L78:
 	movl $2,%edx
 	xorl %esi,%esi
-	movl 4(%r12),%edi
+	movl 4(%rbx),%edi
 	call _lseek
 	cmpq $-1,%rax
 	jz L81
 L80:
-	movl 4(%r12),%edi
+	movl 4(%rbx),%edi
 	movl %r13d,%edx
-	movq 16(%r12),%rsi
+	movq 16(%rbx),%rsi
 	call _do_write
 	testl %eax,%eax
 	jnz L55
 L85:
-	orl $32,8(%r12)
+	orl $32,8(%rbx)
 	jmp L105
 L81:
-	orl $32,8(%r12)
+	orl $32,8(%rbx)
 	jmp L105
 L69:
-	movq 16(%r12),%rcx
+	movq 16(%rbx),%rcx
 	subq %rcx,%r13
-	movl 12(%r12),%eax
+	movl 12(%rbx),%eax
 	decl %eax
-	movl %eax,(%r12)
+	movl %eax,(%rbx)
 	incq %rcx
-	movq %rcx,24(%r12)
+	movq %rcx,24(%rbx)
 	cmpl $0,%r13d
 	jle L91
 L89:
@@ -209,35 +209,35 @@ L89:
 L92:
 	movl $2,%edx
 	xorl %esi,%esi
-	movl 4(%r12),%edi
+	movl 4(%rbx),%edi
 	call _lseek
 	cmpq $-1,%rax
 	jz L95
 L94:
-	movl 4(%r12),%edi
+	movl 4(%rbx),%edi
 	movl %r13d,%edx
-	movq 16(%r12),%rsi
+	movq 16(%rbx),%rsi
 	call _do_write
 	testl %eax,%eax
 	jz L99
 L91:
-	movq 16(%r12),%rax
-	movb %bl,(%rax)
+	movq 16(%rbx),%rax
+	movb %r12b,(%rax)
 L55:
-	movzbl %bl,%eax
+	movzbl %r12b,%eax
 	jmp L14
 L99:
-	movq 16(%r12),%rax
-	movb %bl,(%rax)
-	orl $32,8(%r12)
+	movq 16(%rbx),%rax
+	movb %r12b,(%rax)
+	orl $32,8(%rbx)
 	jmp L105
 L95:
-	orl $32,8(%r12)
+	orl $32,8(%rbx)
 L105:
 	movl $-1,%eax
 	jmp L14
 L15:
-	movzbl %bl,%eax
+	movzbl %r12b,%eax
 L14:
 	popq %r13
 	popq %r12

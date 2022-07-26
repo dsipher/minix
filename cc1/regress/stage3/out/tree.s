@@ -1736,15 +1736,15 @@ L888:
 	pushq %rbx
 L889:
 	movq %rdi,%rbx
-	movl (%rbx),%r8d
-	testl $2147483648,%r8d
+	movl (%rbx),%eax
+	testl $2147483648,%eax
 	jnz L948
 L902:
-	testl $1073741824,%r8d
+	testl $1073741824,%eax
 	jnz L948
 L898:
-	movq 16(%rbx),%rax
-	movq 8(%rax),%rdx
+	movq 16(%rbx),%rcx
+	movq 8(%rcx),%rdx
 	movq (%rdx),%rdi
 	testq $66558,%rdi
 	jz L948
@@ -1754,14 +1754,14 @@ L894:
 	testq $66558,(%rsi)
 	jz L948
 L893:
-	cmpl $134217740,%r8d
+	cmpl $134217740,%eax
 	jl L948
 L951:
-	cmpl $134217744,%r8d
+	cmpl $134217744,%eax
 	jg L948
 L949:
-	addl $-134217740,%r8d
-	movzwl L952(,%r8,2),%eax
+	addl $-134217740,%eax
+	movzwl L952(,%rax,2),%eax
 	addl $_asgcast0,%eax
 	jmp *%rax
 L920:

@@ -8,27 +8,27 @@ L1:
 L2:
 	movl %edi,%r13d
 	leal 5(%r13),%ecx
-	movl $1,%ebx
-	shlq %cl,%rbx
+	movl $1,%r12d
+	shlq %cl,%r12
 	xorl %edi,%edi
 	call _sbrk
 	leaq 4095(%rax),%rdi
 	shrq $12,%rdi
 	shll $12,%edi
 	subl %eax,%edi
-	cmpq $4096,%rbx
+	cmpq $4096,%r12
 	jae L5
 L4:
 	movl $4096,%eax
 	xorl %edx,%edx
-	divq %rbx
-	movl %eax,%r12d
+	divq %r12
+	movl %eax,%ebx
 	jmp L6
 L5:
-	movl $1,%r12d
+	movl $1,%ebx
 L6:
-	movl %ebx,%eax
-	imull %r12d,%eax
+	movl %r12d,%eax
+	imull %ebx,%eax
 	addl %eax,%edi
 	movslq %edi,%rdi
 	call _sbrk
@@ -37,18 +37,18 @@ L6:
 	cmpq $-1,%rsi
 	jz L3
 L11:
-	cmpl %eax,%r12d
+	cmpl %eax,%ebx
 	jle L14
 L12:
 	movslq %r13d,%rdx
 	movq _buckets(,%rdx,8),%rcx
 	movq %rcx,(%rsi)
 	movq %rsi,_buckets(,%rdx,8)
-	addq %rbx,%rsi
+	addq %r12,%rsi
 	incl %eax
 	jmp L11
 L14:
-	movl %r12d,%eax
+	movl %ebx,%eax
 L3:
 	popq %r13
 	popq %r12

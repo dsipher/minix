@@ -391,22 +391,22 @@ L155:
 	movslq _current_scope(%rip),%rcx
 	leaq _chains(,%rcx,8),%rax
 	movq %rax,_linkp(,%rcx,8)
-	movl _current_scope(%rip),%eax
-	movq _strun_scopes(%rip),%rdx
-	movl %eax,%ecx
+	movl _current_scope(%rip),%edx
+	movq _strun_scopes(%rip),%rax
+	movl %edx,%ecx
 	movl $1,%esi
 	shlq %cl,%rsi
 	testl %ebx,%ebx
 	jz L158
 L157:
-	orq %rdx,%rsi
+	orq %rax,%rsi
 	movq %rsi,_strun_scopes(%rip)
 	jmp L152
 L158:
 	notq %rsi
-	andq %rdx,%rsi
+	andq %rax,%rsi
 	movq %rsi,_strun_scopes(%rip)
-	movl %eax,_outer_scope(%rip)
+	movl %edx,_outer_scope(%rip)
 L152:
 	popq %rbx
 	ret 

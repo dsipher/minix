@@ -545,31 +545,31 @@ L227:
 L229:
 	movl $0,(%r14)
 L232:
-	movl _token(%rip),%ecx
-	cmpl $-1610612651,%ecx
+	movl _token(%rip),%eax
+	cmpl $-1610612651,%eax
 	jl L310
 L312:
-	cmpl $-1610612644,%ecx
+	cmpl $-1610612644,%eax
 	jg L310
 L309:
-	addl $1610612651,%ecx
-	movzwl L318(,%rcx,2),%eax
+	addl $1610612651,%eax
+	movzwl L318(,%rax,2),%eax
 	addl $_specifiers,%eax
 	jmp *%rax
 L310:
-	xorl %eax,%eax
+	xorl %ecx,%ecx
 L313:
-	cmpl L316(,%rax,4),%ecx
+	cmpl L316(,%rcx,4),%eax
 	jz L314
 L315:
-	incl %eax
-	cmpl $15,%eax
+	incl %ecx
+	cmpl $15,%ecx
 	jb L313
 	jae L236
 L314:
-	movzwl L317(,%rax,2),%eax
-	addl $_specifiers,%eax
-	jmp *%rax
+	movzwl L317(,%rcx,2),%ecx
+	addl $_specifiers,%ecx
+	jmp *%rcx
 L287:
 	testq %r12,%r12
 	jnz L236
@@ -589,11 +589,11 @@ L264:
 	testq %r12,%r12
 	jnz L272
 L268:
-	andl $130816,%ecx
-	testl %ebx,%ecx
+	andl $130816,%eax
+	testl %ebx,%eax
 	jnz L272
 L270:
-	orl %ecx,%ebx
+	orl %eax,%ebx
 	orl $1,(%r13)
 	jmp L308
 L277:

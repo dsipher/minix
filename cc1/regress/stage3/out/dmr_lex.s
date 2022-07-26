@@ -518,11 +518,11 @@ L8:
 	testb %sil,%sil
 	jz L11
 L9:
-	movl 8(%rcx),%edi
-	cmpl $32,%edi
+	movl 8(%rcx),%r8d
+	cmpl $32,%r8d
 	jl L14
 L12:
-	notl %edi
+	notl %r8d
 L14:
 	cmpb $5,%sil
 	jz L18
@@ -536,55 +536,55 @@ L79:
 	movzbq %sil,%rsi
 	shlq $6,%rsi
 	movslq (%rcx),%rdx
-	movw %di,_bigfsm(%rsi,%rdx,2)
+	movw %r8w,_bigfsm(%rsi,%rdx,2)
 	jmp L10
 L49:
-	movl $48,%r8d
+	movl $48,%edi
 L51:
-	movslq %r8d,%rsi
+	movslq %edi,%rsi
 	shlq $6,%rsi
 	movslq (%rcx),%rdx
-	movw %di,_bigfsm(%rsi,%rdx,2)
-	incl %r8d
-	cmpl $57,%r8d
+	movw %r8w,_bigfsm(%rsi,%rdx,2)
+	incl %edi
+	cmpl $57,%edi
 	jle L51
 	jg L10
 L24:
-	xorl %r8d,%r8d
+	xorl %edi,%edi
 L31:
-	incl %r8d
-	cmpl $256,%r8d
+	incl %edi
+	cmpl $256,%edi
 	jg L10
 L26:
-	cmpl $97,%r8d
+	cmpl $97,%edi
 	jl L36
 L40:
-	cmpl $122,%r8d
+	cmpl $122,%edi
 	jle L29
 L36:
-	cmpl $65,%r8d
+	cmpl $65,%edi
 	jl L32
 L44:
-	cmpl $90,%r8d
+	cmpl $90,%edi
 	jle L29
 L32:
-	cmpl $95,%r8d
+	cmpl $95,%edi
 	jnz L31
 L29:
-	movslq %r8d,%rsi
+	movslq %edi,%rsi
 	shlq $6,%rsi
 	movslq (%rcx),%rdx
-	movw %di,_bigfsm(%rsi,%rdx,2)
+	movw %r8w,_bigfsm(%rsi,%rdx,2)
 	jmp L31
 L18:
-	xorl %r8d,%r8d
+	xorl %edi,%edi
 L20:
-	movslq %r8d,%rsi
+	movslq %edi,%rsi
 	shlq $6,%rsi
 	movslq (%rcx),%rdx
-	movw %di,_bigfsm(%rsi,%rdx,2)
-	incl %r8d
-	cmpl $256,%r8d
+	movw %r8w,_bigfsm(%rsi,%rdx,2)
+	incl %edi
+	cmpl $256,%edi
 	jl L20
 L10:
 	incl %eax

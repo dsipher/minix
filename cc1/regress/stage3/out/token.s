@@ -836,18 +836,18 @@ L341:
 	cmpq $128,%rcx
 	jae L339
 L338:
-	movl _classes(,%rcx,4),%ebx
+	movl _classes(,%rcx,4),%r12d
 	jmp L340
 L339:
-	xorl %ebx,%ebx
+	xorl %r12d,%r12d
 L340:
-	cmpl $51,%ebx
+	cmpl $51,%r12d
 	jl L484
 L486:
-	cmpl $56,%ebx
+	cmpl $56,%r12d
 	jg L484
 L483:
-	leal -51(%rbx),%eax
+	leal -51(%r12),%eax
 	movzwl L493(,%rax,2),%eax
 	addl $_token_scan,%eax
 	jmp *%rax
@@ -870,12 +870,12 @@ L422:
 	incq %r13
 	jmp L421
 L349:
-	movl $1,%r12d
+	movl $1,%ebx
 L350:
 	cmpb $0,(%r13)
 	jnz L356
 L354:
-	cmpl $55,%ebx
+	cmpl $55,%r12d
 	jnz L358
 L357:
 	pushq $L360
@@ -892,31 +892,31 @@ L356:
 	cmpb (%r15),%al
 	jnz L364
 L365:
-	testl %r12d,%r12d
+	testl %ebx,%ebx
 	jz L346
 L364:
-	testl %r12d,%r12d
+	testl %ebx,%ebx
 	jnz L372
 L370:
 	cmpb $92,%al
 	jnz L372
 L371:
-	movl $1,%r12d
+	movl $1,%ebx
 	jmp L350
 L372:
-	xorl %r12d,%r12d
+	xorl %ebx,%ebx
 	jmp L350
 L484:
-	testl %ebx,%ebx
+	testl %r12d,%r12d
 	jz L480
 L488:
-	cmpl $536870952,%ebx
+	cmpl $536870952,%r12d
 	jz L375
 L489:
-	cmpl $536870956,%ebx
+	cmpl $536870956,%r12d
 	jz L434
 L490:
-	cmpl $536871425,%ebx
+	cmpl $536871425,%r12d
 	jnz L345
 L444:
 	cmpb $0,_cxx_mode(%rip)
@@ -928,7 +928,7 @@ L448:
 	cmpb $42,2(%r15)
 	jnz L446
 L445:
-	movl $536870962,%ebx
+	movl $536870962,%r12d
 	leaq 3(%r15),%r13
 	jmp L346
 L446:
@@ -937,7 +937,7 @@ L446:
 L345:
 	leaq 1(%r15),%r13
 L461:
-	movzbl %bl,%eax
+	movzbl %r12b,%eax
 	cmpl $15,%eax
 	jge L346
 L462:
@@ -950,7 +950,7 @@ L467:
 	testl %ecx,%ecx
 	jz L465
 L464:
-	movl %ecx,%ebx
+	movl %ecx,%r12d
 	incq %r13
 	jmp L461
 L465:
@@ -962,11 +962,11 @@ L474:
 	testl %eax,%eax
 	jz L346
 L471:
-	movl %eax,%ebx
+	movl %eax,%r12d
 	incq %r13
 	jmp L461
 L457:
-	movl $536870951,%ebx
+	movl $536870951,%r12d
 	leaq 2(%r15),%r13
 	jmp L346
 L434:
@@ -976,7 +976,7 @@ L438:
 	cmpb $58,1(%r15)
 	jnz L436
 L435:
-	movl $536870960,%ebx
+	movl $536870960,%r12d
 	leaq 2(%r15),%r13
 	jmp L346
 L436:
@@ -992,7 +992,7 @@ L379:
 	jnz L377
 L376:
 	leaq 3(%r15),%r13
-	movl $536870953,%ebx
+	movl $536870953,%r12d
 	jmp L346
 L377:
 	cmpb $0,_cxx_mode(%rip)
@@ -1002,7 +1002,7 @@ L387:
 	jnz L385
 L384:
 	leaq 2(%r15),%r13
-	movl $536870961,%ebx
+	movl $536870961,%r12d
 	jmp L346
 L385:
 	movsbl %al,%eax
@@ -1048,7 +1048,7 @@ L480:
 	call _error
 	addq $16,%rsp
 L346:
-	movl %ebx,%edi
+	movl %r12d,%edi
 	call _alloc
 	movq %rax,%rbx
 	movq %r13,%rdx

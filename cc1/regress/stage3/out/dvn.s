@@ -8,11 +8,11 @@ L1:
 	pushq %r14
 	pushq %r15
 L2:
-	movl _values+4(%rip),%r13d
+	movl _values+4(%rip),%r12d
 	movq %rdi,%r15
 	movl %esi,%r14d
-	movq %rdx,%rbx
-	leal 1(%r13),%eax
+	movq %rdx,%r13
+	leal 1(%r12),%eax
 	cmpl _values(%rip),%eax
 	jge L8
 L7:
@@ -21,22 +21,22 @@ L7:
 L8:
 	movl $32,%ecx
 	movl $1,%edx
-	movl %r13d,%esi
+	movl %r12d,%esi
 	movl $_values,%edi
 	call _vector_insert
 L9:
 	movq _values+8(%rip),%rax
-	movslq %r13d,%r12
-	shlq $5,%r12
-	movl %r14d,(%rax,%r12)
+	movslq %r12d,%rbx
+	shlq $5,%rbx
+	movl %r14d,(%rax,%rbx)
 	movq _values+8(%rip),%rax
-	movl %r13d,4(%r12,%rax)
+	movl %r12d,4(%rbx,%rax)
 	movq _values+8(%rip),%rcx
-	andl $131071,%ebx
-	movl 8(%r12,%rcx),%eax
+	andl $131071,%r13d
+	movl 8(%rbx,%rcx),%eax
 	andl $-131072,%eax
-	orl %ebx,%eax
-	movl %eax,8(%r12,%rcx)
+	orl %r13d,%eax
+	movl %eax,8(%rbx,%rcx)
 	cmpl $1,%r14d
 	jz L14
 L31:
@@ -56,12 +56,12 @@ L26:
 	leaq 656(%r15),%rdi
 	call _vector_insert
 L27:
-	addq _values+8(%rip),%r12
+	addq _values+8(%rip),%rbx
 	movq 664(%r15),%rcx
 	movl 660(%r15),%eax
 	decl %eax
 	movslq %eax,%rax
-	movq %r12,(%rcx,%rax,8)
+	movq %rbx,(%rcx,%rax,8)
 	jmp L11
 L14:
 	movl _imms+4(%rip),%esi
@@ -79,13 +79,13 @@ L18:
 L19:
 	movq _values+8(%rip),%rax
 	movq _imms+8(%rip),%rcx
-	addq %rax,%r12
+	addq %rax,%rbx
 	movl _imms+4(%rip),%eax
 	decl %eax
 	movslq %eax,%rax
-	movq %r12,(%rcx,%rax,8)
+	movq %rbx,(%rcx,%rax,8)
 L11:
-	movl %r13d,%eax
+	movl %r12d,%eax
 L3:
 	popq %r15
 	popq %r14
@@ -640,25 +640,25 @@ L256:
 	movq (%rax,%rcx,8),%rax
 	movl 16(%rax),%ecx
 	movl %ecx,-40(%rbp)
-	movl 8(%rax),%ebx
-	shll $10,%ebx
-	shrl $15,%ebx
-	movq %rbx,%rdi
+	movl 8(%rax),%r12d
+	shll $10,%r12d
+	shrl $15,%r12d
+	movq %r12,%rdi
 	call _t_size
-	movl %eax,%r12d
+	movl %eax,%ebx
 	movl 8(%r14,%r13),%edi
 	andl $131071,%edi
 	call _t_size
-	cmpl %eax,%r12d
+	cmpl %eax,%ebx
 	jz L259
 L258:
 	movl 8(%r14,%r13),%edi
 	andl $131071,%edi
 	call _temp_reg
-	movl %eax,%r12d
+	movl %eax,%ebx
 	jmp L260
 L259:
-	movl -40(%rbp),%r12d
+	movl -40(%rbp),%ebx
 L260:
 	cmpl $1,(%r14,%r13)
 	jnz L262
@@ -670,7 +670,7 @@ L261:
 	andl $-8,%ecx
 	orl $1,%ecx
 	movl %ecx,8(%rax)
-	movl %r12d,16(%rax)
+	movl %ebx,16(%rax)
 	movl 8(%r14,%r13),%edx
 	andl $131071,%edx
 	jz L278
@@ -711,7 +711,7 @@ L262:
 	andl $-8,%ecx
 	orl $1,%ecx
 	movl %ecx,8(%rax)
-	movl %r12d,16(%rax)
+	movl %ebx,16(%rax)
 	movl 8(%r14,%r13),%edx
 	andl $131071,%edx
 	jz L308
@@ -742,10 +742,10 @@ L263:
 	movq -32(%rbp),%rcx
 	movq %rax,(%rdx,%rcx,8)
 	movl -56(%rbp),%edx
-	movl %r12d,%esi
+	movl %ebx,%esi
 	movq %r15,%rdi
 	call _assoc
-	cmpl %r12d,-40(%rbp)
+	cmpl %ebx,-40(%rbp)
 	jz L326
 L324:
 	xorl %esi,%esi
@@ -755,7 +755,7 @@ L324:
 	andl $-8,%ecx
 	orl $1,%ecx
 	movl %ecx,8(%rax)
-	movl %r12d,16(%rax)
+	movl %ebx,16(%rax)
 	movl 8(%r14,%r13),%edx
 	andl $131071,%edx
 	jz L341
@@ -805,20 +805,20 @@ L359:
 	movl %edx,8(%rax)
 	movl -40(%rbp),%ecx
 	movl %ecx,16(%rax)
-	testq %rbx,%rbx
+	testq %r12,%r12
 	jz L374
 L372:
-	andl $131071,%ebx
-	shll $5,%ebx
+	andl $131071,%r12d
+	shll $5,%r12d
 	andl $-4194273,%edx
-	orl %ebx,%edx
+	orl %r12d,%edx
 	movl %edx,8(%rax)
 L374:
 	movl 40(%rax),%ecx
 	andl $-8,%ecx
 	orl $1,%ecx
 	movl %ecx,40(%rax)
-	movl %r12d,48(%rax)
+	movl %ebx,48(%rax)
 	movl 8(%r14,%r13),%edx
 	andl $131071,%edx
 	jz L389
@@ -1343,23 +1343,23 @@ L601:
 	andl $131071,%edi
 	call _t_size
 	shll $3,%eax
-	movq 8(%r15),%rsi
+	movq 8(%r15),%rdi
 	movq 8(%r14),%rcx
-	subl %ecx,%esi
-	shll $3,%esi
+	subl %ecx,%edi
+	shll $3,%edi
 	movl %eax,%ecx
-	movq $-1,%rdi
-	shlq %cl,%rdi
-	notq %rdi
-	movl %esi,%ecx
-	movq %rdi,%rdx
+	movq $-1,%rsi
+	shlq %cl,%rsi
+	notq %rsi
+	movl %edi,%ecx
+	movq %rsi,%rdx
 	shlq %cl,%rdx
 	notq %rdx
 	andq 16(%r13,%rbx),%rdx
 	movq %rdx,-8(%rbp)
 	movq 16(%r13,%r12),%rax
-	andq %rdi,%rax
-	movl %esi,%ecx
+	andq %rsi,%rax
+	movl %edi,%ecx
 	shlq %cl,%rax
 	orq %rdx,%rax
 	movq %rax,-8(%rbp)

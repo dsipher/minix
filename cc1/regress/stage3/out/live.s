@@ -733,7 +733,7 @@ _range_interf:
 L332:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $32,%rsp
+	subq $24,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -748,7 +748,7 @@ L333:
 	shlq $2,%rax
 	movl 4(%rcx,%rax),%r13d
 	movl (%rcx,%rax),%eax
-	movl %eax,-24(%rbp)
+	movl %eax,-20(%rbp)
 L335:
 	leal 1(%rsi),%r14d
 	cmpl 292(%r15),%r14d
@@ -777,7 +777,7 @@ L337:
 	leaq (%rsi,%rsi,2),%rax
 	shlq $2,%rax
 	movl 8(%rcx,%rax),%eax
-	movl %eax,-32(%rbp)
+	movl %eax,-24(%rbp)
 L346:
 	cmpl 292(%r15),%r14d
 	jge L334
@@ -787,7 +787,7 @@ L349:
 	leaq (%rax,%rax,2),%rax
 	shlq $2,%rax
 	movl (%rcx,%rax),%r12d
-	cmpl %r12d,-32(%rbp)
+	cmpl %r12d,-24(%rbp)
 	jle L334
 L347:
 	cmpl 8(%rcx,%rax),%r12d
@@ -822,7 +822,7 @@ L379:
 	cmpl -8(%rbp),%r13d
 	jz L355
 L357:
-	cmpl %r12d,-24(%rbp)
+	cmpl %r12d,-20(%rbp)
 	jz L355
 L386:
 	movl %r13d,%ecx

@@ -1144,7 +1144,7 @@ L377:
 	movq 16(%r15),%r13
 	movl 8(%r15),%ecx
 	movzbl (%r13,%rcx),%eax
-	movl %eax,-32(%rbp)
+	movl %eax,-28(%rbp)
 	movb $0,(%r13,%rcx)
 	cmpb $48,(%r13)
 	jnz L388
@@ -1225,7 +1225,7 @@ L410:
 	movq %r12,-16(%rbp)
 	movq 16(%r15),%rdx
 	movl 8(%r15),%ecx
-	movzbl -32(%rbp),%eax
+	movl -28(%rbp),%eax
 	movb %al,(%rdx,%rcx)
 	jmp L362
 L366:

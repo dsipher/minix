@@ -1434,7 +1434,7 @@ L627:
 	movl %esi,%r12d
 	movq %rdx,%r14
 	movq %rcx,%r13
-	movl $0,-8(%rbp)
+	movl $0,-4(%rbp)
 	testl %r12d,%r12d
 	jz L634
 L635:
@@ -1495,7 +1495,7 @@ L652:
 	movq %rdi,%rsi
 	movq %r13,%rdi
 	call _funcdef
-	movl $1,-8(%rbp)
+	movl $1,-4(%rbp)
 	jmp L644
 L646:
 	movl %r12d,%esi
@@ -1516,7 +1516,7 @@ L668:
 	movl $_formal_chain,%edi
 	call _free_symbols
 L665:
-	movl -8(%rbp),%eax
+	movl -4(%rbp),%eax
 L628:
 	popq %r15
 	popq %r14

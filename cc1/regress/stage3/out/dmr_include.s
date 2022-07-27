@@ -55,7 +55,7 @@ L17:
 	incq %rsi
 	leaq -256(%rbp),%rdi
 	call _strncpy
-	movl $0,-520(%rbp)
+	movl $0,-516(%rbp)
 	jmp L19
 L18:
 	cmpb $33,%al
@@ -87,7 +87,7 @@ L31:
 	movq %rax,(%r15)
 	jmp L26
 L28:
-	movl $1,-520(%rbp)
+	movl $1,-516(%rbp)
 L19:
 	movq (%r15),%rax
 	addq $48,%rax
@@ -129,7 +129,7 @@ L61:
 	cmpb $0,_includelist(%r12)
 	jnz L52
 L57:
-	cmpl $0,-520(%rbp)
+	cmpl $0,-516(%rbp)
 	jz L56
 L65:
 	cmpb $0,_includelist+1(%r12)
@@ -167,7 +167,7 @@ L48:
 	cmpl $1,%eax
 	jg L79
 L82:
-	cmpl $0,-520(%rbp)
+	cmpl $0,-516(%rbp)
 	jnz L81
 L86:
 	cmpl $1,%eax

@@ -102,7 +102,7 @@ _vector_insert:
 L28:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $16,%rsp
+	subq $8,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -110,24 +110,24 @@ L28:
 	pushq %r15
 L29:
 	movq %rdi,%r15
-	movl %esi,-16(%rbp)
+	movl %esi,-8(%rbp)
 	movl %edx,%ebx
 	movl %ecx,%r14d
 	movl 4(%r15),%edx
 	leal (%rdx,%rbx),%eax
-	movl %eax,-8(%rbp)
-	movl -8(%rbp),%eax
+	movl %eax,-4(%rbp)
+	movl -4(%rbp),%eax
 	cmpl (%r15),%eax
 	jle L32
 L31:
-	bsrl -8(%rbp),%eax
+	bsrl -4(%rbp),%eax
 	xorl $31,%eax
 	movl $31,%ecx
 	subl %eax,%ecx
 	movl $1,%eax
 	shll %cl,%eax
 	movl %eax,(%r15)
-	cmpl %eax,-8(%rbp)
+	cmpl %eax,-4(%rbp)
 	jle L36
 L34:
 	shll $1,%eax
@@ -157,18 +157,18 @@ L45:
 	addq %r13,%rax
 	movq %rax,8(%rcx)
 	movl %r14d,%r12d
-	imull -16(%rbp),%r12d
+	imull -8(%rbp),%r12d
 	movslq %r12d,%r12
 	movq %r12,%rdx
 	movq 8(%r15),%rsi
 	movq %r13,%rdi
 	call _memcpy
-	addl -16(%rbp),%ebx
+	addl -8(%rbp),%ebx
 	imull %r14d,%ebx
 	movslq %ebx,%rdi
 	movq 8(%r15),%rsi
 	movl 4(%r15),%edx
-	subl -16(%rbp),%edx
+	subl -8(%rbp),%edx
 	imull %r14d,%edx
 	movslq %edx,%rdx
 	addq %r12,%rsi
@@ -178,20 +178,20 @@ L45:
 	jmp L33
 L32:
 	movq 8(%r15),%rdi
-	addl -16(%rbp),%ebx
+	addl -8(%rbp),%ebx
 	imull %r14d,%ebx
 	movslq %ebx,%rbx
-	movl -16(%rbp),%esi
+	movl -8(%rbp),%esi
 	imull %r14d,%esi
 	movslq %esi,%rsi
-	subl -16(%rbp),%edx
+	subl -8(%rbp),%edx
 	imull %r14d,%edx
 	movslq %edx,%rdx
 	addq %rdi,%rsi
 	addq %rbx,%rdi
 	call _memmove
 L33:
-	movl -8(%rbp),%eax
+	movl -4(%rbp),%eax
 	movl %eax,4(%r15)
 L30:
 	popq %r15

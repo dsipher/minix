@@ -261,7 +261,7 @@ _write0:
 L22:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $24,%rsp
+	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -269,11 +269,11 @@ L22:
 	pushq %r15
 L23:
 	movq %rdi,%r15
-	movl %esi,-24(%rbp)
+	movl %esi,-16(%rbp)
 	movq 16(%r15),%rdx
-	movslq -24(%rbp),%rax
+	movslq -16(%rbp),%rax
 	movq (%rdx,%rax,8),%r14
-	movl -24(%rbp),%ebx
+	movl -16(%rbp),%ebx
 	incl %ebx
 	cmpl 12(%r15),%ebx
 	jz L105
@@ -357,15 +357,15 @@ L83:
 	jnz L105
 L87:
 	call _t_size
-	movl %eax,-16(%rbp)
+	movl %eax,-12(%rbp)
 	movl 8(%r12),%edi
 	shll $10,%edi
 	shrl $15,%edi
 	call _t_size
-	cmpl %eax,-16(%rbp)
+	cmpl %eax,-12(%rbp)
 	jnz L105
 L58:
-	movl -24(%rbp),%edx
+	movl -16(%rbp),%edx
 	movl %r13d,%esi
 	movq %r15,%rdi
 	call _range_by_def

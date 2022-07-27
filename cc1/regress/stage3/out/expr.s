@@ -411,9 +411,9 @@ L112:
 	pushq %r14
 	pushq %r15
 L113:
-	movl %edi,-16(%rbp)
+	movl %edi,-12(%rbp)
 	movq %rsi,%r13
-	movl -16(%rbp),%ebx
+	movl -12(%rbp),%ebx
 	andl $520093696,%ebx
 	sarl $24,%ebx
 	movslq %ebx,%rbx
@@ -468,12 +468,12 @@ L129:
 	testl $8,%r15d
 	jz L138
 L137:
-	movl -16(%rbp),%edx
+	movl -12(%rbp),%edx
 	movl $426770485,%esi
 	movq 24(%r14),%rdi
 	call _test
 	movq %rax,24(%r14)
-	movl -16(%rbp),%edx
+	movl -12(%rbp),%edx
 	movl $426770485,%esi
 	movq 16(%r14),%rdi
 	call _test
@@ -536,7 +536,8 @@ L167:
 L168:
 	xorq %rbx,%rax
 	pushq %rax
-	pushq -16(%rbp)
+	movl -12(%rbp),%eax
+	pushq %rax
 	pushq $L171
 	pushq $0
 	pushq $4
@@ -662,7 +663,8 @@ L219:
 	cmpq 16(%rcx),%rax
 	jz L216
 L155:
-	pushq -16(%rbp)
+	movl -12(%rbp),%eax
+	pushq %rax
 	pushq $L246
 	pushq $0
 	pushq $4

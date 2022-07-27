@@ -8,8 +8,8 @@ _strtod:
 L1:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $40,%rsp
-	movsd %xmm8,-40(%rbp)
+	subq $32,%rsp
+	movsd %xmm8,-32(%rbp)
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -20,8 +20,8 @@ L2:
 	movq %rsi,-8(%rbp)
 	movq -16(%rbp),%r15
 	xorl %edi,%edi
+	movl $0,-20(%rbp)
 	movl $0,-24(%rbp)
-	movl $0,-32(%rbp)
 	xorl %ebx,%ebx
 	xorl %r13d,%r13d
 	movsd L159(%rip),%xmm8
@@ -80,13 +80,13 @@ L46:
 	cmpl $10,%eax
 	jae L47
 L38:
-	cmpl $0,-24(%rbp)
+	cmpl $0,-20(%rbp)
 	jnz L55
 L54:
 	testl %r12d,%r12d
 	jz L53
 L55:
-	incl -24(%rbp)
+	incl -20(%rbp)
 L53:
 	movq $1844674407370955160,%rax
 	cmpq %rax,%r13
@@ -139,7 +139,7 @@ L60:
 	testl $2,%ebx
 	jz L35
 L70:
-	decl -32(%rbp)
+	decl -24(%rbp)
 	jmp L35
 L47:
 	movq %rcx,%r15
@@ -248,32 +248,32 @@ L119:
 	testl %eax,%eax
 	jz L125
 L124:
-	subl %ecx,-32(%rbp)
+	subl %ecx,-24(%rbp)
 	jmp L92
 L125:
-	addl %ecx,-32(%rbp)
+	addl %ecx,-24(%rbp)
 L92:
 	decq %r15
 	movq %r15,-16(%rbp)
-	cmpl $-307,-32(%rbp)
+	cmpl $-307,-24(%rbp)
 	jg L128
 L127:
 	orl $32,%ebx
 	jmp L27
 L128:
-	movl -32(%rbp),%eax
-	addl %eax,-24(%rbp)
-	decl -24(%rbp)
-	cmpl $308,-24(%rbp)
+	movl -24(%rbp),%eax
+	addl %eax,-20(%rbp)
+	decl -20(%rbp)
+	cmpl $308,-20(%rbp)
 	jl L131
 L130:
 	orl $16,%ebx
 	jmp L27
 L131:
-	cmpl $0,-32(%rbp)
+	cmpl $0,-24(%rbp)
 	jz L27
 L133:
-	movl -32(%rbp),%edi
+	movl -24(%rbp),%edi
 	call ___pow10
 	mulsd %xmm8,%xmm0
 	movsd %xmm0,%xmm8
@@ -322,7 +322,7 @@ L3:
 	popq %r13
 	popq %r12
 	popq %rbx
-	movsd -40(%rbp),%xmm8
+	movsd -32(%rbp),%xmm8
 	movq %rbp,%rsp
 	popq %rbp
 	ret 

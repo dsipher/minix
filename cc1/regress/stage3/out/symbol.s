@@ -640,10 +640,10 @@ L231:
 	call _unique
 	movq %r14,%rdi
 	call _align_of
-	movl %eax,-16(%rbp)
+	movl %eax,-12(%rbp)
 	movl 36(%r15),%ecx
-	cmpl %ecx,-16(%rbp)
-	movl -16(%rbp),%eax
+	cmpl %ecx,-12(%rbp)
+	movl -12(%rbp),%eax
 	cmovgel %eax,%ecx
 	movl %ecx,36(%r15)
 	movl 12(%r15),%eax
@@ -750,7 +750,7 @@ L270:
 	movq %rax,%r14
 	jmp L267
 L266:
-	movl -16(%rbp),%ecx
+	movl -12(%rbp),%ecx
 	shll $3,%ecx
 	movl %ecx,%eax
 	decl %eax
@@ -767,12 +767,12 @@ L267:
 	movq %r13,%rax
 	cqto 
 	idivq -32(%rbp)
-	movslq -16(%rbp),%rcx
+	movslq -12(%rbp),%rcx
 	movq %rcx,-24(%rbp)
 	cqto 
 	idivq -24(%rbp)
 	movl %eax,%r12d
-	imull -16(%rbp),%r12d
+	imull -12(%rbp),%r12d
 	testl $2,12(%r15)
 	jz L276
 L275:

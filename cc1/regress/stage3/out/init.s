@@ -525,7 +525,7 @@ L162:
 	pushq %r15
 L163:
 	movq %rdi,%r15
-	movl %esi,-8(%rbp)
+	movl %esi,-4(%rbp)
 	movl %edx,%ebx
 	movq 24(%r15),%r14
 	xorl %esi,%esi
@@ -551,7 +551,7 @@ L169:
 L171:
 	movl %r12d,%edx
 	imull %r13d,%edx
-	addl -8(%rbp),%edx
+	addl -4(%rbp),%edx
 	xorl %esi,%esi
 	movq %r14,%rdi
 	call _init
@@ -604,7 +604,7 @@ L201:
 	pushq %r15
 L202:
 	movq %rdi,-8(%rbp)
-	movl %esi,-16(%rbp)
+	movl %esi,-12(%rbp)
 	movl %edx,%ebx
 	xorl %r12d,%r12d
 	movq -8(%rbp),%rax
@@ -659,7 +659,7 @@ L228:
 	addl %r13d,%r12d
 	movq 32(%r14),%rdi
 	movl 48(%r14),%edx
-	addl -16(%rbp),%edx
+	addl -12(%rbp),%edx
 	xorl %esi,%esi
 	call _init
 	movq 32(%r14),%rdi

@@ -143,19 +143,19 @@ L66:
 L67:
 	movslq _fixcc_map+4(%rip),%rcx
 	movq %rdi,%r15
-	movl $0,-16(%rbp)
+	movl $0,-12(%rbp)
 	movq _fixcc_map+8(%rip),%rdi
 	movl $13,%eax
 	rep 
 	stosb 
-	movl $0,-32(%rbp)
+	movl $0,-28(%rbp)
 L69:
-	movl -32(%rbp),%ebx
+	movl -28(%rbp),%ebx
 	cmpl 12(%r15),%ebx
 	jge L75
 L73:
 	movq 16(%r15),%rcx
-	movslq -32(%rbp),%rax
+	movslq -28(%rbp),%rax
 	movq %rax,-24(%rbp)
 	movq -24(%rbp),%rax
 	movq (%rcx,%rax,8),%r14
@@ -200,7 +200,7 @@ L92:
 	cmpl $13,%r13d
 	jz L115
 L93:
-	movl -32(%rbp),%ebx
+	movl -28(%rbp),%ebx
 	incl %ebx
 	cmpl 12(%r15),%ebx
 	jge L97
@@ -212,7 +212,7 @@ L96:
 L97:
 	xorl %r12d,%r12d
 L98:
-	movl -32(%rbp),%edx
+	movl -28(%rbp),%edx
 	movl $1074266112,%esi
 	movq %r15,%rdi
 	call _range_by_def
@@ -303,10 +303,10 @@ L107:
 	movq 16(%r15),%rcx
 	movq -24(%rbp),%rax
 	movq $_nop_insn,(%rcx,%rax,8)
-	movl -32(%rbp),%esi
+	movl -28(%rbp),%esi
 	movq %r15,%rdi
 	call _live_kill_dead
-	orl %eax,-16(%rbp)
+	orl %eax,-12(%rbp)
 	orl $32,_opt_request(%rip)
 	jmp L71
 L85:
@@ -322,10 +322,10 @@ L85:
 	movslq %eax,%rax
 	movb %cl,(%rdx,%rax)
 L71:
-	incl -32(%rbp)
+	incl -28(%rbp)
 	jmp L69
 L75:
-	movl -16(%rbp),%eax
+	movl -12(%rbp),%eax
 L68:
 	popq %r15
 	popq %r14

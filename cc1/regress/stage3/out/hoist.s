@@ -202,14 +202,14 @@ L89:
 	jnz L90
 L94:
 	movl 16(%r14),%ecx
-	movl %ecx,-16(%rbp)
+	movl %ecx,-12(%rbp)
 	movl 16(%r12),%ebx
 	movl $0,16(%r14)
 	movl $0,16(%r12)
 	movq %r12,%rsi
 	movq %r14,%rdi
 	call _same_insn
-	movl -16(%rbp),%ecx
+	movl -12(%rbp),%ecx
 	movl %ecx,16(%r14)
 	movl %ebx,16(%r12)
 	testl %eax,%eax
@@ -305,16 +305,16 @@ L125:
 	movq 64(%r15),%rax
 	movq 16(%rax),%rcx
 	movq %rcx,-8(%rbp)
-	movl $0,-16(%rbp)
+	movl $0,-12(%rbp)
 L138:
 	movq -8(%rbp),%rcx
-	movl -16(%rbp),%eax
+	movl -12(%rbp),%eax
 	cmpl 556(%rcx),%eax
 	jge L107
 L139:
 	movq -8(%rbp),%rcx
 	movq 560(%rcx),%rcx
-	movslq -16(%rbp),%rax
+	movslq -12(%rbp),%rax
 	movq (%rcx,%rax,8),%rax
 	movq -8(%rbp),%rcx
 	movq %rax,576(%rcx)
@@ -425,7 +425,7 @@ L168:
 L170:
 	orl $132,_opt_request(%rip)
 L157:
-	incl -16(%rbp)
+	incl -12(%rbp)
 	jmp L138
 L107:
 	movq %r15,%rdi

@@ -1606,7 +1606,7 @@ _union_blocks:
 L597:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $24,%rsp
+	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -1614,15 +1614,15 @@ L597:
 	pushq %r15
 L598:
 	movq %rdi,%r15
-	movq %rsi,-24(%rbp)
+	movq %rsi,-16(%rbp)
 	movq %rdx,%r14
 	xorl %r13d,%r13d
 	xorl %r12d,%r12d
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	movl 4(%rax),%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-4(%rbp)
 	movl 4(%r14),%eax
-	movl %eax,-16(%rbp)
+	movl %eax,-8(%rbp)
 	cmpl $0,(%r15)
 	jl L604
 L603:
@@ -1636,13 +1636,13 @@ L604:
 	movq %r15,%rdi
 	call _vector_insert
 L606:
-	cmpl -8(%rbp),%r13d
+	cmpl -4(%rbp),%r13d
 	jl L610
 L609:
-	cmpl -16(%rbp),%r12d
+	cmpl -8(%rbp),%r12d
 	jge L599
 L610:
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	cmpl 4(%rax),%r13d
 	jnz L614
 L613:
@@ -1654,7 +1654,7 @@ L613:
 	jmp L625
 L614:
 	movl 4(%r14),%ecx
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq 8(%rax),%rax
 	cmpl %ecx,%r12d
 	jnz L617
@@ -1717,7 +1717,7 @@ _intersect_blocks:
 L631:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $24,%rsp
+	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -1726,14 +1726,14 @@ L631:
 L632:
 	movq %rdi,%r15
 	movq %rsi,%r14
-	movq %rdx,-24(%rbp)
+	movq %rdx,-16(%rbp)
 	xorl %r13d,%r13d
 	xorl %r12d,%r12d
 	movl 4(%r14),%eax
-	movl %eax,-8(%rbp)
-	movq -24(%rbp),%rax
+	movl %eax,-4(%rbp)
+	movq -16(%rbp),%rax
 	movl 4(%rax),%eax
-	movl %eax,-16(%rbp)
+	movl %eax,-8(%rbp)
 	cmpl $0,(%r15)
 	jl L638
 L637:
@@ -1747,16 +1747,16 @@ L638:
 	movq %r15,%rdi
 	call _vector_insert
 L640:
-	cmpl -8(%rbp),%r13d
+	cmpl -4(%rbp),%r13d
 	jge L633
 L643:
-	cmpl -16(%rbp),%r12d
+	cmpl -8(%rbp),%r12d
 	jge L633
 L644:
 	movq 8(%r14),%rax
 	movslq %r13d,%rbx
 	movq (%rax,%rbx,8),%rdx
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq 8(%rax),%rcx
 	movslq %r12d,%rax
 	cmpq (%rcx,%rax,8),%rdx

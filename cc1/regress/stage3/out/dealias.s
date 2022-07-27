@@ -223,27 +223,27 @@ _deconst:
 L102:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $32,%rsp
+	subq $24,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
 L103:
-	movl $0,-24(%rbp)
+	movl $0,-20(%rbp)
 	movq _all_blocks(%rip),%r15
 L105:
 	testq %r15,%r15
 	jz L108
 L106:
-	movl $0,-32(%rbp)
+	movl $0,-24(%rbp)
 L109:
-	movl -32(%rbp),%eax
+	movl -24(%rbp),%eax
 	cmpl 12(%r15),%eax
 	jge L115
 L113:
 	movq 16(%r15),%rax
-	movslq -32(%rbp),%rcx
+	movslq -24(%rbp),%rcx
 	movq %rcx,-16(%rbp)
 	movq -16(%rbp),%rcx
 	movq (%rax,%rcx,8),%r14
@@ -324,7 +324,7 @@ L150:
 	movsd 24(%r14,%r12),%xmm0
 	call _floateral
 	movq %rax,%rbx
-	movl -32(%rbp),%ecx
+	movl -24(%rbp),%ecx
 	movq %r15,%rdx
 	movq %rbx,%rsi
 	movl $-1577058300,%edi
@@ -336,7 +336,7 @@ L150:
 	movq %rbx,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%r14,%r12)
-	incl -24(%rbp)
+	incl -20(%rbp)
 	jmp L148
 L151:
 	cmpl $2,%eax
@@ -393,7 +393,7 @@ L189:
 	orl %edx,%ecx
 	movl %ecx,40(%rax)
 L197:
-	movl -32(%rbp),%edx
+	movl -24(%rbp),%edx
 	movq %r15,%rsi
 	movq %rax,%rdi
 	call _insert_insn
@@ -402,18 +402,18 @@ L197:
 	orl $1,%eax
 	movl %eax,8(%r14,%r12)
 	movl %ebx,16(%r14,%r12)
-	incl -24(%rbp)
+	incl -20(%rbp)
 L148:
 	incl %r13d
 	jmp L142
 L145:
-	incl -32(%rbp)
+	incl -24(%rbp)
 	jmp L109
 L115:
 	movq 112(%r15),%r15
 	jmp L105
 L108:
-	movl -24(%rbp),%eax
+	movl -20(%rbp),%eax
 L104:
 	popq %r15
 	popq %r14

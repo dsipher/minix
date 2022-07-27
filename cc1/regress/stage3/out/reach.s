@@ -380,21 +380,21 @@ L121:
 	movq %rdi,-8(%rbp)
 	movq -8(%rbp),%rax
 	movq 8(%rax),%rax
-	movl (%rax),%eax
-	movl %eax,-24(%rbp)
+	movl (%rax),%edx
+	movq %rdx,-24(%rbp)
 	xorl %ebx,%ebx
 L123:
-	movq _webs+8(%rip),%rcx
-	movl -24(%rbp),%eax
-	andl $1073725440,%eax
-	sarl $14,%eax
-	movslq %eax,%rax
-	leaq (%rax,%rax,2),%r12
+	movq _webs+8(%rip),%rax
+	movq -24(%rbp),%rdx
+	andl $1073725440,%edx
+	sarl $14,%edx
+	movslq %edx,%rdx
+	leaq (%rdx,%rdx,2),%r12
 	shlq $3,%r12
-	cmpl 4(%rcx,%r12),%ebx
+	cmpl 4(%rax,%r12),%ebx
 	jge L126
 L124:
-	movq 8(%rcx,%r12),%rdx
+	movq 8(%rax,%r12),%rdx
 	movslq %ebx,%rax
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
@@ -465,17 +465,17 @@ L132:
 	call _dup_vector
 	leal 1(%rbx),%r15d
 L149:
-	movq _webs+8(%rip),%rcx
-	movl -24(%rbp),%eax
-	andl $1073725440,%eax
-	sarl $14,%eax
-	movslq %eax,%rax
-	leaq (%rax,%rax,2),%r14
+	movq _webs+8(%rip),%rax
+	movq -24(%rbp),%rdx
+	andl $1073725440,%edx
+	sarl $14,%edx
+	movslq %edx,%rdx
+	leaq (%rdx,%rdx,2),%r14
 	shlq $3,%r14
-	cmpl 4(%rcx,%r14),%r15d
+	cmpl 4(%rax,%r14),%r15d
 	jge L133
 L150:
-	movq 8(%rcx,%r14),%rdx
+	movq 8(%rax,%r14),%rdx
 	movslq %r15d,%rax
 	leaq (%rax,%rax,2),%r13
 	shlq $3,%r13
@@ -513,10 +513,15 @@ L155:
 	jmp L149
 L133:
 	movq _webs+8(%rip),%rcx
-	andl $1073725440,-24(%rbp)
-	sarl $14,-24(%rbp)
-	movslq -24(%rbp),%rax
-	movq %rax,-24(%rbp)
+	movq -24(%rbp),%rdx
+	andl $1073725440,%edx
+	movq %rdx,-24(%rbp)
+	movq -24(%rbp),%rdx
+	sarl $14,%edx
+	movq %rdx,-24(%rbp)
+	movq -24(%rbp),%rdx
+	movslq %edx,%rdx
+	movq %rdx,-24(%rbp)
 	imulq $24,-24(%rbp),%rax
 	movq 8(%rcx,%rax),%rcx
 	movslq %ebx,%rbx

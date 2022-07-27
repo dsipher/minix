@@ -724,7 +724,7 @@ _union_regs:
 L335:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $24,%rsp
+	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -732,15 +732,15 @@ L335:
 	pushq %r15
 L336:
 	movq %rdi,%r15
-	movq %rsi,-24(%rbp)
+	movq %rsi,-16(%rbp)
 	movq %rdx,%r14
 	xorl %r13d,%r13d
 	xorl %r12d,%r12d
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	movl 4(%rax),%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-4(%rbp)
 	movl 4(%r14),%eax
-	movl %eax,-16(%rbp)
+	movl %eax,-8(%rbp)
 	cmpl $0,(%r15)
 	jl L342
 L341:
@@ -754,13 +754,13 @@ L342:
 	movq %r15,%rdi
 	call _vector_insert
 L344:
-	cmpl -8(%rbp),%r13d
+	cmpl -4(%rbp),%r13d
 	jl L348
 L347:
-	cmpl -16(%rbp),%r12d
+	cmpl -8(%rbp),%r12d
 	jge L337
 L348:
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	cmpl 4(%rax),%r13d
 	jnz L352
 L351:
@@ -772,7 +772,7 @@ L351:
 	jmp L363
 L352:
 	movl 4(%r14),%ecx
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq 8(%rax),%rax
 	cmpl %ecx,%r12d
 	jnz L355
@@ -835,7 +835,7 @@ _intersect_regs:
 L369:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $24,%rsp
+	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -844,14 +844,14 @@ L369:
 L370:
 	movq %rdi,%r15
 	movq %rsi,%r14
-	movq %rdx,-24(%rbp)
+	movq %rdx,-16(%rbp)
 	xorl %r13d,%r13d
 	xorl %r12d,%r12d
 	movl 4(%r14),%eax
-	movl %eax,-8(%rbp)
-	movq -24(%rbp),%rax
+	movl %eax,-4(%rbp)
+	movq -16(%rbp),%rax
 	movl 4(%rax),%eax
-	movl %eax,-16(%rbp)
+	movl %eax,-8(%rbp)
 	cmpl $0,(%r15)
 	jl L376
 L375:
@@ -865,16 +865,16 @@ L376:
 	movq %r15,%rdi
 	call _vector_insert
 L378:
-	cmpl -8(%rbp),%r13d
+	cmpl -4(%rbp),%r13d
 	jge L371
 L381:
-	cmpl -16(%rbp),%r12d
+	cmpl -8(%rbp),%r12d
 	jge L371
 L382:
 	movq 8(%r14),%rax
 	movslq %r13d,%rbx
 	movl (%rax,%rbx,4),%edx
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq 8(%rax),%rcx
 	movslq %r12d,%rax
 	cmpl (%rcx,%rax,4),%edx
@@ -925,7 +925,7 @@ _diff_regs:
 L397:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $16,%rsp
+	subq $8,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -938,9 +938,9 @@ L398:
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
 	movl 4(%r14),%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-4(%rbp)
 	movl 4(%r13),%eax
-	movl %eax,-16(%rbp)
+	movl %eax,-8(%rbp)
 	cmpl $0,(%r15)
 	jl L404
 L403:
@@ -954,10 +954,10 @@ L404:
 	movq %r15,%rdi
 	call _vector_insert
 L406:
-	cmpl -8(%rbp),%r12d
+	cmpl -4(%rbp),%r12d
 	jge L399
 L407:
-	cmpl -16(%rbp),%ebx
+	cmpl -8(%rbp),%ebx
 	jz L413
 L412:
 	movq 8(%r14),%rcx

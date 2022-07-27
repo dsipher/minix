@@ -671,7 +671,7 @@ L87:
 L88:
 	movq _cursource(%rip),%r15
 	movq %rdi,-56(%rbp)
-	movl $0,-8(%rbp)
+	movl $0,-4(%rbp)
 	movq -56(%rbp),%rax
 	movq 16(%rax),%r14
 	movq 24(%r15),%r13
@@ -750,7 +750,7 @@ L184:
 	xorl %ebx,%ebx
 L107:
 	movzbl (%r13),%r12d
-	movl %ebx,-96(%rbp)
+	movl %ebx,-92(%rbp)
 	movslq %r12d,%rax
 	shlq $6,%rax
 	movslq %ebx,%rbx
@@ -835,10 +835,11 @@ L124:
 	xorl %ecx,%ecx
 L125:
 	andl $31,%ecx
-	movl $1,%eax
-	shll %cl,%eax
-	andl -48(%rbp),%eax
-	orl %eax,-8(%rbp)
+	movl $1,%edx
+	shll %cl,%edx
+	movq -48(%rbp),%rax
+	andl %eax,%edx
+	orl %edx,-4(%rbp)
 	addq $24,%r14
 	jmp L103
 L171:
@@ -905,7 +906,7 @@ L156:
 	movq -56(%rbp),%rax
 	movq %r14,16(%rax)
 L186:
-	movl -8(%rbp),%eax
+	movl -4(%rbp),%eax
 L89:
 	popq %r15
 	popq %r14
@@ -947,7 +948,7 @@ L133:
 	testl %eax,%eax
 	jz L115
 L185:
-	movl -96(%rbp),%ebx
+	movl -92(%rbp),%ebx
 	jmp L107
 L129:
 	incq %r13

@@ -1986,7 +1986,7 @@ L982:
 	pushq %r15
 L983:
 	movq %rdi,%r15
-	movl %esi,-8(%rbp)
+	movl %esi,-4(%rbp)
 	movq %rdx,-16(%rbp)
 	xorl %r14d,%r14d
 	movl (%r15),%r13d
@@ -2026,7 +2026,7 @@ L1001:
 	cmpl $1,%eax
 	jnz L991
 L997:
-	movl -8(%rbp),%eax
+	movl -4(%rbp),%eax
 	cmpl 16(%rbx,%r15),%eax
 	jnz L991
 L993:
@@ -2073,7 +2073,7 @@ L1029:
 	movq %rdi,%r15
 	movl %esi,%r14d
 	movl %edx,%r13d
-	movl %ecx,-16(%rbp)
+	movl %ecx,-12(%rbp)
 	movq %r8,-8(%rbp)
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
@@ -2081,7 +2081,7 @@ L1029:
 	cmpl $8388609,%edx
 	jnz L1032
 L1031:
-	testl $2,-16(%rbp)
+	testl $2,-12(%rbp)
 	jz L1036
 L1034:
 	movl %r13d,%edx
@@ -2090,7 +2090,7 @@ L1034:
 	call _regmap_substitute
 	movl %eax,%r12d
 L1036:
-	testl $1,-16(%rbp)
+	testl $1,-12(%rbp)
 	jz L1033
 L1037:
 	movl %r13d,%edx
@@ -2112,7 +2112,7 @@ L1040:
 	jle L1033
 L1044:
 	xorl %eax,%eax
-	testl $2,-16(%rbp)
+	testl $2,-12(%rbp)
 	jz L1049
 L1050:
 	testl %ecx,%ecx
@@ -2176,7 +2176,7 @@ L1080:
 	addl %eax,%r12d
 L1049:
 	xorl %r8d,%r8d
-	testl $1,-16(%rbp)
+	testl $1,-12(%rbp)
 	jz L1092
 L1093:
 	testl %ecx,%ecx

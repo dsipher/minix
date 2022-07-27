@@ -13,7 +13,7 @@ L1:
 L2:
 	movl %edx,%r14d
 	movq %rdi,%r13
-	movl $0,-8(%rbp)
+	movl $0,-4(%rbp)
 	xorl %r12d,%r12d
 	xorl %eax,%eax
 	xorl %ebx,%ebx
@@ -33,7 +33,7 @@ L131:
 	jz L11
 	jnz L8
 L10:
-	movl $1,-8(%rbp)
+	movl $1,-4(%rbp)
 L11:
 	movsbl (%r9),%edx
 	incq %r9
@@ -211,7 +211,7 @@ L114:
 	testl %r12d,%r12d
 	jnz L115
 L117:
-	cmpl $0,-8(%rbp)
+	cmpl $0,-4(%rbp)
 	jz L127
 L126:
 	movq %rbx,%rax
@@ -225,7 +225,7 @@ L115:
 	testl %ecx,%ecx
 	jnz L118
 L120:
-	cmpl $0,-8(%rbp)
+	cmpl $0,-4(%rbp)
 	jz L123
 L122:
 	movq $-9223372036854775808,%rax

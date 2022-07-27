@@ -277,7 +277,7 @@ L1:
 L2:
 	movq %rdi,-32(%rbp)
 	movq %rsi,-80(%rbp)
-	movl %edx,-8(%rbp)
+	movl %edx,-4(%rbp)
 	cmpq $2147483646,-80(%rbp)
 	jbe L6
 L4:
@@ -309,9 +309,9 @@ L11:
 	movl %r15d,%r12d
 	shrl $8,%r12d
 	andl $7,%r12d
-	movl %r15d,-56(%rbp)
-	shrl $11,-56(%rbp)
-	andl $63,-56(%rbp)
+	movl %r15d,-52(%rbp)
+	shrl $11,-52(%rbp)
+	andl $63,-52(%rbp)
 	xorl %r14d,%r14d
 	movslq %ebx,%rax
 	movq %rax,-40(%rbp)
@@ -322,7 +322,7 @@ L11:
 	movq -24(%rbp),%rax
 	movq _filters(%rcx,%rax,8),%rax
 	movq %rax,-16(%rbp)
-	movzbl -56(%rbp),%ecx
+	movl -52(%rbp),%ecx
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq -16(%rbp),%rax
@@ -357,7 +357,7 @@ L29:
 	movq %rax,-48(%rbp)
 	movq -48(%rbp),%rax
 	movq %rax,(%r13)
-	cmpl $0,-8(%rbp)
+	cmpl $0,-4(%rbp)
 	jz L14
 L34:
 	movq _string_arena(%rip),%rax
@@ -384,20 +384,20 @@ L42:
 L43:
 	decl _string_slab+20(%rip)
 	movl %r15d,(%r14)
-	movl -80(%rbp),%eax
+	movq -80(%rbp),%rax
 	movl %eax,4(%r14)
 	movq -32(%rbp),%rax
 	movq %rax,8(%r14)
 	movl $0,16(%r14)
 	movl $0,20(%r14)
-	movzbl -56(%rbp),%ecx
+	movl -52(%rbp),%ecx
 	movl $1,%edx
 	shlq %cl,%rdx
 	movslq %ebx,%rax
 	shlq $6,%rax
 	movslq %r12d,%r12
 	orq %rdx,_filters(%rax,%r12,8)
-	cmpl $0,-8(%rbp)
+	cmpl $0,-4(%rbp)
 	jz L40
 L47:
 	movq _string_arena+8(%rip),%rax

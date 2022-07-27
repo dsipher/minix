@@ -553,6 +553,7 @@ static void spill0(void)
     struct operand reg;
     struct operand addr;
     struct symbol *sym;
+    long t;
     int old, new;
     int i;
 
@@ -560,15 +561,16 @@ static void spill0(void)
     old = n->reg;
 
     /* allocate a temporary for the inserted loads and stores.
-       we use a type that is large enough to cover all types
-       in the same cast class (long for GPs, double for XMMs).
-       get frame storage for it and build its address into addr. */
+       we perform all loads and stores using the type of the
+       node's underlying symbol, which is guaranteed to be 
+       large enough. build its frame address into addr. */
 
-    sym = temp(REG_GP(old) ? &long_type : &double_type);
+    sym = temp(REG_TO_SYMBOL(old)->type);
     new = symbol_to_reg(sym);
-    REG_OPERAND(&reg, 0, 0, new);
-    BASED_OPERAND(&addr, 0, 0, O_MEM, REG_RBP, symbol_offset(sym));
-    sym->s |= S_NOSPILL; /* uh, don't spill temps used for spills */
+    t = TYPE_BASE(sym->type);
+    REG_OPERAND(&reg, 0, t, new);
+    BASED_OPERAND(&addr, 0, t, O_MEM, REG_RBP, symbol_offset(sym));
+    sym->s |= S_NOSPILL; /* automatically disqualified */
 
     /* now replace all occurrences of the spilled reg old with
        new, inserting load-before-use and store-after-def insns.
@@ -577,7 +579,6 @@ static void spill0(void)
 
     FOR_ALL_BLOCKS(b) {
         FOR_EACH_INSN(b, i, insn) {
-            long use_t;
             long def_t;
 
             TRUNC_VECTOR(tmp_regs);             /* remember if the */
@@ -588,16 +589,16 @@ static void spill0(void)
                substitute out the only USE, hence the above */
 
             insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_DEFS, &def_t);
-            if (def_t) insert_insn(move(def_t, &addr, &reg), b, i + 1);
+            if (def_t) insert_insn(move(t, &addr, &reg), b, i + 1);
 
             /* if the insn USEs the reg, insert a load beforehand. if
                this fails, but we know the insn USEd the reg, it is an
                update operand, and we want the type from the DEF operand. */
 
-            insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_USES, &use_t);
+            insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_USES, 0);
 
             if (contains_reg(&tmp_regs, old)) {
-                insert_insn(move(use_t ? use_t : def_t, &reg, &addr), b, i);
+                insert_insn(move(t, &reg, &addr), b, i);
                 ++i;  /* we moved the current insn, don't re-examine it */
             }
         }
@@ -606,16 +607,16 @@ static void spill0(void)
           && OPERAND_REG(&b->control)   /* the branch target would be */
           && (b->control.reg == old))   /* stupid, but it's possible, so .. */
         {
-            append_insn(move(b->control.t, &reg, &addr), b);
+            append_insn(move(t, &reg, &addr), b);
             b->control.reg = new;
         }
     }
 }
 
-/* conventional Chaitin simplification. find all nodes with degree
-   less than K, disconnect them from the graph and put it on the stack.
-   repeat exhaustively, returns true if the graph is empty (except for
-   the precolored nodes), or false if it can't proceed further. */
+/* conventional Chaitin simplification. find a node with degree
+   less than K, disconnect it from the graph and put it on the stack.
+   repeat exhaustively. returns true if the graph is empty (except 
+   for precolored nodes), or false if it can't proceed further. */
 
 static int simplify0(void)
 {

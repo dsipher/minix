@@ -31,6 +31,13 @@ struct node
 
     int cost;
 
+    /* blocks in which this node appears. like spill cost, this is
+       invalid (empty) unless we need to spill a node at which point
+       this is populated. for now, we only use this to streamline the
+       substitution process once we decided to spill this node. */
+
+    VECTOR(block) blocks;
+
     /* two nodes connected in the graph (read: which interfere)
        each have an edge entry pointing at the other. when a node
        is disconnected and put on the stack, its neighbors (which
@@ -115,6 +122,7 @@ static struct node *find(int reg, int create)
         ARENA_ALIGN(&local_arena, UNIVERSAL_ALIGN);
         n = ARENA_ALLOC(&local_arena, sizeof(struct node));
         __builtin_memset(n, 0, sizeof(struct node));
+        INIT_VECTOR(n->blocks, &local_arena);
         INIT_VECTOR(n->edges, &local_arena);
 
         n->reg = reg;
@@ -501,6 +509,7 @@ static void out_graph(void)
             if (MACHINE_REG(reg)) continue;                                 \
                                                                             \
             n = find(reg, 0);                                               \
+            add_block(&n->blocks, b);                                       \
             n->cost += 1 * (64 << b->loop_depth);                           \
         }                                                                   \
     } while (0)
@@ -555,7 +564,7 @@ static void spill0(void)
     struct symbol *sym;
     long t;
     int old, new;
-    int i;
+    int i, j;
 
     n = cost0();
     old = n->reg;
@@ -573,11 +582,9 @@ static void spill0(void)
     sym->s |= S_NOSPILL; /* automatically disqualified */
 
     /* now replace all occurrences of the spilled reg old with
-       new, inserting load-before-use and store-after-def insns.
-       we are careful to do these loads and stores using the size
-       of the reg's use or def, to enable fusing where possible */
+       new, inserting load-before-use and store-after-def insns. */
 
-    FOR_ALL_BLOCKS(b) {
+    FOR_EACH_BLOCK(n->blocks, j, b) {
         FOR_EACH_INSN(b, i, insn) {
             TRUNC_VECTOR(tmp_regs);             /* remember if the */
             insn_uses(insn, &tmp_regs, 0);      /* insn USEs the reg */

@@ -662,7 +662,7 @@ _gettokens:
 L87:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $96,%rsp
+	subq $32,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -670,9 +670,9 @@ L87:
 	pushq %r15
 L88:
 	movq _cursource(%rip),%r15
-	movq %rdi,-56(%rbp)
+	movq %rdi,-16(%rbp)
 	movl $0,-4(%rbp)
-	movq -56(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq 16(%rax),%r14
 	movq 24(%r15),%r13
 	testl %esi,%esi
@@ -692,54 +692,46 @@ L93:
 	jmp L92
 L94:
 	leaq 24576(%rdi),%rax
-	movq %rax,-16(%rbp)
-	cmpq -16(%rbp),%r13
+	cmpq %rax,%r13
 	jb L92
 L96:
 	addq $4,%rdx
 	subq %r13,%rdx
 	movq %r13,%rsi
 	call _memmove
-	movq 16(%r15),%rax
-	movq %rax,-72(%rbp)
+	movq 16(%r15),%rcx
 	movq 32(%r15),%rax
 	subq %r13,%rax
-	addq -72(%rbp),%rax
+	addq %rcx,%rax
 	movq %rax,32(%r15)
-	movq -72(%rbp),%rax
-	movq %rax,24(%r15)
-	movq -72(%rbp),%r13
+	movq %rcx,24(%r15)
+	movq %rcx,%r13
 L92:
-	movq -56(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq 8(%rax),%rax
-	movq %rax,-40(%rbp)
-	movq -56(%rbp),%rax
-	movslq 24(%rax),%rax
 	movq %rax,-24(%rbp)
-	imulq $24,-24(%rbp),%rax
-	movq %rax,-32(%rbp)
-	movq -40(%rbp),%rax
-	addq -32(%rbp),%rax
-	movq %rax,-40(%rbp)
+	movq -16(%rbp),%rax
+	movslq 24(%rax),%rax
+	leaq (%rax,%rax,2),%rax
+	shlq $3,%rax
+	addq %rax,-24(%rbp)
 L103:
-	cmpq -40(%rbp),%r14
+	cmpq -24(%rbp),%r14
 	jb L106
 L104:
-	movq -56(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq %r14,16(%rax)
-	movq -56(%rbp),%rdi
+	movq -16(%rbp),%rdi
 	call _growtokenrow
 	movq %rax,%r14
-	movq -56(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq 8(%rax),%rax
-	movq %rax,-40(%rbp)
-	movq -56(%rbp),%rax
+	movq %rax,-24(%rbp)
+	movq -16(%rbp),%rax
 	movslq 24(%rax),%rax
-	movq %rax,-80(%rbp)
-	imulq $24,-80(%rbp),%rax
-	movq %rax,-88(%rbp)
-	movq -88(%rbp),%rax
-	addq %rax,-40(%rbp)
+	leaq (%rax,%rax,2),%rax
+	shlq $3,%rax
+	addq %rax,-24(%rbp)
 L106:
 	movb $1,(%r14)
 	movw $0,2(%r14)
@@ -750,7 +742,7 @@ L184:
 	xorl %ebx,%ebx
 L107:
 	movzbl (%r13),%r12d
-	movl %ebx,-92(%rbp)
+	movl %ebx,-28(%rbp)
 	movslq %r12d,%rax
 	shlq $6,%rax
 	movslq %ebx,%rbx
@@ -817,29 +809,27 @@ L181:
 	jmp L184
 L122:
 	movb $2,(%r14)
-	movq 16(%r14),%rdx
+	movq 16(%r14),%rsi
 	movq %r13,%rcx
-	subq %rdx,%rcx
+	subq %rsi,%rcx
 	movl %ecx,8(%r14)
-	movzbl (%rdx),%eax
+	movzbl (%rsi),%eax
 	andl $63,%eax
 	movzbq %al,%rax
-	movq _namebit(,%rax,8),%rax
-	movq %rax,-48(%rbp)
+	movq _namebit(,%rax,8),%rdx
 	cmpl $1,%ecx
 	jbe L124
 L123:
-	movzbl 1(%rdx),%ecx
+	movzbl 1(%rsi),%ecx
 	jmp L125
 L124:
 	xorl %ecx,%ecx
 L125:
 	andl $31,%ecx
-	movl $1,%edx
-	shll %cl,%edx
-	movq -48(%rbp),%rax
-	andl %eax,%edx
-	orl %edx,-4(%rbp)
+	movl $1,%eax
+	shll %cl,%eax
+	andl %edx,%eax
+	orl %eax,-4(%rbp)
 	addq $24,%r14
 	jmp L103
 L171:
@@ -877,14 +867,14 @@ L169:
 	incq %r13
 	movq %r13,24(%r15)
 	addq $24,%r14
-	movq -56(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq %r14,16(%rax)
 	jmp L186
 L153:
 	movb $0,(%r14)
 	movl $0,8(%r14)
 	movq %r13,24(%r15)
-	movq -56(%rbp),%rax
+	movq -16(%rbp),%rax
 	cmpq 8(%rax),%r14
 	jz L156
 L161:
@@ -892,8 +882,6 @@ L161:
 	jz L156
 L162:
 	movq _cursource(%rip),%rax
-	movq %rax,-64(%rbp)
-	movq -64(%rbp),%rax
 	cmpq $0,40(%rax)
 	jz L156
 L158:
@@ -903,7 +891,7 @@ L158:
 	addq $16,%rsp
 L156:
 	addq $24,%r14
-	movq -56(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq %r14,16(%rax)
 L186:
 	movl -4(%rbp),%eax
@@ -948,7 +936,7 @@ L133:
 	testl %eax,%eax
 	jz L115
 L185:
-	movl -92(%rbp),%ebx
+	movl -28(%rbp),%ebx
 	jmp L107
 L129:
 	incq %r13

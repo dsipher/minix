@@ -268,17 +268,17 @@ _string:
 L1:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $80,%rsp
+	subq $48,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
 L2:
-	movq %rdi,-32(%rbp)
-	movq %rsi,-80(%rbp)
+	movq %rdi,-24(%rbp)
+	movq %rsi,-40(%rbp)
 	movl %edx,-4(%rbp)
-	cmpq $2147483646,-80(%rbp)
+	cmpq $2147483646,-40(%rbp)
 	jbe L6
 L4:
 	pushq $L7
@@ -291,10 +291,10 @@ L6:
 	xorl %edx,%edx
 L8:
 	movslq %edx,%rcx
-	cmpq %rcx,-80(%rbp)
+	cmpq %rcx,-40(%rbp)
 	jbe L11
 L9:
-	movq -32(%rbp),%rax
+	movq -24(%rbp),%rax
 	movzbl (%rcx,%rax),%eax
 	xorl %r15d,%eax
 	movzbq %al,%rax
@@ -309,27 +309,25 @@ L11:
 	movl %r15d,%r12d
 	shrl $8,%r12d
 	andl $7,%r12d
-	movl %r15d,-52(%rbp)
-	shrl $11,-52(%rbp)
-	andl $63,-52(%rbp)
+	movl %r15d,-44(%rbp)
+	shrl $11,-44(%rbp)
+	andl $63,-44(%rbp)
 	xorl %r14d,%r14d
 	movslq %ebx,%rax
-	movq %rax,-40(%rbp)
-	movq -40(%rbp),%rcx
+	movq %rax,-32(%rbp)
+	movq -32(%rbp),%rcx
 	shlq $6,%rcx
 	movslq %r12d,%rax
-	movq %rax,-24(%rbp)
-	movq -24(%rbp),%rax
 	movq _filters(%rcx,%rax,8),%rax
 	movq %rax,-16(%rbp)
-	movl -52(%rbp),%ecx
+	movl -44(%rbp),%ecx
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq -16(%rbp),%rax
 	testq %rax,%rdx
 	jz L14
 L12:
-	movq -40(%rbp),%rax
+	movq -32(%rbp),%rax
 	leaq _buckets(,%rax,8),%r13
 L15:
 	movq (%r13),%r14
@@ -340,11 +338,11 @@ L16:
 	jnz L17
 L21:
 	movslq 4(%r14),%rax
-	cmpq %rax,-80(%rbp)
+	cmpq %rax,-40(%rbp)
 	jnz L17
 L25:
-	movq -80(%rbp),%rdx
-	movq -32(%rbp),%rsi
+	movq -40(%rbp),%rdx
+	movq -24(%rbp),%rsi
 	movq 8(%r14),%rdi
 	call _memcmp
 	testl %eax,%eax
@@ -354,15 +352,11 @@ L17:
 	jmp L15
 L29:
 	movq 24(%r14),%rax
-	movq %rax,-48(%rbp)
-	movq -48(%rbp),%rax
 	movq %rax,(%r13)
 	cmpl $0,-4(%rbp)
 	jz L14
 L34:
 	movq _string_arena(%rip),%rax
-	movq %rax,-64(%rbp)
-	movq -64(%rbp),%rax
 	movq %rax,_string_arena+8(%rip)
 L14:
 	testq %r14,%r14
@@ -373,8 +367,6 @@ L38:
 	jz L42
 L41:
 	movq (%r14),%rax
-	movq %rax,-72(%rbp)
-	movq -72(%rbp),%rax
 	movq %rax,_string_slab+8(%rip)
 	jmp L43
 L42:
@@ -384,13 +376,13 @@ L42:
 L43:
 	decl _string_slab+20(%rip)
 	movl %r15d,(%r14)
-	movq -80(%rbp),%rax
+	movq -40(%rbp),%rax
 	movl %eax,4(%r14)
-	movq -32(%rbp),%rax
+	movq -24(%rbp),%rax
 	movq %rax,8(%r14)
 	movl $0,16(%r14)
 	movl $0,20(%r14)
-	movl -52(%rbp),%ecx
+	movl -44(%rbp),%ecx
 	movl $1,%edx
 	shlq %cl,%rdx
 	movslq %ebx,%rax

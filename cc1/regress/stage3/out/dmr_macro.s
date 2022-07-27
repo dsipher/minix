@@ -580,7 +580,7 @@ _gatherargs:
 L242:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $56,%rsp
+	subq $48,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -589,8 +589,8 @@ L242:
 L243:
 	movq %rdi,%r15
 	movq %rsi,-40(%rbp)
-	movq %rdx,-56(%rbp)
-	movq -56(%rbp),%rcx
+	movq %rdx,-48(%rbp)
+	movq -48(%rbp),%rcx
 	movl $-1,(%rcx)
 	movl $1,%r14d
 	xorl %ebx,%ebx
@@ -620,7 +620,7 @@ L258:
 	jz L245
 	jnz L322
 L256:
-	movq -56(%rbp),%rcx
+	movq -48(%rbp),%rcx
 	movl $0,(%rcx)
 	incl %ebx
 	movl %ebx,%r13d
@@ -682,9 +682,8 @@ L266:
 	movslq %r13d,%rax
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
-	movq %rax,-48(%rbp)
 	movq (%r15),%r12
-	subq -48(%rbp),%r12
+	subq %rax,%r12
 	movq %r12,(%r15)
 	movslq %ebx,%rbx
 	leaq (%rbx,%rbx,2),%rax
@@ -721,7 +720,7 @@ L313:
 	cmpb $22,-24(%rbx)
 	jz L290
 L302:
-	movq -56(%rbp),%rcx
+	movq -48(%rbp),%rcx
 	cmpl $31,(%rcx)
 	jl L319
 L317:
@@ -735,10 +734,10 @@ L319:
 	movq %rbx,-16(%rbp)
 	leaq -32(%rbp),%rdi
 	call _normtokenrow
-	movq -56(%rbp),%rcx
+	movq -48(%rbp),%rcx
 	movl (%rcx),%edx
 	leal 1(%rdx),%esi
-	movq -56(%rbp),%rcx
+	movq -48(%rbp),%rcx
 	movl %esi,(%rcx)
 	movslq %edx,%rdx
 	movq -40(%rbp),%rcx

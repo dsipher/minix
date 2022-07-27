@@ -623,44 +623,48 @@ _insert_member:
 L230:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $40,%rsp
+	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
 L231:
-	movq %rdi,%r15
-	movq %rsi,-40(%rbp)
+	movq %rdi,-8(%rbp)
+	movq %rsi,%r15
 	movq %rdx,%r14
-	movq %r15,%rcx
+	movq -8(%rbp),%rcx
 	movl _current_scope(%rip),%edx
 	movl $2048,%esi
-	movq -40(%rbp),%rdi
+	movq %r15,%rdi
 	call _unique
 	movq %r14,%rdi
 	call _align_of
 	movl %eax,-12(%rbp)
-	movl 36(%r15),%ecx
+	movq -8(%rbp),%rax
+	movl 36(%rax),%ecx
 	cmpl %ecx,-12(%rbp)
 	movl -12(%rbp),%eax
 	cmovgel %eax,%ecx
-	movl %ecx,36(%r15)
-	movl 12(%r15),%eax
-	testl $2,%eax
+	movq -8(%rbp),%rax
+	movl %ecx,36(%rax)
+	movq -8(%rbp),%rax
+	movl 12(%rax),%ecx
+	testl $2,%ecx
 	jz L237
 L236:
 	xorl %r13d,%r13d
 	jmp L238
 L237:
-	movl 32(%r15),%r13d
+	movq -8(%rbp),%rax
+	movl 32(%rax),%r13d
 L238:
 	movslq %r13d,%r13
-	testl $67108864,%eax
+	testl $67108864,%ecx
 	jz L241
 L239:
 	pushq $L242
-	pushq -40(%rbp)
+	pushq %r15
 	pushq $4
 	call _error
 	addq $24,%rsp
@@ -676,7 +680,8 @@ L250:
 	testl $4194304,12(%rax)
 	jz L245
 L243:
-	orl $4194304,12(%r15)
+	movq -8(%rbp),%rax
+	orl $4194304,12(%rax)
 L245:
 	testq $16384,(%r14)
 	jz L255
@@ -685,13 +690,14 @@ L257:
 	jnz L255
 L254:
 	xorl %r12d,%r12d
-	orl $67108864,12(%r15)
+	movq -8(%rbp),%rax
+	orl $67108864,12(%rax)
 	movslq _current_scope(%rip),%rax
 	cmpq $0,_chains(,%rax,8)
 	jnz L256
 L261:
 	pushq $L264
-	pushq -40(%rbp)
+	pushq %r15
 	pushq $4
 	call _error
 	addq $24,%rsp
@@ -722,8 +728,6 @@ L271:
 	movq %rax,%rcx
 	imulq %rdi,%rcx
 	movslq %esi,%rax
-	movq %rax,-8(%rbp)
-	movq -8(%rbp),%rax
 	leaq -1(%r13,%rax),%rax
 	cqto 
 	idivq %rdi
@@ -763,40 +767,43 @@ L266:
 	movq %rax,%r13
 	movl %r12d,%ebx
 L267:
-	movq $8,-32(%rbp)
+	movl $8,%ecx
 	movq %r13,%rax
 	cqto 
-	idivq -32(%rbp)
+	idivq %rcx
 	movslq -12(%rbp),%rcx
-	movq %rcx,-24(%rbp)
 	cqto 
-	idivq -24(%rbp)
+	idivq %rcx
 	movl %eax,%r12d
 	imull -12(%rbp),%r12d
-	testl $2,12(%r15)
+	movq -8(%rbp),%rax
+	testl $2,12(%rax)
 	jz L276
 L275:
-	movl 32(%r15),%eax
-	cmpl %eax,%ebx
-	cmovgel %ebx,%eax
-	movl %eax,32(%r15)
+	movq -8(%rbp),%rax
+	movl 32(%rax),%ecx
+	cmpl %ecx,%ebx
+	cmovgel %ebx,%ecx
+	movq -8(%rbp),%rax
+	movl %ecx,32(%rax)
 	jmp L277
 L276:
 	movslq %ebx,%rbx
 	addq %rbx,%r13
-	movl %r13d,32(%r15)
+	movq -8(%rbp),%rax
+	movl %r13d,32(%rax)
 L277:
 	cmpq $1073741824,%r13
 	jle L283
 L281:
-	pushq %r15
+	pushq -8(%rbp)
 	pushq $L284
 	pushq $0
 	pushq $1
 	call _error
 	addq $32,%rsp
 L283:
-	cmpq $0,-40(%rbp)
+	testq %r15,%r15
 	jnz L287
 L285:
 	testq $8192,(%r14)
@@ -807,14 +814,13 @@ L291:
 	jnz L232
 L288:
 	movl %r12d,%edx
-	movq %r15,%rdi
+	movq -8(%rbp),%rdi
 	call _absorb
 L287:
 	movl $2048,%esi
-	movq -40(%rbp),%rdi
+	movq %r15,%rdi
 	call _new_symbol
-	movq -40(%rbp),%rcx
-	movq %rcx,(%rax)
+	movq %r15,(%rax)
 	movq %r14,32(%rax)
 	movl %r12d,48(%rax)
 	movl _current_scope(%rip),%esi

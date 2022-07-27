@@ -191,6 +191,15 @@ void live_analyze(int flags)
    (never) large enough to warrant a more complex algorithm, especially
    as the comparisons are ordered to cooperate with branch prediction. */
 
+int range_by_reg(struct block *b, int reg)
+{
+    int r;
+
+    for (r = 0; r < NR_RANGES(b); ++r)
+        if (RANGE(b, r).reg == reg)
+            return r;
+}
+
 int range_by_use(struct block *b, int reg, int use)
 {
     int r;
@@ -222,6 +231,29 @@ int range_doa(struct block *b, int reg, int def)
 {
     int r = range_by_def(b, reg, def);
     return !NEXT_IN_RANGE(b, r);            /* true if def is only entry */
+}
+
+int range_spans_death(struct block *b, int r)
+{
+    int first;      /* the DEF of r */
+    int last;       /* its span (last USE) */
+    int r2;         /* the other range in question */
+
+    while (PREV_IN_RANGE(b, r)) --r;
+    first = RANGE(b, r).def;
+    last = range_span(b, r);
+
+    for (r2 = 0; r2 < NR_RANGES(b); ++r2) {
+        /* we've spanned a death when a range's last
+           USE is between our DEF and our last USE. */
+
+        if ((RANGE(b, r2).use > first)
+          && (RANGE(b, r2).use < last)
+          && !NEXT_IN_RANGE(b, r2))
+            return 1;
+    }
+
+    return 0;
 }
 
 int range_use_count(struct block *b, int r)

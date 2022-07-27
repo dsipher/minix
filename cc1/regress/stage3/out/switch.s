@@ -231,7 +231,7 @@ _chain0:
 L84:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $64,%rsp
+	subq $56,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -239,7 +239,7 @@ L84:
 	pushq %r15
 L85:
 	movq %rdi,%r15
-	movq %rsi,-64(%rbp)
+	movq %rsi,-56(%rbp)
 	movq $0,-8(%rbp)
 	movq $0,-16(%rbp)
 	movq 64(%r15),%rax
@@ -253,13 +253,11 @@ L85:
 	movq -40(%rbp),%r14
 	call _new_block
 	movq %rax,%r13
-	cmpq %rbx,-64(%rbp)
+	cmpq %rbx,-56(%rbp)
 	jz L89
 L87:
 	movq 64(%r15),%r12
 	leaq 24(%r12),%rax
-	movq %rax,-56(%rbp)
-	movq -56(%rbp),%rax
 	movq %rax,-8(%rbp)
 	movl 60(%r15),%eax
 	decl %eax
@@ -324,7 +322,7 @@ L87:
 	call _add_succ
 	call _new_block
 	movq %rax,%r13
-	movq -64(%rbp),%rdi
+	movq -56(%rbp),%rdi
 	call _temp_reg
 	movl %eax,-28(%rbp)
 	xorl %esi,%esi
@@ -337,17 +335,17 @@ L87:
 	movl %ecx,8(%rbx)
 	movl -28(%rbp),%eax
 	movl %eax,16(%rbx)
-	cmpq $0,-64(%rbp)
+	cmpq $0,-56(%rbp)
 	jz L116
 L114:
-	movq -64(%rbp),%rax
+	movq -56(%rbp),%rax
 	andl $131071,%eax
-	movq %rax,-64(%rbp)
-	movq -64(%rbp),%rax
+	movq %rax,-56(%rbp)
+	movq -56(%rbp),%rax
 	shll $5,%eax
-	movq %rax,-64(%rbp)
+	movq %rax,-56(%rbp)
 	andl $-4194273,%ecx
-	movq -64(%rbp),%rax
+	movq -56(%rbp),%rax
 	orl %eax,%ecx
 	movl %ecx,8(%rbx)
 L116:

@@ -259,7 +259,7 @@ static void build0(void)
 
 /* try to merge/coalesce two nodes. we do this conservatively,
    only merging nodes if their combination would have fewer
-   than K neighbors of significant degree, per briggs. there
+   than K neighbors of significant degree, per Briggs. there
    are other restrictions; see the comments for the tests.
 
    returns true on success, false on failure. */
@@ -310,7 +310,7 @@ static int merge0(int r1, int r2)
         if (NR_EDGES(EDGE(&dummy, m)) > k)
             ++nr_sigs;
 
-    if (nr_sigs >= k) return 0;     /* too many for briggs */
+    if (nr_sigs >= k) return 0;     /* too many for Briggs */
 
     /* looks good, let's merge the nodes.
        move the neighbors from n2 to n1. */
@@ -328,6 +328,13 @@ static int merge0(int r1, int r2)
     n2->coalesced = n1;                 /* leave a breadcrumb */
     TRUNC_VECTOR(n2->edges);            /* (just to be tidy) */
     get(n2);                            /* and remove from the graph */
+
+    if (!MACHINE_REG(n1->reg)) {
+        /* if we are coalescing two pseudo registers, and the absorbed node
+           was marked for no spilling, we honor that in the merged node. */
+
+        REG_TO_SYMBOL(n1->reg)->s |= REG_TO_SYMBOL(n2->reg)->s & S_NOSPILL;
+    }
 
     return 1;   /* success */
 }
@@ -491,6 +498,31 @@ static void out_graph(void)
 
 #endif /* DEBUG */
 
+/* Chaitin[1982] observes that
+
+    `if a computation is local to a basic block, and if nothing goes
+     dead between its definition and its last use, then spilling the
+     the computation cannot help to make the program colorable'
+
+   the function returns true if node n meets the above criteria.
+
+   because we're talking about a node is a candidate for spilling,
+   we can assume the node isn't a machine reg. further, if such a
+   node only appears in one block, we can assume it has exactly one
+   live range in that block, since non-machine regs are webs. */
+
+static int useless0(struct node *n)
+{
+    struct block *b;
+    int r;
+
+    if (NR_BLOCKS(n->blocks) != 1) return 0;
+
+    b = VECTOR_ELEM(n->blocks, 0);
+    r = range_by_reg(b, n->reg);            /* this is safe; see above */
+    return !range_spans_death(b, r);
+}
+
 /* compute the spill costs for all pseudo-register nodes
    and return the lowest-cost node. we compute the cost
    of spilling a node as the sum of the cost of each USE
@@ -529,6 +561,7 @@ static struct node *cost0(void)
         }
     }
 
+again:
     lowest = 0;
 
     for (i = NR_MACHINE_REGS; i < nr_assigned_regs; ++i) {
@@ -542,6 +575,15 @@ static struct node *cost0(void)
             if ((lowest == 0) || (n->cost < lowest->cost))
                 lowest = n;
         }
+    }
+
+    /* before we commit, look at the node more closely.
+       if spilling it is guaranteed to be no help, then
+       remember this for the future and choose another. */
+
+    if (useless0(lowest)) {
+        REG_TO_SYMBOL(lowest->reg)->s |= S_NOSPILL;
+        goto again;
     }
 
     return lowest;

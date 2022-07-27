@@ -379,158 +379,152 @@ _vfscanf:
 L205:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $360,%rsp
+	subq $208,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
 L206:
-	movq %rdi,%r15
-	movq %rsi,%r14
-	movq %rdx,-184(%rbp)
-	movl $0,-228(%rbp)
+	movq %rdi,-168(%rbp)
+	movq %rsi,%r15
+	movq %rdx,-176(%rbp)
+	movl $0,-180(%rbp)
 	movl $0,-148(%rbp)
 L208:
-	movsbl (%r14),%r13d
-	leaq 1(%r14),%rcx
-	movq %rcx,%r14
-	testl %r13d,%r13d
+	movsbl (%r15),%r14d
+	leaq 1(%r15),%rcx
+	movq %rcx,%r15
+	testl %r14d,%r14d
 	jz L211
 L209:
-	movslq %r13d,%rax
-	movq %rax,-168(%rbp)
-	movq -168(%rbp),%rax
+	movslq %r14d,%rax
 	testb $8,___ctype+1(%rax)
 	jz L213
 L215:
-	decl (%r15)
+	movq -168(%rbp),%rcx
+	decl (%rcx)
 	js L219
 L218:
-	movq 24(%r15),%rcx
-	leaq 1(%rcx),%rax
-	movq %rax,-320(%rbp)
-	movq -320(%rbp),%rax
-	movq %rax,24(%r15)
-	movzbl (%rcx),%eax
+	movq -168(%rbp),%rcx
+	movq 24(%rcx),%rdx
+	leaq 1(%rdx),%rax
+	movq -168(%rbp),%rcx
+	movq %rax,24(%rcx)
+	movzbl (%rdx),%eax
 	jmp L220
 L219:
-	movq %r15,%rdi
+	movq -168(%rbp),%rdi
 	call ___fillbuf
 L220:
 	movslq %eax,%rcx
-	movq %rcx,-328(%rbp)
-	movq -328(%rbp),%rcx
 	testb $8,___ctype+1(%rcx)
 	jz L217
 L216:
-	incl -228(%rbp)
+	incl -180(%rbp)
 	jmp L215
 L217:
 	cmpl $-1,%eax
 	jz L211
 L223:
-	movq %r15,%rsi
+	movq -168(%rbp),%rsi
 	movl %eax,%edi
 	call _ungetc
 	jmp L208
 L213:
-	cmpl $37,%r13d
+	cmpl $37,%r14d
 	jnz L229
 L227:
-	movl $0,-188(%rbp)
+	movl $0,-184(%rbp)
 	movl $0,-152(%rbp)
 	movl $0,-156(%rbp)
-	movsbl (%rcx),%r13d
-	leaq 1(%rcx),%r14
-	cmpl $42,%r13d
+	movsbl (%rcx),%r14d
+	leaq 1(%rcx),%r15
+	cmpl $42,%r14d
 	jnz L240
 L238:
 	movl $1,-152(%rbp)
-	movsbl 1(%rcx),%r13d
+	movsbl 1(%rcx),%r14d
 	addq $2,%rcx
-	movq %rcx,%r14
+	movq %rcx,%r15
 L240:
-	movl %r13d,-332(%rbp)
-	subl $48,-332(%rbp)
-	cmpl $10,-332(%rbp)
+	movl %r14d,%eax
+	subl $48,%eax
+	cmpl $10,%eax
 	jae L242
 L241:
-	xorl %r12d,%r12d
+	xorl %r13d,%r13d
 L244:
-	movl %r13d,%eax
+	movl %r14d,%eax
 	subl $48,%eax
 	cmpl $10,%eax
 	jae L243
 L245:
-	leal (%r12,%r12,4),%r12d
-	addl %r12d,%r12d
-	addl %r13d,%r12d
-	subl $48,%r12d
-	movsbl (%r14),%r13d
-	incq %r14
+	leal (%r13,%r13,4),%r13d
+	addl %r13d,%r13d
+	addl %r14d,%r13d
+	subl $48,%r13d
+	movsbl (%r15),%r14d
+	incq %r15
 	jmp L244
 L242:
-	movl $-1,%r12d
+	movl $-1,%r13d
 L243:
-	cmpl $104,%r13d
+	cmpl $104,%r14d
 	jz L248
 L255:
-	cmpl $108,%r13d
+	cmpl $108,%r14d
 	jz L248
 L251:
-	cmpl $76,%r13d
+	cmpl $76,%r14d
 	jnz L250
 L248:
-	movl %r13d,-188(%rbp)
-	movsbl (%r14),%eax
-	movl %eax,-172(%rbp)
-	incq %r14
-	movl -172(%rbp),%r13d
+	movl %r14d,-184(%rbp)
+	movsbl (%r15),%r14d
+	incq %r15
 L250:
-	cmpl $91,%r13d
+	cmpl $91,%r14d
 	jz L261
 L266:
-	cmpl $99,%r13d
+	cmpl $99,%r14d
 	jz L261
 L262:
-	cmpl $110,%r13d
+	cmpl $110,%r14d
 	jz L261
 L270:
-	decl (%r15)
+	movq -168(%rbp),%rcx
+	decl (%rcx)
 	js L274
 L273:
-	movq 24(%r15),%rcx
-	leaq 1(%rcx),%rax
-	movq %rax,-256(%rbp)
-	movq -256(%rbp),%rax
-	movq %rax,24(%r15)
-	movzbl (%rcx),%eax
+	movq -168(%rbp),%rcx
+	movq 24(%rcx),%rdx
+	leaq 1(%rdx),%rax
+	movq -168(%rbp),%rcx
+	movq %rax,24(%rcx)
+	movzbl (%rdx),%eax
 	jmp L275
 L274:
-	movq %r15,%rdi
+	movq -168(%rbp),%rdi
 	call ___fillbuf
 L275:
 	movslq %eax,%rcx
-	movq %rcx,-264(%rbp)
-	movq -264(%rbp),%rcx
 	testb $8,___ctype+1(%rcx)
 	jz L272
 L271:
-	incl -228(%rbp)
+	incl -180(%rbp)
 	jmp L270
 L272:
-	movq %r15,%rsi
+	movq -168(%rbp),%rsi
 	movl %eax,%edi
 	call _ungetc
 L261:
-	cmpl $99,%r13d
+	cmpl $99,%r14d
 	jl L456
 L458:
-	cmpl $120,%r13d
+	cmpl $120,%r14d
 	jg L456
 L455:
-	leal -99(%r13),%eax
+	leal -99(%r14),%eax
 	movzwl L467(,%rax,2),%eax
 	addl $_vfscanf,%eax
 	jmp *%rax
@@ -538,47 +532,39 @@ L288:
 	movl $10,%edx
 	jmp L282
 L433:
-	movl $18,%r12d
+	movl $18,%r13d
 	movl $16,%edx
-	movl $112,-188(%rbp)
+	movl $112,-184(%rbp)
 	jmp L294
 L286:
 	movl $8,%edx
 	jmp L282
 L435:
-	movq -184(%rbp),%rax
-	addq $8,%rax
-	movq %rax,-288(%rbp)
-	movq -184(%rbp),%rax
-	movq (%rax),%rax
-	movq %rax,-296(%rbp)
-	cmpl $108,-188(%rbp)
+	movq -176(%rbp),%rax
+	leaq 8(%rax),%rdx
+	movq -176(%rbp),%rax
+	movq (%rax),%rcx
+	cmpl $108,-184(%rbp)
 	jnz L437
 L436:
-	movslq -228(%rbp),%rcx
-	movq %rcx,-208(%rbp)
-	movq -288(%rbp),%rax
-	movq %rax,-184(%rbp)
-	movq -208(%rbp),%rcx
-	movq -296(%rbp),%rax
-	movq %rcx,(%rax)
+	movslq -180(%rbp),%rax
+	movq %rax,-192(%rbp)
+	movq %rdx,-176(%rbp)
+	movq -192(%rbp),%rax
+	movq %rax,(%rcx)
 	jmp L208
 L437:
-	cmpl $104,-188(%rbp)
+	cmpl $104,-184(%rbp)
 	jnz L440
 L439:
-	movq -288(%rbp),%rax
-	movq %rax,-184(%rbp)
-	movl -228(%rbp),%ecx
-	movq -296(%rbp),%rax
-	movw %cx,(%rax)
+	movq %rdx,-176(%rbp)
+	movl -180(%rbp),%eax
+	movw %ax,(%rcx)
 	jmp L208
 L440:
-	movq -288(%rbp),%rax
-	movq %rax,-184(%rbp)
-	movl -228(%rbp),%ecx
-	movq -296(%rbp),%rax
-	movl %ecx,(%rax)
+	movq %rdx,-176(%rbp)
+	movl -180(%rbp),%eax
+	movl %eax,(%rcx)
 	jmp L208
 L284:
 	xorl %edx,%edx
@@ -589,196 +575,178 @@ L281:
 	movl $1,-156(%rbp)
 	jmp L282
 L428:
-	cmpl $-1,%r12d
+	cmpl $-1,%r13d
 	movl $1,%eax
-	cmovzl %eax,%r12d
+	cmovzl %eax,%r13d
 	jmp L346
 L456:
-	cmpl $0,%r13d
+	cmpl $0,%r14d
 	jle L211
 L460:
-	cmpl $91,%r13d
+	cmpl $91,%r14d
 	jz L396
 	jg L211
 L461:
-	cmpb $37,%r13b
+	cmpb $37,%r14b
 	jz L229
 L462:
-	cmpb $69,%r13b
+	cmpb $69,%r14b
 	jz L321
 L463:
-	cmpb $71,%r13b
+	cmpb $71,%r14b
 	jz L321
 L464:
-	cmpb $88,%r13b
+	cmpb $88,%r14b
 	jnz L211
 L291:
 	movl $16,%edx
 L282:
-	cmpl $-1,%r12d
+	cmpl $-1,%r13d
 	jz L292
 L295:
-	cmpl $128,%r12d
+	cmpl $128,%r13d
 	jle L294
 L292:
-	movl $128,%r12d
+	movl $128,%r13d
 L294:
 	leaq -136(%rbp),%r9
 	movl -156(%rbp),%r8d
-	movl %r12d,%ecx
-	movq %r15,%rsi
+	movl %r13d,%ecx
+	movq -168(%rbp),%rsi
 	leaq -128(%rbp),%rdi
 	call _lscan
 	testl %eax,%eax
 	jz L211
 L301:
-	addl -228(%rbp),%eax
-	movl %eax,-228(%rbp)
+	addl -180(%rbp),%eax
+	movl %eax,-180(%rbp)
 	cmpl $0,-152(%rbp)
 	jnz L208
 L305:
-	movq -184(%rbp),%rax
-	addq $8,%rax
-	movq %rax,-312(%rbp)
+	movq -176(%rbp),%rax
+	leaq 8(%rax),%rdx
 	movq -136(%rbp),%rcx
-	movq %rcx,-344(%rbp)
-	movq -184(%rbp),%rax
+	movq -176(%rbp),%rax
 	movq (%rax),%rax
-	movq %rax,-352(%rbp)
-	cmpl $112,-188(%rbp)
+	cmpl $112,-184(%rbp)
 	jnz L308
 L307:
-	movq -312(%rbp),%rax
-	movq %rax,-184(%rbp)
-	movq -344(%rbp),%rcx
-	movq -352(%rbp),%rax
+	movq %rdx,-176(%rbp)
 	movq %rcx,(%rax)
 	jmp L309
 L308:
-	cmpl $108,-188(%rbp)
+	cmpl $108,-184(%rbp)
 	jnz L311
 L310:
-	movq -312(%rbp),%rax
-	movq %rax,-184(%rbp)
-	movq -344(%rbp),%rcx
-	movq -352(%rbp),%rax
+	movq %rdx,-176(%rbp)
 	movq %rcx,(%rax)
 	jmp L309
 L311:
-	cmpl $104,-188(%rbp)
+	cmpl $104,-184(%rbp)
 	jnz L314
 L313:
-	movq -312(%rbp),%rax
-	movq %rax,-184(%rbp)
-	movq -344(%rbp),%rcx
-	movq -352(%rbp),%rax
+	movq %rdx,-176(%rbp)
 	movw %cx,(%rax)
 	jmp L309
 L314:
-	movq -312(%rbp),%rax
-	movq %rax,-184(%rbp)
-	movq -344(%rbp),%rcx
-	movq -352(%rbp),%rax
+	movq %rdx,-176(%rbp)
 	movl %ecx,(%rax)
 L309:
 	incl -148(%rbp)
 	jmp L208
 L321:
-	cmpl $-1,%r12d
+	cmpl $-1,%r13d
 	jz L322
 L325:
-	cmpl $128,%r12d
+	cmpl $128,%r13d
 	jle L324
 L322:
-	movl $128,%r12d
+	movl $128,%r13d
 L324:
 	leaq -144(%rbp),%rcx
-	movl %r12d,%edx
-	movq %r15,%rsi
+	movl %r13d,%edx
+	movq -168(%rbp),%rsi
 	leaq -128(%rbp),%rdi
 	call _dscan
 	testl %eax,%eax
 	jz L211
 L331:
-	addl -228(%rbp),%eax
-	movl %eax,-228(%rbp)
+	addl -180(%rbp),%eax
+	movl %eax,-180(%rbp)
 	cmpl $0,-152(%rbp)
 	jnz L208
 L335:
-	cmpl $108,-188(%rbp)
+	cmpl $108,-184(%rbp)
 	jz L337
 L340:
-	cmpl $76,-188(%rbp)
+	cmpl $76,-184(%rbp)
 	jnz L338
 L337:
-	movq -184(%rbp),%rax
+	movq -176(%rbp),%rax
 	addq $8,%rax
-	movq %rax,-184(%rbp)
+	movq %rax,-176(%rbp)
 	movq -8(%rax),%rax
-	movq %rax,-216(%rbp)
 	movsd -144(%rbp),%xmm0
-	movq -216(%rbp),%rax
 	movsd %xmm0,(%rax)
 	jmp L339
 L338:
 	cvtsd2ss -144(%rbp),%xmm0
-	movq -184(%rbp),%rax
+	movq -176(%rbp),%rax
 	addq $8,%rax
-	movq %rax,-184(%rbp)
+	movq %rax,-176(%rbp)
 	movq -8(%rax),%rax
-	movq %rax,-224(%rbp)
-	movq -224(%rbp),%rax
 	movss %xmm0,(%rax)
 L339:
 	incl -148(%rbp)
 	jmp L208
 L229:
-	decl (%r15)
+	movq -168(%rbp),%rcx
+	decl (%rcx)
 	js L234
 L233:
-	movq 24(%r15),%rax
-	movq %rax,-240(%rbp)
-	movq -240(%rbp),%rax
-	incq %rax
+	movq -168(%rbp),%rcx
+	movq 24(%rcx),%rax
 	movq %rax,-200(%rbp)
 	movq -200(%rbp),%rax
-	movq %rax,24(%r15)
-	movq -240(%rbp),%rax
+	incq %rax
+	movq -168(%rbp),%rcx
+	movq %rax,24(%rcx)
+	movq -200(%rbp),%rax
 	movzbl (%rax),%eax
 	jmp L235
 L234:
-	movq %r15,%rdi
+	movq -168(%rbp),%rdi
 	call ___fillbuf
 L235:
-	cmpl %eax,%r13d
+	cmpl %eax,%r14d
 	jnz L230
 L232:
-	incl -228(%rbp)
+	incl -180(%rbp)
 	jmp L208
 L230:
-	movq %r15,%rsi
+	movq -168(%rbp),%rsi
 	movl %eax,%edi
 	call _ungetc
 	jmp L211
 L396:
 	movl $0,-156(%rbp)
-	movsbl (%r14),%ecx
-	incq %r14
+	movsbl (%r15),%ecx
+	incq %r15
 	cmpl $94,%ecx
 	jnz L399
 L397:
 	movl $1,-156(%rbp)
-	movsbl (%r14),%ecx
-	incq %r14
+	movsbl (%r15),%ecx
+	incq %r15
 L399:
-	leaq -128(%rbp),%rbx
+	leaq -128(%rbp),%r12
 	cmpl $93,%ecx
 	jnz L403
 L400:
 	movb %cl,-128(%rbp)
-	leaq -127(%rbp),%rbx
-	movsbl (%r14),%ecx
-	incq %r14
+	leaq -127(%rbp),%r12
+	movsbl (%r15),%ecx
+	incq %r15
 L403:
 	testl %ecx,%ecx
 	jz L405
@@ -790,17 +758,16 @@ L404:
 	jnz L411
 L417:
 	leaq -128(%rbp),%rax
-	movq %rax,-304(%rbp)
-	cmpq -304(%rbp),%rbx
+	cmpq %rax,%r12
 	jz L411
 L413:
-	movzbl (%r14),%eax
+	movzbl (%r15),%eax
 	cmpb $93,%al
 	jz L411
 L410:
-	movsbl -1(%rbx),%ecx
+	movsbl -1(%r12),%ecx
 	movsbl %al,%eax
-	incq %r14
+	incq %r15
 	cmpl %eax,%ecx
 	jg L421
 L424:
@@ -808,71 +775,69 @@ L424:
 	cmpl %ecx,%eax
 	jl L412
 L425:
-	movb %cl,(%rbx)
-	incq %rbx
+	movb %cl,(%r12)
+	incq %r12
 	jmp L424
 L421:
-	decq %rbx
+	decq %r12
 	jmp L412
 L411:
-	movb %cl,(%rbx)
-	incq %rbx
+	movb %cl,(%r12)
+	incq %r12
 L412:
-	movsbl (%r14),%ecx
-	incq %r14
+	movsbl (%r15),%ecx
+	incq %r15
 	jmp L403
 L405:
-	movb $0,(%rbx)
-	movl $91,%r13d
+	movb $0,(%r12)
+	movl $91,%r14d
 L346:
 	cmpl $0,-152(%rbp)
 	jnz L349
 L347:
-	movq -184(%rbp),%rax
+	movq -176(%rbp),%rax
 	addq $8,%rax
-	movq %rax,-184(%rbp)
-	movq -8(%rax),%rbx
+	movq %rax,-176(%rbp)
+	movq -8(%rax),%r12
 L349:
-	movl $0,-244(%rbp)
+	movl $0,-204(%rbp)
 L350:
-	cmpl $0,%r12d
+	cmpl $0,%r13d
 	jl L351
 L354:
-	cmpl -244(%rbp),%r12d
+	cmpl -204(%rbp),%r13d
 	jle L353
 L351:
-	decl (%r15)
+	movq -168(%rbp),%rcx
+	decl (%rcx)
 	js L362
 L361:
-	movq 24(%r15),%rcx
-	leaq 1(%rcx),%rax
-	movq %rax,-272(%rbp)
-	movq -272(%rbp),%rax
-	movq %rax,24(%r15)
-	movzbl (%rcx),%eax
-	movl %eax,-356(%rbp)
+	movq -168(%rbp),%rcx
+	movq 24(%rcx),%rdx
+	leaq 1(%rdx),%rax
+	movq -168(%rbp),%rcx
+	movq %rax,24(%rcx)
+	movzbl (%rdx),%ebx
 	jmp L363
 L362:
-	movq %r15,%rdi
+	movq -168(%rbp),%rdi
 	call ___fillbuf
-	movl %eax,-356(%rbp)
+	movl %eax,%ebx
 L363:
-	cmpl $-1,-356(%rbp)
+	cmpl $-1,%ebx
 	jz L353
 L360:
-	cmpl $115,%r13d
+	cmpl $115,%r14d
 	jnz L368
 L372:
-	movslq -356(%rbp),%rax
-	movq %rax,-280(%rbp)
-	movq -280(%rbp),%rax
+	movslq %ebx,%rax
 	testb $8,___ctype+1(%rax)
 	jnz L365
 L368:
-	cmpl $91,%r13d
+	cmpl $91,%r14d
 	jnz L367
 L376:
-	movl -356(%rbp),%esi
+	movl %ebx,%esi
 	leaq -128(%rbp),%rdi
 	call _strchr
 	testq %rax,%rax
@@ -884,29 +849,28 @@ L367:
 	cmpl $0,-152(%rbp)
 	jnz L383
 L381:
-	movl -356(%rbp),%eax
-	movb %al,(%rbx)
-	incq %rbx
+	movb %bl,(%r12)
+	incq %r12
 L383:
-	incl -244(%rbp)
+	incl -204(%rbp)
 	jmp L350
 L365:
-	movq %r15,%rsi
-	movl -356(%rbp),%edi
+	movq -168(%rbp),%rsi
+	movl %ebx,%edi
 	call _ungetc
 L353:
-	cmpl $0,-244(%rbp)
+	cmpl $0,-204(%rbp)
 	jz L211
 L386:
-	movl -244(%rbp),%eax
-	addl %eax,-228(%rbp)
+	movl -204(%rbp),%eax
+	addl %eax,-180(%rbp)
 	cmpl $0,-152(%rbp)
 	jnz L208
 L390:
-	cmpl $99,%r13d
+	cmpl $99,%r14d
 	jz L394
 L392:
-	movb $0,(%rbx)
+	movb $0,(%r12)
 L394:
 	incl -148(%rbp)
 	jmp L208
@@ -914,7 +878,8 @@ L211:
 	cmpl $0,-148(%rbp)
 	jnz L448
 L450:
-	testl $16,8(%r15)
+	movq -168(%rbp),%rcx
+	testl $16,8(%rcx)
 	jz L448
 L447:
 	movl $-1,%eax

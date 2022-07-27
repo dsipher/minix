@@ -853,8 +853,6 @@ int insn_substitute_con(struct insn *insn, int reg,
 
 #define SUBSTITUTE0(usedef)                                                 \
     do {                                                                    \
-        int _count = 0;                                                     \
-                                                                            \
         if ((flags & INSN_SUBSTITUTE_##usedef)                              \
           && OPERAND_##usedef##_REGS(insn, i))                              \
         {                                                                   \
@@ -864,31 +862,21 @@ int insn_substitute_con(struct insn *insn, int reg,
             {                                                               \
             case O_MEM:                                                     \
             case O_EA:      if (_o->index == src) {                         \
-                                ++_count;                                   \
+                                ++count;                                    \
                                 _o->index = dst;                            \
                             }                                               \
                             /* FALLTHRU */                                  \
             case O_REG:     if (_o->reg == src) {                           \
-                                ++_count;                                   \
+                                ++count;                                    \
                                 _o->reg = dst;                              \
                             }                                               \
             }                                                               \
-                                                                            \
-            if (_count)                                                     \
-                if (OPERAND_MEM(_o))   /* in O_MEM the reg is used for */   \
-                    t = T_LONG;        /* the address, not the operand */   \
-                else                                                        \
-                    t = MAX(t, _o->t);                                      \
-                                                                            \
-            count += _count;                                                \
         }                                                                   \
     } while (0)
 
-int insn_substitute_reg(struct insn *insn, int src,
-                        int dst, int flags, long *tp)
+int insn_substitute_reg(struct insn *insn, int src, int dst, int flags)
 {
     int count = 0;
-    long t = 0;
 
     switch (insn->op)
     {
@@ -902,7 +890,6 @@ int insn_substitute_reg(struct insn *insn, int src,
             if (flags & INSN_SUBSTITUTE_DEFS)
                 count += regmap_substitute(&asm_insn->defs, src, dst);
 
-            t = REG_GP(src) ? T_LONG : T_DOUBLE;
             break;
         }
 
@@ -919,7 +906,6 @@ int insn_substitute_reg(struct insn *insn, int src,
         }
     }
 
-    if (tp) *tp = t;
     return count;
 }
 

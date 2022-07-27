@@ -49,7 +49,7 @@ static void decorate0(struct block *b)
             new = reg;
             REG_SET_SUB(new, *sub);
 
-            insn_substitute_reg(insn, reg, new, INSN_SUBSTITUTE_DEFS, 0);
+            insn_substitute_reg(insn, reg, new, INSN_SUBSTITUTE_DEFS);
         }
     }
 }
@@ -307,7 +307,7 @@ static void build0(struct block *b)
         FOR_EACH_REG(tmp_regs, j, reg) {
             if (MACHINE_REG(reg)) continue;
             insn_substitute_reg(insn, reg, build1(reg, &reach_regs),
-                                INSN_SUBSTITUTE_USES, 0);
+                                INSN_SUBSTITUTE_USES);
         }
 
         update(insn, &reach_regs);
@@ -333,7 +333,7 @@ static void build0(struct block *b)
                                                                             \
         FOR_EACH_REG(tmp_regs, j, reg)                                      \
             insn_substitute_reg(insn, reg, name(reg),                       \
-                                INSN_SUBSTITUTE_##USES, 0);                 \
+                                INSN_SUBSTITUTE_##USES);                    \
     } while (0)
 
 static void redecorate0(struct block *b)

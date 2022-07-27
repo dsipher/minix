@@ -55,7 +55,7 @@ static void local0(struct block *b)
         for (k = 0; k < NR_PROPS(b); ++k) {
             if (insn_substitute_reg(insn, PROP(b, k).dst,
                                           PROP(b, k).src,
-                                          INSN_SUBSTITUTE_USES, 0))
+                                          INSN_SUBSTITUTE_USES))
                 opt_request |= OPT_DEAD | OPT_LIR_NORM | OPT_LIR_REASSOC;
         }
 

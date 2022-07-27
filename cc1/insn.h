@@ -1656,17 +1656,12 @@ int insn_substitute_con(struct insn *insn, int reg,
    in MCH insns, a reg need only meet one criterion to be replaced (if it
    is both USEd and DEFd, it will always match one of the flags). dst can
    be either a pseudo reg or a machine reg, but src must always be a pseudo
-   reg: some machine registers are inherent to an insn and can't be replaced.
-
-   if tp is not null, it will be filled with the type of the operand in
-   which dst appeared. if it appeared in multiple operands, the `largest'
-   type (T_*-wise) will be returned. if no substitution made, *tp == 0. */
+   reg: some machine regs are inherent to an insn and can't be replaced. */
 
 #define INSN_SUBSTITUTE_DEFS    0x00000001
 #define INSN_SUBSTITUTE_USES    0x00000002
 
-int insn_substitute_reg(struct insn *insn, int src,
-                        int dst, int flags, long *tp);
+int insn_substitute_reg(struct insn *insn, int src, int dst, int flags);
 
 /* determine if insn merely effects a copy from one register to another.
    if so, populate dst and src with the destination and source registers

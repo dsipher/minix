@@ -571,7 +571,7 @@ void substitute_reg(int src, int dst)
     FOR_ALL_BLOCKS(b) {
         FOR_EACH_INSN(b, i, insn)
             insn_substitute_reg(insn, src, dst, INSN_SUBSTITUTE_USES
-                                              | INSN_SUBSTITUTE_DEFS, 0);
+                                              | INSN_SUBSTITUTE_DEFS);
 
         if (SWITCH_BLOCK(b)
           && OPERAND_REG(&b->control)

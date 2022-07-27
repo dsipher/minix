@@ -579,8 +579,6 @@ static void spill0(void)
 
     FOR_ALL_BLOCKS(b) {
         FOR_EACH_INSN(b, i, insn) {
-            long def_t;
-
             TRUNC_VECTOR(tmp_regs);             /* remember if the */
             insn_uses(insn, &tmp_regs, 0);      /* insn USEs the reg */
 
@@ -588,14 +586,14 @@ static void spill0(void)
                if the reg is an update operand, this might also
                substitute out the only USE, hence the above */
 
-            insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_DEFS, &def_t);
-            if (def_t) insert_insn(move(t, &addr, &reg), b, i + 1);
+            if (insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_DEFS))
+                insert_insn(move(t, &addr, &reg), b, i + 1);
 
             /* if the insn USEs the reg, insert a load beforehand. if
                this fails, but we know the insn USEd the reg, it is an
                update operand, and we want the type from the DEF operand. */
 
-            insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_USES, 0);
+            insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_USES);
 
             if (contains_reg(&tmp_regs, old)) {
                 insert_insn(move(t, &reg, &addr), b, i);

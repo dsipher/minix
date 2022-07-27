@@ -94,8 +94,8 @@ void range_interf(struct block *b, int r, VECTOR(reg) *regs);
 
 int range_doa(struct block *b, int reg, int def);
 
-/* returns true if at least one (other) live range
-   dies during the lifetime of the specified range. */
+/* returns true if at least one (other) live range of the same
+   reg type dies during the lifetime of the specified range. */
 
 int range_spans_death(struct block *b, int r);
 

@@ -235,11 +235,13 @@ int range_doa(struct block *b, int reg, int def)
 
 int range_spans_death(struct block *b, int r)
 {
-    int first;      /* the DEF of r */
+    int reg;        /* reg of the range */
+    int first;      /* the DEF of reg */
     int last;       /* its span (last USE) */
     int r2;         /* the other range in question */
 
     while (PREV_IN_RANGE(b, r)) --r;
+    reg = RANGE(b, r).reg;
     first = RANGE(b, r).def;
     last = range_span(b, r);
 
@@ -247,7 +249,8 @@ int range_spans_death(struct block *b, int r)
         /* we've spanned a death when a range's last
            USE is between our DEF and our last USE. */
 
-        if ((RANGE(b, r2).use > first)
+        if ((REG_TYPE(reg) == REG_TYPE(RANGE(b, r2).reg))
+          && (RANGE(b, r2).use > first)
           && (RANGE(b, r2).use < last)
           && !NEXT_IN_RANGE(b, r2))
             return 1;

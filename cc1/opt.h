@@ -30,15 +30,14 @@ extern int opt_prohibit;            /* passes prohibited globally */
 #define OPT_LIR_FOLD        0x00000080
 #define OPT_LIR_HOIST       0x00000100
 #define OPT_LIR_DVN         0x00000200
-#define OPT_LIR_MASK        0x00000400
-#define OPT_LIR_CMP         0x00000800
-#define OPT_LIR_MERGE       0x00001000
-#define OPT_MCH_EARLY       0x00002000
-#define OPT_MCH_CMP         0x00004000
-#define OPT_MCH_FUSE        0x00008000
-#define OPT_MCH_CMOV        0x00010000
-#define OPT_MCH_LATE        0x00020000
-#define OPT_MCH_MBZ         0x00040000
+#define OPT_LIR_CMP         0x00000400
+#define OPT_LIR_MERGE       0x00000800
+#define OPT_MCH_EARLY       0x00001000
+#define OPT_MCH_CMP         0x00002000
+#define OPT_MCH_FUSE        0x00004000
+#define OPT_MCH_CMOV        0x00008000
+#define OPT_MCH_LATE        0x00010000
+#define OPT_MCH_MBZ         0x00020000
 
 #define OPT_ANY_PASSES      (   OPT_DEAD            \
                             |   OPT_PRUNE           )
@@ -51,7 +50,6 @@ extern int opt_prohibit;            /* passes prohibited globally */
                             |   OPT_LIR_FOLD        \
                             |   OPT_LIR_HOIST       \
                             |   OPT_LIR_DVN         \
-                            |   OPT_LIR_MASK        \
                             |   OPT_LIR_CMP         \
                             |   OPT_LIR_MERGE       )
 

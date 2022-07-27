@@ -23,7 +23,6 @@
 #include "cmp.h"
 #include "mbz.h"
 #include "cmov.h"
-#include "mask.h"
 #include "opt.h"
 
 /* OPT_PRUNE. prune the CFG to 'minimal' form.
@@ -362,7 +361,6 @@ static struct { int bit; void (*pass)(void); char *name; } passes[] =
             OPT_LIR_FOLD,       opt_lir_fold,       "lir_fold",
             OPT_LIR_HOIST,      opt_lir_hoist,      "lir_hoist",
             OPT_LIR_DVN,        opt_lir_dvn,        "lir_dvn",
-            OPT_LIR_MASK,       opt_lir_mask,       "lir_mask",
             OPT_LIR_CMP,        opt_lir_cmp,        "lir_cmp",
             OPT_LIR_MERGE,      opt_lir_merge,      "lir_merge",
             OPT_MCH_EARLY,      opt_mch_early,      "mch_early",

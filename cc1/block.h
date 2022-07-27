@@ -18,7 +18,6 @@
 #include "hoist.h"
 #include "insn.h"
 #include "reach.h"
-#include "mask.h"
 #include "lower.h"
 
 /* the intermediate representation is a control flow graph: a collection of
@@ -107,7 +106,6 @@ struct block
     struct dvn dvn;                 /* value numbering data (dvn.c) */
     struct lower lower;             /* lowering data (lower.c) */
     struct insn *cmp;               /* last I_LIR_CMP on path (cmp.c) */
-    struct mask mask;               /* register masks (mask.c) */
 
     VECTOR(dep) deps;               /* insn dependencies (dep.c) */
 };

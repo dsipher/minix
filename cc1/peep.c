@@ -11,167 +11,19 @@
 #include "block.h"
 #include "peep.h"
 
-/* lowering chooses LEA for additions and shifts when possible. if we
-   determine that a simple ADD or SHL will suffice, we substitute. as
-   the register allocator progresses, new opportunities appear through
-   coalsecing (and after final allocation). we want to rewrite these
-   insns as soon as we can, mostly because ADD/SHL can be fused.
-
-   LEA doesn't affect the flags, whereas ADD/SHL do, so we can't make the
-   substitution if REG_CC is alive across the LEA. on the other hand, if
-   we do substitute, OPT_MCH_CMP may have a new opportunity to exploit. */
-
-static void lea0(struct block *b, int i)
-{
-    struct insn *insn = INSN(b, i);
-    struct operand *ea = &insn->operand[1];     /* O_EA */
-    struct operand *dst = &insn->operand[0];    /* O_REG */
-    struct insn *new;
-    int add, shl, mov;
-
-    if (live_across(b, REG_CC, i)) return;
-
-    switch (insn->op)
-    {
-    case I_MCH_LEAB:    add = I_MCH_ADDB;
-                        shl = I_MCH_SHLB;
-                        mov = I_MCH_MOVB;
-                        break;
-
-    case I_MCH_LEAW:    add = I_MCH_ADDW;
-                        shl = I_MCH_SHLW;
-                        mov = I_MCH_MOVW;
-                        break;
-
-    case I_MCH_LEAL:    add = I_MCH_ADDL;
-                        shl = I_MCH_SHLL;
-                        mov = I_MCH_MOVL;
-                        break;
-
-    case I_MCH_LEAQ:    add = I_MCH_ADDQ;
-                        shl = I_MCH_SHLQ;
-                        mov = I_MCH_MOVQ;
-                        break;
-    }
-
-    if ((ea->reg == dst->reg) && (ea->index == REG_NONE)) {
-        /* LEAx c(%dst), %dst -> ADDx $c, %dst.
-           (c will already be properly normalized.) */
-
-        new = new_insn(add, 0);
-        IMM_OPERAND(&new->operand[1], 0, 0, ea->con, ea->sym);
-        goto replace;
-    }
-
-    if ((ea->sym == 0) && (ea->con.i == 0)) {
-        if ((ea->reg == REG_NONE) && (ea->index == dst->reg)) {
-            /* LEAx (,%dst,n), %dst -> SHLx $LOG2(n), %dst */
-
-            new = new_insn(shl, 0);
-            I_OPERAND(&new->operand[1], 0, 0, ea->scale);
-            goto replace;
-        }
-
-        if (ea->scale == 0) {
-            if (ea->reg == dst->reg) {
-                /* LEAx (%dst,%reg), %dst -> ADDx %reg, %dst */
-                new = new_insn(add, 0);
-                REG_OPERAND(&new->operand[1], 0, 0, ea->index);
-                goto replace;
-            }
-
-            if (ea->index == dst->reg) {
-                /* LEAx (%reg,%dst), %dst -> ADDx %reg, %dst */
-                new = new_insn(add, 0);
-                REG_OPERAND(&new->operand[1], 0, 0, ea->reg);
-                goto replace;
-            }
-
-            if (ea->index == REG_NONE) {
-                /* LEAx (%reg), %dst -> MOVx %reg, %dst */
-                new = new_insn(mov, 0);
-                REG_OPERAND(&new->operand[1], 0, 0, ea->reg);
-                goto replace;
-            }
-        }
-    }
-
-    return;
-
-replace:
-    REG_OPERAND(&new->operand[0], 0, 0, dst->reg);
-    INSN(b, i) = new;
-    opt_request |= OPT_MCH_FUSE | OPT_MCH_CMP;
-}
-
-/* if we encounter an ANDx insn whose result is tossed, we can
-   rewrite as TESTx. because this doesn't require a scratch reg
-   this eases pressure and can eliminate unnecessary copies. */
-
-static void and0(struct block *b, int i)
-{
-    struct insn *insn = INSN(b, i);
-    struct operand *dst = &insn->operand[0];
-    int op;
-
-    if (!OPERAND_REG(dst) || !range_doa(b, dst->reg, i))
-        return;
-
-    switch (insn->op)
-    {
-    case I_MCH_ANDB:    op = I_MCH_TESTB; break;
-    case I_MCH_ANDW:    op = I_MCH_TESTW; break;
-    case I_MCH_ANDL:    op = I_MCH_TESTL; break;
-    case I_MCH_ANDQ:    op = I_MCH_TESTQ; break;
-    }
-
-    /* and ANDx insns with a reg dst are valid
-       TSTx insns, so we can twiddle in place. */
-
-    insn->op = op;
-}
-
-/* we leave most peephole optimizations to opt_mch_late(), but some
-   substitutions must be interleaved with register allocation (and
-   the other interleaved passes) for best results. we call these the
-   EARLY substitutions, which are handled here ... */
-
-void opt_mch_early(void)
-{
-    struct block *b;
-    struct insn *insn;
-    int i;
-
-    live_analyze(LIVE_ANALYZE_REGS | LIVE_ANALYZE_CC);
-
-    FOR_ALL_BLOCKS(b)
-        FOR_EACH_INSN(b, i, insn)
-            switch (insn->op)
-            {
-            case I_MCH_ANDB:
-            case I_MCH_ANDW:
-            case I_MCH_ANDL:
-            case I_MCH_ANDQ:    and0(b, i); break;
-
-            case I_MCH_LEAB:
-            case I_MCH_LEAW:
-            case I_MCH_LEAL:
-            case I_MCH_LEAQ:    lea0(b, i); break;
-            }
-
-}
-
 /* map indicating which possible optimizations are available for each
    MCH insn. these entries must be in sync with the handler functions:
    they'll be confused if they see an op they're not prepared for. */
 
-#define XOR0    0x0001      /* MOVx $0,%R -> XORL %R,%R */
-#define INC0    0x0002      /* ADDx $1,Y -> INCx Y, et al. */
-#define LOAD0   0x0004      /* widen sub-word loads from memory */
-#define WIDE0   0x0008      /* widen sub-word operations */
-#define CMP0    0x0010      /* replace CMPx $0,%R with TESTx %R,%R */
-#define TRUNC0  0x0020      /* truncate MOVQ/ANDQ -> MOVL/ANDL */
-#define MUL0    0x0040      /* IMUL -> LEA/ADD/SHL equivalents */
+#define LEA0    0x0001      /* LEAx -> ADDx/SHLx */
+#define AND0    0x0002      /* ANDx -> TESTx */
+#define XOR0    0x0004      /* MOVx $0,%R -> XORL %R,%R */
+#define INC0    0x0008      /* ADDx $1,Y -> INCx Y, et al. */
+#define LOAD0   0x0010      /* widen sub-word loads from memory */
+#define WIDE0   0x0020      /* widen sub-word operations */
+#define CMP0    0x0040      /* replace CMPx $0,%R with TESTx %R,%R */
+#define TRUNC0  0x0080      /* truncate MOVQ/ANDQ -> MOVL/ANDL */
+#define MUL0    0x0100      /* IMUL -> LEA/ADD/SHL equivalents */
 
 static short peeps[] =      /* indexed by I_INDEX */
 {
@@ -216,10 +68,10 @@ static short peeps[] =      /* indexed by I_INDEX */
     CMP0,                                       /*   97  I_MCH_CMPQ       */
     0,                                          /*   98  I_MCH_UCOMISS    */
     0,                                          /*   99  I_MCH_UCOMISD    */
-    0,                                          /*  100  I_MCH_LEAB       */
-    0,                                          /*  101  I_MCH_LEAW       */
-    0,                                          /*  102  I_MCH_LEAL       */
-    0,                                          /*  103  I_MCH_LEAQ       */
+    LEA0,                                       /*  100  I_MCH_LEAB       */
+    LEA0,                                       /*  101  I_MCH_LEAW       */
+    LEA0,                                       /*  102  I_MCH_LEAL       */
+    LEA0,                                       /*  103  I_MCH_LEAQ       */
     0,                                          /*  104  I_MCH_NOTB       */
     0,                                          /*  105  I_MCH_NOTW       */
     0,                                          /*  106  I_MCH_NOTL       */
@@ -271,10 +123,10 @@ static short peeps[] =      /* indexed by I_INDEX */
     WIDE0,                                      /*  152  I_MCH_SHLW       */
     0,                                          /*  153  I_MCH_SHLL       */
     0,                                          /*  154  I_MCH_SHLQ       */
-    WIDE0,                                      /*  155  I_MCH_ANDB       */
-    WIDE0,                                      /*  156  I_MCH_ANDW       */
-    0,                                          /*  157  I_MCH_ANDL       */
-    TRUNC0,                                     /*  158  I_MCH_ANDQ       */
+    AND0 | WIDE0,                               /*  155  I_MCH_ANDB       */
+    AND0 | WIDE0,                               /*  156  I_MCH_ANDW       */
+    AND0,                                       /*  157  I_MCH_ANDL       */
+    AND0 | TRUNC0,                              /*  158  I_MCH_ANDQ       */
     WIDE0,                                      /*  159  I_MCH_ORB        */
     WIDE0,                                      /*  160  I_MCH_ORW        */
     0,                                          /*  161  I_MCH_ORL        */
@@ -348,6 +200,128 @@ static short peeps[] =      /* indexed by I_INDEX */
     0,                                          /*  229  I_MCH_CMOVBQ     */
     0                                           /*  230  I_MCH_ZERO       */
 };
+
+/* lowering chooses LEA for additions and shifts when possible. if we
+   determine that a simple ADD or SHL will suffice, we substitute. as
+   the register allocator progresses, new opportunities appear through
+   coalsecing (and after final allocation). we want to rewrite these
+   insns as soon as we can, mostly because ADD/SHL can be fused.
+
+   LEA doesn't affect the flags, whereas ADD/SHL do, so we can't make the
+   substitution if REG_CC is alive across the LEA. on the other hand, if
+   we do substitute, OPT_MCH_CMP may have a new opportunity to exploit. */
+
+static int lea0(struct block *b, int i)
+{
+    struct insn *insn = INSN(b, i);
+    struct operand *ea = &insn->operand[1];     /* O_EA */
+    struct operand *dst = &insn->operand[0];    /* O_REG */
+    struct insn *new;
+    int add, shl, mov;
+
+    if (live_across(b, REG_CC, i)) return 0;
+
+    switch (insn->op)
+    {
+    case I_MCH_LEAB:    add = I_MCH_ADDB;
+                        shl = I_MCH_SHLB;
+                        mov = I_MCH_MOVB;
+                        break;
+
+    case I_MCH_LEAW:    add = I_MCH_ADDW;
+                        shl = I_MCH_SHLW;
+                        mov = I_MCH_MOVW;
+                        break;
+
+    case I_MCH_LEAL:    add = I_MCH_ADDL;
+                        shl = I_MCH_SHLL;
+                        mov = I_MCH_MOVL;
+                        break;
+
+    case I_MCH_LEAQ:    add = I_MCH_ADDQ;
+                        shl = I_MCH_SHLQ;
+                        mov = I_MCH_MOVQ;
+                        break;
+    }
+
+    if ((ea->reg == dst->reg) && (ea->index == REG_NONE)) {
+        /* LEAx c(%dst), %dst -> ADDx $c, %dst.
+           (c will already be properly normalized.) */
+
+        new = new_insn(add, 0);
+        IMM_OPERAND(&new->operand[1], 0, 0, ea->con, ea->sym);
+        goto replace;
+    }
+
+    if ((ea->sym == 0) && (ea->con.i == 0)) {
+        if ((ea->reg == REG_NONE) && (ea->index == dst->reg)) {
+            /* LEAx (,%dst,n), %dst -> SHLx $LOG2(n), %dst */
+
+            new = new_insn(shl, 0);
+            I_OPERAND(&new->operand[1], 0, 0, ea->scale);
+            goto replace;
+        }
+
+        if (ea->scale == 0) {
+            if (ea->reg == dst->reg) {
+                /* LEAx (%dst,%reg), %dst -> ADDx %reg, %dst */
+                new = new_insn(add, 0);
+                REG_OPERAND(&new->operand[1], 0, 0, ea->index);
+                goto replace;
+            }
+
+            if (ea->index == dst->reg) {
+                /* LEAx (%reg,%dst), %dst -> ADDx %reg, %dst */
+                new = new_insn(add, 0);
+                REG_OPERAND(&new->operand[1], 0, 0, ea->reg);
+                goto replace;
+            }
+
+            if (ea->index == REG_NONE) {
+                /* LEAx (%reg), %dst -> MOVx %reg, %dst */
+                new = new_insn(mov, 0);
+                REG_OPERAND(&new->operand[1], 0, 0, ea->reg);
+                goto replace;
+            }
+        }
+    }
+
+    return 0;
+
+replace:
+    REG_OPERAND(&new->operand[0], 0, 0, dst->reg);
+    INSN(b, i) = new;
+    opt_request |= OPT_MCH_FUSE | OPT_MCH_CMP;
+    return 1;
+}
+
+/* if we encounter an ANDx insn whose result is tossed, we can
+   rewrite as TESTx. because this doesn't require a scratch reg
+   this eases pressure and can eliminate unnecessary copies. */
+
+static int and0(struct block *b, int i)
+{
+    struct insn *insn = INSN(b, i);
+    struct operand *dst = &insn->operand[0];
+    int op;
+
+    if (!OPERAND_REG(dst) || !range_doa(b, dst->reg, i))
+        return 0;
+
+    switch (insn->op)
+    {
+    case I_MCH_ANDB:    op = I_MCH_TESTB; break;
+    case I_MCH_ANDW:    op = I_MCH_TESTW; break;
+    case I_MCH_ANDL:    op = I_MCH_TESTL; break;
+    case I_MCH_ANDQ:    op = I_MCH_TESTQ; break;
+    }
+
+    /* and ANDx insns with a reg dst are valid
+       TSTx insns, so we can twiddle in place. */
+
+    insn->op = op;
+    return 1;
+}
 
 /* replace MOVx $0,%reg with XORL %reg, %reg.
 
@@ -660,16 +634,15 @@ lea_shl:
     return 1;
 }
 
-/* LATE peephole optimizations are done almost immediately before
-   the function is output. these transformations produce [almost]
-   semantically-identical behavior, but result in sequences that
-   would be confusing to earlier passes and/or do not expose any
-   additional opportunities the way that the EARLY peeps do.
+/* basic instruction substitutions. we divide these into two broad
+   categories, EARLY and LATE. EARLY optimizations are interleaved
+   with register allocation because they are non-disruptive and/or
+   expose additional optimization opportunities. LATE substitutions
+   are run only once, after allocation is complete, because they are
+   more concerned with the arcana of AMD64 instruction than anything
+   else, tend to obscure meaning, or otherwise get in the way. */
 
-   opt_mch_late() is followed in short order by lower_more(); the
-   difference is the opt_mch_late() substitutions are optional. */
-
-void opt_mch_late(void)
+static void peep0(int late)
 {
     struct block *b;
     struct insn *insn;
@@ -690,17 +663,17 @@ nocc:
             insn = INSN(b, i);
             peep = peeps[I_INDEX(insn->op)];
 
-            if ((peep & INC0)       && inc0(b, i))      goto nocc;
-            if ((peep & MUL0)       && mul0(b, i))      goto nocc;
-            if ((peep & LOAD0)      && load0(b, i))     goto nocc;
-            if ((peep & TRUNC0)     && trunc0(b, i))    goto nocc;
+            if ( late && (peep & INC0)      && inc0(b, i))      goto nocc;
+            if ( late && (peep & MUL0)      && mul0(b, i))      goto nocc;
+            if ( late && (peep & LOAD0)     && load0(b, i))     goto nocc;
+            if ( late && (peep & TRUNC0)    && trunc0(b, i))    goto nocc;
         }
 
-    /* the second group need the live data for REG_CC. it is
-       important that they preserve its validity, since we do
-       not currently do not invalidate on replacement. */
+    /* the second group need the live data. it is important that
+       they preserve its validity (at least conservatively) since
+       we do not [want to] repeat the analysis after a replacement. */
 
-    live_analyze(LIVE_ANALYZE_CC);
+    live_analyze(LIVE_ANALYZE_REGS | LIVE_ANALYZE_CC);
 
     FOR_ALL_BLOCKS(b)
         for (i = 0; i < NR_INSNS(b); ++i) {
@@ -708,10 +681,15 @@ needcc:
             insn = INSN(b, i);
             peep = peeps[I_INDEX(insn->op)];
 
-            if ((peep & XOR0)       && xor0(b, i))      goto needcc;
-            if ((peep & WIDE0)      && wide0(b, i))     goto needcc;
-            if ((peep & CMP0)       && cmp0(b, i))      goto needcc;
+            if (!late && (peep & LEA0)      && lea0(b, i))      goto needcc;
+            if (!late && (peep & AND0)      && and0(b, i))      goto needcc;
+            if ( late && (peep & XOR0)      && xor0(b, i))      goto needcc;
+            if ( late && (peep & WIDE0)     && wide0(b, i))     goto needcc;
+            if ( late && (peep & CMP0)      && cmp0(b, i))      goto needcc;
         }
 }
+
+void opt_mch_early(void)    { peep0(0); }
+void opt_mch_late(void)     { peep0(1); }
 
 /* vi: set ts=4 expandtab: */

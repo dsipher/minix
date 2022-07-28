@@ -25,12 +25,12 @@ const char * const cc_text[] =
     "jmp"   /* CC_NEVER .. CC_SWITCH not present */
 };
 
-/* we never attempt to commute CC_S or CC_NS
-   since they don't arise from I_LIR_CMP */
+/* map a condition to the condition that results
+   if the operands of a comparison are swapped */
 
 const char commuted_cc[] =
 {
-    CC_Z,   CC_NZ,  0,      0,      CC_L,   CC_GE,
+    CC_Z,   CC_NZ,  CC_NS,  CC_S,   CC_L,   CC_GE,
     CC_LE,  CC_G,   CC_B,   CC_AE,  CC_BE,  CC_A
 };
 

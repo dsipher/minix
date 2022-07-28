@@ -99,9 +99,9 @@ static void and0(struct block *b, int i, int op)
 }
 
 /* we leave most peephole optimizations to opt_mch_late(), but some
-   substitutions must be made before (or during) register allocation
-   for best results. though opt_mch_late() can play fast and loose
-   with operand sizes and such, here we must still be conservative. */
+   substitutions must be interleaved with register allocation (and
+   the other interleaved passes) for best results. we call these the
+   EARLY substitutions, which are handled here ... */
 
 void opt_mch_early(void)
 {
@@ -638,17 +638,14 @@ lea_shl:
     return 1;
 }
 
-/* the late peephole optimizations are done almost immediately before
-   the function is output, because they're destructive the sense that
-   they manipulate insns in a way that loses information or otherwise
-   would confuse analysis/optimization passes. specific handlers above
-   carry specific notes, but one common theme is that we play fast and
-   loose with the sizes of operands; we delay this because an operand
-   with the `wrong' size will confuse the spill code in the allocator,
-   which matches its loads and stores with the operand size for fusing.
-   also, replacements which obscure the meaning (e.g., `XOR R,R' really
-   means `load 0 into R') or are mere synonyms (INC/TEST) are left until
-   now, so we don't burden other passes with the arcana of AMD64 insns. */
+/* LATE peephole optimizations are done almost immediately before
+   the function is output. these transformations produce [almost]
+   semantically-identical behavior, but result in sequences that
+   would be confusing to earlier passes and/or do not expose any
+   additional opportunities the way that the EARLY peeps do.
+
+   opt_mch_late() is followed in short order by lower_more(); the
+   difference is the opt_mch_late() substitutions are optional. */
 
 void opt_mch_late(void)
 {

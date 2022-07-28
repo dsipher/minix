@@ -305,12 +305,7 @@ static int cmpz0(struct block *b, int i)
 /* this is a bit harder. if we compare a register against 0, and
    are interested if it's L/GE, then the S bit will tell us. we
    can nuke the comparison but, unlike the above, we also have to
-   rewrite the L/GE to S/NS in dependent SETxx insns, or branches.
-
-   this is left until the very late in optimization, because the
-   S/NS condition codes are not understood by earlier phases of
-   the compiler, so once we rewrite them, we are limited in what
-   facilities are available for further analysis/optimization. */
+   rewrite the L/GE to S/NS in dependent insns or branches. */
 
 #define CMPS0(cc)   ((cc) = ((cc) == CC_L) ? CC_S : CC_NS)
 
@@ -333,8 +328,7 @@ static int cmps0(struct block *b, int i)
             if (RANGE(b, r).use == INSN_INDEX_BRANCH) {
                 /* rewrite L/GE branches as S/NS. we intentionally do this
                    manually, in place, rather than using the primitives in
-                   block.c because they don't really understand CC_S/CC_NS.
-                   that's why this transformation is saved until the end... */
+                   block.c because they don't really understand CC_S/CC_NS. */
 
                 int n;
 

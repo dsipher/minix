@@ -324,10 +324,10 @@ static int merge0(int r1, int r2)
         }
     }
 
-    substitute_reg(n2->reg, n1->reg);   /* n2->reg is gone */
-    n2->coalesced = n1;                 /* leave a breadcrumb */
-    TRUNC_VECTOR(n2->edges);            /* (just to be tidy) */
-    get(n2);                            /* and remove from the graph */
+    substitute_reg_everywhere(n2->reg, n1->reg);    /* n2->reg is gone */
+    n2->coalesced = n1;                             /* leave a breadcrumb */
+    TRUNC_VECTOR(n2->edges);                        /* (just to be tidy) */
+    get(n2);                                        /* remove from graph */
 
     if (!MACHINE_REG(n1->reg)) {
         /* if we are coalescing two pseudo registers, and the absorbed node
@@ -613,7 +613,7 @@ static void spill0(void)
 
     /* allocate a temporary for the inserted loads and stores.
        we perform all loads and stores using the type of the
-       node's underlying symbol, which is guaranteed to be 
+       node's underlying symbol, which is guaranteed to be
        large enough. build its frame address into addr. */
 
     sym = temp(REG_TO_SYMBOL(old)->type);
@@ -662,7 +662,7 @@ static void spill0(void)
 
 /* conventional Chaitin simplification. find a node with degree
    less than K, disconnect it from the graph and put it on the stack.
-   repeat exhaustively. returns true if the graph is empty (except 
+   repeat exhaustively. returns true if the graph is empty (except
    for precolored nodes), or false if it can't proceed further. */
 
 static int simplify0(void)
@@ -763,7 +763,7 @@ static void marker0(void)
 
     for (i = NR_MACHINE_REGS; i < nr_assigned_regs; ++i)
         for (n = VECTOR_ELEM(graph, i); n; n = n->link)
-            substitute_reg(n->reg, n->color);
+            substitute_reg_everywhere(n->reg, n->color);
 }
 
 void color(void)

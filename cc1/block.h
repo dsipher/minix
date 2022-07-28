@@ -267,7 +267,7 @@ void undecorate_blocks(void);
 /* substitute all appearances of a reg (src) with
    a new reg (dst) thoughout the entire CFG */
 
-void substitute_reg(int src, int dst);
+void substitute_reg_everywhere(int src, int dst);
 
 /* populate regs with the set of all
    registers referenced in the CFG. */

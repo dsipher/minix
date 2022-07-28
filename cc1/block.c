@@ -562,7 +562,7 @@ void undecorate_blocks(void)
     }
 }
 
-void substitute_reg(int src, int dst)
+void substitute_reg_everywhere(int src, int dst)
 {
     struct block *b;
     struct insn *insn;

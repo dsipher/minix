@@ -5,7 +5,7 @@ L1:
 L2:
 	movq %rdi,%rax
 L4:
-	movzbl (%rax),%ecx
+	movb (%rax),%cl
 	incq %rax
 	testb %cl,%cl
 	jnz L4

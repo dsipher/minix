@@ -40,7 +40,7 @@ L2:
 	leaq 24(%rbp),%rbx
 L4:
 	movq 16(%rbp),%rcx
-	movzbl (%rcx),%eax
+	movb (%rcx),%al
 	testb %al,%al
 	jz L3
 L5:
@@ -53,7 +53,7 @@ L7:
 	movq 16(%rbp),%rax
 	js L11
 L10:
-	movzbl (%rax),%edx
+	movb (%rax),%dl
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
@@ -66,7 +66,7 @@ L11:
 L8:
 	leaq 1(%rcx),%rax
 	movq %rax,16(%rbp)
-	movzbl 1(%rcx),%ecx
+	movb 1(%rcx),%cl
 	movq _out_f(%rip),%rdi
 	xorl %eax,%eax
 L58:
@@ -201,7 +201,7 @@ L13:
 	movq 16(%rbp),%rax
 	js L56
 L55:
-	movzbl (%rax),%edx
+	movb (%rax),%dl
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
@@ -315,7 +315,7 @@ L103:
 	leaq 40(%rbp),%rbx
 L105:
 	movq 32(%rbp),%rcx
-	movzbl (%rcx),%eax
+	movb (%rcx),%al
 	testb %al,%al
 	jz L107
 L106:
@@ -325,7 +325,7 @@ L108:
 	decl ___stderr(%rip)
 	js L112
 L111:
-	movzbl (%rcx),%edx
+	movb (%rcx),%dl
 	movq ___stderr+24(%rip),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,___stderr+24(%rip)
@@ -339,7 +339,7 @@ L112:
 L109:
 	leaq 1(%rcx),%rax
 	movq %rax,32(%rbp)
-	movzbl 1(%rcx),%eax
+	movb 1(%rcx),%al
 	cmpb $37,%al
 	jz L183
 L201:

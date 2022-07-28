@@ -114,12 +114,12 @@ L39:
 	sarl $25,%eax
 	decl %eax
 	movslq %eax,%rax
-	movzbl 1(%rdi,%rax),%eax
+	movb 1(%rdi,%rax),%al
 	ret
 L40:
 	movq 16(%rdi),%rcx
 	movq 8(%rdi),%rax
-	movzbl -1(%rcx,%rax),%eax
+	movb -1(%rcx,%rax),%al
 	ret
 L32:
 	xorl %eax,%eax
@@ -304,7 +304,7 @@ L88:
 	orl %edx,%ecx
 	movl %ecx,(%rdi)
 	movslq %eax,%rax
-	movzbl -1(%rbp),%ecx
+	movb -1(%rbp),%cl
 	movb %cl,1(%rdi,%rax)
 	movl (%rdi),%eax
 	shll $24,%eax
@@ -317,7 +317,7 @@ L89:
 	movq 8(%rdi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,8(%rdi)
-	movzbl -1(%rbp),%eax
+	movb -1(%rbp),%al
 	movb %al,(%rdx,%rcx)
 	movq 16(%rdi),%rcx
 	movq 8(%rdi),%rax

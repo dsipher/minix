@@ -6,8 +6,8 @@ L2:
 	testq %rdx,%rdx
 	jz L31
 L7:
-	movzbl (%rdi),%eax
-	movzbl (%rsi),%ecx
+	movb (%rdi),%al
+	movb (%rsi),%cl
 	incq %rsi
 	cmpb %cl,%al
 	jnz L8
@@ -23,7 +23,7 @@ L8:
 	cmpq $0,%rdx
 	jbe L31
 L18:
-	movzbl (%rdi),%eax
+	movb (%rdi),%al
 	testb %al,%al
 	jz L21
 L23:

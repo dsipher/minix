@@ -393,7 +393,7 @@ L155:
 	movq %rax,_linkp(,%rcx,8)
 	movl _current_scope(%rip),%edx
 	movq _strun_scopes(%rip),%rax
-	movl %edx,%ecx
+	movb %dl,%cl
 	movl $1,%esi
 	shlq %cl,%rsi
 	testl %ebx,%ebx

@@ -12,9 +12,9 @@ L7:
 	cmpq $0,%rdx
 	jbe L6
 L8:
-	movzbl (%rdi),%eax
+	movb (%rdi),%al
 	incq %rdi
-	movzbl (%rsi),%ecx
+	movb (%rsi),%cl
 	incq %rsi
 	cmpb %cl,%al
 	jz L7

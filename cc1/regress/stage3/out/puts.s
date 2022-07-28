@@ -8,7 +8,7 @@ L2:
 	movq %rdi,%r12
 	xorl %ebx,%ebx
 L4:
-	movzbl (%r12),%ecx
+	movb (%r12),%cl
 	movl ___stdout(%rip),%eax
 	decl %eax
 	testb %cl,%cl
@@ -19,7 +19,7 @@ L5:
 	cmpl $0,%eax
 	jl L11
 L10:
-	movzbl (%r12),%eax
+	movb (%r12),%al
 	movq ___stdout+24(%rip),%rdx
 	movq %rcx,%r12
 	leaq 1(%rdx),%rcx

@@ -64,7 +64,7 @@ L17:
 	xorl %esi,%esi
 	xorl %edx,%edx
 L19:
-	movzbl (%rdi),%ecx
+	movb (%rdi),%cl
 	testb %cl,%cl
 	jz L21
 L20:
@@ -250,7 +250,7 @@ L131:
 	cmpl $-1,%r12d
 	jz L125
 L132:
-	movl %r12d,%esi
+	movb %r12b,%sil
 	movl $L105,%edi
 	call _vstring_putc
 	jmp L110
@@ -407,7 +407,7 @@ L186:
 	movq %r12,%rsi
 	leaq -24(%rbp),%rdi
 	call _vstring_concat
-	movl $47,%esi
+	movb $47,%sil
 	leaq -24(%rbp),%rdi
 	call _vstring_putc
 	movq %rbx,%rsi

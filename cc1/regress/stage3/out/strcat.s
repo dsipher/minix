@@ -6,14 +6,14 @@ L2:
 	movq %rdi,%rax
 	movq %rax,%rdx
 L4:
-	movzbl (%rdx),%ecx
+	movb (%rdx),%cl
 	incq %rdx
 	testb %cl,%cl
 	jnz L4
 L6:
 	decq %rdx
 L7:
-	movzbl (%rsi),%ecx
+	movb (%rsi),%cl
 	incq %rsi
 	movb %cl,(%rdx)
 	incq %rdx

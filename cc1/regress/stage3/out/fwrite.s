@@ -25,7 +25,7 @@ L8:
 	movq %r15,%rbx
 L10:
 	decl (%r14)
-	movzbl (%r13),%eax
+	movb (%r13),%al
 	movzbl %al,%edi
 	js L17
 L16:

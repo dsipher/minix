@@ -518,14 +518,14 @@ L295:
 	testl %eax,%eax
 	jz L283
 L296:
-	movl %edx,%ecx
-	movl $5,%eax
+	movb %dl,%cl
+	movb $5,%al
 	imulb %cl
 	leal 8(%rax),%ecx
 	movl %r9d,%eax
 	sarl %cl,%eax
-	andl $31,%eax
-	movl %eax,%ecx
+	andb $31,%al
+	movb %al,%cl
 	movl $1,%esi
 	shll %cl,%esi
 	movslq %edx,%rcx
@@ -1201,7 +1201,7 @@ L631:
 	call _fputs
 	xorl %ebx,%ebx
 L648:
-	movl %ebx,%ecx
+	movb %bl,%cl
 	movl $1,%eax
 	shll %cl,%eax
 	testl %r12d,%eax

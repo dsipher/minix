@@ -174,7 +174,7 @@ L22:
 	cmpq 16(%r13),%r12
 	jae L25
 L23:
-	movzbl (%r12),%eax
+	movb (%r12),%al
 	cmpb (%rbx),%al
 	jnz L43
 L37:
@@ -545,7 +545,7 @@ L149:
 	movl 8(%r12),%eax
 	movb %bl,(%rcx,%rax)
 L151:
-	movzbl (%r12),%ecx
+	movb (%r12),%cl
 	movq (%r13),%rax
 	cmpb $2,%cl
 	jnz L154
@@ -759,7 +759,7 @@ L215:
 	movl %ebx,%eax
 	cltd 
 	idivl %ecx
-	addl $48,%edx
+	addb $48,%dl
 	movb %dl,(%rdi)
 	leaq 1(%rdi),%rax
 L212:

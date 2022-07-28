@@ -41,7 +41,7 @@ L25:
 	movl %edi,%eax
 	cltd 
 	idivl %ecx
-	addl $48,%edx
+	addb $48,%dl
 	leaq -1(%r8),%rax
 	movb %dl,-1(%r8)
 	movq %rax,%r8
@@ -67,39 +67,39 @@ L29:
 	movl %edi,%eax
 	cltd 
 	idivl %r8d
-	addl $48,%eax
+	addb $48,%al
 	movb %al,L31(%rip)
 	movl $10,%r8d
 	movl %edi,%eax
 	cltd 
 	idivl %r8d
-	addl $48,%edx
+	addb $48,%dl
 	movb %dl,L31+1(%rip)
 	movb %cl,L31+2(%rip)
 	movl $10,%edi
 	movl %esi,%eax
 	cltd 
 	idivl %edi
-	addl $48,%eax
+	addb $48,%al
 	movb %al,L31+3(%rip)
 	movl $10,%edi
 	movl %esi,%eax
 	cltd 
 	idivl %edi
-	addl $48,%edx
+	addb $48,%dl
 	movb %dl,L31+4(%rip)
 	movb %cl,L31+5(%rip)
 	movl $10,%ecx
 	movl %r9d,%eax
 	cltd 
 	idivl %ecx
-	addl $48,%eax
+	addb $48,%al
 	movb %al,L31+6(%rip)
 	movl $10,%ecx
 	movl %r9d,%eax
 	cltd 
 	idivl %ecx
-	addl $48,%edx
+	addb $48,%dl
 	movb %dl,L31+7(%rip)
 	movl $L31,%eax
 L30:
@@ -173,7 +173,7 @@ L34:
 	xorl %r14d,%r14d
 L36:
 	movq -40(%rbp),%rax
-	movzbl (%rax),%ecx
+	movb (%rax),%cl
 	incq -40(%rbp)
 	leaq -1(%rbp),%rax
 	movq %rax,-24(%rbp)
@@ -196,7 +196,7 @@ L47:
 L41:
 	xorl %r13d,%r13d
 	movq -40(%rbp),%rax
-	movzbl (%rax),%ecx
+	movb (%rax),%cl
 	incq -40(%rbp)
 	movb %cl,-1(%rbp)
 	cmpb $83,%cl
@@ -205,7 +205,7 @@ L130:
 	cmpb $89,%cl
 	jg L128
 L127:
-	addl $-83,%ecx
+	addb $-83,%cl
 	movzbl %cl,%ecx
 	movzwl L135(,%rcx,2),%eax
 	addl $_strftime,%eax

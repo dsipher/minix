@@ -53,7 +53,7 @@ L7:
 	movq %rsi,%rax
 	xorl %edx,%edx
 	divq %r8
-	movzbl (%rdx,%r10),%ecx
+	movb (%rdx,%r10),%cl
 	leaq -1(%r9),%rax
 	movb %cl,-1(%r9)
 	movq %rax,%r9
@@ -64,7 +64,7 @@ L7:
 	testq %rsi,%rsi
 	jnz L7
 L10:
-	movzbl (%r9),%eax
+	movb (%r9),%al
 	testb %al,%al
 	jz L12
 L11:
@@ -315,7 +315,7 @@ L166:
 	movq %rdx,-592(%rbp)
 	movq %rdx,%rsi
 L171:
-	movzbl (%rsi),%eax
+	movb (%rsi),%al
 	incq %rsi
 	testb %al,%al
 	jz L173
@@ -678,7 +678,7 @@ L281:
 	js L284
 L283:
 	movq -592(%rbp),%rax
-	movzbl (%rax),%edx
+	movb (%rax),%dl
 	movq %rcx,-592(%rbp)
 	movq 24(%r15),%rcx
 	leaq 1(%rcx),%rax

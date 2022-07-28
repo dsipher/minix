@@ -305,7 +305,7 @@ L162:
 	andl $1073725440,%eax
 	movl %eax,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq 736(%r14),%rcx
@@ -336,7 +336,7 @@ L175:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -369,7 +369,7 @@ L185:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -464,7 +464,7 @@ L220:
 	andl $1073725440,%r13d
 	movl %r13d,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	notq %rdx
@@ -494,7 +494,7 @@ L229:
 	andl $1073725440,%ebx
 	movl %ebx,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	notq %rdx
@@ -519,7 +519,7 @@ L235:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -938,7 +938,7 @@ L470:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -989,7 +989,7 @@ L464:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -1028,7 +1028,7 @@ L442:
 	movslq %edi,%rdi
 	movq %rdi,-16(%rbp)
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%ebx
 	shlq %cl,%rbx
 	movq -16(%rbp),%rdi
@@ -1050,7 +1050,7 @@ L446:
 	movq (%r8,%rdi,8),%rdi
 	movq %rdi,-24(%rbp)
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%r8d
 	shlq %cl,%r8
 	movq -24(%rbp),%rdi

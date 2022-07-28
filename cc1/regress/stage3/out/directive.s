@@ -192,7 +192,7 @@ L67:
 	movq _state_stack(%rip),%rcx
 	movb %al,1(%rcx)
 	movq _state_stack(%rip),%rcx
-	movzbl 1(%rcx),%eax
+	movb 1(%rcx),%al
 	movb %al,(%rcx)
 L58:
 	popq %rbx

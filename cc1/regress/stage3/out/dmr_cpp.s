@@ -88,7 +88,7 @@ L13:
 	movq %rax,(%r12)
 L15:
 	movq (%r12),%rcx
-	movzbl (%rcx),%eax
+	movb (%rcx),%al
 	testb %al,%al
 	jz L16
 L18:
@@ -202,7 +202,7 @@ L49:
 L50:
 	movq %rdi,%r13
 	movq (%r13),%rbx
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	cmpb $2,%al
 	jnz L52
 L54:
@@ -213,7 +213,7 @@ L54:
 	testq %r12,%r12
 	jz L69
 L68:
-	movzbl 41(%r12),%eax
+	movb 41(%r12),%al
 	andb $2,%al
 	jnz L74
 L72:
@@ -234,7 +234,7 @@ L78:
 	testb %al,%al
 	jz L51
 L83:
-	movzbl 40(%r12),%eax
+	movb 40(%r12),%al
 	cmpb $0,%al
 	jl L51
 L253:
@@ -261,7 +261,7 @@ L102:
 	cmpl _ifdepth(%rip),%ecx
 	jl L51
 L80:
-	movzbl 40(%r12),%esi
+	movb 40(%r12),%sil
 	cmpb $0,%sil
 	jl L109
 L250:
@@ -649,7 +649,7 @@ L274:
 	leaq 32(%rbp),%rbx
 	movq 24(%rbp),%r15
 L279:
-	movzbl (%r15),%edi
+	movb (%r15),%dil
 	testb %dil,%dil
 	jz L282
 L280:
@@ -657,7 +657,7 @@ L280:
 	jnz L284
 L283:
 	leaq 1(%r15),%rax
-	movzbl 1(%r15),%edi
+	movb 1(%r15),%dil
 	movq %rax,%r15
 	cmpb $115,%dil
 	jz L289

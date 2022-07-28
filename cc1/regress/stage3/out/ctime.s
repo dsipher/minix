@@ -228,7 +228,7 @@ L92:
 	call _atoi
 	movb %al,_dsttimes(%rip)
 L95:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L97
 L98:
@@ -241,7 +241,7 @@ L97:
 	decb %al
 	movb %al,_dsttimes+1(%rip)
 L102:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L104
 L105:
@@ -254,7 +254,7 @@ L104:
 	decb %al
 	movb %al,_dsttimes+2(%rip)
 L109:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L94
 L112:
@@ -269,7 +269,7 @@ L116:
 	call _atoi
 	movb %al,_dsttimes+3(%rip)
 L119:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L121
 L122:
@@ -282,7 +282,7 @@ L121:
 	decb %al
 	movb %al,_dsttimes+4(%rip)
 L126:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L128
 L129:
@@ -295,7 +295,7 @@ L128:
 	decb %al
 	movb %al,_dsttimes+5(%rip)
 L133:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L118
 L136:
@@ -310,7 +310,7 @@ L140:
 	call _atoi
 	movb %al,_dsthour(%rip)
 L143:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L142
 L146:
@@ -352,7 +352,7 @@ L163:
 	movq $0,_timezone(%rip)
 	movq _tzname(%rip),%rdx
 L166:
-	movzbl (%rbx),%ecx
+	movb (%rbx),%cl
 	testb %cl,%cl
 	jz L171
 L173:
@@ -371,7 +371,7 @@ L170:
 L171:
 	movb $0,(%rdx)
 L177:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L182
 L180:
@@ -385,7 +385,7 @@ L182:
 	imulq $60,%rax,%rax
 	movq %rax,_timezone(%rip)
 L184:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L189
 L187:
@@ -395,7 +395,7 @@ L187:
 L189:
 	movq _tzname+8(%rip),%rdx
 L191:
-	movzbl (%rbx),%ecx
+	movb (%rbx),%cl
 	testb %cl,%cl
 	jz L196
 L198:
@@ -414,7 +414,7 @@ L195:
 L196:
 	movb $0,(%rdx)
 L202:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	testb %al,%al
 	jz L207
 L205:
@@ -581,11 +581,11 @@ L250:
 	movl $0,%eax
 	cmovael %eax,%ecx
 	leal (%rcx,%rcx,2),%ecx
-	movzbl _daynames(%rcx),%eax
+	movb _daynames(%rcx),%al
 	movb %al,_timestr(%rip)
-	movzbl _daynames+1(%rcx),%eax
+	movb _daynames+1(%rcx),%al
 	movb %al,_timestr+1(%rip)
-	movzbl _daynames+2(%rcx),%eax
+	movb _daynames+2(%rcx),%al
 	movb %al,_timestr+2(%rip)
 	movb $32,_timestr+3(%rip)
 	movl 16(%rdi),%ecx
@@ -593,11 +593,11 @@ L250:
 	movl $0,%eax
 	cmovael %eax,%ecx
 	leal (%rcx,%rcx,2),%ecx
-	movzbl _months(%rcx),%eax
+	movb _months(%rcx),%al
 	movb %al,_timestr+4(%rip)
-	movzbl _months+1(%rcx),%eax
+	movb _months+1(%rcx),%al
 	movb %al,_timestr+5(%rip)
-	movzbl _months+2(%rcx),%eax
+	movb _months+2(%rcx),%al
 	movb %al,_timestr+6(%rip)
 	movb $32,_timestr+7(%rip)
 	movl 12(%rdi),%esi
@@ -608,7 +608,7 @@ L258:
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%eax
+	addb $48,%al
 	movb %al,_timestr+8(%rip)
 	jmp L260
 L259:
@@ -618,7 +618,7 @@ L260:
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%edx
+	addb $48,%dl
 	movb %dl,_timestr+9(%rip)
 	movb $32,_timestr+10(%rip)
 	movl 8(%rdi),%esi
@@ -626,13 +626,13 @@ L260:
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%eax
+	addb $48,%al
 	movb %al,_timestr+11(%rip)
 	movl $10,%ecx
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%edx
+	addb $48,%dl
 	movb %dl,_timestr+12(%rip)
 	movb $58,_timestr+13(%rip)
 	movl 4(%rdi),%esi
@@ -640,13 +640,13 @@ L260:
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%eax
+	addb $48,%al
 	movb %al,_timestr+14(%rip)
 	movl $10,%ecx
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%edx
+	addb $48,%dl
 	movb %dl,_timestr+15(%rip)
 	movb $58,_timestr+16(%rip)
 	movl (%rdi),%esi
@@ -654,13 +654,13 @@ L260:
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%eax
+	addb $48,%al
 	movb %al,_timestr+17(%rip)
 	movl $10,%ecx
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%edx
+	addb $48,%dl
 	movb %dl,_timestr+18(%rip)
 	movb $32,_timestr+19(%rip)
 	movl 20(%rdi),%esi
@@ -668,7 +668,7 @@ L260:
 	leal 1900(%rsi),%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%eax
+	addb $48,%al
 	movb %al,_timestr+20(%rip)
 	movl $1000,%ecx
 	leal 1900(%rsi),%eax
@@ -679,7 +679,7 @@ L260:
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%eax
+	addb $48,%al
 	movb %al,_timestr+21(%rip)
 	movl $100,%ecx
 	movl %esi,%eax
@@ -690,13 +690,13 @@ L260:
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%eax
+	addb $48,%al
 	movb %al,_timestr+22(%rip)
 	movl $10,%ecx
 	movl %esi,%eax
 	xorl %edx,%edx
 	divl %ecx
-	addl $48,%edx
+	addb $48,%dl
 	movb %dl,_timestr+23(%rip)
 	movb $10,_timestr+24(%rip)
 	movb $0,_timestr+25(%rip)

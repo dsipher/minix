@@ -1196,7 +1196,7 @@ L647:
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L655:
-	movl %r14d,%ecx
+	movb %r14b,%cl
 	movq $-1,%rax
 	shlq %cl,%rax
 	notq %rax
@@ -1433,7 +1433,7 @@ L788:
 	movq %r15,%rsi
 	leaq 40(%r12),%rdi
 	call _leaf_operand
-	movl %ebx,%ecx
+	movb %bl,%cl
 	movq $-1,%rbx
 	shlq %cl,%rbx
 	notq %rbx
@@ -1570,7 +1570,7 @@ L876:
 	orl %ecx,%eax
 	movl %eax,40(%r12)
 L884:
-	movl %r14d,%ecx
+	movb %r14b,%cl
 	shlq %cl,%rbx
 	notq %rbx
 	movq %rbx,-24(%rbp)

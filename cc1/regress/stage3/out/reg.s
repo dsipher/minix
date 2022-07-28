@@ -212,7 +212,7 @@ L109:
 	movslq %ebx,%rbx
 	js L114
 L113:
-	movzbl L112(%rbx),%edx
+	movb L112(%rbx),%dl
 	movq 24(%r14),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%r14)

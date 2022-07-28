@@ -145,7 +145,7 @@ L67:
 	movq %rdi,%r15
 	movl $0,-12(%rbp)
 	movq _fixcc_map+8(%rip),%rdi
-	movl $13,%eax
+	movb $13,%al
 	rep 
 	stosb 
 	movl $0,-28(%rbp)
@@ -170,7 +170,7 @@ L80:
 	ja L82
 L81:
 	movq _fixcc_map+8(%rip),%rcx
-	subl $24,%edx
+	subb $24,%dl
 	movl 16(%r14),%eax
 	andl $1073725440,%eax
 	sarl $14,%eax
@@ -258,7 +258,7 @@ L125:
 L126:
 	movslq _fixcc_map+4(%rip),%rcx
 	movq _fixcc_map+8(%rip),%rdi
-	movl $13,%eax
+	movb $13,%al
 	rep 
 	stosb 
 	jmp L71
@@ -315,7 +315,7 @@ L85:
 	andl $1073725440,%eax
 	sarl $14,%eax
 	movslq %eax,%rax
-	movzbl (%rdx,%rax),%ecx
+	movb (%rdx,%rax),%cl
 	movl -4(%rbp),%eax
 	andl $1073725440,%eax
 	sarl $14,%eax

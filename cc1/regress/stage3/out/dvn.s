@@ -1347,11 +1347,11 @@ L601:
 	movq 8(%r14),%rcx
 	subl %ecx,%edi
 	shll $3,%edi
-	movl %eax,%ecx
+	movb %al,%cl
 	movq $-1,%rsi
 	shlq %cl,%rsi
 	notq %rsi
-	movl %edi,%ecx
+	movb %dil,%cl
 	movq %rsi,%rdx
 	shlq %cl,%rdx
 	notq %rdx
@@ -1359,7 +1359,7 @@ L601:
 	movq %rdx,-8(%rbp)
 	movq 16(%r13,%r12),%rax
 	andq %rsi,%rax
-	movl %edi,%ecx
+	movb %dil,%cl
 	shlq %cl,%rax
 	orq %rdx,%rax
 	movq %rax,-8(%rbp)

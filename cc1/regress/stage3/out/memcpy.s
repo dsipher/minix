@@ -14,7 +14,7 @@ L7:
 	cmpq $0,%rdx
 	jbe L3
 L8:
-	movzbl (%rsi),%ecx
+	movb (%rsi),%cl
 	incq %rsi
 	movb %cl,(%rdi)
 	incq %rdi

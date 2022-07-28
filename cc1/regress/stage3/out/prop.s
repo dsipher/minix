@@ -300,8 +300,8 @@ L122:
 	movq 8(%rdx,%rcx),%rax
 	movq %rax,8(%rdi,%rsi)
 	movl _next_u(%rip),%eax
-	movl %eax,%ecx
-	andl $63,%ecx
+	movb %al,%cl
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq 464(%rbx),%rcx
@@ -365,8 +365,8 @@ L147:
 	testl %eax,%eax
 	jz L146
 L148:
-	movl %ebx,%ecx
-	andl $63,%ecx
+	movb %bl,%cl
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq 488(%r12),%rcx
@@ -438,13 +438,13 @@ L175:
 	jmp L156
 L176:
 	shlq $3,%rcx
-	movl $255,%eax
+	movb $255,%al
 	rep 
 	stosb 
 	movslq 532(%rbx),%rcx
 	shlq $3,%rcx
 	movq 536(%rbx),%rdi
-	movl $255,%eax
+	movb $255,%al
 	rep 
 	stosb 
 	movl 532(%rbx),%edi
@@ -618,8 +618,8 @@ L255:
 	sarl $6,%eax
 	movslq %eax,%rax
 	movq (%rcx,%rax,8),%rdx
-	movl %ebx,%ecx
-	andl $63,%ecx
+	movb %bl,%cl
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax

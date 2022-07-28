@@ -514,7 +514,7 @@ L4:
 	jl L56
 L8:
 	movslq %eax,%rdx
-	movzbl 4(%rcx,%rdx),%esi
+	movb 4(%rcx,%rdx),%sil
 	testb %sil,%sil
 	jz L11
 L9:
@@ -608,7 +608,7 @@ L63:
 	movslq %edi,%rsi
 	shlq $6,%rsi
 	movslq %eax,%rdx
-	movzwl _bigfsm(%rsi,%rdx,2),%ecx
+	movw _bigfsm(%rsi,%rdx,2),%cx
 	cmpw $0,%cx
 	jle L72
 L70:
@@ -638,7 +638,7 @@ L82:
 	cmpl $0,_Cplusplus(%rip)
 	jnz L83
 L84:
-	movzwl _bigfsm+7696(%rip),%eax
+	movw _bigfsm+7696(%rip),%ax
 	movw %ax,_bigfsm+3024(%rip)
 L83:
 	ret 
@@ -813,8 +813,8 @@ L122:
 	movq %r13,%rcx
 	subq %rsi,%rcx
 	movl %ecx,8(%r14)
-	movzbl (%rsi),%eax
-	andl $63,%eax
+	movb (%rsi),%al
+	andb $63,%al
 	movzbq %al,%rax
 	movq _namebit(,%rax,8),%rdx
 	cmpl $1,%ecx
@@ -825,7 +825,7 @@ L123:
 L124:
 	xorl %ecx,%ecx
 L125:
-	andl $31,%ecx
+	andb $31,%cl
 	movl $1,%eax
 	shll %cl,%eax
 	andl %edx,%eax
@@ -979,14 +979,14 @@ L196:
 	cmpb $63,1(%rcx)
 	jnz L201
 L203:
-	movzbl 2(%rcx),%eax
+	movb 2(%rcx),%al
 	cmpb $39,%al
 	jb L231
 L233:
 	cmpb $47,%al
 	ja L231
 L230:
-	addl $-39,%eax
+	addb $-39,%al
 	movzbl %al,%eax
 	movzwl L240(,%rax,2),%eax
 	addl $_trigraph,%eax

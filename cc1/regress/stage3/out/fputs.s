@@ -17,7 +17,7 @@ L5:
 	leaq 1(%r13),%rcx
 	js L11
 L10:
-	movzbl (%r13),%eax
+	movb (%r13),%al
 	movq %rcx,%r13
 	movq 24(%r12),%rdx
 	leaq 1(%rdx),%rcx

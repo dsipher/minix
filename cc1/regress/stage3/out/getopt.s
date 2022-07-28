@@ -79,7 +79,7 @@ L36:
 	movl $1,L4(%rip)
 	jmp L59
 L30:
-	movzbl 1(%rax),%r8d
+	movb 1(%rax),%r8b
 	movl _optind(%rip),%edi
 	movl L4(%rip),%esi
 	movslq %edi,%rdx

@@ -6,7 +6,7 @@ L2:
 	xorl %eax,%eax
 	movsbl %sil,%esi
 L4:
-	movzbl (%rdi),%edx
+	movb (%rdi),%dl
 	movsbl %dl,%ecx
 	cmpl %ecx,%esi
 	cmovzq %rdi,%rax

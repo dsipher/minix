@@ -31,7 +31,7 @@ L9:
 	testl %ebx,%ebx
 	jnz L13
 L16:
-	movzbl (%r12),%eax
+	movb (%r12),%al
 	testb %al,%al
 	jz L19
 L20:
@@ -52,7 +52,7 @@ L24:
 L26:
 	movq %r15,%rcx
 L27:
-	movzbl (%rcx),%eax
+	movb (%rcx),%al
 	testb %al,%al
 	jz L30
 L28:
@@ -75,7 +75,7 @@ L15:
 	testl %ebx,%ebx
 	jnz L12
 L33:
-	movzbl (%r12),%eax
+	movb (%r12),%al
 	testb %al,%al
 	jz L12
 L37:

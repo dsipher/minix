@@ -19,11 +19,9 @@
 #define AND0    0x0002      /* ANDx -> TESTx */
 #define XOR0    0x0004      /* MOVx $0,%R -> XORL %R,%R */
 #define INC0    0x0008      /* ADDx $1,Y -> INCx Y, et al. */
-#define LOAD0   0x0010      /* widen sub-word loads from memory */
-#define WIDE0   0x0020      /* widen sub-word operations */
-#define CMP0    0x0040      /* replace CMPx $0,%R with TESTx %R,%R */
-#define TRUNC0  0x0080      /* truncate MOVQ/ANDQ -> MOVL/ANDL */
-#define MUL0    0x0100      /* IMUL -> LEA/ADD/SHL equivalents */
+#define CMP0    0x0010      /* replace CMPx $0,%R with TESTx %R,%R */
+#define TRUNC0  0x0020      /* truncate MOVQ/ANDQ -> MOVL/ANDL */
+#define MUL0    0x0040      /* IMUL -> LEA/ADD/SHL equivalents */
 
 static short peeps[] =      /* indexed by I_INDEX */
 {
@@ -36,16 +34,16 @@ static short peeps[] =      /* indexed by I_INDEX */
     0,                                          /*   65  I_MCH_RET        */
     0,                                          /*   66  I_MCH_RETI       */
     0,                                          /*   67  I_MCH_RETF       */
-    XOR0 | LOAD0 | WIDE0,                       /*   68  I_MCH_MOVB       */
-    XOR0 | LOAD0 | WIDE0,                       /*   69  I_MCH_MOVW       */
+    XOR0,                                       /*   68  I_MCH_MOVB       */
+    XOR0,                                       /*   69  I_MCH_MOVW       */
     XOR0,                                       /*   70  I_MCH_MOVL       */
     XOR0 | TRUNC0,                              /*   71  I_MCH_MOVQ       */
     0,                                          /*   72  I_MCH_MOVSS      */
     0,                                          /*   73  I_MCH_MOVSD      */
-    LOAD0,                                      /*   74  I_MCH_MOVZBW     */
+    0,                                          /*   74  I_MCH_MOVZBW     */
     0,                                          /*   75  I_MCH_MOVZBL     */
     0,                                          /*   76  I_MCH_MOVZBQ     */
-    LOAD0,                                      /*   77  I_MCH_MOVSBW     */
+    0,                                          /*   77  I_MCH_MOVSBW     */
     0,                                          /*   78  I_MCH_MOVSBL     */
     0,                                          /*   79  I_MCH_MOVSBQ     */
     0,                                          /*   80  I_MCH_MOVZWL     */
@@ -80,14 +78,14 @@ static short peeps[] =      /* indexed by I_INDEX */
     0,                                          /*  109  I_MCH_NEGW       */
     0,                                          /*  110  I_MCH_NEGL       */
     0,                                          /*  111  I_MCH_NEGQ       */
-    INC0 | WIDE0,                               /*  112  I_MCH_ADDB       */
-    INC0 | WIDE0,                               /*  113  I_MCH_ADDW       */
+    INC0,                                       /*  112  I_MCH_ADDB       */
+    INC0,                                       /*  113  I_MCH_ADDW       */
     INC0,                                       /*  114  I_MCH_ADDL       */
     INC0,                                       /*  115  I_MCH_ADDQ       */
     0,                                          /*  116  I_MCH_ADDSS      */
     0,                                          /*  117  I_MCH_ADDSD      */
-    INC0 | WIDE0,                               /*  118  I_MCH_SUBB       */
-    INC0 | WIDE0,                               /*  119  I_MCH_SUBW       */
+    INC0,                                       /*  118  I_MCH_SUBB       */
+    INC0,                                       /*  119  I_MCH_SUBW       */
     INC0,                                       /*  120  I_MCH_SUBL       */
     INC0,                                       /*  121  I_MCH_SUBQ       */
     0,                                          /*  122  I_MCH_SUBSS      */
@@ -119,20 +117,20 @@ static short peeps[] =      /* indexed by I_INDEX */
     0,                                          /*  148  I_MCH_SARW       */
     0,                                          /*  149  I_MCH_SARL       */
     0,                                          /*  150  I_MCH_SARQ       */
-    WIDE0,                                      /*  151  I_MCH_SHLB       */
-    WIDE0,                                      /*  152  I_MCH_SHLW       */
+    0,                                          /*  151  I_MCH_SHLB       */
+    0,                                          /*  152  I_MCH_SHLW       */
     0,                                          /*  153  I_MCH_SHLL       */
     0,                                          /*  154  I_MCH_SHLQ       */
-    AND0 | WIDE0,                               /*  155  I_MCH_ANDB       */
-    AND0 | WIDE0,                               /*  156  I_MCH_ANDW       */
+    AND0,                                       /*  155  I_MCH_ANDB       */
+    AND0,                                       /*  156  I_MCH_ANDW       */
     AND0,                                       /*  157  I_MCH_ANDL       */
     AND0 | TRUNC0,                              /*  158  I_MCH_ANDQ       */
-    WIDE0,                                      /*  159  I_MCH_ORB        */
-    WIDE0,                                      /*  160  I_MCH_ORW        */
+    0,                                          /*  159  I_MCH_ORB        */
+    0,                                          /*  160  I_MCH_ORW        */
     0,                                          /*  161  I_MCH_ORL        */
     0,                                          /*  162  I_MCH_ORQ        */
-    WIDE0,                                      /*  163  I_MCH_XORB       */
-    WIDE0,                                      /*  164  I_MCH_XORW       */
+    0,                                          /*  163  I_MCH_XORB       */
+    0,                                          /*  164  I_MCH_XORW       */
     0,                                          /*  165  I_MCH_XORL       */
     0,                                          /*  166  I_MCH_XORQ       */
     0,                                          /*  167  I_MCH_SETZ       */
@@ -400,86 +398,6 @@ static int inc0(struct block *b, int i)
     return 1;
 }
 
-/* when loading a char/short from memory, force it to
-   be zero- or sign-extended to cover the full target
-   register to avoid unnecessary partial register stalls. */
-
-static int load0(struct block *b, int i)
-{
-    struct insn *insn = INSN(b, i);
-    struct insn *new;
-    struct operand *dst = &insn->operand[0];
-    struct operand *src = &insn->operand[1];
-    int op;
-
-    if (!OPERAND_REG(dst)) return 0;
-    if (!OPERAND_MEM(src)) return 0;
-
-    switch (insn->op)
-    {
-    case I_MCH_MOVB:    op = I_MCH_MOVZBL; break;
-    case I_MCH_MOVW:    op = I_MCH_MOVZWL; break;
-    case I_MCH_MOVSBW:  op = I_MCH_MOVSBL; break;
-    case I_MCH_MOVZBW:  op = I_MCH_MOVZBL; break;
-    }
-
-    new = new_insn(op, 0);
-    MCH_OPERAND(&new->operand[0], dst);
-    MCH_OPERAND(&new->operand[1], src);
-    INSN(b, i) = new;
-    return 1;
-}
-
-/* unless we're interested in the resulting condition codes, or are
-   consulting a memory operand, there is little reason to perform
-   most operations in less-than-32-bit sizes. any cost in enlarged
-   encoding (not always the case!) is supposedly paid for by the
-   avoidance of partial register stalls and/or decoding hiccups. */
-
-static int wide0(struct block *b, int i)
-{
-    struct insn *insn = INSN(b, i);
-    struct insn *new;
-    struct operand *dst = &insn->operand[0];
-    struct operand *src = &insn->operand[1];
-    int op;
-
-    if (!OPERAND_REG(dst)) return 0;
-    if (OPERAND_MEM(src)) return 0;
-    if (INSN_DEFS_CC(insn) && !range_doa(b, REG_CC, i)) return 0;
-
-    switch (insn->op)
-    {
-    case I_MCH_MOVB:
-    case I_MCH_MOVW:    op = I_MCH_MOVL; break;
-
-    case I_MCH_ADDB:
-    case I_MCH_ADDW:    op = I_MCH_ADDL; break;
-
-    case I_MCH_SUBB:
-    case I_MCH_SUBW:    op = I_MCH_SUBL; break;
-
-    case I_MCH_SHLB:
-    case I_MCH_SHLW:    op = I_MCH_SHLL; break;
-
-    case I_MCH_ANDB:
-    case I_MCH_ANDW:    op = I_MCH_ANDL; break;
-
-    case I_MCH_XORB:
-    case I_MCH_XORW:    op = I_MCH_XORL; break;
-
-    case I_MCH_ORB:
-    case I_MCH_ORW:     op = I_MCH_ORL; break;
-    }
-
-    new = new_insn(op, 0);
-    MCH_OPERAND(&new->operand[0], dst);
-    MCH_OPERAND(&new->operand[1], src);
-    INSN(b, i) = new;
-
-    return 1;
-}
-
 /* replace CMPx $0,%R with TESTx %R,%R, when
    our only interest is the Z or S flag.
 
@@ -661,7 +579,6 @@ nocc:
 
             if ( late && (peep & INC0)      && inc0(b, i))      goto nocc;
             if ( late && (peep & MUL0)      && mul0(b, i))      goto nocc;
-            if ( late && (peep & LOAD0)     && load0(b, i))     goto nocc;
             if ( late && (peep & TRUNC0)    && trunc0(b, i))    goto nocc;
         }
 
@@ -680,7 +597,6 @@ needcc:
             if (!late && (peep & LEA0)      && lea0(b, i))      goto needcc;
             if (!late && (peep & AND0)      && and0(b, i))      goto needcc;
             if ( late && (peep & XOR0)      && xor0(b, i))      goto needcc;
-            if ( late && (peep & WIDE0)     && wide0(b, i))     goto needcc;
             if ( late && (peep & CMP0)      && cmp0(b, i))      goto needcc;
         }
 }

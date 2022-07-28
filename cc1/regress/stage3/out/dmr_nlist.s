@@ -152,7 +152,7 @@ L40:
 	jz L42
 L41:
 	movq 16(%r12),%rdi
-	movzbl (%rdi),%eax
+	movb (%rdi),%al
 	movq 8(%r14),%rsi
 	cmpb (%rsi),%al
 	jnz L45
@@ -204,13 +204,13 @@ L58:
 L59:
 	xorl %ecx,%ecx
 L60:
-	andl $31,%ecx
+	andb $31,%cl
 	movl $1,%edx
 	shll %cl,%edx
 	movslq %edx,%rdx
 	movq 16(%r12),%rax
-	movzbl (%rax),%eax
-	andl $63,%eax
+	movb (%rax),%al
+	andb $63,%al
 	movzbq %al,%rax
 	orq %rdx,_namebit(,%rax,8)
 	movq %rbx,%rax

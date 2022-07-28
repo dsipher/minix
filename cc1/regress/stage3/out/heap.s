@@ -121,9 +121,9 @@ L29:
 	jle L32
 L31:
 	bsrl -4(%rbp),%eax
-	xorl $31,%eax
-	movl $31,%ecx
-	subl %eax,%ecx
+	xorb $31,%al
+	movb $31,%cl
+	subb %al,%cl
 	movl $1,%eax
 	shll %cl,%eax
 	movl %eax,(%r15)

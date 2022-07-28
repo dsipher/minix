@@ -761,7 +761,7 @@ L417:
 	cmpq %rax,%r12
 	jz L411
 L413:
-	movzbl (%r15),%eax
+	movb (%r15),%al
 	cmpb $93,%al
 	jz L411
 L410:

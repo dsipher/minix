@@ -3,8 +3,8 @@
 _strcmp:
 L1:
 L4:
-	movzbl (%rdi),%eax
-	movzbl (%rsi),%ecx
+	movb (%rdi),%al
+	movb (%rsi),%cl
 	incq %rsi
 	cmpb %cl,%al
 	jnz L6

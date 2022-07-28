@@ -46,7 +46,7 @@ L12:
 	cmpl $48,%r11d
 	jnz L16
 L15:
-	movzbl (%r13),%edx
+	movb (%r13),%dl
 	cmpb $120,%dl
 	jz L22
 L21:
@@ -66,7 +66,7 @@ L37:
 	cmpl $48,%r11d
 	jnz L32
 L38:
-	movzbl (%r13),%edx
+	movb (%r13),%dl
 	cmpb $120,%dl
 	jz L42
 L41:

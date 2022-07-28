@@ -9,7 +9,7 @@ L4:
 	jbe L3
 L5:
 	movsbl (%rdi),%ecx
-	movzbl (%rsi),%eax
+	movb (%rsi),%al
 	movb %al,(%rdi)
 	incq %rdi
 	movb %cl,(%rsi)
@@ -28,9 +28,9 @@ L10:
 	jbe L9
 L11:
 	movsbl (%rdi),%r8d
-	movzbl (%rdx),%eax
+	movb (%rdx),%al
 	movb %al,(%rdi)
-	movzbl (%rsi),%eax
+	movb (%rsi),%al
 	incq %rdi
 	movb %al,(%rdx)
 	incq %rdx

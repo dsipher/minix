@@ -17,11 +17,11 @@ L12:
 L13:
 	movq %rdi,%rsi
 L15:
-	movzbl (%rsi),%edx
+	movb (%rsi),%dl
 	testb %dl,%dl
 	jz L17
 L18:
-	movzbl (%rax),%ecx
+	movb (%rax),%cl
 	incq %rax
 	cmpb %cl,%dl
 	jnz L17

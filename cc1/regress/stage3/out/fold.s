@@ -601,7 +601,7 @@ L269:
 	movq $0,-32(%rbp)
 	movq -96(%rbp),%rdi
 	call _get_ccs
-	movl %ebx,%ecx
+	movb %bl,%cl
 	movl $1,%edx
 	shll %cl,%edx
 	testl %edx,%eax
@@ -650,7 +650,7 @@ L280:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -738,7 +738,7 @@ L515:
 	andl $1073725440,%r12d
 	movl %r12d,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%esi
 	shlq %cl,%rsi
 	notq %rsi
@@ -1228,7 +1228,7 @@ L491:
 	andl $1073725440,%r12d
 	movl %r12d,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%esi
 	shlq %cl,%rsi
 	movq -96(%rbp),%rdx
@@ -1364,7 +1364,7 @@ L648:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -1416,7 +1416,7 @@ L642:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -1452,7 +1452,7 @@ L616:
 	movslq %edi,%rdi
 	movq %rdi,-16(%rbp)
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movq $1,-56(%rbp)
 	shlq %cl,-56(%rbp)
 	movq -16(%rbp),%rdi
@@ -1475,7 +1475,7 @@ L620:
 	movq (%r8,%rdi,8),%rdi
 	movq %rdi,-40(%rbp)
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%r8d
 	shlq %cl,%r8
 	movq -40(%rbp),%rdi
@@ -2015,7 +2015,7 @@ L852:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax

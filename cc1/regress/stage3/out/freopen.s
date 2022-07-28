@@ -21,7 +21,7 @@ L2:
 	call _fflush
 	movl 4(%r14),%edi
 	call _close
-	movzbl (%r15),%eax
+	movb (%r15),%al
 	incq %r15
 	cmpb $114,%al
 	jz L7
@@ -45,7 +45,7 @@ L7:
 	orl $1,%r12d
 	xorl %r13d,%r13d
 L14:
-	movzbl (%r15),%eax
+	movb (%r15),%al
 	testb %al,%al
 	jz L16
 L15:

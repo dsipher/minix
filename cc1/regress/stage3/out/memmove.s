@@ -23,7 +23,7 @@ L14:
 	jbe L3
 L15:
 	leaq -1(%rdi),%rcx
-	movzbl -1(%rdi),%esi
+	movb -1(%rdi),%sil
 	movq %rcx,%rdi
 	leaq -1(%r8),%rcx
 	movb %sil,-1(%r8)
@@ -36,7 +36,7 @@ L17:
 	cmpq $0,%rdx
 	jbe L3
 L18:
-	movzbl (%rsi),%ecx
+	movb (%rsi),%cl
 	incq %rsi
 	movb %cl,(%r8)
 	incq %r8

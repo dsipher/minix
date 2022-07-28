@@ -146,17 +146,17 @@ L43:
 	testl %eax,%eax
 	jz L40
 L44:
-	movzbl L41(%rip),%eax
+	movb L41(%rip),%al
 	sarb $1,%al
 	movb %al,L41(%rip)
 	testq $1,%rbx
 	jz L47
 L46:
-	orl $-128,%eax
+	orb $-128,%al
 	movb %al,L41(%rip)
 	jmp L48
 L47:
-	andl $127,%eax
+	andb $127,%al
 	movb %al,L41(%rip)
 L48:
 	movl L42(%rip),%eax

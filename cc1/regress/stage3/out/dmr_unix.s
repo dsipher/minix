@@ -225,7 +225,7 @@ L87:
 	cmpq %rsi,%rdi
 	jae L90
 L92:
-	movzbl (%rsi),%eax
+	movb (%rsi),%al
 	incq %rsi
 	movb %al,(%rdi)
 	incq %rdi
@@ -237,7 +237,7 @@ L90:
 	addq %rdx,%rsi
 L95:
 	leaq -1(%rsi),%rax
-	movzbl -1(%rsi),%ecx
+	movb -1(%rsi),%cl
 	movq %rax,%rsi
 	leaq -1(%rdi),%rax
 	movb %cl,-1(%rdi)

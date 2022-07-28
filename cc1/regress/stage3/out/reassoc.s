@@ -304,8 +304,8 @@ L121:
 L122:
 	movl %r14d,%r12d
 L124:
-	movl %r15d,%ecx
-	andl $63,%ecx
+	movb %r15b,%cl
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq _ineligible+8(%rip),%rcx
@@ -489,8 +489,8 @@ L196:
 	movslq %r13d,%rax
 	movq (%rcx,%rax,8),%rbx
 	movl %r12d,L198(%rip)
-	movl %r13d,%ecx
-	andl $63,%ecx
+	movb %r13b,%cl
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq _ineligible+8(%rip),%rcx
@@ -610,8 +610,8 @@ L241:
 	movslq %esi,%rax
 	movq (%rcx,%rax,8),%r13
 	movl %r14d,L243(%rip)
-	movl %esi,%ecx
-	andl $63,%ecx
+	movb %sil,%cl
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq _ineligible+8(%rip),%rcx
@@ -715,8 +715,8 @@ L276:
 	sarl $6,%eax
 	movslq %eax,%rax
 	movq (%rcx,%rax,8),%rdx
-	movl %ebx,%ecx
-	andl $63,%ecx
+	movb %bl,%cl
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax

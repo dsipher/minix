@@ -79,7 +79,7 @@ L34:
 	movsd %xmm1,%xmm0
 	jmp L3
 L32:
-	subl $20,%ecx
+	subb $20,%cl
 	movl $4294967295,%eax
 	shrl %cl,%eax
 	testl %eax,%edx

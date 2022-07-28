@@ -25,7 +25,7 @@ L10:
 	incl %ebx
 	jmp L4
 L7:
-	movzbl (%rsi),%eax
+	movb (%rsi),%al
 	incq %rsi
 	cmpb $114,%al
 	jz L15
@@ -49,7 +49,7 @@ L15:
 	movl $129,%r12d
 	xorl %r15d,%r15d
 L22:
-	movzbl (%rsi),%eax
+	movb (%rsi),%al
 	testb %al,%al
 	jz L24
 L23:

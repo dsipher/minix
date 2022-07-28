@@ -102,7 +102,7 @@ L46:
 	movq %rax,16(%rcx)
 	incl %r12d
 	addq $24,%r14
-	movzbl (%r14),%eax
+	movb (%r14),%al
 	cmpb $23,%al
 	jz L31
 L57:
@@ -254,7 +254,7 @@ L118:
 	cmpq %rcx,%rax
 	jae L124
 L127:
-	movzbl 24(%rdx),%eax
+	movb 24(%rdx),%al
 	testb %al,%al
 	jnz L126
 L124:
@@ -333,8 +333,8 @@ L149:
 	jnz L152
 L167:
 	movq 16(%r12),%rcx
-	movzbl (%rcx),%eax
-	andl $63,%eax
+	movb (%rcx),%al
+	andb $63,%al
 	movzbq %al,%rax
 	movq _namebit(,%rax,8),%rdx
 	cmpl $1,8(%r12)
@@ -345,7 +345,7 @@ L171:
 L172:
 	xorl %ecx,%ecx
 L173:
-	andl $31,%ecx
+	andb $31,%cl
 	movl $1,%eax
 	shll %cl,%eax
 	movslq %eax,%rax
@@ -362,7 +362,7 @@ L159:
 	testb $9,41(%rbx)
 	jz L152
 L155:
-	movzwl 2(%r12),%edi
+	movw 2(%r12),%di
 	testw %di,%di
 	jz L154
 L174:
@@ -376,7 +376,7 @@ L152:
 	jmp L148
 L154:
 	movq %r12,(%r14)
-	movzbl 40(%rbx),%esi
+	movb 40(%rbx),%sil
 	cmpb $12,%sil
 	jz L179
 L181:
@@ -517,7 +517,7 @@ L232:
 	cmpb $2,(%r12)
 	jnz L237
 L235:
-	movzwl 2(%r12),%edi
+	movw 2(%r12),%di
 	testw %di,%di
 	jnz L239
 L238:
@@ -612,7 +612,7 @@ L249:
 	jz L252
 L251:
 	movq (%r15),%rax
-	movzbl (%rax),%eax
+	movb (%rax),%al
 	cmpb $22,%al
 	jz L256
 L258:
@@ -643,7 +643,7 @@ L270:
 	call _makespace
 L272:
 	movq (%r15),%rax
-	movzbl (%rax),%ecx
+	movb (%rax),%cl
 	testb %cl,%cl
 	jz L273
 L275:
@@ -694,7 +694,7 @@ L288:
 	cmpl $0,%r14d
 	jl L323
 L289:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	cmpb $22,%al
 	jz L292
 L294:
@@ -803,7 +803,7 @@ L327:
 	cmpq 16(%r14),%r12
 	jae L326
 L328:
-	movzbl (%r12),%eax
+	movb (%r12),%al
 	cmpb $41,%al
 	jz L331
 L333:
@@ -916,7 +916,7 @@ L367:
 	cmpq %rcx,%r14
 	jae L366
 L368:
-	movzbl (%r14),%eax
+	movb (%r14),%al
 	cmpb $56,%al
 	jnz L372
 L371:
@@ -1093,7 +1093,7 @@ L425:
 	cmpq 16(%rdi),%r8
 	jae L428
 L426:
-	movzbl (%r8),%eax
+	movb (%r8),%al
 	cmpb $4,%al
 	jz L430
 L429:
@@ -1130,7 +1130,7 @@ L446:
 	testl %esi,%esi
 	jz L451
 L452:
-	movzbl (%rcx),%eax
+	movb (%rcx),%al
 	cmpb $34,%al
 	jz L449
 L456:
@@ -1140,7 +1140,7 @@ L449:
 	movb $92,(%rbx)
 	incq %rbx
 L451:
-	movzbl (%rcx),%eax
+	movb (%rcx),%al
 	incq %rcx
 	movb %al,(%rbx)
 	incq %rbx
@@ -1251,7 +1251,7 @@ L490:
 L482:
 	movq (%rdx),%rcx
 L483:
-	movzbl (%rcx),%eax
+	movb (%rcx),%al
 	incq %rcx
 	movb %al,(%rdi)
 	incq %rdi

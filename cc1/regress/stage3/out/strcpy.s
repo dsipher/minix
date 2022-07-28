@@ -6,7 +6,7 @@ L2:
 	movq %rdi,%rax
 	movq %rax,%rdx
 L4:
-	movzbl (%rsi),%ecx
+	movb (%rsi),%cl
 	incq %rsi
 	movb %cl,(%rdx)
 	incq %rdx

@@ -12,7 +12,7 @@ L4:
 L5:
 	movq 16(%rdi),%rdi
 L7:
-	movzbl (%rdi),%ecx
+	movb (%rdi),%cl
 	testb %cl,%cl
 	jz L3
 L8:

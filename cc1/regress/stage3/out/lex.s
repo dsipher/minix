@@ -589,7 +589,7 @@ L176:
 	movq _pos(%rip),%rsi
 	leaq 1(%rsi),%rax
 	movq %rax,_pos(%rip)
-	movzbl 1(%rsi),%edx
+	movb 1(%rsi),%dl
 	movzbq %dl,%rax
 	testw $4,_ctype(,%rax,2)
 	jz L179
@@ -598,7 +598,7 @@ L178:
 	subl $48,%edx
 	leaq 2(%rsi),%rax
 	movq %rax,_pos(%rip)
-	movzbl 2(%rsi),%eax
+	movb 2(%rsi),%al
 	movzbq %al,%rcx
 	testw $4,_ctype(,%rcx,2)
 	jz L180
@@ -607,7 +607,7 @@ L181:
 	leal -48(%rax,%rdx,8),%edx
 	leaq 3(%rsi),%rax
 	movq %rax,_pos(%rip)
-	movzbl 3(%rsi),%eax
+	movb 3(%rsi),%al
 	movzbq %al,%rcx
 	testw $4,_ctype(,%rcx,2)
 	jz L180
@@ -631,9 +631,9 @@ L192:
 	jz L198
 L200:
 	movq _pos(%rip),%rsi
-	movzbl (%rsi),%eax
+	movb (%rsi),%al
 	movzbq %al,%rcx
-	movzwl _ctype(,%rcx,2),%ecx
+	movw _ctype(,%rcx,2),%cx
 	testw $8,%cx
 	jz L180
 L201:
@@ -739,7 +739,7 @@ L242:
 	incq _pos(%rip)
 L244:
 	movq _pos(%rip),%rdx
-	movzbl (%rdx),%ecx
+	movb (%rdx),%cl
 	movzbq %cl,%rax
 	testw $53248,_ctype(,%rax,2)
 	jnz L246
@@ -821,7 +821,7 @@ L277:
 	incl %ebx
 L281:
 	movq _pos(%rip),%rdx
-	movzbl (%rdx),%ecx
+	movb (%rdx),%cl
 	movzbq %cl,%rax
 	testw $45056,_ctype(,%rax,2)
 	jnz L283
@@ -857,7 +857,7 @@ L289:
 	movq %rsi,_pos(%rip)
 	xorl %edx,%edx
 L291:
-	movzbl (%rsi),%ecx
+	movb (%rsi),%cl
 	movzbq %cl,%rax
 	testw $33792,_ctype(,%rax,2)
 	jz L293
@@ -921,7 +921,7 @@ L309:
 L311:
 	movq _pos(%rip),%rsi
 	movzbq (%rsi),%rcx
-	movzwl _ctype(,%rcx,2),%edi
+	movw _ctype(,%rcx,2),%di
 	testw $515,%di
 	jz L313
 L312:
@@ -933,7 +933,7 @@ L312:
 L317:
 	leaq 1(%rsi),%rdi
 	movzbq 1(%rsi),%rcx
-	movzwl _ctype(,%rcx,2),%ecx
+	movw _ctype(,%rcx,2),%cx
 	testw $2048,%cx
 	jz L321
 L320:
@@ -970,7 +970,7 @@ L333:
 	movsd %xmm0,_token+24(%rip)
 	movq -8(%rbp),%rcx
 	movzbq (%rcx),%rax
-	movzwl _ctype(,%rax,2),%eax
+	movw _ctype(,%rax,2),%ax
 	testw $64,%ax
 	jz L337
 L336:
@@ -1245,7 +1245,7 @@ L402:
 	jmp L401
 L403:
 	movq %rax,_text(%rip)
-	movzbl (%rax),%ecx
+	movb (%rax),%cl
 	cmpb $0,%cl
 	jl L404
 L746:
@@ -1288,7 +1288,7 @@ L425:
 	jmp L400
 L527:
 	leaq 1(%rax),%rsi
-	movzbl 1(%rax),%edx
+	movb 1(%rax),%dl
 	cmpb %dl,%cl
 	jz L534
 L536:
@@ -1343,7 +1343,7 @@ L411:
 	jmp L400
 L489:
 	leaq 1(%rax),%rsi
-	movzbl 1(%rax),%edx
+	movb 1(%rax),%dl
 	cmpb %dl,%cl
 	jnz L497
 L495:
@@ -1389,7 +1389,7 @@ L441:
 	jmp L400
 L468:
 	leaq 1(%rax),%rsi
-	movzbl 1(%rax),%edx
+	movb 1(%rax),%dl
 	cmpb %dl,%cl
 	jnz L476
 L474:
@@ -1445,7 +1445,7 @@ L589:
 	jmp L400
 L649:
 	leaq 1(%rax),%rdx
-	movzbl 1(%rax),%ecx
+	movb 1(%rax),%cl
 	cmpb $46,%cl
 	jnz L655
 L653:
@@ -1470,7 +1470,7 @@ L658:
 	jmp L400
 L628:
 	leaq 1(%rax),%rsi
-	movzbl 1(%rax),%edx
+	movb 1(%rax),%dl
 	cmpb $62,%dl
 	jz L629
 L633:
@@ -1505,7 +1505,7 @@ L417:
 	jmp L400
 L612:
 	leaq 1(%rax),%rsi
-	movzbl 1(%rax),%edx
+	movb 1(%rax),%dl
 	cmpb %dl,%cl
 	jz L619
 L621:
@@ -1554,7 +1554,7 @@ L736:
 	jmp L400
 L544:
 	leaq 1(%rax),%rsi
-	movzbl 1(%rax),%edx
+	movb 1(%rax),%dl
 	cmpb %dl,%cl
 	jz L551
 L553:

@@ -324,7 +324,7 @@ L26:
 	cmpq 16(%r13),%rbx
 	jae L29
 L27:
-	movzbl (%rbx),%ecx
+	movb (%rbx),%cl
 	cmpb $2,%cl
 	jb L30
 L159:
@@ -358,7 +358,7 @@ L67:
 	movq %rax,_op(%rip)
 	movl $59,(%rcx)
 L69:
-	movzbl (%rbx),%eax
+	movb (%rbx),%al
 	cmpb $26,%al
 	jz L74
 L73:
@@ -375,9 +375,9 @@ L112:
 	jz L44
 L115:
 	subq $8,%rsp
-	movzwl _priority+69(%rip),%eax
+	movw _priority+69(%rip),%ax
 	movw %ax,(%rsp)
-	movzbl _priority+71(%rip),%eax
+	movb _priority+71(%rip),%al
 	movb %al,2(%rsp)
 	call _evalop
 	addq $8,%rsp
@@ -411,9 +411,9 @@ L99:
 	leaq (%rcx,%rcx,2),%rcx
 	addq $_priority,%rcx
 	subq $8,%rsp
-	movzwl (%rcx),%eax
+	movw (%rcx),%ax
 	movw %ax,(%rsp)
-	movzbl 2(%rcx),%eax
+	movb 2(%rcx),%al
 	movb %al,2(%rsp)
 	call _evalop
 	addq $8,%rsp
@@ -467,9 +467,9 @@ L44:
 	jmp L156
 L134:
 	subq $8,%rsp
-	movzwl _priority(%rip),%eax
+	movw _priority(%rip),%ax
 	movw %ax,(%rsp)
-	movzbl _priority+2(%rip),%eax
+	movb _priority+2(%rip),%al
 	movb %al,2(%rsp)
 	call _evalop
 	addq $8,%rsp
@@ -568,7 +568,7 @@ L162:
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
 L164:
-	movzbl 16(%rbp),%esi
+	movb 16(%rbp),%sil
 	movq _op(%rip),%rcx
 	leaq -4(%rcx),%rdx
 	movslq -4(%rcx),%rax
@@ -600,7 +600,7 @@ L169:
 	movq -8(%rsi),%rdx
 	movq %rdx,-24(%rbp)
 	movq -32(%rbp),%r13
-	movzbl _priority+2(%rax),%eax
+	movb _priority+2(%rax),%al
 	cmpb $0,%al
 	jl L170
 L342:
@@ -818,11 +818,11 @@ L336:
 	xorl %ebx,%ebx
 	jmp L218
 L246:
-	movl %r12d,%ecx
+	movb %r12b,%cl
 	sarq %cl,%r13
 	jmp L218
 L242:
-	movl %r12d,%ecx
+	movb %r12b,%cl
 	shlq %cl,%r13
 	jmp L218
 L228:
@@ -849,11 +849,11 @@ L347:
 	addl $_evalop,%eax
 	jmp *%rax
 L248:
-	movl %r12d,%ecx
+	movb %r12b,%cl
 	shrq %cl,%r13
 	jmp L218
 L244:
-	movl %r12d,%ecx
+	movb %r12b,%cl
 	shlq %cl,%r13
 	jmp L218
 L236:
@@ -975,7 +975,7 @@ L361:
 	movq %rsi,%r15
 	movl $0,-8(%rbp)
 	movq $0,-16(%rbp)
-	movzbl (%r15),%eax
+	movb (%r15),%al
 	cmpb $2,%al
 	jz L366
 L498:
@@ -1016,7 +1016,7 @@ L429:
 L431:
 	incq %r13
 	movq %r13,%r12
-	movzbl (%r13),%eax
+	movb (%r13),%al
 	cmpb $92,%al
 	jnz L434
 L433:
@@ -1151,7 +1151,7 @@ L377:
 L378:
 	movl $8,%r14d
 	leaq 1(%r13),%rcx
-	movzbl 1(%r13),%eax
+	movb 1(%r13),%al
 	cmpb $120,%al
 	jz L381
 L384:
@@ -1194,7 +1194,7 @@ L403:
 L400:
 	movl $1,-8(%rbp)
 L407:
-	movzbl (%r13),%eax
+	movb (%r13),%al
 	testb %al,%al
 	jz L410
 L408:

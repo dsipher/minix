@@ -18,7 +18,7 @@ L2:
 	cmpq 16(%r15),%rax
 	jae L7
 L6:
-	movzbl 24(%rcx),%ecx
+	movb 24(%rcx),%cl
 	cmpb $4,%cl
 	jz L11
 L12:
@@ -41,7 +41,7 @@ L9:
 	movq %rcx,(%r15)
 L11:
 	movq (%r15),%rcx
-	movzbl (%rcx),%eax
+	movb (%rcx),%al
 	cmpb $4,%al
 	jnz L18
 L17:

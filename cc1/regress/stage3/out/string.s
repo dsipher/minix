@@ -295,8 +295,8 @@ L8:
 	jbe L11
 L9:
 	movq -24(%rbp),%rax
-	movzbl (%rcx,%rax),%eax
-	xorl %r15d,%eax
+	movb (%rcx,%rax),%al
+	xorb %r15b,%al
 	movzbq %al,%rax
 	shrl $8,%r15d
 	xorl _crctab(,%rax,4),%r15d

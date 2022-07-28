@@ -65,7 +65,7 @@ L33:
 	subl $34,%eax
 	movslq %eax,%rax
 	movq (%rcx,%rax,8),%rsi
-	movzbl _g_flag(%rip),%ecx
+	movb _g_flag(%rip),%cl
 	movl 12(%rsi),%eax
 	testb %cl,%cl
 	jz L47
@@ -128,7 +128,7 @@ L63:
 	subl $34,%eax
 	movslq %eax,%rax
 	movq (%rcx,%rax,8),%rsi
-	movzbl _g_flag(%rip),%ecx
+	movb _g_flag(%rip),%cl
 	movl 12(%rsi),%eax
 	testb %cl,%cl
 	jz L77
@@ -176,7 +176,7 @@ L83:
 	subl $34,%eax
 	movslq %eax,%rax
 	movq (%rcx,%rax,8),%rsi
-	movzbl _g_flag(%rip),%ecx
+	movb _g_flag(%rip),%cl
 	movl 12(%rsi),%eax
 	testb %cl,%cl
 	jz L97

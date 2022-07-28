@@ -7,7 +7,7 @@ L2:
 	cmpl $0,%ecx
 	jl L4
 L7:
-	movzbl (%rsi),%edi
+	movb (%rsi),%dil
 	testb %dil,%dil
 	jz L11
 L10:
@@ -70,7 +70,7 @@ L52:
 	incq %rax
 	jmp L33
 L53:
-	movzbl (%rsi),%edi
+	movb (%rsi),%dil
 	testb %dil,%dil
 	jz L56
 L55:
@@ -221,7 +221,7 @@ L119:
 	cmpq %rax,%r14
 	jz L121
 L120:
-	movzbl (%r13),%eax
+	movb (%r13),%al
 	incb %al
 	movb %al,(%r13)
 	cmpb $57,%al

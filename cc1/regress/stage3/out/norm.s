@@ -441,7 +441,7 @@ L145:
 	testq %rax,_norms(%rbx)
 	jz L142
 L150:
-	movzbl _norms+12(%rbx),%esi
+	movb _norms+12(%rbx),%sil
 	testb %sil,%sil
 	jnz L157
 L155:
@@ -459,7 +459,7 @@ L157:
 	movslq %r8d,%r8
 	movq (%rdx,%r8,8),%r9
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%r8d
 	shlq %cl,%r8
 	testq %r9,%r8
@@ -484,7 +484,7 @@ L179:
 	testl %ecx,%ecx
 	jz L142
 L165:
-	movzbl _norms+13(%rbx),%ecx
+	movb _norms+13(%rbx),%cl
 	cmpb $0,%cl
 	jl L185
 L372:
@@ -541,7 +541,7 @@ L219:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -580,7 +580,7 @@ L197:
 	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax
@@ -639,7 +639,7 @@ L284:
 	sarl $20,%eax
 	movslq %eax,%rax
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%esi
 	shlq %cl,%rsi
 	andq (%rdi,%rax,8),%rsi
@@ -649,7 +649,7 @@ L284:
 	sarl $14,%ecx
 	sarl $20,%eax
 	movslq %eax,%rax
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq (%rdi,%rax,8),%rcx
@@ -671,7 +671,7 @@ L289:
 	sarl $20,%eax
 	movslq %eax,%rax
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%esi
 	shlq %cl,%rsi
 	andq (%rdi,%rax,8),%rsi
@@ -681,7 +681,7 @@ L289:
 	sarl $14,%ecx
 	sarl $20,%eax
 	movslq %eax,%rax
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq (%rdi,%rax,8),%rcx
@@ -732,7 +732,7 @@ L361:
 	andl $1073725440,%eax
 	movl %eax,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	notq %rdx
@@ -744,7 +744,7 @@ L361:
 	andl $1073725440,%eax
 	movl %eax,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	notq %rdx
@@ -771,7 +771,7 @@ L312:
 	andl $1073725440,%eax
 	movl %eax,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq _norm_0s+8(%rip),%rcx
@@ -783,7 +783,7 @@ L313:
 	andl $1073725440,%eax
 	movl %eax,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	notq %rdx
@@ -815,7 +815,7 @@ L330:
 	andl $1073725440,%eax
 	movl %eax,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	notq %rdx
@@ -829,7 +829,7 @@ L337:
 	andl $1073725440,%eax
 	movl %eax,%ecx
 	sarl $14,%ecx
-	andl $63,%ecx
+	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq _norm_1s+8(%rip),%rcx

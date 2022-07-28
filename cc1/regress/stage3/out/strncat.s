@@ -8,14 +8,14 @@ L2:
 	cmpq $0,%rdx
 	jbe L3
 L7:
-	movzbl (%rdi),%ecx
+	movb (%rdi),%cl
 	incq %rdi
 	testb %cl,%cl
 	jnz L7
 L9:
 	decq %rdi
 L10:
-	movzbl (%rsi),%ecx
+	movb (%rsi),%cl
 	incq %rsi
 	movb %cl,(%rdi)
 	incq %rdi

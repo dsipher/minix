@@ -40,12 +40,12 @@ L1:
 L2:
 	movq %rdi,%r13
 	movq (%r13),%r12
-	movzbl (%r12),%r14d
+	movb (%r12),%r14b
 	leaq 1(%r12),%rbx
 	cmpb $92,%r14b
 	jnz L5
 L4:
-	movzbl 1(%r12),%ecx
+	movb 1(%r12),%cl
 	movsbl %cl,%edi
 	movl %edi,%eax
 	subl $48,%eax
@@ -65,7 +65,7 @@ L7:
 	subq $_digits,%rax
 	movl %eax,%r14d
 	leaq 2(%r12),%rbx
-	movzbl 2(%r12),%ecx
+	movb 2(%r12),%cl
 	movsbl %cl,%edi
 	movl %edi,%eax
 	subl $48,%eax
@@ -85,7 +85,7 @@ L18:
 	subq $_digits,%rax
 	leal (%rax,%r14,8),%r14d
 	leaq 3(%r12),%rbx
-	movzbl 3(%r12),%ecx
+	movb 3(%r12),%cl
 	movsbl %cl,%edi
 	movl %edi,%eax
 	subl $48,%eax
@@ -119,7 +119,7 @@ L44:
 L49:
 	xorl %r14d,%r14d
 L51:
-	movzbl (%rbx),%edi
+	movb (%rbx),%dil
 	movsbq %dil,%rax
 	testb $68,___ctype+1(%rax)
 	jz L6
@@ -282,11 +282,11 @@ L115:
 	cmpl $34,%ebx
 	jnz L114
 L112:
-	movl $92,%esi
+	movb $92,%sil
 	movq %r12,%rdi
 	call _vstring_putc
 L114:
-	movl %ebx,%esi
+	movb %bl,%sil
 	movq %r12,%rdi
 	call _vstring_putc
 L111:
@@ -304,11 +304,11 @@ L120:
 	movl $55,%edi
 	call _alloc
 	movq %rax,%rbx
-	movl $34,%esi
+	movb $34,%sil
 	leaq 8(%rbx),%rdi
 	call _vstring_putc
 L122:
-	movzbl (%r12),%esi
+	movb (%r12),%sil
 	testb %sil,%sil
 	jz L124
 L123:
@@ -318,7 +318,7 @@ L123:
 	call _backslash
 	jmp L122
 L124:
-	movl $34,%esi
+	movb $34,%sil
 	leaq 8(%rbx),%rdi
 	call _vstring_putc
 	movq %rbx,%rax
@@ -498,7 +498,7 @@ L180:
 	movl $51,%edi
 	call _alloc
 	movq %rax,%rbx
-	movl $32,%esi
+	movb $32,%sil
 	leaq 8(%rbx),%rdi
 	call _vstring_putc
 	movq %rbx,%rax
@@ -828,7 +828,7 @@ L336:
 	movq %rdi,%r15
 	movq %rsi,%r14
 	movq %r15,%r13
-	movzbl (%r15),%eax
+	movb (%r15),%al
 	cmpb $0,%al
 	jle L339
 L341:
@@ -852,7 +852,7 @@ L483:
 	addl $_token_scan,%eax
 	jmp *%rax
 L426:
-	movzbl (%r13),%ecx
+	movb (%r13),%cl
 	movsbq %cl,%rax
 	testb $7,___ctype+1(%rax)
 	jnz L427
@@ -887,7 +887,7 @@ L358:
 	call _error
 	addq $8,%rsp
 L356:
-	movzbl (%r13),%eax
+	movb (%r13),%al
 	incq %r13
 	cmpb (%r15),%al
 	jnz L364
@@ -941,7 +941,7 @@ L461:
 	cmpl $15,%eax
 	jge L346
 L462:
-	movzbl (%r13),%edx
+	movb (%r13),%dl
 	cmpb (%r15),%dl
 	jnz L465
 L467:
@@ -984,7 +984,7 @@ L436:
 	jmp L346
 L375:
 	leaq 1(%r15),%rdx
-	movzbl 1(%r15),%ecx
+	movb 1(%r15),%cl
 	cmpb $46,%cl
 	jnz L377
 L379:
@@ -1010,7 +1010,7 @@ L385:
 	cmpl $10,%eax
 	jae L392
 L397:
-	movzbl (%r13),%edi
+	movb (%r13),%dil
 	movsbq %dil,%rax
 	testb $7,___ctype+1(%rax)
 	jnz L398
@@ -1027,7 +1027,7 @@ L398:
 	jnz L410
 L411:
 	leaq 1(%r13),%rcx
-	movzbl 1(%r13),%eax
+	movb 1(%r13),%al
 	cmpb $45,%al
 	jz L408
 L415:
@@ -1272,7 +1272,7 @@ L561:
 	jae L550
 L562:
 	leaq 1(%r14),%rax
-	movzbl 1(%r14),%esi
+	movb 1(%r14),%sil
 	movq %rax,%r14
 	movq %r13,%rdi
 	call _vstring_putc
@@ -1357,7 +1357,7 @@ L599:
 	call _vstring_free
 	leaq 8(%rbx),%rdi
 	call _vstring_init
-	movl $32,%esi
+	movb $32,%sil
 	leaq 8(%rbx),%rdi
 	call _vstring_putc
 L602:
@@ -1722,7 +1722,7 @@ L763:
 	movl $55,%edi
 	call _alloc
 	movq %rax,%r13
-	movl $34,%esi
+	movb $34,%sil
 	leaq 8(%r13),%rdi
 	call _vstring_putc
 	movq (%r14),%r12
@@ -1754,7 +1754,7 @@ L785:
 L786:
 	movq 24(%r12),%rbx
 L788:
-	movzbl (%rbx),%esi
+	movb (%rbx),%sil
 	testb %sil,%sil
 	jz L767
 L789:
@@ -1779,7 +1779,7 @@ L767:
 	movq 32(%r12),%r12
 	jmp L765
 L768:
-	movl $34,%esi
+	movb $34,%sil
 	leaq 8(%r13),%rdi
 	call _vstring_putc
 	movq %r13,%rax

@@ -16,9 +16,9 @@
 
 void lower(void);
 
-/* eliminate pseudo MCH insns after optimization */
+/* eliminate synthetic MCH insns before output */
 
-void lower_more(void);
+void desynth(void);
 
 /* generate a machine move instruction appropriate to t. the
    caller must ensure the type/operand combination is valid. */

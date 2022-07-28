@@ -2183,11 +2183,10 @@ void lower(void)
     ARENA_FREE(&local_arena);
 }
 
-/* this is really the first of the `destructive' passes, and is invoked
-   before the final optimizers (which can handle the denormalized CFG).
-   we simply need to replace psuedo-insns with their real equivalents. */
+/* replace synthetic MCH instructions with their real counterparts. called
+   right before the function is output so the we render legal assembly. */
 
-void lower_more(void)
+void desynth(void)
 {
     struct block *b;
     struct insn *insn;

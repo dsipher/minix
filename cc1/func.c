@@ -410,18 +410,18 @@ void exit_func(void)
 
     color();                    /* allocate registers */
 
-    /* the register allocator interleaves OPT_MCH_PASSES with
+    /* the register allocator interleaved OPT_MCH_PASSES with
        coalescing and spilling; we give it a last once-over. */
 
     opt(OPT_MCH_PASSES | OPT_ANY_PASSES, OPT_LIR_PASSES);
 
-    /* and now the final passes; rewrite to eliminate synthetic insns
-       and perform optimizations that can mangle the IR a bit. */
+    /* and now the final passes; perform `special'
+       optimizations that might mangle the IR a bit. */
 
-    lower_more();
     opt(OPT_MCH_FINAL, ~OPT_MCH_FINAL);
 
     logues();                       /* generate prolog/epilog */
+    desynth();                      /* replace fake MCH insns */
     out_func();
     free_symbols(&func_chain);
     ARENA_FREE(&func_arena);

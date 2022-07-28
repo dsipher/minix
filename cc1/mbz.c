@@ -98,7 +98,7 @@ static int mbz1(struct block *b)
     meet0(b);
 
     FOR_EACH_INSN(b, i, insn) {
-        if ((insn->op == I_MCH_MOVL)
+        if ((insn->op == I_MCH_MOVZLQ)
           && OPERAND_REG(&insn->operand[0])
           && OPERAND_REG(&insn->operand[1])
           && insn->operand[0].reg == insn->operand[1].reg

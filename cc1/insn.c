@@ -189,7 +189,7 @@ static const char * const insn_text[] =
     /* 216 */   "cmovael",      "cmovbl",       "cmovzq",       "cmovnzq",
     /* 220 */   "cmovsq",       "cmovnsq",      "cmovgq",       "cmovleq",
     /* 224 */   "cmovgeq",      "cmovlq",       "cmovaq",       "cmovbeq",
-    /* 228 */   "cmovaeq",      "cmovbq",       "ZERO"
+    /* 228 */   "cmovaeq",      "cmovbq"
 };
 
 struct insn *new_insn(int op, int nr_args)
@@ -596,13 +596,6 @@ void out_insn(struct insn *insn)
             out_operand(&insn->operand[0], 0);
         }
 
-        break;
-
-    case I_MCH_ZERO:        /* yuck */
-        OUTS("\txorl ");
-        out_operand(&insn->operand[0], 0);
-        OUTC(',');
-        out_operand(&insn->operand[0], 0);
         break;
 
     default:

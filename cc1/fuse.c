@@ -194,8 +194,7 @@ static char flags[] =   /* indexed by I_INDEX */
     0     | 0       | 0     | 0     | 0         , /*  226  I_MCH_CMOVAQ     */
     0     | 0       | 0     | 0     | 0         , /*  227  I_MCH_CMOVBEQ    */
     0     | 0       | 0     | 0     | 0         , /*  228  I_MCH_CMOVAEQ    */
-    0     | 0       | 0     | 0     | 0         , /*  229  I_MCH_CMOVBQ     */
-    0     | 0       | 0     | 0     | 0           /*  230  I_MCH_ZERO       */
+    0     | 0       | 0     | 0     | 0           /*  229  I_MCH_CMOVBQ     */
 };
 
 /* when we have an active load this points to

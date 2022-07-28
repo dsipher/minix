@@ -201,8 +201,7 @@ static char arith[] =   /* indexed by I_INDEX */
     0,  /*  222  I_MCH_CMOVGQ     */        0,  /*  223  I_MCH_CMOVLEQ    */
     0,  /*  224  I_MCH_CMOVGEQ    */        0,  /*  225  I_MCH_CMOVLQ     */
     0,  /*  226  I_MCH_CMOVAQ     */        0,  /*  227  I_MCH_CMOVBEQ    */
-    0,  /*  228  I_MCH_CMOVAEQ    */        0,  /*  229  I_MCH_CMOVBQ     */
-    0   /*  230  I_MCH_ZERO       */
+    0,  /*  228  I_MCH_CMOVAEQ    */        0   /*  229  I_MCH_CMOVBQ     */
 };
 
 /* the register whose contents are properly

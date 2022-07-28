@@ -1300,17 +1300,6 @@ extern const char commuted_cc[];
                                   | I_TYPE_ENC(0, T_INDEX_LONG)             \
                                   | I_TYPE_ENC(1, T_INDEX_LONG)             )
 
-    /* we need a special insn to represent XOR %reg, %reg when used to
-       zero a register, because the regular XOR looks like it depends
-       on the previous value of %reg. because this insn takes a single
-       operand, but it actually has two, we need a special case in
-       out_insn() to handle it. yuck. */
-
-#define I_MCH_ZERO          ( 230 | I_ENC_OPERANDS(1)                       \
-                                  | I_FLAG_HAS_DST                          \
-                                  | I_FLAG_DEFS_CC                          \
-                                  | I_TYPE_ENC(0, T_INDEX_INT)              )
-
 /* operands for insns. MCH insns may have operands of any
    class, but LIR insns may not have O_MEM or O_EA operands.
 

@@ -21,14 +21,38 @@
    substitution if REG_CC is alive across the LEA. on the other hand, if
    we do substitute, OPT_MCH_CMP may have a new opportunity to exploit. */
 
-static void lea0(struct block *b, int i, int add, int shl, int mov)
+static void lea0(struct block *b, int i)
 {
     struct insn *insn = INSN(b, i);
     struct operand *ea = &insn->operand[1];     /* O_EA */
     struct operand *dst = &insn->operand[0];    /* O_REG */
     struct insn *new;
+    int add, shl, mov;
 
     if (live_across(b, REG_CC, i)) return;
+
+    switch (insn->op)
+    {
+    case I_MCH_LEAB:    add = I_MCH_ADDB;
+                        shl = I_MCH_SHLB;
+                        mov = I_MCH_MOVB;
+                        break;
+
+    case I_MCH_LEAW:    add = I_MCH_ADDW;
+                        shl = I_MCH_SHLW;
+                        mov = I_MCH_MOVW;
+                        break;
+
+    case I_MCH_LEAL:    add = I_MCH_ADDL;
+                        shl = I_MCH_SHLL;
+                        mov = I_MCH_MOVL;
+                        break;
+
+    case I_MCH_LEAQ:    add = I_MCH_ADDQ;
+                        shl = I_MCH_SHLQ;
+                        mov = I_MCH_MOVQ;
+                        break;
+    }
 
     if ((ea->reg == dst->reg) && (ea->index == REG_NONE)) {
         /* LEAx c(%dst), %dst -> ADDx $c, %dst.
@@ -84,13 +108,22 @@ replace:
    rewrite as TESTx. because this doesn't require a scratch reg
    this eases pressure and can eliminate unnecessary copies. */
 
-static void and0(struct block *b, int i, int op)
+static void and0(struct block *b, int i)
 {
     struct insn *insn = INSN(b, i);
     struct operand *dst = &insn->operand[0];
+    int op;
 
     if (!OPERAND_REG(dst) || !range_doa(b, dst->reg, i))
         return;
+
+    switch (insn->op)
+    {
+    case I_MCH_ANDB:    op = I_MCH_TESTB; break;
+    case I_MCH_ANDW:    op = I_MCH_TESTW; break;
+    case I_MCH_ANDL:    op = I_MCH_TESTL; break;
+    case I_MCH_ANDQ:    op = I_MCH_TESTQ; break;
+    }
 
     /* and ANDx insns with a reg dst are valid
        TSTx insns, so we can twiddle in place. */
@@ -115,26 +148,15 @@ void opt_mch_early(void)
         FOR_EACH_INSN(b, i, insn)
             switch (insn->op)
             {
-            case I_MCH_ANDB:    and0(b, i, I_MCH_TESTB); break;
-            case I_MCH_ANDW:    and0(b, i, I_MCH_TESTW); break;
-            case I_MCH_ANDL:    and0(b, i, I_MCH_TESTL); break;
-            case I_MCH_ANDQ:    and0(b, i, I_MCH_TESTQ); break;
+            case I_MCH_ANDB:
+            case I_MCH_ANDW:
+            case I_MCH_ANDL:
+            case I_MCH_ANDQ:    and0(b, i); break;
 
-            case I_MCH_LEAB:    lea0(b, i, I_MCH_ADDB,
-                                           I_MCH_SHLB,
-                                           I_MCH_MOVB); break;
-
-            case I_MCH_LEAW:    lea0(b, i, I_MCH_ADDW,
-                                           I_MCH_SHLW,
-                                           I_MCH_MOVW); break;
-
-            case I_MCH_LEAL:    lea0(b, i, I_MCH_ADDL,
-                                           I_MCH_SHLL,
-                                           I_MCH_MOVL); break;
-
-            case I_MCH_LEAQ:    lea0(b, i, I_MCH_ADDQ,
-                                           I_MCH_SHLQ,
-                                           I_MCH_MOVQ); break;
+            case I_MCH_LEAB:
+            case I_MCH_LEAW:
+            case I_MCH_LEAL:
+            case I_MCH_LEAQ:    lea0(b, i); break;
             }
 
 }

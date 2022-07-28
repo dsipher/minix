@@ -323,11 +323,21 @@ static int and0(struct block *b, int i)
 
 /* replace MOVx $0,%reg with XORL %reg, %reg.
 
-   this can't be done in early peep because the IR would see a false
-   dependency on the previous value of %reg (though most CPUs do not).
-   we wouldn't want to, anyway, because this would prevent fusing.
+   this is a textbook example of a LATE optimization, because:
 
-   MOVs don't affect the flags; XORs do. be on the lookout. */
+        1. XOR-self obscures the more obvious meaning of MOV-0
+        2. it creates a false dependency on the target register
+           (so live analysis data will be overly conservative)
+        3. doing this earlier would prevent a possible FUSE
+           (we can MOV-0 to memory, we can't XOR-self in memory)
+
+   so we have many reasons for wanting to delay this until late.
+
+   because this happens after register allocation (and importantly,
+   after spilling), we can blindly I_MCH_XORL rather than trying to
+   match the register's size. this is the always best choice.
+
+   n.b.: MOVs don't affect the flags; XORs do. be on the lookout. */
 
 static int xor0(struct block *b, int i)
 {
@@ -340,8 +350,9 @@ static int xor0(struct block *b, int i)
       && OPERAND_REG(dst)
       && !live_across(b, REG_CC, i))
     {
-        new = new_insn(I_MCH_ZERO, 0);
+        new = new_insn(I_MCH_XORL, 0);
         REG_OPERAND(&new->operand[0], 0, 0, dst->reg);
+        REG_OPERAND(&new->operand[1], 0, 0, dst->reg);
         INSN(b, i) = new;
         return 1;
     } else

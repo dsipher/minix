@@ -19,7 +19,7 @@ L2:
 	movq %rax,-40(%rbp)
 	movq $0,-64(%rbp)
 	movq %rsi,-32(%rbp)
-	movl $-1073741824,%eax
+	movl $3221225472,%eax
 	movq %rax,-24(%rbp)
 	leaq -64(%rbp),%rdx
 	leaq -32(%rbp),%rsi

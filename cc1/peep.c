@@ -528,9 +528,6 @@ static int cmp0(struct block *b, int i)
         ANDQ $imm, %R       ->      ANDL $imm, %R
         MOVQ $imm, %R       ->      MOVL $imm, %R
 
-   we renormalize the imm in case it exceeds INT_MAX,
-   making it appear negative to shut up the assembler.
-
    because of the assumption of our memory model that
    all globals be <2GB, the immediate need not be pure. */
 
@@ -551,7 +548,6 @@ static int trunc0(struct block *b, int i)
     new = new_insn((insn->op == I_MCH_ANDQ) ? I_MCH_ANDL : I_MCH_MOVL, 0);
     MCH_OPERAND(&new->operand[0], dst);
     MCH_OPERAND(&new->operand[1], src);
-    new->operand[1].con.i = (int) new->operand[1].con.i;
     INSN(b, i) = new;
 
     return 1;

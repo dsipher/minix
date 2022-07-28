@@ -1185,7 +1185,7 @@ L398:
 	incq %r13
 	jmp L388
 L392:
-	movl $-2147483648,%eax
+	movl $2147483648,%eax
 	cmpq %rax,%r12
 	jb L407
 L403:

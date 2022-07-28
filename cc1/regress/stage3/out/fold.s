@@ -142,7 +142,7 @@ L66:
 	cmpq $0,%rcx
 	jl L69
 L67:
-	movl $-1,%eax
+	movl $4294967295,%eax
 	cmpq %rax,%rcx
 	jg L69
 L68:

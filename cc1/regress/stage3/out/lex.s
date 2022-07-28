@@ -1043,7 +1043,7 @@ L363:
 	testl %r12d,%r12d
 	jz L369
 L368:
-	movl $-1,%ecx
+	movl $4294967295,%ecx
 	cmpq %rcx,%rax
 	jbe L397
 	ja L395
@@ -1055,7 +1055,7 @@ L395:
 	movl $1073741830,%ebx
 	jmp L335
 L375:
-	movl $-1,%ecx
+	movl $4294967295,%ecx
 	cmpq %rcx,%rax
 	ja L396
 L378:

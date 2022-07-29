@@ -37,7 +37,7 @@ extern int opt_prohibit;            /* passes prohibited globally */
 #define OPT_MCH_FUSE        0x00004000
 #define OPT_MCH_CMOV        0x00008000
 #define OPT_MCH_LATE        0x00010000
-#define OPT_MCH_MBZ         0x00020000
+#define OPT_MCH_ZLQ         0x00020000
 
 #define OPT_ANY_PASSES      (   OPT_DEAD            \
                             |   OPT_PRUNE           )
@@ -66,12 +66,12 @@ extern int opt_prohibit;            /* passes prohibited globally */
                             |   OPT_MCH_CMP         \
                             |   OPT_MCH_FUSE        )
 
-/* MCH final passes must be treated with care, because
-   they modify the IR `destructively', in the sense that
-   other passes may not be able to handle them anymore. */
+/* MCH final passes must be treated with care, because they
+   modify the IR `destructively', in the sense that other
+   passes may not be able to handle them after they run. */
 
 #define OPT_MCH_FINAL       (   OPT_MCH_LATE        \
-                            |   OPT_MCH_MBZ         )
+                            |   OPT_MCH_ZLQ         )
 
 void opt_prune(void);               /* CFG pruning */
 void opt_dead(void);                /* dead store removal */

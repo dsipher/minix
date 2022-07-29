@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-  mbz.c                                                   tahoe/64 c compiler
+  zlq.c                                                   tahoe/64 c compiler
 
      Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.
 
@@ -8,21 +8,21 @@
 
 #include "cc1.h"
 #include "block.h"
-#include "mbz.h"
+#include "zlq.h"
 
-/* SET/CLR set or clear the MBZ state of reg
-   respectively; MBZ inquires if the reg is MBZ.
+/* SET/CLR set or clear the ZLQ state of reg
+   respectively; ZLQ inquires if the reg is ZLQ.
 
    these (obviously?) rely on the fact that all
    the GP regs of interest have indices <= 31. */
 
-#define SET(mbz, reg)       ((mbz) |= (1 << REG_INDEX(reg)))
-#define CLR(mbz, reg)       ((mbz) &= ~(1 << REG_INDEX(reg)))
-#define MBZ(mbz, reg)       ((mbz) & (1 << REG_INDEX(reg)))
+#define SET(zlq, reg)       ((zlq) |= (1 << REG_INDEX(reg)))
+#define CLR(zlq, reg)       ((zlq) &= ~(1 << REG_INDEX(reg)))
+#define ZLQ(zlq, reg)       ((zlq) & (1 << REG_INDEX(reg)))
 
 static VECTOR(reg) regs;
 
-/* update the state of b->mbz according
+/* update the state of b->zlq according
    to the actions of insn at index i */
 
 static void update0(struct block *b, int i)
@@ -41,7 +41,7 @@ static void update0(struct block *b, int i)
       && (insn->operand[0].t & T_INTS))
     {
         dst = insn->operand[0].reg;
-        SET(b->mbz, dst);
+        SET(b->zlq, dst);
     }
 
     TRUNC_VECTOR(regs);
@@ -49,7 +49,7 @@ static void update0(struct block *b, int i)
 
     FOR_EACH_REG(regs, j, reg)
         if (reg != dst)
-            CLR(b->mbz, reg);
+            CLR(b->zlq, reg);
 }
 
 /* compute meet: the intersection
@@ -59,30 +59,30 @@ static void meet0(struct block *b)
 {
     int n;
 
-    b->mbz = 0;
+    b->zlq = 0;
 
     for (n = 0; n < NR_PREDS(b); ++n)
         if (n == 0)
-            b->mbz = PRED(b, n)->mbz;
+            b->zlq = PRED(b, n)->zlq;
         else
-            b->mbz &= PRED(b, n)->mbz;
+            b->zlq &= PRED(b, n)->zlq;
 }
 
 /* iterative analysis. compute output state from input
    state transformed by insns in block. repeat if the
    output state is not the same as the last iteration */
 
-static int mbz0(struct block *b)
+static int zlq0(struct block *b)
 {
-    int old_mbz, i;
+    int old_zlq, i;
 
-    old_mbz = b->mbz;
+    old_zlq = b->zlq;
     meet0(b);
 
     for (i = 0; i < NR_INSNS(b); ++i)
         update0(b, i);
 
-    if (b->mbz == old_mbz)
+    if (b->zlq == old_zlq)
         return ITERATE_OK;
     else
         return ITERATE_AGAIN;
@@ -90,7 +90,7 @@ static int mbz0(struct block *b)
 
 /* perform a final meet, and nuke unnecessary zero extensions. */
 
-static int mbz1(struct block *b)
+static int zlq1(struct block *b)
 {
     struct insn *insn;
     int i;
@@ -102,7 +102,7 @@ static int mbz1(struct block *b)
           && OPERAND_REG(&insn->operand[0])
           && OPERAND_REG(&insn->operand[1])
           && insn->operand[0].reg == insn->operand[1].reg
-          && MBZ(b->mbz, insn->operand[1].reg))
+          && ZLQ(b->zlq, insn->operand[1].reg))
         {
             INSN(b, i) = &nop_insn;
             return 1;
@@ -116,35 +116,49 @@ static int mbz1(struct block *b)
 
 /* the AMD64 architecture automatically zeros bits[63:32] of a register
    when it is written to as a 32-bit operand. here we perform data-flow
-   analysis to determine at which points the last write to a register
-   must have cleared the upper 32 bits, and eliminate unnecessary zero
-   extensions that follow.
+   analysis to determine at which points the last write(s) to a register
+   zeroed the upper bits, and use this to eliminate unnecessary MOVZLQs.
 
-   this pass runs on the MCH insns in a `destructive' final phase, and,
-   in fact, is best run after OPT_MCH_LATE, as that pass shrinks ops to
-   32-bit when possible, which opens up more opportunities here. */
+   by itself, this optimization yields only a modest benefit (we eliminate
+   117 insns, ~0.2%, in the regression suite). ultimately, synergy between
+   this pass and not-yet-written other transformations is the goal, e.g.:
 
-void opt_mch_mbz(void)
+        (1) we need to rewrite MOVSLQs as MOVZLQs when the value is
+            known to be non-negative. the former are far more common,
+            often arising from indexing arrays with ints.
+
+        (2) the register allocator needs to recognize when a value and
+            its sign-extended value can inhabit the same register and
+            coalsece them accordingly.
+
+   these two alone should yield many more removable MOVZLQ-self insns.
+
+   this pass must run last, as we have no means of indicating a dependency
+   on the _size_ of a previous write. if we try to interleave other passes
+   they might pull the rug out from underneath us. on the bright side, this
+   allows us to optimize for working on the small set of machine regs. */
+
+void opt_mch_zlq(void)
 {
     struct block *b;
 
     sequence_blocks(0);
 
 restart:
-    FOR_ALL_BLOCKS(b) b->mbz = 0;
+    FOR_ALL_BLOCKS(b) b->zlq = 0;
 
     INIT_VECTOR(regs, &local_arena);
-    iterate_blocks(mbz0);
+    iterate_blocks(zlq0);
     ARENA_FREE(&local_arena);
 
     live_analyze(LIVE_ANALYZE_REGS);
     INIT_VECTOR(regs, &local_arena);
 
     /* it is extremely conservative to restart the entire analysis
-       on any change; probably overly conservative. rainy day. */
+       on any change; probably completely unnecessary. rainy day. */
 
     FOR_ALL_BLOCKS(b)
-        if (mbz1(b)) {
+        if (zlq1(b)) {
             ARENA_FREE(&local_arena);
             goto restart;
         }

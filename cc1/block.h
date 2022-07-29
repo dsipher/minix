@@ -97,7 +97,7 @@ struct block
 
     /* private/semi-private data for other optimizations/analyses */
 
-    int mbz;                        /* must-be-zero regs (mbz.c) */
+    int zlq;                        /* zero-extended regs (zlq.c) */
     struct live live;               /* live analysis data (live.c) */
     struct fold fold;               /* constant propagation data (fold.c) */
     struct prop prop;               /* copy propagation data (prop.c) */

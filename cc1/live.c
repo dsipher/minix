@@ -305,7 +305,11 @@ int live_across(struct block *b, int reg, int i)
    is technically O(n) but in reality most ranges are short, so
    we only scan some fraction of n ranges.
 
-   GP and XMM registers never interfere, as they are disjoint. */
+   GP and XMM registers never interfere, as they are disjoint.
+
+   note that our definition of interference is asymmetric, and
+   thus can be used to build either a conventional interference
+   graph or a `containment' graph (a la cooper & simpson, 1998). */
 
 void range_interf(struct block *b, int r, VECTOR(reg) *regs)
 {

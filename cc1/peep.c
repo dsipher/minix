@@ -198,6 +198,8 @@ static short peeps[] =      /* indexed by I_INDEX */
     0                                           /*  229  I_MCH_CMOVBQ     */
 };
 
+/******************************************************************** EARLY */
+
 /* lowering chooses LEA for additions and shifts when possible. if we
    determine that a simple ADD or SHL will suffice, we substitute. as
    the register allocator progresses, new opportunities appear through
@@ -320,21 +322,23 @@ static int and0(struct block *b, int i)
     return 1;
 }
 
+/********************************************************************* LATE */
+
 /* replace MOVx $0,%reg with XORL %reg, %reg.
 
-   this is a textbook example of a LATE optimization, because:
+   this is a prime example of why an optimization is LATE:
 
         1. XOR-self obscures the more obvious meaning of MOV-0
         2. it creates a false dependency on the target register
            (so live analysis data will be overly conservative)
         3. doing this earlier would prevent a possible FUSE
            (we can MOV-0 to memory, we can't XOR-self in memory)
+        4. we always blindly I_MCH_XORL rather than trying to
+           match the register's size. this is always the best
+           choice, but it breaks an IR invariant which limits
+           reg sizes based on the node's symbol's type.
 
    so we have many reasons for wanting to delay this until late.
-
-   because this happens after register allocation (and importantly,
-   after spilling), we can blindly I_MCH_XORL rather than trying to
-   match the register's size. this is the always best choice.
 
    n.b.: MOVs don't affect the flags; XORs do. be on the lookout. */
 
@@ -408,11 +412,7 @@ static int inc0(struct block *b, int i)
     return 1;
 }
 
-/* replace CMPx $0,%R with TESTx %R,%R, when
-   our only interest is the Z or S flag.
-
-   this is just an equivalent with a smaller encoding.
-   it occurs frequently enough to warrant replacement. */
+/* CMPx $0,%R -> TESTx %R,%R when our only concern is the Z and/or S flags. */
 
 static int cmp0(struct block *b, int i)
 {
@@ -483,7 +483,15 @@ static int trunc0(struct block *b, int i)
 
 /* multiplication by an immediate value can often be replaced by
    a short combination of LEA and/or alu insns which compute the
-   equivalent. IMULx trash the flags, so we have free reign. */
+   equivalent. IMULx trash the flags, so we have free reign.
+
+   for the moment we only handle a small handful of constants,
+   but there are many more that can be trivially added. todo.
+
+   there is no reason why this can't be an EARLY substitution.
+   it has a slightly different impact when it's LATE because
+   of changes to fusing and register allocation. some day we
+   should see which of EARLY or LATE produces better results. */
 
 static int mul0(struct block *b, int i)
 {
@@ -514,7 +522,7 @@ static int mul0(struct block *b, int i)
                         add = I_MCH_ADDQ;
     }
 
-    switch (con->con.i)
+    switch (con->con.i)     /* see above, this table is incomplete */
     {
     case 3:     scale = 1; shift = 0; goto lea_shl;
     case 10:    scale = 2; shift = 1; goto lea_shl;
@@ -560,13 +568,13 @@ lea_shl:
 
 /* basic instruction substitutions. we divide these into two broad
    categories, EARLY and LATE. EARLY optimizations are interleaved
-   with register allocation because they are non-disruptive and/or
-   expose additional optimization opportunities. LATE substitutions
-   are run only once, after allocation is complete, because they are
-   more concerned with the arcana of AMD64 instruction than anything
-   else, tend to obscure meaning, or otherwise get in the way. */
+   with register allocation primarily because they expose additional
+   optimization opportunities. LATE substitutions are run only once,
+   after allocation is complete, because they are solely concerned
+   with the arcana of AMD64 instruction selection, break invariants,
+   obscure meaning, or are otherwise troublesome in some way. */
 
-static void peep0(int late)
+static void peep0(int early)
 {
     struct block *b;
     struct insn *insn;
@@ -587,9 +595,13 @@ nocc:
             insn = INSN(b, i);
             peep = peeps[I_INDEX(insn->op)];
 
-            if ( late && (peep & INC0)      && inc0(b, i))      goto nocc;
-            if ( late && (peep & MUL0)      && mul0(b, i))      goto nocc;
-            if ( late && (peep & TRUNC0)    && trunc0(b, i))    goto nocc;
+            if (early) {
+                /* no EARLY transformations here yet */
+            } else {
+                if ((peep & INC0)       && inc0(b, i))      goto nocc;
+                if ((peep & MUL0)       && mul0(b, i))      goto nocc;
+                if ((peep & TRUNC0)     && trunc0(b, i))    goto nocc;
+            }
         }
 
     /* the second group need the live data. it is important that
@@ -604,14 +616,17 @@ needcc:
             insn = INSN(b, i);
             peep = peeps[I_INDEX(insn->op)];
 
-            if (!late && (peep & LEA0)      && lea0(b, i))      goto needcc;
-            if (!late && (peep & AND0)      && and0(b, i))      goto needcc;
-            if ( late && (peep & XOR0)      && xor0(b, i))      goto needcc;
-            if ( late && (peep & CMP0)      && cmp0(b, i))      goto needcc;
+            if (early) {
+                if ((peep & LEA0)       && lea0(b, i))      goto needcc;
+                if ((peep & AND0)       && and0(b, i))      goto needcc;
+            } else {
+                if ((peep & XOR0)       && xor0(b, i))      goto needcc;
+                if ((peep & CMP0)       && cmp0(b, i))      goto needcc;
+            }
         }
 }
 
-void opt_mch_early(void)    { peep0(0); }
-void opt_mch_late(void)     { peep0(1); }
+void opt_mch_early(void)    { peep0(1); }
+void opt_mch_late(void)     { peep0(0); }
 
 /* vi: set ts=4 expandtab: */

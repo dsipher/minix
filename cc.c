@@ -243,6 +243,17 @@ void run(struct list *args, char *out_path)
     }
 }
 
+#define DO_STEP(GOAL, CMD, reverse)                                         \
+    new = morph(src, GOAL);     /* generate output path from input name */  \
+    copy(&args, &CMD);          /* and new command line from template */    \
+    if (!reverse) add(&args, src, 0);   /* append input and ... */          \
+    add(&args, new, 0);                 /* ... output path names ... */     \
+    if (reverse) add(&args, src, 0);    /* ... in the right order! */       \
+    run(&args, new);            /* and go run it */                         \
+    if (goal == GOAL) break;    /* if we met our goal, we're done */        \
+    add(&temps, new, 0);        /* otherwise we just made a temp file */    \
+    src = new;                  /* and it's the source for the next step */
+
 int main(int argc, char **argv)
 {
     char *src;
@@ -323,44 +334,9 @@ int main(int argc, char **argv)
         src = *argv;
 
         switch (type(src)) {
-        case C_FILE:
-            new = morph(src, CC1_FILE);
-            copy(&args, &cpp);
-            add(&args, src, 0);
-            add(&args, new, 0);
-            run(&args, new);
-
-            if (goal == CC1_FILE)
-                break;
-
-            add(&temps, new, 0);
-            src = new;
-
-        case CC1_FILE:
-            new = morph(src, AS_FILE);
-            copy(&args, &cc1);
-            add(&args, src, 0);
-            add(&args, new, 0);
-            run(&args, new);
-
-            if (goal == AS_FILE)
-                break;
-
-            src = new;
-            add(&temps, new, 0);
-
-        case AS_FILE:
-            new = morph(src, LD_FILE);
-            copy(&args, &as);
-            add(&args, new, 0);
-            add(&args, src, 0);
-            run(&args, new);
-
-            if (goal == LD_FILE)
-                break;
-
-            add(&temps, new, 0);
-            src = new;
+        case C_FILE:        DO_STEP(CC1_FILE, cpp, 0);
+        case CC1_FILE:      DO_STEP(AS_FILE, cc1, 0);
+        case AS_FILE:       DO_STEP(LD_FILE, as, 1);
 
         case LD_FILE:
             add(&ld, src, 0);

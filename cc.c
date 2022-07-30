@@ -79,7 +79,8 @@ struct list temps;      /* list of temp files (delete before exit) */
 #define LIB_FILE    'a'
 
 int goal = EXEC_FILE;       /* file type for result(s) */
-char *a_out;                /* target executable name */
+char *a_out = "a.out";      /* linker output path name */
+char *o_path;               /* output path from -o option */
 int n_flag;                 /* no standard include files */
 
 /* call before exit to axe all the temp files */
@@ -244,15 +245,17 @@ void run(struct list *args, char *out_path)
 }
 
 #define DO_STEP(GOAL, CMD, reverse)                                         \
-    new = morph(src, GOAL);     /* generate output path from input name */  \
+    if ((goal == GOAL) && o_path)    /* if this the goal step, and user */  \
+        new = o_path;                /* supplied path, use it; otherwise */ \
+    else new = morph(src, GOAL);     /* generate name from input name */    \
     copy(&args, &CMD);          /* and new command line from template */    \
     if (!reverse) add(&args, src, 0);   /* append input and ... */          \
     add(&args, new, 0);                 /* ... output path names ... */     \
     if (reverse) add(&args, src, 0);    /* ... in the right order! */       \
     run(&args, new);            /* and go run it */                         \
-    if (goal == GOAL) break;    /* if we met our goal, we're done */        \
+    if (goal == GOAL) break;    /* if we met our goal, then stop here, */   \
     add(&temps, new, 0);        /* otherwise we just made a temp file */    \
-    src = new;                  /* and it's the source for the next step */
+    src = new;                  /* and it's the input for the next step */
 
 int main(int argc, char **argv)
 {
@@ -305,11 +308,11 @@ int main(int argc, char **argv)
             if ((*argv)[2] || (argv[1] == 0))
                 error("malformed output option (-o)");
 
-            if (a_out)
+            if (o_path)
                 error("duplicate output specified (-o)");
 
             ++argv;
-            a_out = *argv;
+            o_path = *argv;
             break;
 
         default:
@@ -319,16 +322,12 @@ int main(int argc, char **argv)
         ++argv;
     }
 
-    if (a_out == 0)
-        a_out = "a.out";
+    if (*argv == 0) error("no input files");
 
-    if (n_flag == 0)
-        add(&cpp, "-I" INC, 0);
-
+    if (o_path) a_out = o_path;
     add(&ld, a_out, CRT0, 0);
 
-    if (*argv == 0)
-        error("no input files");
+    if (n_flag == 0) add(&cpp, "-I" INC, 0);
 
     while (*argv) {
         src = *argv;

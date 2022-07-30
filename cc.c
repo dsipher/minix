@@ -190,20 +190,25 @@ int type(char *path)
     error("'%s': unknown file type", path);
 }
 
-/* return a copy of the name in question with its
+/* return a copy of the path name in question,
+   with all directory prefixes stripped and its
    extension changed to the file type specified.
-   notice that we make no attempt to track these
-   allocations, we are dirty, dirty, lazy leakers. */
+   we make no attempt to track these allocations
+   because we are dirty, dirty leakers. */
 
 char *morph(char *path, int type)
 {
     char *dot;
     char *new;
+    char *base;
 
     new = mem(strlen(path) + 1);
     strcpy(new, path);
     dot = strrchr(new, '.');
     *++dot = type;
+
+    base = strrchr(new, '/');
+    if (base) new = base + 1;
 
     return new;
 }

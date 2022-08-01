@@ -5,8 +5,6 @@
 #                                  derived from NetBSD's bcopy.S for AMD64 by
 #                     Wolfgang Solfrank (ws@tools.de), dsl@netbsd.org, et al.
 #
-#    Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.
-#
 ##############################################################################
 
 .text

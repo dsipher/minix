@@ -5,8 +5,6 @@
 #         derived from public-domain version by J.T. Conklin <jtc@netbsd.org>
 #  and Open/NetBSD adaptation by Frank van der Linden <fvdl@wasabisytems.com>
 #
-#    Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.
-#
 ##############################################################################
 
 .text

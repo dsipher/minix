@@ -2,7 +2,7 @@
 
   sys/slist.h                                       tahoe/64 standard library
 
-        Copyright (c) 1980-1995, The Regents of the University of California.
+       Copyright (c) 1991, 1993, The Regents of the University of California.
      Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.
 
 *****************************************************************************/

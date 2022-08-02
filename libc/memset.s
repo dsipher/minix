@@ -5,6 +5,8 @@
 #         derived from public-domain version by J.T. Conklin <jtc@netbsd.org>
 #  and Open/NetBSD adaptation by Frank van der Linden <fvdl@wasabisytems.com>
 #
+#             FIXME: replace with version derived from MINIX or COHERENT libc
+#
 ##############################################################################
 
 .text

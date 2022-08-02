@@ -1,9 +1,11 @@
 /*****************************************************************************
 
-  frexp.c                                           tahoe/64 standard library
+   frexp.c                                       tahoe/64 standard library
 
-                          Copyright (c) 2004 David Schultz <das@freebsd.org>.
-     Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.
+                       Copyright (c) 2004 David Schultz <das@freebsd.org>.
+  Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.
+
+           FIXME: replace with version derived from MINIX or COHERENT libc
 
 *****************************************************************************/
 

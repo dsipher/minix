@@ -1,32 +1,32 @@
-/* flexdef - definitions file for flex */
+/*****************************************************************************
 
-/*-
- * Copyright (c) 1990 The Regents of the University of California.
- * All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Vern Paxson.
- * 
- * The United States Government has rights in this work pursuant
- * to contract no. DE-AC03-76SF00098 between the United States
- * Department of Energy and the University of California.
- *
- * Redistribution and use in source and binary forms are permitted provided
- * that: (1) source distributions retain this entire copyright notice and
- * comment, and (2) distributions including binaries display the following
- * acknowledgement:  ``This product includes software developed by the
- * University of California, Berkeley and its contributors'' in the
- * documentation or other materials provided with the distribution and in
- * all advertising materials mentioning features or use of this software.
- * Neither the name of the University nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- */
+   flexdef.h (definitions for flex)                           tahoe/64 lex
 
-/* @(#) $Header: /usr/fsys/odin/a/vern/flex/RCS/flexdef.h,v 2.10 90/08/03 14:09:52 vern Exp $ (LBL) */
+******************************************************************************
+
+   derived from flex 2.3.7, contributed to Berkeley by Vern Paxson.
+   Copyright (c) 1990, The Regents of the University of California.
+
+   The United States Government has rights in this work pursuant
+   to contract no. DE-AC03-76SF00098 between the United States
+   Department of Energy and the University of California.
+
+   Redistribution and use in source and binary forms are permitted provided
+   that: (1) source distributions retain this entire copyright notice and
+   comment, and (2) distributions including binaries display the following
+   acknowledgement:  ``This product includes software developed by the
+   University of California, Berkeley and its contributors'' in the
+   documentation or other materials provided with the distribution and in
+   all advertising materials mentioning features or use of this software.
+   Neither the name of the University nor the names of its contributors may
+   be used to endorse or promote products derived from this software without
+   specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
+   WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+   MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+*****************************************************************************/
 
 #ifndef FILE
 #include <stdio.h>
@@ -251,7 +251,7 @@ char *malloc(), *realloc();
 
 /* the percentage the number of homogeneous out-transitions of a state
  * must be of the number of total out-transitions of the state in order
- * that the state's transition table is first compared with a potential 
+ * that the state's transition table is first compared with a potential
  * template of the most common out-transition instead of with the first
  * proto in the proto queue
  */
@@ -339,7 +339,7 @@ typedef struct hash_entry *hash_table[];
 #define START_COND_HASH_SIZE 101
 #define CCL_HASH_SIZE 101
 
-extern struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE]; 
+extern struct hash_entry *ndtbl[NAME_TABLE_HASH_SIZE];
 extern struct hash_entry *sctbl[START_COND_HASH_SIZE];
 extern struct hash_entry *ccltab[CCL_HASH_SIZE];
 
@@ -399,7 +399,7 @@ extern int yymore_really_used, reject_really_used;
  * action_file_name - name of the temporary file
  * input_files - array holding names of input files
  * num_input_files - size of input_files array
- * program_name - name with which program was invoked 
+ * program_name - name with which program was invoked
  */
 
 extern int datapos, dataline, linenum;

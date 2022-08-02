@@ -1,35 +1,32 @@
-/* gen - actual generation (writing) of flex scanners */
+/*****************************************************************************
 
-/*-
- * Copyright (c) 1990 The Regents of the University of California.
- * All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Vern Paxson.
- * 
- * The United States Government has rights in this work pursuant
- * to contract no. DE-AC03-76SF00098 between the United States
- * Department of Energy and the University of California.
- *
- * Redistribution and use in source and binary forms are permitted provided
- * that: (1) source distributions retain this entire copyright notice and
- * comment, and (2) distributions including binaries display the following
- * acknowledgement:  ``This product includes software developed by the
- * University of California, Berkeley and its contributors'' in the
- * documentation or other materials provided with the distribution and in
- * all advertising materials mentioning features or use of this software.
- * Neither the name of the University nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
- * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
- */
+   gen.c (actual writing of scanners)                         tahoe/64 lex
 
-#ifndef lint
-static char rcsid[] =
-    "@(#) $Header: /home/horse/u0/vern/flex/RCS/gen.c,v 2.12 91/03/28 12:01:38 vern Exp $ (LBL)";
-#endif
+******************************************************************************
+
+   derived from flex 2.3.7, contributed to Berkeley by Vern Paxson.
+   Copyright (c) 1990, The Regents of the University of California.
+
+   The United States Government has rights in this work pursuant
+   to contract no. DE-AC03-76SF00098 between the United States
+   Department of Energy and the University of California.
+
+   Redistribution and use in source and binary forms are permitted provided
+   that: (1) source distributions retain this entire copyright notice and
+   comment, and (2) distributions including binaries display the following
+   acknowledgement:  ``This product includes software developed by the
+   University of California, Berkeley and its contributors'' in the
+   documentation or other materials provided with the distribution and in
+   all advertising materials mentioning features or use of this software.
+   Neither the name of the University nor the names of its contributors may
+   be used to endorse or promote products derived from this software without
+   specific prior written permission.
+
+   THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED
+   WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF
+   MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+*****************************************************************************/
 
 #include "flexdef.h"
 
@@ -69,7 +66,7 @@ void do_indent()
 	putchar( '\t' );
 	i -= 8;
 	}
-    
+
     while ( i > 0 )
 	{
 	putchar( ' ' );
@@ -146,7 +143,7 @@ void genctbl()
     printf( "static const struct yy_trans_info yy_transition[%d] =\n",
 	    tblend + numecs + 1 );
     printf( "    {\n" );
-    
+
     /* We want the transition to be represented as the offset to the
      * next state, not the actual state number, which is what it currently is.
      * The offset is base[nxt[i]] - base[chk[i]].  That's just the
@@ -479,7 +476,7 @@ void gen_next_match()
      */
     char *char_map = useecs ? "yy_ec[*yy_cp]" : "*yy_cp";
     char *char_map_2 = useecs ? "yy_ec[*++yy_cp]" : "*++yy_cp";
-    
+
     if ( fulltbl )
 	{
 	indent_put2s(
@@ -594,11 +591,11 @@ int worry_about_NULs;
 	indent_up();
 	indent_puts( "{" );
 	}
-   
+
     if ( fulltbl )
-	indent_put2s( "yy_current_state = yy_nxt[yy_current_state][%s];", 
+	indent_put2s( "yy_current_state = yy_nxt[yy_current_state][%s];",
 		char_map );
-    
+
     else if ( fullspd )
 	indent_put2s( "yy_current_state += yy_current_state[%s].yy_nxt;",
 		    char_map );
@@ -615,7 +612,7 @@ int worry_about_NULs;
 	indent_puts( "yy_current_state = yy_NUL_trans[yy_current_state];" );
 	indent_down();
 	}
-    
+
     if ( fullspd || fulltbl )
 	gen_backtracking();
 
@@ -1028,7 +1025,7 @@ void make_tables()
 	indent_puts( "yyleng = yy_cp - yy_bp; \\" );
 
     set_indent( 0 );
-    
+
     skelout();
 
 
@@ -1061,7 +1058,7 @@ void make_tables()
 
 	indent_puts( "typedef const struct yy_trans_info *yy_state_type;" );
 	}
-    
+
     else
 	indent_puts( "typedef int yy_state_type;" );
 
@@ -1093,7 +1090,7 @@ void make_tables()
 		else
 		    printf( "    0,\n" );
 		}
-	    
+
 	    else
 		mkdata( nultrans[i] );
 	    }
@@ -1150,7 +1147,7 @@ void make_tables()
         puts( "goto find_rule; \\" );
         puts( "}" );
 	}
-    
+
     else
 	{
 	puts( "/* the intent behind this definition is that it'll catch" );
@@ -1158,7 +1155,7 @@ void make_tables()
 	puts( " */" );
 	puts( "#define REJECT reject_used_but_not_detected" );
 	}
-    
+
     if ( yymore_used )
 	{
 	indent_puts( "static int yy_more_flag = 0;" );
@@ -1279,7 +1276,7 @@ void make_tables()
 	    printf( "case YY_STATE_EOF(%s):\n", scname[i] );
 	    did_eof_rule = true;
 	    }
-    
+
     if ( did_eof_rule )
 	{
 	indent_up();
@@ -1298,7 +1295,7 @@ void make_tables()
 
     if ( fullspd || fulltbl )
 	indent_puts( "yy_cp = yy_c_buf_p;" );
-    
+
     else
 	{ /* compressed table */
 	if ( ! reject && ! interactive )

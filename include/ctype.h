@@ -68,14 +68,14 @@ extern int toupper(int);
 #define isalnum(c)      ((__ctype+1)[c]&(_U|_L|_N))
 #define isalpha(c)      ((__ctype+1)[c]&(_U|_L))
 #define iscntrl(c)      ((__ctype+1)[c]&_C)
+#define isdigit(c)      ((__ctype+1)[c]&_N)
 #define isgraph(c)      ((__ctype+1)[c]&(_P|_U|_L|_N))
+#define islower(c)      ((__ctype+1)[c]&_L)
 #define ispunct(c)      ((__ctype+1)[c]&_P)
 #define isspace(c)      ((__ctype+1)[c]&_S)
+#define isupper(c)      ((__ctype+1)[c]&_U)
 #define isxdigit(c)     ((__ctype+1)[c]&(_N|_X))
 
-#define isdigit(c)      ((unsigned) ((c)-'0') < 10)
-#define islower(c)      ((unsigned) ((c)-'a') < 26)
-#define isupper(c)      ((unsigned) ((c)-'A') < 26)
 #define isprint(c)      ((unsigned) ((c)-' ') < 95)
 #define isascii(c)      ((unsigned) (c) < 128)
 

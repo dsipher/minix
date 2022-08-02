@@ -1,4 +1,10 @@
 *.o
+as/as
+as/lex.yy.c
+as/mktable
+as/table.c
+as/y.tab.h
+as/y.tab.c
 cpp/cpp
 cc1/cc1
 cc1/regress/stage1

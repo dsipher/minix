@@ -547,10 +547,9 @@ static void dense1(struct block *b, int long_func)
     ttab = anon_static(&void_type, ++last_asmlab);
     treg = temp_reg(T_LONG);
 
-    /* we take shortcuts in our computation of the target
-       address that violate the rules about operand sizes
-       in MCH IR (before the late passes), so treg can't
-       be spilled. it's always be a poor choice, anyway. */
+    /* it's hard to predict how the table-switching code would
+       interact with spilling, so don't ever spill it. it's
+       not clear how it would ever be a good choice anyway. */
 
     REG_TO_SYMBOL(treg)->s |= S_NOSPILL;
 

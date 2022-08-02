@@ -1,3 +1,18 @@
+/*****************************************************************************
+
+   warshall.c                                                tahoe/64 yacc
+
+******************************************************************************
+
+   derived from Berkeley Yacc 1.9, which was placed in the public domain
+   by its author, Robert Corbett, who distributed it with the disclaimer:
+
+   ``Berkeley Yacc is distributed with no warranty whatever. The code is
+   certain to contain errors. The author and any other contributors take
+   no responsibility for the consequences of its use.''
+
+*****************************************************************************/
+
 #include "defs.h"
 
 transitive_closure(R, n)

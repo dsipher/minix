@@ -1,3 +1,18 @@
+/*****************************************************************************
+
+   reader.c                                                  tahoe/64 yacc
+
+******************************************************************************
+
+   derived from Berkeley Yacc 1.9, which was placed in the public domain
+   by its author, Robert Corbett, who distributed it with the disclaimer:
+
+   ``Berkeley Yacc is distributed with no warranty whatever. The code is
+   certain to contain errors. The author and any other contributors take
+   no responsibility for the consequences of its use.''
+
+*****************************************************************************/
+
 #include "defs.h"
 
 /*  The line size must be a positive integer.  One hundred was chosen	*/
@@ -664,7 +679,7 @@ get_literal()
     n = cinc;
     s = MALLOC(n);
     if (s == 0) no_space();
-    
+
     for (i = 0; i < n; ++i)
 	s[i] = cache[i];
 

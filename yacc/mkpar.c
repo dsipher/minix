@@ -1,4 +1,17 @@
+/*****************************************************************************
 
+   mkpar.c                                                   tahoe/64 yacc
+
+******************************************************************************
+
+   derived from Berkeley Yacc 1.9, which was placed in the public domain
+   by its author, Robert Corbett, who distributed it with the disclaimer:
+
+   ``Berkeley Yacc is distributed with no warranty whatever. The code is
+   certain to contain errors. The author and any other contributors take
+   no responsibility for the consequences of its use.''
+
+*****************************************************************************/
 #include "defs.h"
 
 action **parser;
@@ -302,7 +315,7 @@ int stateno;
     register action *p;
 
     count = 0;
-    ruleno = 0; 
+    ruleno = 0;
     for (p = parser[stateno]; p; p = p->next)
     {
 	if (p->action_code == SHIFT && p->suppressed == 0)
@@ -331,7 +344,7 @@ defreds()
     for (i = 0; i < nstates; i++)
 	defred[i] = sole_reduction(i);
 }
- 
+
 free_action_row(p)
 register action *p;
 {

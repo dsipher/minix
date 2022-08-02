@@ -191,8 +191,7 @@ L73:
 	movl 4(%r14),%eax
 	andl $-17,%eax
 	orl $16,%eax
-	movl %eax,4(%r14)
-	jmp L88
+	jmp L89
 L74:
 	pushq $L76
 	pushq $0
@@ -210,11 +209,11 @@ L77:
 L80:
 	andl $-9,%eax
 	orl $8,%eax
-	movl %eax,4(%r14)
-	jmp L88
+	jmp L89
 L81:
 	andl $-5,%eax
 	orl $4,%eax
+L89:
 	movl %eax,4(%r14)
 L88:
 	call _lex
@@ -242,9 +241,9 @@ L22:
 
 
 _asm_stmt:
-L89:
-	pushq %rbx
 L90:
+	pushq %rbx
+L91:
 	xorl %esi,%esi
 	movl $8388609,%edi
 	call _new_insn
@@ -259,19 +258,19 @@ L90:
 	movq %rax,8(%rbx)
 	call _lex
 	cmpl $486539286,_token(%rip)
-	jnz L97
-L95:
+	jnz L98
+L96:
 	movq %rbx,%rsi
 	xorl %edi,%edi
 	call _asm0
-L97:
-	cmpl $486539286,_token(%rip)
-	jnz L101
 L98:
+	cmpl $486539286,_token(%rip)
+	jnz L102
+L99:
 	movq %rbx,%rsi
 	movl $1,%edi
 	call _asm0
-L101:
+L102:
 	movl $13,%edi
 	call _expect
 	call _lex
@@ -281,27 +280,27 @@ L101:
 	movq _current_block(%rip),%rsi
 	movq %rbx,%rdi
 	call _append_insn
-L91:
+L92:
 	popq %rbx
 	ret 
 
 
 _case_label:
-L107:
+L108:
 	pushq %rbx
 	pushq %r12
-L110:
+L111:
 	cmpq $0,_control_block(%rip)
-	jnz L115
-L113:
+	jnz L116
+L114:
 	movl _token(%rip),%eax
 	pushq %rax
-	pushq $L116
+	pushq $L117
 	pushq $0
 	pushq $4
 	call _error
 	addq $32,%rsp
-L115:
+L116:
 	call _lex
 	call _case_expr
 	movq %rax,%r12
@@ -319,35 +318,35 @@ L115:
 	movq _current_block(%rip),%rdi
 	call _add_succ
 	movq %rbx,_current_block(%rip)
-L109:
+L110:
 	popq %r12
 	popq %rbx
 	ret 
 
 
 _default_label:
-L120:
-L123:
+L121:
+L124:
 	cmpq $0,_control_block(%rip)
-	jnz L128
-L126:
+	jnz L129
+L127:
 	movl _token(%rip),%eax
 	pushq %rax
-	pushq $L116
+	pushq $L117
 	pushq $0
 	pushq $4
 	call _error
 	addq $32,%rsp
-L128:
-	cmpl $0,_saw_default(%rip)
-	jz L131
 L129:
-	pushq $L132
+	cmpl $0,_saw_default(%rip)
+	jz L132
+L130:
+	pushq $L133
 	pushq $0
 	pushq $4
 	call _error
 	addq $24,%rsp
-L131:
+L132:
 	call _lex
 	movl $486539286,%edi
 	call _expect
@@ -359,16 +358,16 @@ L131:
 	call _add_succ
 	movq _default_block(%rip),%rax
 	movq %rax,_current_block(%rip)
-L122:
+L123:
 	ret 
 
 
 _do_stmt:
-L136:
+L137:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L137:
+L138:
 	movq _continue_block(%rip),%r13
 	movq _break_block(%rip),%r12
 	call _new_block
@@ -404,7 +403,7 @@ L137:
 	movq %rax,_current_block(%rip)
 	movq %r13,_continue_block(%rip)
 	movq %r12,_break_block(%rip)
-L138:
+L139:
 	popq %r13
 	popq %r12
 	popq %rbx
@@ -412,7 +411,7 @@ L138:
 
 
 _for_stmt:
-L145:
+L146:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $8,%rsp
@@ -421,7 +420,7 @@ L145:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-L146:
+L147:
 	movq _continue_block(%rip),%rax
 	movq %rax,-8(%rbp)
 	movq _break_block(%rip),%r15
@@ -440,30 +439,30 @@ L146:
 	call _expect
 	call _lex
 	cmpl $23,_token(%rip)
-	jz L154
-L151:
+	jz L155
+L152:
 	call _expression
 	movq %rax,%rdi
 	call _gen
-L154:
+L155:
 	movl $23,%edi
 	call _expect
 	call _lex
 	cmpl $23,_token(%rip)
-	jz L160
-L157:
+	jz L161
+L158:
 	call _expression
 	movq %rax,%r12
-L160:
+L161:
 	movl $23,%edi
 	call _expect
 	call _lex
 	cmpl $13,_token(%rip)
-	jz L166
-L163:
+	jz L167
+L164:
 	call _expression
 	movq %rax,%rbx
-L166:
+L167:
 	movl $13,%edi
 	call _expect
 	call _lex
@@ -473,8 +472,8 @@ L166:
 	call _add_succ
 	movq %r14,_current_block(%rip)
 	testq %r12,%r12
-	jz L170
-L169:
+	jz L171
+L170:
 	movl $-2147483573,%edx
 	movl $426770485,%esi
 	movq %r12,%rdi
@@ -485,13 +484,13 @@ L169:
 	movq %r13,%rsi
 	movq %rax,%rdi
 	call _branch
-	jmp L171
-L170:
+	jmp L172
+L171:
 	movq %r13,%rdx
 	movl $12,%esi
 	movq %r14,%rdi
 	call _add_succ
-L171:
+L172:
 	movq %r13,_current_block(%rip)
 	call _stmt
 	movq _continue_block(%rip),%rdx
@@ -501,11 +500,11 @@ L171:
 	movq _continue_block(%rip),%rax
 	movq %rax,_current_block(%rip)
 	testq %rbx,%rbx
-	jz L174
-L172:
+	jz L175
+L173:
 	movq %rbx,%rdi
 	call _gen
-L174:
+L175:
 	movq %r14,%rdx
 	movl $12,%esi
 	movq _current_block(%rip),%rdi
@@ -515,7 +514,7 @@ L174:
 	movq -8(%rbp),%rax
 	movq %rax,_continue_block(%rip)
 	movq %r15,_break_block(%rip)
-L147:
+L148:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -527,8 +526,8 @@ L147:
 
 
 _goto_stmt:
-L175:
 L176:
+L177:
 	call _lex
 	movl $1,%edi
 	call _expect
@@ -544,16 +543,16 @@ L176:
 	movl $23,%edi
 	call _expect
 	call _lex
-L177:
+L178:
 	ret 
 
 
 _if_stmt:
-L181:
+L182:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L182:
+L183:
 	call _new_block
 	movq %rax,%r13
 	call _new_block
@@ -572,19 +571,19 @@ L182:
 	movq _current_block(%rip),%rdi
 	call _add_succ
 	cmpl $2147483719,_token(%rip)
-	jnz L186
-L184:
+	jnz L187
+L185:
 	call _lex
 	movq %r12,_current_block(%rip)
 	call _stmt
 	movq _current_block(%rip),%r12
-L186:
+L187:
 	movq %rbx,%rdx
 	movl $12,%esi
 	movq %r12,%rdi
 	call _add_succ
 	movq %rbx,_current_block(%rip)
-L183:
+L184:
 	popq %r13
 	popq %r12
 	popq %rbx
@@ -592,24 +591,24 @@ L183:
 
 
 _return_stmt:
-L187:
-	pushq %rbx
 L188:
+	pushq %rbx
+L189:
 	call _lex
 	movq _func_ret_type(%rip),%rax
 	testq $1,(%rax)
-	jnz L192
-L190:
+	jnz L193
+L191:
 	call _expression
 	movq %rax,%rbx
 	movq _func_ret_type(%rip),%rax
 	testq $8192,(%rax)
-	jz L195
-L196:
+	jz L196
+L197:
 	movq 8(%rbx),%rdx
 	testq $8192,(%rdx)
-	jz L195
-L197:
+	jz L196
+L198:
 	xorl %esi,%esi
 	movl $65536,%edi
 	call _get_tnode
@@ -618,7 +617,7 @@ L197:
 	movl $1073741831,%edi
 	call _unary_tree
 	movq %rax,%rbx
-L195:
+L196:
 	movq _func_ret_sym(%rip),%rdi
 	call _sym_tree
 	movq %rbx,%rdx
@@ -627,7 +626,7 @@ L195:
 	call _build_tree
 	movq %rax,%rdi
 	call _gen
-L192:
+L193:
 	movq _current_block(%rip),%rdi
 	movq _exit_block(%rip),%rdx
 	movl $12,%esi
@@ -637,13 +636,13 @@ L192:
 	movl $23,%edi
 	call _expect
 	call _lex
-L189:
+L190:
 	popq %rbx
 	ret 
 
 
 _switch_stmt:
-L203:
+L204:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $32,%rsp
@@ -652,7 +651,7 @@ L203:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-L204:
+L205:
 	movq _control_block(%rip),%r15
 	movq _default_block(%rip),%r14
 	movq _break_block(%rip),%r13
@@ -668,14 +667,14 @@ L204:
 	call _lex
 	movq 8(%rbx),%rax
 	testq $1022,(%rax)
-	jnz L214
-L212:
-	pushq $L215
+	jnz L215
+L213:
+	pushq $L216
 	pushq $0
 	pushq $4
 	call _error
 	addq $24,%rsp
-L214:
+L215:
 	movq %rbx,%rdi
 	call _gen
 	movq %rax,%rsi
@@ -701,13 +700,13 @@ L214:
 	movq _current_block(%rip),%rdi
 	call _add_succ
 	cmpl $0,_saw_default(%rip)
-	jnz L218
-L216:
+	jnz L219
+L217:
 	movq _default_block(%rip),%rdi
 	movq _break_block(%rip),%rdx
 	movl $12,%esi
 	call _add_succ
-L218:
+L219:
 	movq _control_block(%rip),%rdi
 	call _trim_switch_block
 	movq _break_block(%rip),%rax
@@ -716,7 +715,7 @@ L218:
 	movq %r13,_break_block(%rip)
 	movq %r14,_default_block(%rip)
 	movl %r12d,_saw_default(%rip)
-L205:
+L206:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -728,12 +727,12 @@ L205:
 
 
 _while_stmt:
-L219:
+L220:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
-L220:
+L221:
 	movq _break_block(%rip),%r14
 	movq _continue_block(%rip),%r13
 	call _new_block
@@ -763,7 +762,7 @@ L220:
 	movq %rax,_current_block(%rip)
 	movq %r13,_continue_block(%rip)
 	movq %r14,_break_block(%rip)
-L221:
+L222:
 	popq %r14
 	popq %r13
 	popq %r12
@@ -771,108 +770,108 @@ L221:
 	ret 
 
 .align 2
-L293:
-	.short L235-_stmt
-	.short L232-_stmt
-	.short L237-_stmt
-	.short L239-_stmt
-	.short L232-_stmt
-	.short L232-_stmt
-	.short L241-_stmt
-	.short L243-_stmt
-	.short L245-_stmt
+L294:
+	.short L236-_stmt
+	.short L233-_stmt
+	.short L238-_stmt
+	.short L240-_stmt
+	.short L233-_stmt
+	.short L233-_stmt
+	.short L242-_stmt
+	.short L244-_stmt
+	.short L246-_stmt
 
 _stmt:
-L222:
+L223:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $32,%rsp
 	pushq %rbx
 	pushq %r12
-L223:
+L224:
 	movl $_void_tree,%r12d
-L226:
+L227:
 	cmpb $0,_g_flag(%rip)
-	jz L231
-L229:
+	jz L232
+L230:
 	xorl %esi,%esi
 	movl $58720258,%edi
 	call _new_insn
 	movq _current_block(%rip),%rsi
 	movq %rax,%rdi
 	call _append_insn
-L231:
+L232:
 	movl _token(%rip),%eax
 	cmpl $-2147483587,%eax
-	jl L279
-L281:
+	jl L280
+L282:
 	cmpl $-2147483579,%eax
-	jg L279
-L278:
+	jg L280
+L279:
 	addl $2147483587,%eax
-	movzwl L293(,%rax,2),%eax
+	movzwl L294(,%rax,2),%eax
 	addl $_stmt,%eax
 	jmp *%rax
-L243:
+L244:
 	call _default_label
-	jmp L226
-L239:
+	jmp L227
+L240:
 	call _case_label
-	jmp L226
-L245:
+	jmp L227
+L246:
 	call _do_stmt
-	jmp L233
-L241:
+	jmp L234
+L242:
 	movq _continue_block(%rip),%rdi
-	call _control
-	jmp L233
-L237:
+	jmp L295
+L238:
 	movq _break_block(%rip),%rdi
+L295:
 	call _control
-	jmp L233
-L235:
+	jmp L234
+L236:
 	call _asm_stmt
-	jmp L233
-L279:
+	jmp L234
+L280:
 	cmpl $-2147483573,%eax
-	jz L247
-L283:
-	cmpl $-2147483572,%eax
-	jz L249
+	jz L248
 L284:
-	cmpl $-2147483571,%eax
-	jz L251
+	cmpl $-2147483572,%eax
+	jz L250
 L285:
-	cmpl $-2147483567,%eax
-	jz L253
+	cmpl $-2147483571,%eax
+	jz L252
 L286:
-	cmpl $-2147483561,%eax
-	jz L255
+	cmpl $-2147483567,%eax
+	jz L254
 L287:
-	cmpl $-2147483555,%eax
-	jz L257
+	cmpl $-2147483561,%eax
+	jz L256
 L288:
+	cmpl $-2147483555,%eax
+	jz L258
+L289:
 	cmpl $1,%eax
-	jnz L289
-L261:
+	jnz L290
+L262:
 	leaq -32(%rbp),%rdi
 	call _lookahead
 	cmpl $486539286,-32(%rbp)
-	jnz L232
-L262:
+	jnz L233
+L263:
 	movq _token+24(%rip),%rdi
 	call _lookup_label
 	movq %rax,%rbx
 	testl $1073741824,12(%rbx)
-	jz L269
-L265:
+	jz L270
+L266:
 	pushq %rbx
-	pushq $L268
+	pushq $L269
 	pushq _token+24(%rip)
 	pushq $4
 	call _error
 	addq $32,%rsp
-L269:
+L270:
 	movq _path(%rip),%rax
 	movq %rax,24(%rbx)
 	movl _line_no(%rip),%eax
@@ -886,51 +885,51 @@ L269:
 	call _add_succ
 	movq 48(%rbx),%rax
 	movq %rax,_current_block(%rip)
-	jmp L226
-L289:
-	cmpl $16,%eax
-	jz L259
+	jmp L227
 L290:
+	cmpl $16,%eax
+	jz L260
+L291:
 	cmpl $23,%eax
-	jz L274
-L232:
+	jz L275
+L233:
 	call _expression
 	movq %rax,%rdi
 	call _gen
 	movq %rax,%r12
-L274:
+L275:
 	movl $23,%edi
 	call _expect
 	call _lex
-	jmp L233
-L259:
+	jmp L234
+L260:
 	xorl %edi,%edi
 	call _enter_scope
 	xorl %edi,%edi
 	call _compound
 	movl $_func_chain,%edi
 	call _exit_scope
-	jmp L233
-L257:
+	jmp L234
+L258:
 	call _while_stmt
-	jmp L233
-L255:
+	jmp L234
+L256:
 	call _switch_stmt
-	jmp L233
-L253:
+	jmp L234
+L254:
 	call _return_stmt
-	jmp L233
-L251:
+	jmp L234
+L252:
 	call _if_stmt
-	jmp L233
-L249:
+	jmp L234
+L250:
 	call _goto_stmt
-	jmp L233
-L247:
+	jmp L234
+L248:
 	call _for_stmt
-L233:
+L234:
 	movq %r12,_stmt_tree(%rip)
-L224:
+L225:
 	popq %r12
 	popq %rbx
 	movq %rbp,%rsp
@@ -939,37 +938,37 @@ L224:
 
 
 _compound:
-L294:
+L296:
 	pushq %rbx
-L295:
+L297:
 	movl %edi,%ebx
 	movl $16,%edi
 	call _expect
 	call _lex
 	call _locals
 	movq $_void_tree,_stmt_tree(%rip)
-L300:
+L302:
 	cmpl $17,_token(%rip)
-	jz L302
-L301:
+	jz L304
+L303:
 	testl %ebx,%ebx
-	jz L305
-L306:
+	jz L307
+L308:
 	movq _stmt_arena(%rip),%rax
 	movq %rax,_stmt_arena+8(%rip)
-L305:
+L307:
 	call _stmt
-	jmp L300
-L302:
+	jmp L302
+L304:
 	testl %ebx,%ebx
-	jz L312
-L309:
+	jz L314
+L311:
 	call _check_labels
-L312:
+L314:
 	movl $17,%edi
 	call _expect
 	call _lex
-L296:
+L298:
 	popq %rbx
 	ret 
 
@@ -981,17 +980,17 @@ L76:
  .byte 98,111,103,117,115,32,37,37
  .byte 99,99,32,100,101,112,101,110
  .byte 100,101,110,99,121,0
-L215:
+L216:
  .byte 99,111,110,116,114,111,108,108
  .byte 105,110,103,32,101,120,112,114
  .byte 101,115,115,105,111,110,32,109
  .byte 117,115,116,32,98,101,32,105
  .byte 110,116,101,103,114,97,108,0
-L132:
+L133:
  .byte 100,117,112,108,105,99,97,116
  .byte 101,32,100,101,102,97,117,108
  .byte 116,32,99,97,115,101,0
-L116:
+L117:
  .byte 109,105,115,112,108,97,99,101
  .byte 100,32,37,107,32,40,110,111
  .byte 116,32,105,110,32,115,119,105
@@ -1005,7 +1004,7 @@ L65:
  .byte 105,110,118,97,108,105,100,32
  .byte 114,101,103,105,115,116,101,114
  .byte 32,99,108,97,115,115,0
-L268:
+L269:
  .byte 100,117,112,108,105,99,97,116
  .byte 101,32,108,97,98,101,108,32
  .byte 37,76,0

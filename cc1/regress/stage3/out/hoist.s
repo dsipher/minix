@@ -305,8 +305,9 @@ L125:
 	movq 64(%r15),%rax
 	movq 16(%rax),%rcx
 	movq %rcx,-8(%rbp)
-	movl $0,-12(%rbp)
-L138:
+	xorl %eax,%eax
+L171:
+	movl %eax,-12(%rbp)
 	movq -8(%rbp),%rcx
 	movl -12(%rbp),%eax
 	cmpl 556(%rcx),%eax
@@ -425,8 +426,9 @@ L168:
 L170:
 	orl $132,_opt_request(%rip)
 L157:
-	incl -12(%rbp)
-	jmp L138
+	movl -12(%rbp),%eax
+	incl %eax
+	jmp L171
 L107:
 	movq %r15,%rdi
 	call _eval
@@ -442,8 +444,8 @@ L103:
 
 
 _opt_lir_hoist:
-L171:
-L174:
+L172:
+L175:
 	movl $0,_defd_regs(%rip)
 	movl $0,_defd_regs+4(%rip)
 	movq $0,_defd_regs+8(%rip)
@@ -457,24 +459,24 @@ L174:
 	movq $0,_tmp2_regs+8(%rip)
 	movq $_local_arena,_tmp2_regs+16(%rip)
 	movq _all_blocks(%rip),%rax
-L183:
+L184:
 	testq %rax,%rax
-	jz L186
-L187:
+	jz L187
+L188:
 	movl $0,552(%rax)
 	movl $0,556(%rax)
 	movq $0,560(%rax)
 	movq $_local_arena,568(%rax)
 	movq 112(%rax),%rax
-	jmp L183
-L186:
+	jmp L184
+L187:
 	movl $_hoist0,%edx
 	xorl %esi,%esi
 	xorl %edi,%edi
 	call _walk_blocks
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)
-L173:
+L174:
 	ret 
 
 .local _defd_regs

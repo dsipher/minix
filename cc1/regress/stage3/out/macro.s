@@ -902,23 +902,16 @@ L336:
 L337:
 	cmpl $1610612793,(%r14)
 	jnz L340
-L339:
+L357:
 	movq %r14,%rsi
 	movq %r12,%rdi
 	call _list_drop
 	movq %rax,%r14
-L342:
 	testq %r14,%r14
 	jz L344
 L345:
 	cmpl $51,(%r14)
-	jnz L344
-L343:
-	movq %r14,%rsi
-	movq %r12,%rdi
-	call _list_drop
-	movq %rax,%r14
-	jmp L342
+	jz L357
 L344:
 	testq %r14,%r14
 	jz L349
@@ -957,14 +950,14 @@ L335:
 
 
 _expand:
-L357:
+L358:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L358:
+L359:
 	movq %rdi,%r12
 	movq %rsi,%rbx
 	leaq -16(%rbp),%rcx
@@ -974,13 +967,13 @@ L358:
 	movq $0,-16(%rbp)
 	movq %rcx,-8(%rbp)
 	movq (%r12),%r13
-L360:
-	testq %r13,%r13
-	jz L359
 L361:
+	testq %r13,%r13
+	jz L360
+L362:
 	cmpl $2147483709,(%r13)
-	jnz L364
-L363:
+	jnz L365
+L364:
 	movq 8(%r13),%rsi
 	movq %rbx,%rdi
 	call _arg_i
@@ -992,18 +985,18 @@ L363:
 	movq %r12,%rdi
 	call _list_next_is
 	testl %eax,%eax
-	jnz L368
-L369:
+	jnz L369
+L370:
 	movl $1610612794,%edx
 	movq %r13,%rsi
 	movq %r12,%rdi
 	call _list_prev_is
 	testl %eax,%eax
-	jnz L368
-L366:
+	jnz L369
+L367:
 	leaq -16(%rbp),%rdi
 	call _macro_replace_all
-L368:
+L369:
 	movq %r13,%rsi
 	movq %r12,%rdi
 	call _list_drop
@@ -1012,11 +1005,11 @@ L368:
 	movq %rax,%rsi
 	movq %r12,%rdi
 	call _list_insert_list
-	jmp L360
-L364:
+	jmp L361
+L365:
 	movq 32(%r13),%r13
-	jmp L360
-L359:
+	jmp L361
+L360:
 	popq %r13
 	popq %r12
 	popq %rbx
@@ -1026,22 +1019,22 @@ L359:
 
 
 _paste:
-L373:
+L374:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
-L374:
+L375:
 	movq %rdi,%r15
 	movq (%r15),%r14
-L376:
-	testq %r14,%r14
-	jz L375
 L377:
+	testq %r14,%r14
+	jz L376
+L378:
 	cmpl $1610612794,(%r14)
-	jnz L380
-L379:
+	jnz L381
+L380:
 	movq %r14,%rsi
 	movq %r15,%rdi
 	call _list_strip_around
@@ -1050,15 +1043,15 @@ L379:
 	movq (%rax),%r13
 	movq 32(%r14),%r12
 	testq %r13,%r13
-	jz L382
-L385:
+	jz L383
+L386:
 	testq %r12,%r12
-	jnz L384
-L382:
-	pushq $L389
+	jnz L385
+L383:
+	pushq $L390
 	call _error
 	addq $8,%rsp
-L384:
+L385:
 	movq %r12,%rsi
 	movq %r13,%rdi
 	call _token_paste
@@ -1077,11 +1070,11 @@ L384:
 	movq %rax,%rsi
 	movq %r15,%rdi
 	call _list_insert
-	jmp L376
-L380:
+	jmp L377
+L381:
 	movq 32(%r14),%r14
-	jmp L376
-L375:
+	jmp L377
+L376:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -1091,7 +1084,7 @@ L375:
 
 
 _macro_replace:
-L390:
+L391:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $32,%rsp
@@ -1099,7 +1092,7 @@ L390:
 	pushq %r12
 	pushq %r13
 	pushq %r14
-L391:
+L392:
 	movq %rdi,%r14
 	leaq -16(%rbp),%rcx
 	xorl %eax,%eax
@@ -1115,45 +1108,45 @@ L391:
 	movq %r13,-24(%rbp)
 	movq (%r14),%r12
 	cmpl $52,(%r12)
-	jnz L435
-L395:
+	jnz L436
+L396:
 	leaq 8(%r12),%rdi
 	call _macro_lookup
 	movq %rax,%rbx
 	testq %rbx,%rbx
-	jz L435
-L400:
+	jz L436
+L401:
 	movl 24(%rbx),%eax
 	testl $1,%eax
-	jnz L435
-L402:
+	jnz L436
+L403:
 	testl $2147483648,%eax
-	jz L406
-L405:
+	jz L407
+L406:
 	movq 32(%r12),%rdi
 	call _list_skip_spaces
 	movq %rax,%rsi
 	testq %rsi,%rsi
-	jz L435
-L411:
+	jz L436
+L412:
 	cmpl $536870927,(%rsi)
-	jz L413
-L435:
+	jz L414
+L436:
 	xorl %eax,%eax
-	jmp L392
-L413:
+	jmp L393
+L414:
 	movq %r14,%rdi
 	call _list_cut
 	leaq -16(%rbp),%rdx
 	movq %rbx,%rsi
 	movq %r14,%rdi
 	call _gather
-	jmp L407
-L406:
+	jmp L408
+L407:
 	xorl %esi,%esi
 	movq %r14,%rdi
 	call _list_pop
-L407:
+L408:
 	leaq -32(%rbp),%rsi
 	movq %rbx,%rdi
 	call _tokens
@@ -1170,8 +1163,8 @@ L407:
 	call _list_ennervate
 	movq (%r14),%rcx
 	testq %rcx,%rcx
-	jz L421
-L419:
+	jz L422
+L420:
 	movq -24(%rbp),%rax
 	movq %rcx,(%rax)
 	movq -24(%rbp),%rcx
@@ -1181,11 +1174,11 @@ L419:
 	movq %rax,-24(%rbp)
 	movq $0,(%r14)
 	movq %r14,8(%r14)
-L421:
+L422:
 	movq -32(%rbp),%rcx
 	testq %rcx,%rcx
-	jz L430
-L428:
+	jz L431
+L429:
 	movq 8(%r14),%rax
 	movq %rcx,(%rax)
 	movq 8(%r14),%rcx
@@ -1195,11 +1188,11 @@ L428:
 	movq %rax,8(%r14)
 	movq $0,-32(%rbp)
 	movq %r13,-24(%rbp)
-L430:
+L431:
 	leaq -16(%rbp),%rdi
 	call _args_clear
 	movl $1,%eax
-L392:
+L393:
 	popq %r14
 	popq %r13
 	popq %r12
@@ -1210,12 +1203,12 @@ L392:
 
 
 _macro_replace_all:
-L436:
+L437:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $24,%rsp
 	pushq %rbx
-L437:
+L438:
 	movq %rdi,%rbx
 	leaq -16(%rbp),%rcx
 	xorl %eax,%eax
@@ -1225,8 +1218,8 @@ L437:
 	movq %rcx,-8(%rbp)
 	movq (%rbx),%rax
 	testq %rax,%rax
-	jz L448
-L442:
+	jz L449
+L443:
 	movq %rax,-16(%rbp)
 	movq (%rbx),%rax
 	movq %rcx,40(%rax)
@@ -1234,15 +1227,15 @@ L442:
 	movq %rax,-8(%rbp)
 	movq $0,(%rbx)
 	movq %rbx,8(%rbx)
-L448:
-	cmpq $0,-16(%rbp)
-	jz L438
 L449:
+	cmpq $0,-16(%rbp)
+	jz L439
+L450:
 	leaq -16(%rbp),%rdi
 	call _macro_replace
 	testl %eax,%eax
-	jnz L448
-L451:
+	jnz L449
+L452:
 	leaq -24(%rbp),%rsi
 	leaq -16(%rbp),%rdi
 	call _list_pop
@@ -1257,8 +1250,8 @@ L451:
 	movq -24(%rbp),%rax
 	addq $32,%rax
 	movq %rax,8(%rbx)
-	jmp L448
-L438:
+	jmp L449
+L439:
 	popq %rbx
 	movq %rbp,%rsp
 	popq %rbp
@@ -1296,7 +1289,7 @@ L356:
 L28:
  .byte 95,95,76,73,78,69,95,95
  .byte 0
-L389:
+L390:
  .byte 109,105,115,115,105,110,103,32
  .byte 111,112,101,114,97,110,100,115
  .byte 32,116,111,32,112,97,115,116

@@ -17,12 +17,7 @@ L17:
 	jz L5
 L18:
 	subl $1022,%eax
-	movl %eax,(%rdi)
-	movl -4(%rbp),%eax
-	andl $-2146435073,%eax
-	orl $1071644672,%eax
-	movl %eax,-4(%rbp)
-	jmp L5
+	jmp L20
 L7:
 	andl $1048575,%ecx
 	orl -8(%rbp),%ecx
@@ -38,6 +33,7 @@ L9:
 	shll $1,%eax
 	shrl $21,%eax
 	subl $1536,%eax
+L20:
 	movl %eax,(%rdi)
 	movl -4(%rbp),%eax
 	andl $-2146435073,%eax

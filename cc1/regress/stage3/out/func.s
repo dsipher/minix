@@ -266,19 +266,17 @@ L128:
 	movl $65536,%edi
 	call _get_tnode
 	movq %rax,%rdi
-	call _temp
-	movq %rax,_func_ret_sym(%rip)
-	jmp L130
+	jmp L137
 L129:
 	movq $0,_func_hidden_arg(%rip)
 	testq $1,(%rdi)
-	jz L132
-L131:
-	movq $0,_func_ret_sym(%rip)
-	jmp L130
-L132:
+	jnz L131
+L137:
 	call _temp
 	movq %rax,_func_ret_sym(%rip)
+	jmp L130
+L131:
+	movq $0,_func_ret_sym(%rip)
 L130:
 	movl $_arg0,%edx
 	movl $134217728,%esi
@@ -329,54 +327,54 @@ L117:
 
 
 _out_func:
-L137:
+L138:
 	pushq %rbx
 	pushq %r12
-L138:
+L139:
 	xorl %edi,%edi
 	call _sequence_blocks
 	movl $1,%edi
 	call _seg
 	pushq _current_func(%rip)
-	pushq $L140
+	pushq $L141
 	call _out
 	addq $16,%rsp
 	movq _all_blocks(%rip),%r12
-L141:
-	testq %r12,%r12
-	jz L144
 L142:
+	testq %r12,%r12
+	jz L145
+L143:
 	movq %r12,%rdi
 	call _out_block
 	testl $1,4(%r12)
-	jnz L145
-L147:
+	jnz L146
+L148:
 	xorl %ebx,%ebx
-L153:
-	cmpl 60(%r12),%ebx
-	jge L143
 L154:
+	cmpl 60(%r12),%ebx
+	jge L144
+L155:
 	movq 64(%r12),%rcx
 	movslq %ebx,%rax
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
 	movq 16(%rcx,%rax),%rdx
 	cmpq 112(%r12),%rdx
-	jz L155
-L159:
+	jz L156
+L160:
 	movslq (%rcx,%rax),%rax
 	movq _cc_text(,%rax,8),%rcx
 	movl (%rdx),%eax
 	pushq %rax
 	pushq %rcx
-	pushq $L161
+	pushq $L162
 	call _out
 	addq $24,%rsp
-L155:
+L156:
 	incl %ebx
-	jmp L153
-L145:
-	pushq $L148
+	jmp L154
+L146:
+	pushq $L149
 	call _out
 	addq $8,%rsp
 	movl $1,%esi
@@ -385,41 +383,41 @@ L145:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
-	js L150
-L149:
+	js L151
+L150:
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
 	movb $10,(%rcx)
-	jmp L143
-L150:
+	jmp L144
+L151:
 	movl $10,%edi
 	call ___flushbuf
-L143:
-	movq 112(%r12),%r12
-	jmp L141
 L144:
+	movq 112(%r12),%r12
+	jmp L142
+L145:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
-	js L163
-L162:
+	js L164
+L163:
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
 	movb $10,(%rcx)
-	jmp L139
-L163:
+	jmp L140
+L164:
 	movl $10,%edi
 	call ___flushbuf
-L139:
+L140:
 	popq %r12
 	popq %rbx
 	ret 
 
 
 _logues:
-L165:
+L166:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $144,%rsp
@@ -427,31 +425,31 @@ L165:
 	pushq %r12
 	pushq %r13
 	pushq %r14
-L168:
+L169:
 	movl $0,-24(%rbp)
 	movl $0,-20(%rbp)
 	movq $0,-16(%rbp)
 	movq $_func_arena,-8(%rbp)
 	xorl %ebx,%ebx
-L172:
+L173:
 	movslq %ebx,%rax
 	movl _iscratch(,%rax,4),%esi
 	leaq -24(%rbp),%rdi
 	call _add_reg
 	incl %ebx
 	cmpl $9,%ebx
-	jl L172
-L174:
+	jl L173
+L175:
 	xorl %ebx,%ebx
-L176:
+L177:
 	movslq %ebx,%rax
 	movl _fscratch(,%rax,4),%esi
 	leaq -24(%rbp),%rdi
 	call _add_reg
 	incl %ebx
 	cmpl $8,%ebx
-	jl L176
-L179:
+	jl L177
+L180:
 	movl $0,-48(%rbp)
 	movl $0,-44(%rbp)
 	movq $0,-40(%rbp)
@@ -469,34 +467,34 @@ L179:
 	xorl %ecx,%ecx
 	xorl %edi,%edi
 	xorl %esi,%esi
-L185:
+L186:
 	cmpl -68(%rbp),%esi
-	jge L191
-L189:
+	jge L192
+L190:
 	movq -64(%rbp),%rdx
 	movslq %esi,%rax
 	movl (%rdx,%rax,4),%edx
 	testl %edx,%edx
-	jz L191
-L190:
+	jz L192
+L191:
 	cmpl $2147647488,%edx
-	jz L187
-L195:
+	jz L188
+L196:
 	movl %edx,%eax
 	andl $3221225472,%eax
 	cmpl $2147483648,%eax
-	jnz L198
-L197:
+	jnz L199
+L198:
 	cmpl $2147663872,%edx
 	movl $1,%eax
 	cmovzl %eax,%ecx
-	jmp L187
-L198:
+	jmp L188
+L199:
 	incl %edi
-L187:
+L188:
 	incl %esi
-	jmp L185
-L191:
+	jmp L186
+L192:
 	movl _frame_size(%rip),%eax
 	movl $8,%esi
 	leal 7(%rax,%rdi,8),%eax
@@ -510,8 +508,8 @@ L191:
 	xorl %r13d,%r13d
 	movl 12(%rax),%r12d
 	testl %ecx,%ecx
-	jz L208
-L206:
+	jz L209
+L207:
 	xorl %esi,%esi
 	movl $276826304,%edi
 	call _new_insn
@@ -555,8 +553,8 @@ L206:
 	movq %rax,%rdi
 	call _insert_insn
 	cmpl $0,_frame_size(%rip)
-	jz L208
-L269:
+	jz L209
+L270:
 	xorl %esi,%esi
 	movl $-469694343,%edi
 	call _new_insn
@@ -600,25 +598,25 @@ L269:
 	movq _exit_block(%rip),%rsi
 	movq %rax,%rdi
 	call _insert_insn
-L208:
+L209:
 	movl _frame_size(%rip),%r14d
 	negl %r14d
 	xorl %ebx,%ebx
-L335:
+L336:
 	cmpl -68(%rbp),%ebx
-	jge L341
-L339:
+	jge L342
+L340:
 	movq -64(%rbp),%rcx
 	movslq %ebx,%rax
 	movl (%rcx,%rax,4),%ecx
 	testl %ecx,%ecx
-	jz L341
-L340:
+	jz L342
+L341:
 	movl %ecx,%eax
 	andl $3221225472,%eax
 	cmpl $3221225472,%eax
-	jnz L345
-L346:
+	jnz L346
+L347:
 	movl -112(%rbp),%eax
 	andl $-8,%eax
 	orl $1,%eax
@@ -652,26 +650,26 @@ L346:
 	movq %rax,%rdi
 	call _insert_insn
 	addl $8,%r14d
-L345:
+L346:
 	incl %ebx
-	jmp L335
-L341:
+	jmp L336
+L342:
 	xorl %r14d,%r14d
-L376:
+L377:
 	cmpl -68(%rbp),%r14d
-	jge L167
-L380:
+	jge L168
+L381:
 	movq -64(%rbp),%rcx
 	movslq %r14d,%rax
 	movl (%rcx,%rax,4),%ebx
 	testl %ebx,%ebx
-	jz L167
-L381:
+	jz L168
+L382:
 	movl %ebx,%eax
 	andl $3221225472,%eax
 	cmpl $2147483648,%eax
-	jnz L386
-L387:
+	jnz L387
+L388:
 	cmpl $2147663872,%ebx
 	setnz %al
 	movzbl %al,%eax
@@ -679,8 +677,8 @@ L387:
 	setnz %cl
 	movzbl %cl,%ecx
 	testl %ecx,%eax
-	jz L386
-L388:
+	jz L387
+L389:
 	xorl %esi,%esi
 	movl $276826304,%edi
 	call _new_insn
@@ -706,10 +704,10 @@ L388:
 	movq _exit_block(%rip),%rsi
 	movq %rax,%rdi
 	call _insert_insn
-L386:
+L387:
 	incl %r14d
-	jmp L376
-L167:
+	jmp L377
+L168:
 	popq %r14
 	popq %r13
 	popq %r12
@@ -720,8 +718,8 @@ L167:
 
 
 _exit_func:
-L421:
 L422:
+L423:
 	movq _current_block(%rip),%rdi
 	movq _exit_block(%rip),%rdx
 	movl $12,%esi
@@ -735,12 +733,12 @@ L422:
 	call _lir_switch
 	call _deconst
 	testl %eax,%eax
-	jz L426
-L424:
+	jz L427
+L425:
 	movl $1088,%esi
 	movl $384,%edi
 	call _opt
-L426:
+L427:
 	call _lower
 	call _mch_switch
 	call _color
@@ -751,15 +749,15 @@ L426:
 	movq _func_arena(%rip),%rax
 	movq %rax,_func_arena+8(%rip)
 	movq $0,_current_func(%rip)
-L423:
+L424:
 	ret 
 
 
 _frame_alloc:
-L430:
+L431:
 	pushq %rbx
 	pushq %r12
-L431:
+L432:
 	movq %rdi,%r12
 	xorl %esi,%esi
 	movq %r12,%rdi
@@ -778,16 +776,16 @@ L431:
 	imull %esi,%eax
 	movl %eax,_frame_size(%rip)
 	negl %eax
-L432:
+L433:
 	popq %r12
 	popq %rbx
 	ret 
 
 
 _temp:
-L434:
-	pushq %rbx
 L435:
+	pushq %rbx
+L436:
 	movq %rdi,%rbx
 	testq $73726,(%rbx)
 	movl $64,%eax
@@ -800,14 +798,14 @@ L435:
 	movq _func_chain(%rip),%rcx
 	movq %rcx,56(%rax)
 	movq %rax,_func_chain(%rip)
-L436:
+L437:
 	popq %rbx
 	ret 
 
 
 _temp_reg:
-L441:
 L442:
+L443:
 	xorl %edx,%edx
 	xorl %esi,%esi
 	call _get_tnode
@@ -815,18 +813,18 @@ L442:
 	call _temp
 	movq %rax,%rdi
 	call _symbol_to_reg
-L443:
+L444:
 	ret 
 
-L148:
+L149:
  .byte 9,106,109,112,32,0
 L19:
  .byte 97,114,103,117,109,101,110,116
  .byte 115,32,109,117,115,116,32,98
  .byte 101,32,110,97,109,101,100,0
-L161:
+L162:
  .byte 9,37,115,32,37,76,10,0
-L140:
+L141:
  .byte 10,37,103,58,10,0
 L121:
  .byte 119,101,32,97,108,114,101,97

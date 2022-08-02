@@ -43,9 +43,7 @@ L27:
 	movl %eax,-36(%rbp)
 	movl $0,-40(%rbp)
 	movsd -40(%rbp),%xmm1
-	movsd %xmm1,(%rdi)
-	subsd %xmm1,%xmm0
-	jmp L3
+	jmp L60
 L17:
 	movsd %xmm0,(%rdi)
 	movsd %xmm0,-24(%rbp)
@@ -90,6 +88,7 @@ L55:
 	andl %edx,%eax
 	movl %eax,-80(%rbp)
 	movsd -80(%rbp),%xmm1
+L60:
 	movsd %xmm1,(%rdi)
 	subsd %xmm1,%xmm0
 	jmp L3

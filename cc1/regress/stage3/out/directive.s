@@ -122,16 +122,13 @@ L42:
 	xorl %edi,%edi
 L43:
 	cmpl $6,%ebx
-	jnz L45
-L44:
-	call _state_push
-	jmp L46
+	jz L47
 L45:
 	testl %edi,%edi
 	setz %dil
 	movzbl %dil,%edi
+L47:
 	call _state_push
-L46:
 	movq -8(%rbp),%rdi
 	call _token_free
 L39:
@@ -142,51 +139,51 @@ L39:
 
 
 _do_if:
-L47:
 L48:
+L49:
 	movq _state_stack(%rip),%rax
 	testq %rax,%rax
-	jz L50
-L53:
+	jz L51
+L54:
 	movsbl (%rax),%eax
 	testl %eax,%eax
-	jz L51
-L50:
+	jz L52
+L51:
 	call _evaluate
 	movl %eax,%edi
-	call _state_push
-	ret
-L51:
+	jmp L57
+L52:
 	xorl %edi,%edi
+L57:
 	call _state_push
-L49:
+L50:
 	ret 
 
 
 _do_elif:
-L56:
+L58:
 	pushq %rbx
-L57:
+L59:
 	movq %rdi,%rbx
 	cmpq $0,_state_stack(%rip)
-	jnz L61
-L59:
-	pushq $L62
+	jnz L63
+L61:
+	pushq $L64
 	call _error
 	addq $8,%rsp
-L61:
+L63:
 	movq _state_stack(%rip),%rax
 	cmpb $0,2(%rax)
-	jz L65
-L63:
-	pushq $L66
+	jz L67
+L65:
+	pushq $L68
 	call _error
 	addq $8,%rsp
-L65:
+L67:
 	movq _state_stack(%rip),%rax
 	cmpb $0,1(%rax)
-	jnz L58
-L67:
+	jnz L60
+L69:
 	movq %rbx,%rdi
 	call _evaluate
 	movq _state_stack(%rip),%rcx
@@ -194,29 +191,29 @@ L67:
 	movq _state_stack(%rip),%rcx
 	movb 1(%rcx),%al
 	movb %al,(%rcx)
-L58:
+L60:
 	popq %rbx
 	ret 
 
 
 _do_else:
-L70:
-L71:
-	cmpq $0,_state_stack(%rip)
-	jnz L75
+L72:
 L73:
-	pushq $L76
+	cmpq $0,_state_stack(%rip)
+	jnz L77
+L75:
+	pushq $L78
 	call _error
 	addq $8,%rsp
-L75:
+L77:
 	movq _state_stack(%rip),%rax
 	cmpb $0,2(%rax)
-	jz L79
-L77:
-	pushq $L80
+	jz L81
+L79:
+	pushq $L82
 	call _error
 	addq $8,%rsp
-L79:
+L81:
 	movq _state_stack(%rip),%rcx
 	cmpb $0,1(%rcx)
 	setz %al
@@ -224,32 +221,32 @@ L79:
 	movb %al,(%rcx)
 	movq _state_stack(%rip),%rax
 	movb $1,2(%rax)
-L72:
+L74:
 	ret 
 
 
 _do_endif:
-L81:
-L82:
-	cmpq $0,_state_stack(%rip)
-	jnz L86
+L83:
 L84:
-	pushq $L87
+	cmpq $0,_state_stack(%rip)
+	jnz L88
+L86:
+	pushq $L89
 	call _error
 	addq $8,%rsp
-L86:
+L88:
 	call _state_pop
-L83:
+L85:
 	ret 
 
 
 _do_line:
-L88:
+L90:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $16,%rsp
 	pushq %rbx
-L89:
+L91:
 	movq %rdi,%rbx
 	movq $0,-16(%rbp)
 	movq %rbx,%rdi
@@ -259,13 +256,13 @@ L89:
 	movq %rbx,%rdi
 	call _list_match
 	cmpq $0,(%rbx)
-	jz L93
-L91:
+	jz L95
+L93:
 	leaq -16(%rbp),%rdx
 	movl $55,%esi
 	movq %rbx,%rdi
 	call _list_match
-L93:
+L95:
 	movq -8(%rbp),%rdi
 	call _token_convert_number
 	movq -8(%rbp),%rax
@@ -274,8 +271,8 @@ L93:
 	decl %ecx
 	movl %ecx,32(%rax)
 	cmpq $0,-16(%rbp)
-	jz L96
-L94:
+	jz L98
+L96:
 	movq _input_stack(%rip),%rdi
 	addq $8,%rdi
 	call _vstring_clear
@@ -286,11 +283,11 @@ L94:
 	call _vstring_concat
 	movq -16(%rbp),%rdi
 	call _token_free
-L96:
+L98:
 	movq -8(%rbp),%rdi
 	call _token_free
 	movb $1,_need_resync(%rip)
-L90:
+L92:
 	popq %rbx
 	movq %rbp,%rsp
 	popq %rbp
@@ -298,33 +295,33 @@ L90:
 
 
 _do_error:
-L97:
-L98:
+L99:
+L100:
 	call _list_stringize
 	testl $1,8(%rax)
-	jz L102
-L101:
-	addq $9,%rax
-	jmp L103
-L102:
-	movq 24(%rax),%rax
+	jz L104
 L103:
+	addq $9,%rax
+	jmp L105
+L104:
+	movq 24(%rax),%rax
+L105:
 	pushq %rax
-	pushq $L100
+	pushq $L102
 	call _error
 	addq $16,%rsp
-L99:
+L101:
 	ret 
 
 
 _do_include:
-L104:
+L106:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $32,%rsp
 	pushq %rbx
 	pushq %r12
-L105:
+L107:
 	movq %rdi,%rbx
 	xorl %eax,%eax
 	movq %rax,-24(%rbp)
@@ -336,29 +333,29 @@ L105:
 	movl %eax,-24(%rbp)
 	movq (%rbx),%rax
 	testq %rax,%rax
-	jz L116
-L114:
-	cmpl $55,(%rax)
-	jz L109
+	jz L118
 L116:
-	testq %rax,%rax
-	jz L120
+	cmpl $55,(%rax)
+	jz L111
 L118:
-	cmpl $536871946,(%rax)
-	jz L109
+	testq %rax,%rax
+	jz L122
 L120:
+	cmpl $536871946,(%rax)
+	jz L111
+L122:
 	movq %rbx,%rdi
 	call _macro_replace_all
 	movq %rbx,%rdi
 	call _list_strip_ends
-L109:
+L111:
 	movq (%rbx),%rax
 	testq %rax,%rax
-	jz L127
-L125:
+	jz L129
+L127:
 	cmpl $55,(%rax)
-	jnz L127
-L126:
+	jnz L129
+L128:
 	leaq -32(%rbp),%rsi
 	movq %rbx,%rdi
 	call _list_pop
@@ -368,25 +365,25 @@ L126:
 	movq -32(%rbp),%rdi
 	call _token_free
 	movl $2,%r12d
-	jmp L124
-L127:
+	jmp L126
+L129:
 	testq %rax,%rax
-	jz L134
-L132:
+	jz L136
+L134:
 	cmpl $536871946,(%rax)
-	jnz L134
-L133:
+	jnz L136
+L135:
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _list_pop
-L136:
+L138:
 	movq (%rbx),%rax
 	testq %rax,%rax
-	jz L141
-L143:
-	cmpl $536871944,(%rax)
-	jz L141
+	jz L143
 L145:
+	cmpl $536871944,(%rax)
+	jz L143
+L147:
 	leaq -32(%rbp),%rsi
 	movq %rbx,%rdi
 	call _list_pop
@@ -395,32 +392,32 @@ L145:
 	call _token_text
 	movq -32(%rbp),%rdi
 	call _token_free
-	jmp L136
-L141:
+	jmp L138
+L143:
 	xorl %edx,%edx
 	movl $536871944,%esi
 	movq %rbx,%rdi
 	call _list_match
 	movl $1,%r12d
-	jmp L124
-L134:
-	pushq $L147
+	jmp L126
+L136:
+	pushq $L149
 	call _error
 	addq $8,%rsp
-L124:
+L126:
 	testl $1,-24(%rbp)
-	jz L149
-L148:
-	leaq -23(%rbp),%rdi
-	jmp L150
-L149:
-	movq -8(%rbp),%rdi
+	jz L151
 L150:
+	leaq -23(%rbp),%rdi
+	jmp L152
+L151:
+	movq -8(%rbp),%rdi
+L152:
 	movl %r12d,%esi
 	call _input_open
 	leaq -24(%rbp),%rdi
 	call _vstring_free
-L106:
+L108:
 	popq %r12
 	popq %rbx
 	movq %rbp,%rsp
@@ -428,172 +425,172 @@ L106:
 	ret 
 
 .align 2
-L242:
-	.short L201-_directive
-	.short L185-_directive
-	.short L179-_directive
+L244:
+	.short L203-_directive
+	.short L187-_directive
 	.short L181-_directive
 	.short L183-_directive
-	.short L212-_directive
+	.short L185-_directive
+	.short L214-_directive
+	.short L179-_directive
 	.short L177-_directive
-	.short L175-_directive
-	.short L175-_directive
+	.short L177-_directive
+	.short L174-_directive
+	.short L212-_directive
 	.short L172-_directive
-	.short L210-_directive
-	.short L170-_directive
-	.short L193-_directive
-	.short L170-_directive
+	.short L195-_directive
+	.short L172-_directive
 
 _directive:
-L151:
+L153:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L152:
+L154:
 	movq %rdi,%rbx
 	movq (%rbx),%rdi
 	call _list_skip_spaces
 	testq %rax,%rax
-	jz L167
-L157:
+	jz L169
+L159:
 	cmpl $1610612748,(%rax)
-	jnz L167
-L154:
+	jnz L169
+L156:
 	movq 32(%rax),%rdi
 	call _list_skip_spaces
 	movq %rax,%r13
 	movq %r13,%rdi
 	testq %r13,%r13
-	jz L162
-L161:
+	jz L164
+L163:
 	movq %r13,%rdi
 	call _lookup
 	movl %eax,%r12d
 	movq 32(%r13),%rdi
 	cmpl $10,%eax
-	jnz L166
-	jz L167
-L162:
+	jnz L168
+	jz L169
+L164:
 	movl $12,%r12d
-L166:
+L168:
 	call _list_skip_spaces
 	movq %rax,%rsi
 	movq %rbx,%rdi
 	call _list_cut
 	cmpl $-1,%r12d
-	jl L170
-L241:
+	jl L172
+L243:
 	cmpl $12,%r12d
-	jg L170
-L239:
+	jg L172
+L241:
 	leal 1(%r12),%eax
-	movzwl L242(,%rax,2),%eax
+	movzwl L244(,%rax,2),%eax
 	addl $_directive,%eax
 	jmp *%rax
-L193:
+L195:
 	movq _state_stack(%rip),%rax
 	testq %rax,%rax
-	jz L194
-L197:
+	jz L196
+L199:
 	movsbl (%rax),%eax
 	testl %eax,%eax
-	jz L170
-L194:
+	jz L172
+L196:
 	movq %rbx,%rdi
 	call _macro_undef
-	jmp L170
-L210:
+	jmp L172
+L212:
 	movq %rbx,%rdi
 	call _do_line
-	jmp L170
-L172:
+	jmp L172
+L174:
 	movq %rbx,%rdi
 	call _do_include
-	jmp L170
-L175:
+	jmp L172
+L177:
 	movq %rbx,%rsi
 	movl %r12d,%edi
 	call _do_ifdef
-	jmp L170
-L177:
-	movq %rbx,%rdi
-	call _do_if
-	jmp L170
-L212:
-	movq _state_stack(%rip),%rax
-	testq %rax,%rax
-	jz L213
-L216:
-	movsbl (%rax),%eax
-	testl %eax,%eax
-	jz L170
-L213:
-	movq %rbx,%rdi
-	call _do_error
-	jmp L170
-L183:
-	call _do_endif
-	jmp L170
-L181:
-	movq %rbx,%rdi
-	call _do_else
-	jmp L170
+	jmp L172
 L179:
 	movq %rbx,%rdi
-	call _do_elif
-	jmp L170
-L185:
+	call _do_if
+	jmp L172
+L214:
 	movq _state_stack(%rip),%rax
 	testq %rax,%rax
-	jz L186
-L189:
+	jz L215
+L218:
 	movsbl (%rax),%eax
 	testl %eax,%eax
-	jz L170
-L186:
+	jz L172
+L215:
+	movq %rbx,%rdi
+	call _do_error
+	jmp L172
+L185:
+	call _do_endif
+	jmp L172
+L183:
+	movq %rbx,%rdi
+	call _do_else
+	jmp L172
+L181:
+	movq %rbx,%rdi
+	call _do_elif
+	jmp L172
+L187:
+	movq _state_stack(%rip),%rax
+	testq %rax,%rax
+	jz L188
+L191:
+	movsbl (%rax),%eax
+	testl %eax,%eax
+	jz L172
+L188:
 	movq %rbx,%rdi
 	call _macro_define
-	jmp L170
-L201:
+	jmp L172
+L203:
 	movq _state_stack(%rip),%rax
 	testq %rax,%rax
-	jz L202
-L205:
+	jz L204
+L207:
 	movsbl (%rax),%eax
 	testl %eax,%eax
-	jz L170
-L202:
-	pushq $L208
+	jz L172
+L204:
+	pushq $L210
 	call _error
 	addq $8,%rsp
-L170:
+L172:
 	movq _state_stack(%rip),%rax
 	testq %rax,%rax
-	jz L225
-L229:
+	jz L227
+L231:
 	movsbl (%rax),%eax
 	testl %eax,%eax
-	jz L167
-L225:
+	jz L169
+L227:
 	cmpq $0,(%rbx)
-	jz L167
-L222:
-	pushq $L232
+	jz L169
+L224:
+	pushq $L234
 	call _error
 	addq $8,%rsp
-L167:
+L169:
 	movq _state_stack(%rip),%rax
 	testq %rax,%rax
-	jz L153
-L236:
+	jz L155
+L238:
 	movsbl (%rax),%eax
 	testl %eax,%eax
-	jnz L153
-L233:
+	jnz L155
+L235:
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _list_cut
-L153:
+L155:
 	popq %r13
 	popq %r12
 	popq %rbx
@@ -601,57 +598,57 @@ L153:
 
 
 _directive_check:
-L243:
-L244:
-	cmpq $0,_state_stack(%rip)
-	jz L245
+L245:
 L246:
-	pushq $L249
+	cmpq $0,_state_stack(%rip)
+	jz L247
+L248:
+	pushq $L251
 	call _error
 	addq $8,%rsp
-L245:
+L247:
 	ret 
 
-L87:
+L89:
  .byte 35,101,110,100,105,102,32,119
  .byte 105,116,104,111,117,116,32,35
  .byte 105,102,0
-L208:
+L210:
  .byte 117,110,107,110,111,119,110,32
  .byte 100,105,114,101,99,116,105,118
  .byte 101,0
-L80:
+L82:
  .byte 100,117,112,108,105,99,97,116
  .byte 101,32,35,101,108,115,101,0
-L100:
+L102:
  .byte 35,101,114,114,111,114,32,100
  .byte 105,114,101,99,116,105,118,101
  .byte 58,32,37,115,0
-L147:
+L149:
  .byte 101,120,112,101,99,116,101,100
  .byte 32,102,105,108,101,32,110,97
  .byte 109,101,32,97,102,116,101,114
  .byte 32,35,105,110,99,108,117,100
  .byte 101,0
-L76:
+L78:
  .byte 35,101,108,115,101,32,119,105
  .byte 116,104,111,117,116,32,35,105
  .byte 102,0
-L232:
+L234:
  .byte 116,114,97,105,108,105,110,103
  .byte 32,103,97,114,98,97,103,101
  .byte 32,97,102,116,101,114,32,100
  .byte 105,114,101,99,116,105,118,101
  .byte 0
-L66:
+L68:
  .byte 35,101,108,105,102,32,97,102
  .byte 116,101,114,32,35,101,108,115
  .byte 101,0
-L62:
+L64:
  .byte 35,101,108,105,102,32,119,105
  .byte 116,104,111,117,116,32,35,105
  .byte 102,0
-L249:
+L251:
  .byte 101,110,100,45,111,102,45,102
  .byte 105,108,101,32,105,110,32,35
  .byte 105,102,47,105,102,100,101,102

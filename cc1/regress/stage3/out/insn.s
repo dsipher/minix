@@ -1139,9 +1139,7 @@ L566:
 	pushq 16(%rbx)
 	pushq 24(%rbx)
 	pushq $L569
-	call _out
-	addq $24,%rsp
-	jmp L545
+	jmp L630
 L549:
 	testl %esi,%esi
 	jz L552
@@ -1167,6 +1165,7 @@ L552:
 	pushq %rax
 	pushq %rcx
 	pushq $L556
+L630:
 	call _out
 	addq $24,%rsp
 L545:
@@ -1175,8 +1174,7 @@ L545:
 
 .data
 .align 8
-L633:
-	.quad L634
+L634:
 	.quad L635
 	.quad L636
 	.quad L637
@@ -1188,86 +1186,87 @@ L633:
 	.quad L643
 	.quad L644
 	.quad L645
+	.quad L646
 .text
 
 _out_ccs:
-L630:
+L631:
 	pushq %rbx
 	pushq %r12
-L631:
+L632:
 	movl %edi,%r12d
 	movq _out_f(%rip),%rsi
-	movl $L646,%edi
+	movl $L647,%edi
 	call _fputs
 	xorl %ebx,%ebx
-L648:
+L649:
 	movb %bl,%cl
 	movl $1,%eax
 	shll %cl,%eax
 	testl %r12d,%eax
-	jz L653
-L651:
+	jz L654
+L652:
 	movslq %ebx,%rax
-	pushq L633(,%rax,8)
-	pushq $L654
+	pushq L634(,%rax,8)
+	pushq $L655
 	call _out
 	addq $16,%rsp
-L653:
+L654:
 	incl %ebx
 	cmpl $12,%ebx
-	jl L648
-L650:
+	jl L649
+L651:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
-	js L656
-L655:
+	js L657
+L656:
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
 	movb $93,(%rcx)
-	jmp L632
-L656:
+	jmp L633
+L657:
 	movl $93,%edi
 	call ___flushbuf
-L632:
+L633:
 	popq %r12
 	popq %rbx
 	ret 
 
-.local L669
-.comm L669, 8, 8
+.local L670
+.comm L670, 8, 8
 
 _out_insn:
-L658:
+L659:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L659:
+L660:
 	movq %rdi,%r12
 	movl (%r12),%ebx
 	cmpl $8388609,%ebx
-	jz L664
-L724:
-	cmpl $58720258,%ebx
-	jz L668
+	jz L665
 L725:
-	cmpl $-1493172218,%ebx
-	jz L676
+	cmpl $58720258,%ebx
+	jz L669
 L726:
+	cmpl $-1493172218,%ebx
+	jz L677
+L727:
 	movzbq %bl,%rax
 	pushq _insn_text(,%rax,8)
-	pushq $L708
+	pushq $L709
 	call _out
 	addq $16,%rsp
 	andl $805306368,%ebx
 	sarl $28,%ebx
-L709:
+L710:
 	movl %ebx,%eax
 	decl %ebx
 	testl %eax,%eax
-	jz L662
-L710:
+	jz L663
+L711:
 	movslq %ebx,%rax
 	shlq $5,%rax
 	cmpl $385878080,(%r12)
@@ -1276,25 +1275,25 @@ L710:
 	leaq 8(%r12,%rax),%rdi
 	call _out_operand
 	testl %ebx,%ebx
-	jz L709
-L713:
+	jz L710
+L714:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
-	js L717
-L716:
+	js L718
+L717:
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
 	movb $44,(%rcx)
-	jmp L709
-L717:
+	jmp L710
+L718:
 	movl $44,%edi
 	call ___flushbuf
-	jmp L709
-L676:
+	jmp L710
+L677:
 	movq _out_f(%rip),%rsi
-	movl $L677,%edi
+	movl $L678,%edi
 	call _fputs
 	movl $1,%esi
 	leaq 40(%r12),%rdi
@@ -1302,45 +1301,45 @@ L676:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
-	js L679
-L678:
+	js L680
+L679:
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
 	movb $40,(%rcx)
-	jmp L680
-L679:
+	jmp L681
+L680:
 	movl $40,%edi
 	call ___flushbuf
-L680:
-	testl $2016,4(%r12)
-	jz L683
 L681:
+	testl $2016,4(%r12)
+	jz L684
+L682:
 	xorl %ebx,%ebx
-L684:
+L685:
 	movl 4(%r12),%eax
 	shll $21,%eax
 	shrl $26,%eax
 	cmpl %eax,%ebx
-	jae L683
-L685:
+	jae L684
+L686:
 	testl %ebx,%ebx
-	jz L690
-L688:
+	jz L691
+L689:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
-	js L692
-L691:
+	js L693
+L692:
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
 	movb $44,(%rcx)
-	jmp L690
-L692:
+	jmp L691
+L693:
 	movl $44,%edi
 	call ___flushbuf
-L690:
+L691:
 	leal 2(%rbx),%r13d
 	movslq %r13d,%r13
 	shlq $5,%r13
@@ -1348,96 +1347,96 @@ L690:
 	leaq 8(%r12,%r13),%rdi
 	call _out_operand
 	testl $262144,8(%r12,%r13)
-	jz L696
-L694:
+	jz L697
+L695:
 	movl 12(%r13,%r12),%eax
 	movl %eax,%ecx
 	andl $268435455,%ecx
 	shrl $28,%eax
 	pushq %rax
 	pushq %rcx
-	pushq $L697
+	pushq $L698
 	call _out
 	addq $24,%rsp
-L696:
+L697:
 	incl %ebx
-	jmp L684
-L683:
+	jmp L685
+L684:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
-	js L699
-L698:
+	js L700
+L699:
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
 	movb $41,(%rcx)
-	jmp L700
-L699:
+	jmp L701
+L700:
 	movl $41,%edi
 	call ___flushbuf
-L700:
-	testl $7,8(%r12)
-	jz L662
 L701:
+	testl $7,8(%r12)
+	jz L663
+L702:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
-	js L705
-L704:
+	js L706
+L705:
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
 	movb $44,(%rcx)
-	jmp L706
-L705:
+	jmp L707
+L706:
 	movl $44,%edi
 	call ___flushbuf
-L706:
+L707:
 	xorl %esi,%esi
 	leaq 8(%r12),%rdi
 	call _out_operand
-	jmp L662
-L668:
+	jmp L663
+L669:
 	movl 16(%r12),%eax
 	pushq %rax
-	pushq $L670
+	pushq $L671
 	call _out
 	addq $16,%rsp
 	movq 8(%r12),%rax
-	cmpq L669(%rip),%rax
-	jz L662
-L671:
+	cmpq L670(%rip),%rax
+	jz L663
+L672:
 	pushq %rax
-	pushq $L674
+	pushq $L675
 	call _out
 	addq $16,%rsp
 	movq _path(%rip),%rax
-	movq %rax,L669(%rip)
-	jmp L662
-L664:
+	movq %rax,L670(%rip)
+	jmp L663
+L665:
 	pushq 8(%r12)
-	pushq $L665
-	call _out
-	addq $16,%rsp
 	pushq $L666
 	call _out
+	addq $16,%rsp
+	pushq $L667
+	call _out
 	addq $8,%rsp
-L662:
+L663:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
-	js L721
-L720:
+	js L722
+L721:
 	movq 24(%rsi),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%rsi)
 	movb $10,(%rcx)
-	jmp L660
-L721:
+	jmp L661
+L722:
 	movl $10,%edi
 	call ___flushbuf
-L660:
+L661:
 	popq %r13
 	popq %r12
 	popq %rbx
@@ -1445,116 +1444,116 @@ L660:
 
 
 _insn_defs_cc0:
-L728:
 L729:
+L730:
 	movl (%rdi),%eax
 	cmpl $-1610612724,%eax
-	jz L740
-L749:
-	cmpl $-1342177266,%eax
-	jz L740
+	jz L741
 L750:
-	cmpl $-1342177265,%eax
-	jz L740
+	cmpl $-1342177266,%eax
+	jz L741
 L751:
-	cmpl $-1342177264,%eax
-	jz L740
+	cmpl $-1342177265,%eax
+	jz L741
 L752:
-	cmpl $-1342177263,%eax
-	jz L740
+	cmpl $-1342177264,%eax
+	jz L741
 L753:
+	cmpl $-1342177263,%eax
+	jz L741
+L754:
 	cmpl $8388609,%eax
-	jnz L747
-L734:
+	jnz L748
+L735:
 	movl 4(%rdi),%eax
 	shll $27,%eax
 	shrl $31,%eax
 	ret
-L740:
+L741:
 	testl $2129856,8(%rdi)
-	jnz L741
-L747:
+	jnz L742
+L748:
 	xorl %eax,%eax
 	ret
-L741:
+L742:
 	movl $1,%eax
-L730:
+L731:
 	ret 
 
 
 _insn_uses_mem0:
-L756:
 L757:
+L758:
 	movl (%rdi),%eax
 	cmpl $8388609,%eax
-	jz L762
-L777:
+	jz L763
+L778:
 	xorl %ecx,%ecx
 	testl $2147483648,%eax
-	jz L767
-L764:
+	jz L768
+L765:
 	testl $1073741824,%eax
 	setz %cl
 	movzbl %cl,%ecx
-L767:
+L768:
 	movl (%rdi),%eax
 	andl $805306368,%eax
 	sarl $28,%eax
 	cmpl %eax,%ecx
-	jge L770
-L768:
+	jge L771
+L769:
 	movslq %ecx,%rax
 	shlq $5,%rax
 	movl 8(%rdi,%rax),%eax
 	andl $7,%eax
 	cmpl $3,%eax
-	jz L771
-L773:
+	jz L772
+L774:
 	incl %ecx
-	jmp L767
-L771:
+	jmp L768
+L772:
 	movl $1,%eax
 	ret
-L770:
+L771:
 	xorl %eax,%eax
 	ret
-L762:
+L763:
 	movl 4(%rdi),%eax
 	shll $29,%eax
 	shrl $31,%eax
-L758:
+L759:
 	ret 
 
 
 _insn_defs_mem0:
-L779:
 L780:
+L781:
 	movl (%rdi),%eax
 	cmpl $8388609,%eax
-	jz L785
-L797:
+	jz L786
+L798:
 	testl $2147483648,%eax
-	jz L789
-L790:
+	jz L790
+L791:
 	movl 8(%rdi),%eax
 	andl $7,%eax
 	cmpl $3,%eax
-	jnz L789
-L787:
+	jnz L790
+L788:
 	movl $1,%eax
 	ret
-L789:
+L790:
 	xorl %eax,%eax
 	ret
-L785:
+L786:
 	movl 4(%rdi),%eax
 	shll $28,%eax
 	shrl $31,%eax
-L781:
+L782:
 	ret 
 
 .align 4
-L906:
+L907:
 	.int 186
 	.int 187
 	.int 188
@@ -1577,123 +1576,122 @@ L906:
 	.int 335546510
 	.int 385878080
 .align 2
-L907:
-	.short L897-_insn_uses
-	.short L897-_insn_uses
-	.short L897-_insn_uses
-	.short L897-_insn_uses
-	.short L823-_insn_uses
-	.short L859-_insn_uses
-	.short L827-_insn_uses
-	.short L897-_insn_uses
-	.short L842-_insn_uses
-	.short L857-_insn_uses
-	.short L801-_insn_uses
-	.short L848-_insn_uses
-	.short L848-_insn_uses
-	.short L848-_insn_uses
-	.short L855-_insn_uses
-	.short L855-_insn_uses
-	.short L855-_insn_uses
-	.short L855-_insn_uses
-	.short L855-_insn_uses
-	.short L855-_insn_uses
-	.short L832-_insn_uses
+L908:
+	.short L898-_insn_uses
+	.short L898-_insn_uses
+	.short L898-_insn_uses
+	.short L898-_insn_uses
+	.short L824-_insn_uses
+	.short L860-_insn_uses
+	.short L828-_insn_uses
+	.short L898-_insn_uses
+	.short L843-_insn_uses
+	.short L858-_insn_uses
+	.short L802-_insn_uses
+	.short L849-_insn_uses
+	.short L849-_insn_uses
+	.short L849-_insn_uses
+	.short L856-_insn_uses
+	.short L856-_insn_uses
+	.short L856-_insn_uses
+	.short L856-_insn_uses
+	.short L856-_insn_uses
+	.short L856-_insn_uses
+	.short L833-_insn_uses
 
 _insn_uses:
-L799:
+L800:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
-L800:
+L801:
 	movq %rdi,%r15
 	movq %rsi,%r14
 	movl %edx,%ebx
 	testl $134217728,%ebx
-	jz L804
-L805:
+	jz L805
+L806:
 	testl $134217728,(%r15)
-	jz L804
-L802:
+	jz L805
+L803:
 	movl $1074266112,%esi
 	movq %r14,%rdi
 	call _add_reg
-L804:
+L805:
 	testl $33554432,%ebx
-	jz L811
-L812:
+	jz L812
+L813:
 	testl $33554432,(%r15)
-	jnz L809
-L816:
+	jnz L810
+L817:
 	movq %r15,%rdi
 	call _insn_uses_mem0
 	testl %eax,%eax
-	jz L811
-L809:
+	jz L812
+L810:
 	movl $1074282496,%esi
 	movq %r14,%rdi
 	call _add_reg
-L811:
+L812:
 	movl (%r15),%ecx
 	xorl %eax,%eax
-L903:
-	cmpl L906(,%rax,4),%ecx
-	jz L904
-L905:
+L904:
+	cmpl L907(,%rax,4),%ecx
+	jz L905
+L906:
 	incl %eax
 	cmpl $21,%eax
-	jb L903
-	jae L821
-L904:
-	movzwl L907(,%rax,2),%eax
+	jb L904
+	jae L822
+L905:
+	movzwl L908(,%rax,2),%eax
 	addl $_insn_uses,%eax
 	jmp *%rax
-L832:
-	xorl %ebx,%ebx
 L833:
+	xorl %ebx,%ebx
+L834:
 	movl 4(%r15),%eax
 	shll $17,%eax
 	shrl $29,%eax
 	cmpl %eax,%ebx
-	jae L836
-L834:
+	jae L837
+L835:
 	movslq %ebx,%rax
 	movl _iargs(,%rax,4),%esi
 	movq %r14,%rdi
 	call _add_reg
 	incl %ebx
-	jmp L833
-L836:
-	xorl %ebx,%ebx
+	jmp L834
 L837:
+	xorl %ebx,%ebx
+L838:
 	movl 4(%r15),%eax
 	shll $13,%eax
 	shrl $28,%eax
 	cmpl %eax,%ebx
-	jae L821
-L838:
+	jae L822
+L839:
 	movslq %ebx,%rax
 	movl _fargs(,%rax,4),%esi
 	movq %r14,%rdi
 	call _add_reg
 	incl %ebx
-	jmp L837
-L855:
+	jmp L838
+L856:
 	movl $-2147483648,%esi
 	movq %r14,%rdi
 	call _add_reg
 	movl $-2147450880,%esi
-	movq %r14,%rdi
-	call _add_reg
-	jmp L821
-L848:
+	jmp L910
+L849:
 	movl $-2147483648,%esi
+L910:
 	movq %r14,%rdi
 	call _add_reg
-	jmp L821
-L857:
+	jmp L822
+L858:
 	movl $-2147434496,%esi
 	movq %r14,%rdi
 	call _add_reg
@@ -1701,44 +1699,39 @@ L857:
 	movq %r14,%rdi
 	call _add_reg
 	movl $-2147467264,%esi
-	movq %r14,%rdi
-	call _add_reg
-	jmp L801
-L842:
+	jmp L909
+L843:
 	movl $-1073479680,%esi
-	movq %r14,%rdi
-	call _add_reg
-	jmp L801
-L827:
+	jmp L909
+L828:
 	movq _func_ret_type(%rip),%rax
 	testq $1,(%rax)
-	jnz L801
-L828:
+	jnz L802
+L829:
 	movq _func_ret_sym(%rip),%rdi
 	call _symbol_to_reg
 	movl %eax,%esi
-	movq %r14,%rdi
-	call _add_reg
-	jmp L801
-L859:
+	jmp L909
+L860:
 	movl $-2147418112,%esi
 	movq %r14,%rdi
 	call _add_reg
 	movl $-2147467264,%esi
 	movq %r14,%rdi
 	call _add_reg
-	jmp L897
-L823:
+	jmp L898
+L824:
 	movq %r14,%rsi
 	leaq 16(%r15),%rdi
 	call _regmap_regs
-	jmp L801
-L897:
+	jmp L802
+L898:
 	movl $-2147483648,%esi
+L909:
 	movq %r14,%rdi
 	call _add_reg
-	jmp L801
-L821:
+	jmp L802
+L822:
 	movl (%r15),%r12d
 	andl $805306368,%r12d
 	sarl $28,%r12d
@@ -1747,58 +1740,58 @@ L821:
 	shrl $26,%eax
 	addl %eax,%r12d
 	xorl %r13d,%r13d
-L866:
-	cmpl %r12d,%r13d
-	jge L801
 L867:
+	cmpl %r12d,%r13d
+	jge L802
+L868:
 	testl %r13d,%r13d
-	jnz L870
-L881:
+	jnz L871
+L882:
 	movl (%r15),%eax
 	testl $2147483648,%eax
-	jz L870
-L877:
+	jz L871
+L878:
 	testl $1073741824,%eax
-	jnz L870
-L873:
+	jnz L871
+L874:
 	movslq %r13d,%rax
 	shlq $5,%rax
 	movl 8(%r15,%rax),%eax
 	andl $7,%eax
 	cmpl $1,%eax
-	jz L872
-L870:
+	jz L873
+L871:
 	movslq %r13d,%rbx
 	shlq $5,%rbx
 	movl 8(%r15,%rbx),%eax
 	andl $7,%eax
 	cmpl $3,%eax
-	jz L889
-L899:
-	cmpl $4,%eax
-	jz L889
+	jz L890
 L900:
+	cmpl $4,%eax
+	jz L890
+L901:
 	cmpl $1,%eax
-	jz L893
-	jnz L872
-L889:
+	jz L894
+	jnz L873
+L890:
 	movl 20(%r15,%rbx),%esi
 	testl %esi,%esi
-	jz L893
-L890:
+	jz L894
+L891:
 	movq %r14,%rdi
 	call _add_reg
-L893:
+L894:
 	movl 16(%r15,%rbx),%esi
 	testl %esi,%esi
-	jz L872
-L894:
+	jz L873
+L895:
 	movq %r14,%rdi
 	call _add_reg
-L872:
+L873:
 	incl %r13d
-	jmp L866
-L801:
+	jmp L867
+L802:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -1807,7 +1800,7 @@ L801:
 	ret 
 
 .align 4
-L980:
+L983:
 	.int 186
 	.int 187
 	.int 188
@@ -1827,147 +1820,142 @@ L980:
 	.int 335546510
 	.int 385878080
 .align 2
-L981:
-	.short L976-_insn_defs
-	.short L966-_insn_defs
-	.short L966-_insn_defs
-	.short L966-_insn_defs
-	.short L936-_insn_defs
+L984:
+	.short L979-_insn_defs
+	.short L969-_insn_defs
+	.short L969-_insn_defs
+	.short L969-_insn_defs
+	.short L939-_insn_defs
+	.short L965-_insn_defs
+	.short L964-_insn_defs
+	.short L913-_insn_defs
+	.short L979-_insn_defs
+	.short L979-_insn_defs
+	.short L979-_insn_defs
 	.short L962-_insn_defs
-	.short L961-_insn_defs
-	.short L910-_insn_defs
-	.short L976-_insn_defs
-	.short L976-_insn_defs
-	.short L976-_insn_defs
-	.short L959-_insn_defs
-	.short L959-_insn_defs
-	.short L959-_insn_defs
-	.short L959-_insn_defs
-	.short L959-_insn_defs
-	.short L959-_insn_defs
-	.short L940-_insn_defs
+	.short L962-_insn_defs
+	.short L962-_insn_defs
+	.short L962-_insn_defs
+	.short L962-_insn_defs
+	.short L962-_insn_defs
+	.short L943-_insn_defs
 
 _insn_defs:
-L908:
+L911:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L909:
+L912:
 	movq %rdi,%r12
 	movq %rsi,%rbx
 	movl %edx,%r13d
 	testl $67108864,%r13d
-	jz L913
-L914:
+	jz L916
+L917:
 	testl $67108864,(%r12)
-	jnz L911
-L918:
+	jnz L914
+L921:
 	movq %r12,%rdi
 	call _insn_defs_cc0
 	testl %eax,%eax
-	jz L913
-L911:
+	jz L916
+L914:
 	movl $1074266112,%esi
 	movq %rbx,%rdi
 	call _add_reg
-L913:
+L916:
 	testl $16777216,%r13d
-	jz L924
-L925:
+	jz L927
+L928:
 	testl $16777216,(%r12)
-	jnz L922
-L929:
+	jnz L925
+L932:
 	movq %r12,%rdi
 	call _insn_defs_mem0
 	testl %eax,%eax
-	jz L924
-L922:
+	jz L927
+L925:
 	movl $1074282496,%esi
 	movq %rbx,%rdi
 	call _add_reg
-L924:
+L927:
 	movl (%r12),%ecx
 	xorl %eax,%eax
-L977:
-	cmpl L980(,%rax,4),%ecx
-	jz L978
-L979:
+L980:
+	cmpl L983(,%rax,4),%ecx
+	jz L981
+L982:
 	incl %eax
 	cmpl $18,%eax
-	jb L977
-	jae L933
-L978:
-	movzwl L981(,%rax,2),%eax
+	jb L980
+	jae L936
+L981:
+	movzwl L984(,%rax,2),%eax
 	addl $_insn_defs,%eax
 	jmp *%rax
-L940:
+L943:
 	xorl %r12d,%r12d
-L942:
+L945:
 	movslq %r12d,%rax
 	movl _iscratch(,%rax,4),%esi
 	movq %rbx,%rdi
 	call _add_reg
 	incl %r12d
 	cmpl $9,%r12d
-	jl L942
-L944:
+	jl L945
+L947:
 	xorl %r12d,%r12d
-L946:
+L949:
 	movslq %r12d,%rax
 	movl _fscratch(,%rax,4),%esi
 	movq %rbx,%rdi
 	call _add_reg
 	incl %r12d
 	cmpl $8,%r12d
-	jl L946
-	jge L910
-L959:
+	jl L949
+	jge L913
+L962:
 	movl $-2147483648,%esi
 	movq %rbx,%rdi
 	call _add_reg
 	movl $-2147450880,%esi
-	movq %rbx,%rdi
-	call _add_reg
-	jmp L910
-L961:
+	jmp L985
+L964:
 	movl $-2147434496,%esi
 	movq %rbx,%rdi
 	call _add_reg
-L962:
+L965:
 	movl $-2147418112,%esi
 	movq %rbx,%rdi
 	call _add_reg
 	movl $-2147467264,%esi
-	movq %rbx,%rdi
-	call _add_reg
-	jmp L910
-L936:
+	jmp L985
+L939:
 	movq %rbx,%rsi
 	leaq 40(%r12),%rdi
 	call _regmap_regs
-	jmp L910
-L966:
+	jmp L913
+L969:
 	movl $-2147450880,%esi
 	movq %rbx,%rdi
 	call _add_reg
-L976:
+L979:
 	movl $-2147483648,%esi
-	movq %rbx,%rdi
-	call _add_reg
-	jmp L910
-L933:
+	jmp L985
+L936:
 	testl $2147483648,%ecx
-	jz L910
-L972:
+	jz L913
+L975:
 	movl 8(%r12),%eax
 	andl $7,%eax
 	cmpl $1,%eax
-	jnz L910
-L969:
+	jnz L913
+L972:
 	movl 16(%r12),%esi
+L985:
 	movq %rbx,%rdi
 	call _add_reg
-L910:
+L913:
 	popq %r13
 	popq %r12
 	popq %rbx
@@ -1975,7 +1963,7 @@ L910:
 
 
 _insn_substitute_con:
-L982:
+L986:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $16,%rsp
@@ -1984,7 +1972,7 @@ L982:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-L983:
+L987:
 	movq %rdi,%r15
 	movl %esi,-4(%rbp)
 	movq %rdx,-16(%rbp)
@@ -1997,39 +1985,39 @@ L983:
 	shrl $26,%eax
 	addl %eax,%r13d
 	xorl %r12d,%r12d
-L985:
+L989:
 	cmpl %r12d,%r13d
-	jle L988
-L986:
+	jle L992
+L990:
 	testl %r12d,%r12d
-	jnz L1001
-L1008:
+	jnz L1005
+L1012:
 	movl (%r15),%eax
 	testl $2147483648,%eax
-	jz L1001
-L1010:
+	jz L1005
+L1014:
 	testl $1073741824,%eax
-	jnz L1001
-L1006:
+	jnz L1005
+L1010:
 	movslq %r12d,%rax
 	shlq $5,%rax
 	movl 8(%r15,%rax),%eax
 	andl $7,%eax
 	cmpl $1,%eax
-	jz L991
-L1001:
+	jz L995
+L1005:
 	movslq %r12d,%rbx
 	shlq $5,%rbx
 	movl 8(%r15,%rbx),%edi
 	movl %edi,%eax
 	andl $7,%eax
 	cmpl $1,%eax
-	jnz L991
-L997:
+	jnz L995
+L1001:
 	movl -4(%rbp),%eax
 	cmpl 16(%rbx,%r15),%eax
-	jnz L991
-L993:
+	jnz L995
+L997:
 	shll $10,%edi
 	shrl $15,%edi
 	leaq 16(%rbp),%rsi
@@ -2043,12 +2031,12 @@ L993:
 	movq -16(%rbp),%rax
 	movq %rax,32(%rbx,%r15)
 	incl %r14d
-L991:
+L995:
 	incl %r12d
-	jmp L985
-L988:
+	jmp L989
+L992:
 	movl %r14d,%eax
-L984:
+L988:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -2060,7 +2048,7 @@ L984:
 
 
 _insn_substitute_reg:
-L1028:
+L1032:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $16,%rsp
@@ -2069,7 +2057,7 @@ L1028:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-L1029:
+L1033:
 	movq %rdi,%r15
 	movl %esi,%r14d
 	movl %edx,%r13d
@@ -2079,27 +2067,27 @@ L1029:
 	xorl %ebx,%ebx
 	movl (%r15),%edx
 	cmpl $8388609,%edx
-	jnz L1032
-L1031:
+	jnz L1036
+L1035:
 	testl $2,-12(%rbp)
-	jz L1036
-L1034:
+	jz L1040
+L1038:
 	movl %r13d,%edx
 	movl %r14d,%esi
 	leaq 16(%r15),%rdi
 	call _regmap_substitute
 	movl %eax,%r12d
-L1036:
+L1040:
 	testl $1,-12(%rbp)
-	jz L1033
-L1037:
+	jz L1037
+L1041:
 	movl %r13d,%edx
 	movl %r14d,%esi
 	leaq 40(%r15),%rdi
 	call _regmap_substitute
 	addl %eax,%r12d
-	jmp L1033
-L1032:
+	jmp L1037
+L1036:
 	andl $805306368,%edx
 	sarl $28,%edx
 	movl 4(%r15),%eax
@@ -2107,143 +2095,143 @@ L1032:
 	shrl $26,%eax
 	addl %eax,%edx
 	xorl %ecx,%ecx
-L1040:
-	cmpl %ecx,%edx
-	jle L1033
 L1044:
+	cmpl %ecx,%edx
+	jle L1037
+L1048:
 	xorl %eax,%eax
 	testl $2,-12(%rbp)
-	jz L1049
-L1050:
+	jz L1053
+L1054:
 	testl %ecx,%ecx
-	jnz L1055
-L1062:
+	jnz L1059
+L1066:
 	movl (%r15),%esi
 	testl $2147483648,%esi
-	jz L1055
-L1064:
+	jz L1059
+L1068:
 	testl $1073741824,%esi
-	jnz L1055
-L1060:
+	jnz L1059
+L1064:
 	movslq %ecx,%rsi
 	shlq $5,%rsi
 	movl 8(%r15,%rsi),%esi
 	andl $7,%esi
 	cmpl $1,%esi
-	jz L1049
-L1055:
+	jz L1053
+L1059:
 	movslq %ecx,%r8
 	shlq $5,%r8
 	movl 8(%r15,%r8),%esi
 	movl %esi,%edi
 	andl $7,%edi
 	cmpl $3,%edi
-	jz L1070
-L1131:
-	cmpl $4,%edi
-	jz L1070
-L1132:
-	cmpl $1,%edi
 	jz L1074
-	jnz L1067
-L1070:
+L1135:
+	cmpl $4,%edi
+	jz L1074
+L1136:
+	cmpl $1,%edi
+	jz L1078
+	jnz L1071
+L1074:
 	cmpl 20(%r15,%r8),%r14d
-	jnz L1074
-L1071:
+	jnz L1078
+L1075:
 	movl $1,%eax
 	movl %r13d,20(%r15,%r8)
-L1074:
+L1078:
 	cmpl 16(%r15,%r8),%r14d
-	jnz L1067
-L1075:
+	jnz L1071
+L1079:
 	incl %eax
 	movl %r13d,16(%r15,%r8)
-L1067:
+L1071:
 	testl %eax,%eax
-	jz L1080
-L1078:
-	cmpl $3,%edi
-	jnz L1082
-L1081:
-	movl $256,%ebx
-	jmp L1080
+	jz L1084
 L1082:
+	cmpl $3,%edi
+	jnz L1086
+L1085:
+	movl $256,%ebx
+	jmp L1084
+L1086:
 	shll $10,%esi
 	shrl $15,%esi
 	cmpq %rsi,%rbx
 	cmovleq %rsi,%rbx
-L1080:
+L1084:
 	addl %eax,%r12d
-L1049:
+L1053:
 	xorl %r8d,%r8d
 	testl $1,-12(%rbp)
-	jz L1092
-L1093:
+	jz L1096
+L1097:
 	testl %ecx,%ecx
-	jnz L1092
-L1101:
+	jnz L1096
+L1105:
 	testl $2147483648,(%r15)
-	jz L1092
-L1102:
+	jz L1096
+L1106:
 	movl 8(%r15),%eax
 	andl $7,%eax
 	cmpl $1,%eax
-	jnz L1092
-L1098:
+	jnz L1096
+L1102:
 	movslq %ecx,%rdi
 	shlq $5,%rdi
 	movl 8(%r15,%rdi),%eax
 	movl %eax,%esi
 	andl $7,%esi
 	cmpl $3,%esi
-	jz L1109
-L1136:
-	cmpl $4,%esi
-	jz L1109
-L1137:
-	cmpl $1,%esi
 	jz L1113
-	jnz L1106
-L1109:
+L1140:
+	cmpl $4,%esi
+	jz L1113
+L1141:
+	cmpl $1,%esi
+	jz L1117
+	jnz L1110
+L1113:
 	cmpl 20(%r15,%rdi),%r14d
-	jnz L1113
-L1110:
+	jnz L1117
+L1114:
 	movl $1,%r8d
 	movl %r13d,20(%r15,%rdi)
-L1113:
+L1117:
 	cmpl 16(%r15,%rdi),%r14d
-	jnz L1106
-L1114:
+	jnz L1110
+L1118:
 	incl %r8d
 	movl %r13d,16(%r15,%rdi)
-L1106:
+L1110:
 	testl %r8d,%r8d
-	jz L1119
-L1117:
-	cmpl $3,%esi
-	jnz L1121
-L1120:
-	movl $256,%ebx
-	jmp L1119
+	jz L1123
 L1121:
+	cmpl $3,%esi
+	jnz L1125
+L1124:
+	movl $256,%ebx
+	jmp L1123
+L1125:
 	shll $10,%eax
 	shrl $15,%eax
 	cmpq %rax,%rbx
 	cmovleq %rax,%rbx
-L1119:
+L1123:
 	addl %r8d,%r12d
-L1092:
+L1096:
 	incl %ecx
-	jmp L1040
-L1033:
+	jmp L1044
+L1037:
 	cmpq $0,-8(%rbp)
-	jz L1128
-L1126:
+	jz L1132
+L1130:
 	movq -8(%rbp),%rax
 	movq %rbx,(%rax)
-L1128:
+L1132:
 	movl %r12d,%eax
-L1030:
+L1034:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -2255,153 +2243,151 @@ L1030:
 
 
 _insn_is_copy:
-L1140:
-L1141:
+L1144:
+L1145:
 	movl (%rdi),%eax
 	cmpl $-1610612727,%eax
-	jz L1152
-L1163:
-	cmpl $-1610604220,%eax
-	jz L1152
-L1164:
-	cmpl $-1610578875,%eax
-	jz L1152
-L1165:
-	cmpl $-1610561978,%eax
-	jz L1152
-L1166:
-	cmpl $-1610545081,%eax
-	jz L1152
+	jz L1156
 L1167:
-	cmpl $-1610528184,%eax
-	jz L1152
+	cmpl $-1610604220,%eax
+	jz L1156
 L1168:
+	cmpl $-1610578875,%eax
+	jz L1156
+L1169:
+	cmpl $-1610561978,%eax
+	jz L1156
+L1170:
+	cmpl $-1610545081,%eax
+	jz L1156
+L1171:
+	cmpl $-1610528184,%eax
+	jz L1156
+L1172:
 	cmpl $-1610519735,%eax
-	jnz L1143
-L1152:
+	jnz L1147
+L1156:
 	movl 8(%rdi),%eax
 	andl $7,%eax
 	cmpl $1,%eax
-	jnz L1143
-L1156:
+	jnz L1147
+L1160:
 	movl 40(%rdi),%eax
 	andl $7,%eax
 	cmpl $1,%eax
-	jnz L1143
-L1153:
+	jnz L1147
+L1157:
 	movl 16(%rdi),%eax
 	movl %eax,(%rsi)
 	movl 48(%rdi),%eax
 	movl %eax,(%rdx)
 	movl $1,%eax
 	ret
-L1143:
+L1147:
 	xorl %eax,%eax
-L1142:
+L1146:
 	ret 
 
 
 _insn_is_cmpz:
-L1171:
-L1172:
+L1175:
+L1176:
 	cmpl $603979787,(%rdi)
-	jnz L1174
-L1178:
+	jnz L1178
+L1182:
 	movl 8(%rdi),%ecx
 	andl $7,%ecx
 	cmpl $2,%ecx
-	jnz L1186
-L1192:
+	jnz L1190
+L1196:
 	cmpq $0,32(%rdi)
-	jnz L1186
-L1193:
+	jnz L1190
+L1197:
 	cmpq $0,24(%rdi)
-	jnz L1186
-L1189:
+	jnz L1190
+L1193:
 	movl 40(%rdi),%eax
 	andl $7,%eax
 	cmpl $1,%eax
-	jnz L1186
-L1185:
+	jnz L1190
+L1189:
 	movl 48(%rdi),%eax
-	movl %eax,(%rsi)
-	jmp L1217
-L1186:
+	jmp L1225
+L1190:
 	movl 40(%rdi),%eax
 	andl $7,%eax
 	cmpl $2,%eax
-	jnz L1174
-L1211:
+	jnz L1178
+L1215:
 	cmpq $0,64(%rdi)
-	jnz L1174
-L1212:
+	jnz L1178
+L1216:
 	cmpq $0,56(%rdi)
-	jnz L1174
-L1208:
+	jnz L1178
+L1212:
 	cmpl $1,%ecx
-	jz L1204
-L1174:
+	jz L1208
+L1178:
 	xorl %eax,%eax
 	ret
-L1204:
+L1208:
 	movl 16(%rdi),%eax
+L1225:
 	movl %eax,(%rsi)
-L1217:
 	movl $1,%eax
-L1173:
+L1177:
 	ret 
 
 
 _insn_is_cmp_con:
-L1221:
-L1222:
+L1226:
+L1227:
 	cmpl $603979787,(%rdi)
-	jnz L1224
-L1228:
+	jnz L1229
+L1233:
 	movl 8(%rdi),%ecx
 	andl $7,%ecx
 	cmpl $2,%ecx
-	jnz L1236
-L1238:
+	jnz L1241
+L1243:
 	cmpq $0,32(%rdi)
-	jnz L1236
-L1239:
+	jnz L1241
+L1244:
 	movl 40(%rdi),%eax
 	andl $7,%eax
 	cmpl $1,%eax
-	jnz L1236
-L1235:
+	jnz L1241
+L1240:
 	movl 48(%rdi),%eax
-	movl %eax,(%rsi)
-	jmp L1259
-L1236:
+	jmp L1268
+L1241:
 	movl 40(%rdi),%eax
 	andl $7,%eax
 	cmpl $2,%eax
-	jnz L1224
-L1253:
+	jnz L1229
+L1258:
 	cmpq $0,64(%rdi)
-	jnz L1224
-L1254:
+	jnz L1229
+L1259:
 	cmpl $1,%ecx
-	jz L1250
-L1224:
+	jz L1255
+L1229:
 	xorl %eax,%eax
 	ret
-L1250:
+L1255:
 	movl 16(%rdi),%eax
+L1268:
 	movl %eax,(%rsi)
-L1259:
 	movl $1,%eax
-L1223:
+L1228:
 	ret 
 
-L644:
+L645:
  .byte 65,69,0
 L269:
  .byte 99,118,116,115,115,50,115,100
  .byte 0
-L638:
+L639:
  .byte 71,0
 L255:
  .byte 115,101,116,98,101,0
@@ -2411,7 +2397,7 @@ L189:
  .byte 110,111,116,113,0
 L5:
  .byte 106,103,0
-L674:
+L675:
  .byte 44,34,37,83,34,0
 L218:
  .byte 100,105,118,98,0
@@ -2419,7 +2405,7 @@ L133:
  .byte 79,82,0
 L197:
  .byte 97,100,100,113,0
-L639:
+L640:
  .byte 76,69,0
 L159:
  .byte 109,111,118,122,98,119,0
@@ -2432,7 +2418,7 @@ L12:
 L172:
  .byte 99,118,116,115,105,50,115,100
  .byte 108,0
-L645:
+L646:
  .byte 66,0
 L216:
  .byte 105,100,105,118,108,0
@@ -2446,7 +2432,7 @@ L247:
  .byte 115,101,116,110,122,0
 L223:
  .byte 115,104,114,119,0
-L708:
+L709:
  .byte 9,37,115,32,0
 L220:
  .byte 100,105,118,108,0
@@ -2462,13 +2448,13 @@ L235:
  .byte 97,110,100,119,0
 L8:
  .byte 106,108,0
-L677:
+L678:
  .byte 9,67,65,76,76,32,0
 L134:
  .byte 88,79,82,0
 L158:
  .byte 109,111,118,115,100,0
-L640:
+L641:
  .byte 71,69,0
 L191:
  .byte 110,101,103,119,0
@@ -2482,7 +2468,7 @@ L254:
  .byte 115,101,116,97,0
 L136:
  .byte 83,69,84,78,90,0
-L641:
+L642:
  .byte 76,0
 L126:
  .byte 83,85,66,0
@@ -2522,12 +2508,12 @@ L222:
  .byte 115,104,114,98,0
 L114:
  .byte 78,79,80,0
-L665:
+L666:
  .byte 37,83,0
 L177:
  .byte 99,118,116,116,115,100,50,115
  .byte 105,113,0
-L670:
+L671:
  .byte 9,46,108,105,110,101,32,37
  .byte 100,0
 L556:
@@ -2553,7 +2539,7 @@ L246:
  .byte 115,101,116,122,0
 L185:
  .byte 108,101,97,113,0
-L666:
+L667:
  .byte 10,0
 L203:
  .byte 115,117,98,113,0
@@ -2568,7 +2554,7 @@ L11:
 L270:
  .byte 99,118,116,115,100,50,115,115
  .byte 0
-L636:
+L637:
  .byte 83,0
 L245:
  .byte 120,111,114,113,0
@@ -2581,7 +2567,7 @@ L181:
  .byte 99,109,112,113,0
 L261:
  .byte 98,115,114,113,0
-L637:
+L638:
  .byte 78,83,0
 L229:
  .byte 115,97,114,113,0
@@ -2639,7 +2625,7 @@ L207:
  .byte 105,109,117,108,119,0
 L139:
  .byte 83,69,84,71,0
-L643:
+L644:
  .byte 66,69,0
 L258:
  .byte 98,115,102,108,0
@@ -2666,7 +2652,7 @@ L267:
  .byte 99,108,116,100,0
 L125:
  .byte 65,68,68,0
-L646:
+L647:
  .byte 91,32,0
 L162:
  .byte 109,111,118,115,98,119,0
@@ -2682,7 +2668,7 @@ L268:
  .byte 99,113,116,111,0
 L157:
  .byte 109,111,118,115,115,0
-L635:
+L636:
  .byte 78,90,0
 L188:
  .byte 110,111,116,108,0
@@ -2690,7 +2676,7 @@ L1:
  .byte 106,122,0
 L141:
  .byte 83,69,84,71,69,0
-L634:
+L635:
  .byte 90,0
 L240:
  .byte 111,114,108,0
@@ -2710,7 +2696,7 @@ L228:
  .byte 115,97,114,108,0
 L257:
  .byte 115,101,116,98,0
-L654:
+L655:
  .byte 37,115,32,0
 L244:
  .byte 120,111,114,108,0
@@ -2723,7 +2709,7 @@ L233:
  .byte 115,104,108,113,0
 L180:
  .byte 99,109,112,108,0
-L697:
+L698:
  .byte 32,60,37,100,58,37,100,62
  .byte 0
 L198:
@@ -2782,7 +2768,7 @@ L178:
  .byte 99,109,112,98,0
 L242:
  .byte 120,111,114,98,0
-L642:
+L643:
  .byte 65,0
 L265:
  .byte 99,98,116,119,0

@@ -1761,7 +1761,7 @@ L644:
 	movslq %r12d,%rax
 	cmpq (%rcx,%rax,8),%rdx
 	jb L647
-	ja L650
+	ja L659
 L653:
 	movl 4(%r15),%esi
 	leal 1(%rsi),%eax
@@ -1784,9 +1784,7 @@ L658:
 	movslq %eax,%rax
 	movq %rdx,(%rcx,%rax,8)
 	incl %r13d
-	incl %r12d
-	jmp L640
-L650:
+L659:
 	incl %r12d
 	jmp L640
 L647:

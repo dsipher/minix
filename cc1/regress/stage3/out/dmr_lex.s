@@ -748,7 +748,7 @@ L107:
 	movslq %ebx,%rbx
 	movswl _bigfsm(%rax,%rbx,2),%ebx
 	cmpl $0,%ebx
-	jge L111
+	jge L194
 L113:
 	notl %ebx
 L115:
@@ -787,8 +787,7 @@ L175:
 	subq 16(%r14),%r13
 	subq %r13,32(%r15)
 	movq 16(%r14),%r13
-	incq %r13
-	jmp L107
+	jmp L194
 L127:
 	movq %r13,%rax
 	subq 16(%r14),%rax
@@ -830,8 +829,7 @@ L125:
 	shll %cl,%eax
 	andl %edx,%eax
 	orl %eax,-4(%rbp)
-	addq $24,%r14
-	jmp L103
+	jmp L193
 L171:
 	pushq $L172
 	pushq $2
@@ -839,18 +837,17 @@ L171:
 	addq $16,%rsp
 	leaq 1(%r13),%rax
 	movq %rax,%r13
-	subq 16(%r14),%rax
-	movl %eax,8(%r14)
-	addq $24,%r14
-	jmp L103
+	jmp L195
 L119:
 	incq %r13
 L120:
 	sarl $7,%ebx
 	movb %bl,(%r14)
 	movq %r13,%rax
+L195:
 	subq 16(%r14),%rax
 	movl %eax,8(%r14)
+L193:
 	addq $24,%r14
 	jmp L103
 L167:
@@ -866,34 +863,30 @@ L169:
 	incl 12(%r15)
 	incq %r13
 	movq %r13,24(%r15)
-	addq $24,%r14
-	movq -16(%rbp),%rax
-	movq %r14,16(%rax)
-	jmp L186
+	jmp L191
 L153:
 	movb $0,(%r14)
 	movl $0,8(%r14)
 	movq %r13,24(%r15)
 	movq -16(%rbp),%rax
 	cmpq 8(%rax),%r14
-	jz L156
+	jz L191
 L161:
 	cmpb $6,-24(%r14)
-	jz L156
+	jz L191
 L162:
 	movq _cursource(%rip),%rax
 	cmpq $0,40(%rax)
-	jz L156
+	jz L191
 L158:
 	pushq $L165
 	pushq $0
 	call _error
 	addq $16,%rsp
-L156:
+L191:
 	addq $24,%r14
 	movq -16(%rbp),%rax
 	movq %r14,16(%rax)
-L186:
 	movl -4(%rbp),%eax
 L89:
 	popq %r15
@@ -906,7 +899,7 @@ L89:
 	ret 
 L116:
 	testl $64,%ebx
-	jz L129
+	jz L194
 L131:
 	andl $-65,%ebx
 	movq %r13,24(%r15)
@@ -928,8 +921,7 @@ L143:
 	pushq $0
 	call _error
 	addq $16,%rsp
-	incq %r13
-	jmp L107
+	jmp L194
 L133:
 	movq %r15,%rdi
 	call _trigraph
@@ -938,98 +930,95 @@ L133:
 L185:
 	movl -28(%rbp),%ebx
 	jmp L107
-L129:
-	incq %r13
-	jmp L107
-L111:
+L194:
 	incq %r13
 	jmp L107
 
 .align 2
-L240:
-	.short L216-_trigraph
-	.short L210-_trigraph
-	.short L214-_trigraph
-	.short L228-_trigraph
-	.short L228-_trigraph
-	.short L228-_trigraph
-	.short L224-_trigraph
-	.short L228-_trigraph
-	.short L212-_trigraph
+L245:
+	.short L221-_trigraph
+	.short L215-_trigraph
+	.short L219-_trigraph
+	.short L233-_trigraph
+	.short L233-_trigraph
+	.short L233-_trigraph
+	.short L229-_trigraph
+	.short L233-_trigraph
+	.short L217-_trigraph
 
 _trigraph:
-L191:
+L196:
 	pushq %rbx
 	pushq %r12
-L192:
+L197:
 	movq %rdi,%rbx
-L194:
+L199:
 	movq 24(%rbx),%rax
 	addq $2,%rax
 	cmpq 32(%rbx),%rax
-	jb L196
-L197:
+	jb L201
+L202:
 	movq %rbx,%rdi
 	call _fillbuf
 	cmpl $-1,%eax
-	jnz L194
-L196:
+	jnz L199
+L201:
 	movq 24(%rbx),%rcx
 	xorl %r12d,%r12d
 	cmpb $63,1(%rcx)
-	jnz L201
-L203:
+	jnz L246
+L208:
 	movb 2(%rcx),%al
 	cmpb $39,%al
-	jb L231
-L233:
+	jb L236
+L238:
 	cmpb $47,%al
-	ja L231
-L230:
+	ja L236
+L235:
 	addb $-39,%al
 	movzbl %al,%eax
-	movzwl L240(,%rax,2),%eax
+	movzwl L245(,%rax,2),%eax
 	addl $_trigraph,%eax
 	jmp *%rax
-L212:
+L217:
 	movl $92,%r12d
-	jmp L226
-L224:
+	jmp L231
+L229:
 	movl $126,%r12d
-	jmp L226
-L214:
+	jmp L231
+L219:
 	movl $93,%r12d
-	jmp L226
-L210:
+	jmp L231
+L215:
 	movl $91,%r12d
-	jmp L226
-L216:
+	jmp L231
+L221:
 	movl $94,%r12d
-	jmp L226
-L231:
-	cmpb $33,%al
-	jz L220
-L235:
-	cmpb $60,%al
-	jz L218
+	jmp L231
 L236:
+	cmpb $33,%al
+	jz L225
+L240:
+	cmpb $60,%al
+	jz L223
+L241:
 	cmpb $61,%al
-	jz L208
-L237:
+	jz L213
+L242:
 	cmpb $62,%al
-	jnz L228
-L222:
+	jnz L233
+L227:
 	movl $125,%r12d
-	jmp L226
-L208:
+	jmp L231
+L213:
 	movl $35,%r12d
-	jmp L226
-L218:
+	jmp L231
+L223:
 	movl $123,%r12d
-	jmp L226
-L220:
+	jmp L231
+L225:
 	movl $124,%r12d
-L226:
+L231:
 	movb %r12b,(%rcx)
 	movq 24(%rbx),%rdi
 	movq 32(%rbx),%rdx
@@ -1039,40 +1028,38 @@ L226:
 	incq %rdi
 	call _memmove
 	subq $2,32(%rbx)
-L228:
+L233:
+L246:
 	movl %r12d,%eax
-	jmp L193
-L201:
-	movl %r12d,%eax
-L193:
+L198:
 	popq %r12
 	popq %rbx
 	ret 
 
 
 _foldline:
-L241:
+L247:
 	pushq %rbx
-L242:
+L248:
 	movq %rdi,%rbx
-L244:
+L250:
 	movq 24(%rbx),%rax
 	incq %rax
 	cmpq 32(%rbx),%rax
-	jb L246
-L247:
+	jb L252
+L253:
 	movq %rbx,%rdi
 	call _fillbuf
 	cmpl $-1,%eax
-	jnz L244
-L246:
+	jnz L250
+L252:
 	movq 24(%rbx),%rdi
 	cmpb $10,1(%rdi)
-	jz L251
-L253:
+	jz L257
+L259:
 	xorl %eax,%eax
-	jmp L243
-L251:
+	jmp L249
+L257:
 	movq 32(%rbx),%rdx
 	subq %rdi,%rdx
 	addq $3,%rdx
@@ -1080,47 +1067,47 @@ L251:
 	call _memmove
 	subq $2,32(%rbx)
 	movl $1,%eax
-L243:
+L249:
 	popq %rbx
 	ret 
 
 
 _fillbuf:
-L256:
+L262:
 	pushq %rbx
-L257:
+L263:
 	movq %rdi,%rbx
 	movq 32(%rbx),%rcx
 	addq $4096,%rcx
 	movq 16(%rbx),%rax
 	addq $32768,%rax
 	cmpq %rax,%rcx
-	jbe L261
-L259:
-	pushq $L262
+	jbe L267
+L265:
+	pushq $L268
 	pushq $2
 	call _error
 	addq $16,%rsp
-L261:
+L267:
 	movq 40(%rbx),%rcx
 	testq %rcx,%rcx
-	jz L267
-L266:
+	jz L273
+L272:
 	movl $4096,%edx
 	movl $1,%esi
 	movq 32(%rbx),%rdi
 	call _fread
 	cmpl $0,%eax
-	jg L265
-L267:
+	jg L271
+L273:
 	xorl %eax,%eax
-L265:
+L271:
 	movq 24(%rbx),%rcx
 	cmpb $254,(%rcx)
-	jnz L272
-L270:
+	jnz L278
+L276:
 	movb $253,(%rcx)
-L272:
+L278:
 	movslq %eax,%rsi
 	movq 32(%rbx),%rdx
 	leaq (%rsi,%rdx),%rcx
@@ -1133,11 +1120,11 @@ L272:
 	movq 32(%rbx),%rcx
 	movb $254,(%rcx)
 	testl %eax,%eax
-	jz L273
-L275:
+	jz L279
+L281:
 	xorl %eax,%eax
-	jmp L258
-L273:
+	jmp L264
+L279:
 	movq 32(%rbx),%rax
 	movb $253,3(%rax)
 	movq 32(%rbx),%rax
@@ -1147,18 +1134,18 @@ L273:
 	movq 32(%rbx),%rax
 	movb $253,(%rax)
 	movl $-1,%eax
-L258:
+L264:
 	popq %rbx
 	ret 
 
 
 _setsource:
-L278:
+L284:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
-L279:
+L285:
 	movq %rdi,%r14
 	movq %rsi,%r12
 	movq %rdx,%r13
@@ -1174,8 +1161,8 @@ L279:
 	movl $0,48(%rbx)
 	movq %rbx,_cursource(%rip)
 	testq %r13,%r13
-	jz L282
-L281:
+	jz L288
+L287:
 	movq %r13,%rdi
 	call _strlen
 	movl %eax,%r12d
@@ -1187,14 +1174,14 @@ L281:
 	movq %r13,%rsi
 	movq %rax,%rdi
 	call _strncpy
-	jmp L283
-L282:
+	jmp L289
+L288:
 	movl $32772,%edi
 	call _domalloc
 	movq %rax,16(%rbx)
 	movq %rax,24(%rbx)
 	xorl %r12d,%r12d
-L283:
+L289:
 	movq 24(%rbx),%rcx
 	movslq %r12d,%r12
 	leaq (%rcx,%r12),%rax
@@ -1203,7 +1190,7 @@ L283:
 	movq 32(%rbx),%rax
 	movb $254,(%rax)
 	movq %rbx,%rax
-L280:
+L286:
 	popq %r14
 	popq %r13
 	popq %r12
@@ -1212,23 +1199,23 @@ L280:
 
 
 _unsetsource:
-L285:
+L291:
 	pushq %rbx
-L286:
+L292:
 	movq _cursource(%rip),%rbx
 	movq 40(%rbx),%rdi
 	testq %rdi,%rdi
-	jz L290
-L288:
+	jz L296
+L294:
 	call _fclose
 	movq 16(%rbx),%rdi
 	call _dofree
-L290:
+L296:
 	movq 56(%rbx),%rax
 	movq %rax,_cursource(%rip)
 	movq %rbx,%rdi
 	call _dofree
-L287:
+L293:
 	popq %rbx
 	ret 
 
@@ -1237,7 +1224,7 @@ L165:
  .byte 110,101,32,97,116,32,101,110
  .byte 100,32,111,102,32,102,105,108
  .byte 101,0
-L262:
+L268:
  .byte 73,110,112,117,116,32,98,117
  .byte 102,102,101,114,32,111,118,101
  .byte 114,102,108,111,119,0

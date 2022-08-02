@@ -48,7 +48,7 @@ L13:
 	movq %rsi,%rbx
 	movq $___stdio_cleanup,___exit_cleanup(%rip)
 	cmpl $0,4(%rbx)
-	jl L15
+	jl L106
 L17:
 	movl 8(%rbx),%eax
 	testl $2,%eax
@@ -82,11 +82,7 @@ L41:
 	movq %rax,16(%rbx)
 	movl 8(%rbx),%ecx
 	testq %rax,%rax
-	jnz L45
-L44:
-	orl $4,%ecx
-	movl %ecx,8(%rbx)
-	jmp L39
+	jz L108
 L45:
 	orl $72,%ecx
 	movl %ecx,8(%rbx)
@@ -99,7 +95,7 @@ L42:
 	movl 8(%rbx),%ecx
 	testq %rax,%rax
 	jnz L48
-L47:
+L108:
 	orl $4,%ecx
 	movl %ecx,8(%rbx)
 	jmp L39
@@ -132,23 +128,15 @@ L56:
 	movl 4(%rbx),%edi
 	call _lseek
 	cmpq $-1,%rax
-	jz L59
+	jz L107
 L58:
 	movl $1,%edx
 	leaq -1(%rbp),%rsi
 	movl 4(%rbx),%edi
 	call _write
 	cmpq $1,%rax
-	jnz L63
-L65:
-	movzbl %r12b,%eax
-	jmp L14
-L63:
-	orl $32,8(%rbx)
-	jmp L105
-L59:
-	orl $32,8(%rbx)
-	jmp L105
+	jnz L107
+	jz L106
 L54:
 	testl $64,%edx
 	movq 24(%rbx),%r13
@@ -164,7 +152,7 @@ L74:
 	movl 12(%rbx),%eax
 	negl %eax
 	cmpl %eax,%ecx
-	jnz L55
+	jnz L106
 L75:
 	movl (%rbx),%r13d
 	negl %r13d
@@ -179,20 +167,15 @@ L78:
 	movl 4(%rbx),%edi
 	call _lseek
 	cmpq $-1,%rax
-	jz L81
+	jz L107
 L80:
 	movl 4(%rbx),%edi
 	movl %r13d,%edx
 	movq 16(%rbx),%rsi
 	call _do_write
 	testl %eax,%eax
-	jnz L55
-L85:
-	orl $32,8(%rbx)
-	jmp L105
-L81:
-	orl $32,8(%rbx)
-	jmp L105
+	jz L107
+	jnz L106
 L69:
 	movq 16(%rbx),%rcx
 	subq %rcx,%r13
@@ -212,7 +195,7 @@ L92:
 	movl 4(%rbx),%edi
 	call _lseek
 	cmpq $-1,%rax
-	jz L95
+	jz L107
 L94:
 	movl 4(%rbx),%edi
 	movl %r13d,%edx
@@ -223,21 +206,16 @@ L94:
 L91:
 	movq 16(%rbx),%rax
 	movb %r12b,(%rax)
-L55:
+L106:
 	movzbl %r12b,%eax
 	jmp L14
 L99:
 	movq 16(%rbx),%rax
 	movb %r12b,(%rax)
-	orl $32,8(%rbx)
-	jmp L105
-L95:
+L107:
 	orl $32,8(%rbx)
 L105:
 	movl $-1,%eax
-	jmp L14
-L15:
-	movzbl %r12b,%eax
 L14:
 	popq %r13
 	popq %r12

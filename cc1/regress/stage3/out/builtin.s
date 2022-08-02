@@ -34,15 +34,11 @@ L18:
 L15:
 	movl $_int_type,%r12d
 	movl $_long_type,%esi
-	movq %r13,%rdi
-	call _new_formal
-	jmp L5
+	jmp L22
 L12:
 	movl $_int_type,%r12d
 	movl $_int_type,%esi
-	movq %r13,%rdi
-	call _new_formal
-	jmp L5
+	jmp L22
 L9:
 	movl $_void_type,%edx
 	xorl %esi,%esi
@@ -57,9 +53,7 @@ L9:
 	movq %r13,%rdi
 	call _new_formal
 	movl $_int_type,%esi
-	movq %r13,%rdi
-	call _new_formal
-	jmp L17
+	jmp L23
 L7:
 	movl $_void_type,%edx
 	xorl %esi,%esi
@@ -81,10 +75,11 @@ L7:
 	movl $65536,%edi
 	call _get_tnode
 	movq %rax,%rsi
+L23:
 	movq %r13,%rdi
 	call _new_formal
-L17:
 	movl $_ulong_type,%esi
+L22:
 	movq %r13,%rdi
 	call _new_formal
 L5:
@@ -107,56 +102,56 @@ L3:
 	ret 
 
 .align 2
-L60:
-	.short L50-_rewrite_builtin
-	.short L50-_rewrite_builtin
-	.short L41-_rewrite_builtin
-	.short L41-_rewrite_builtin
-	.short L47-_rewrite_builtin
-	.short L47-_rewrite_builtin
+L62:
+	.short L52-_rewrite_builtin
+	.short L52-_rewrite_builtin
+	.short L43-_rewrite_builtin
+	.short L43-_rewrite_builtin
+	.short L49-_rewrite_builtin
+	.short L49-_rewrite_builtin
 
 _rewrite_builtin:
-L22:
+L24:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L23:
+L25:
 	movq %rdi,%rax
 	movq 16(%rax),%rcx
 	cmpl $1073741831,(%rcx)
-	jnz L24
-L32:
+	jnz L26
+L34:
 	movq 16(%rcx),%rcx
 	cmpl $2415919105,(%rcx)
-	jnz L24
-L28:
+	jnz L26
+L30:
 	movq 24(%rcx),%rcx
 	testl $2147483648,12(%rcx)
-	jz L24
-L27:
+	jz L26
+L29:
 	movq (%rcx),%rcx
 	movl 20(%rcx),%ebx
 	cmpl $262272,%ebx
-	jl L24
-L59:
+	jl L26
+L61:
 	cmpl $262277,%ebx
-	jg L24
-L57:
+	jg L26
+L59:
 	leal -262272(%rbx),%ecx
-	movzwl L60(,%rcx,2),%ecx
+	movzwl L62(,%rcx,2),%ecx
 	addl $_rewrite_builtin,%ecx
 	jmp *%rcx
-L47:
+L49:
 	movq 24(%rax),%rax
 	movq (%rax),%rdx
 	movl $_int_type,%esi
 	movl $1073741871,%edi
 	call _unary_tree
-	jmp L24
-L41:
+	jmp L26
+L43:
 	movq 24(%rax),%rax
 	movq (%rax),%rdx
 	movl $_int_type,%esi
@@ -179,8 +174,8 @@ L41:
 	movl $_int_type,%esi
 	movl $536870942,%edi
 	call _binary_tree
-	jmp L24
-L50:
+	jmp L26
+L52:
 	cmpl $262272,%ebx
 	movl $46,%ecx
 	movl $45,%edi
@@ -190,7 +185,7 @@ L50:
 	movq 8(%rax),%rdx
 	movq 16(%rax),%rcx
 	call _blk_tree
-L24:
+L26:
 	popq %r13
 	popq %r12
 	popq %rbx

@@ -81,7 +81,7 @@ L60:
 	movl 4(%rbx),%edi
 	call _lseek
 	cmpq $-1,%rax
-	jz L63
+	jz L74
 L62:
 	movl 4(%rbx),%edi
 	movslq %r12d,%rdx
@@ -89,17 +89,14 @@ L62:
 	call _write
 	movl $0,(%rbx)
 	cmpl %eax,%r12d
-	jnz L69
-L72:
-	xorl %eax,%eax
-	jmp L3
-L69:
-	orl $32,8(%rbx)
-	jmp L73
-L63:
+	jz L72
+L74:
 	orl $32,8(%rbx)
 L73:
 	movl $-1,%eax
+	jmp L3
+L72:
+	xorl %eax,%eax
 	jmp L3
 L4:
 	xorl %ebx,%ebx
@@ -126,25 +123,25 @@ L3:
 
 
 ___stdio_cleanup:
-L74:
-	pushq %rbx
 L75:
+	pushq %rbx
+L76:
 	xorl %ebx,%ebx
-L78:
+L79:
 	movslq %ebx,%rax
 	movq ___iotab(,%rax,8),%rdi
 	testq %rdi,%rdi
-	jz L83
-L84:
+	jz L84
+L85:
 	testl $256,8(%rdi)
-	jz L83
-L81:
+	jz L84
+L82:
 	call _fflush
-L83:
+L84:
 	incl %ebx
 	cmpl $20,%ebx
-	jl L78
-L76:
+	jl L79
+L77:
 	popq %rbx
 	ret 
 

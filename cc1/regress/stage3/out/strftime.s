@@ -220,9 +220,7 @@ L103:
 	movl 4(%r15),%esi
 	movl $58,%ecx
 	movl (%r15),%edx
-	call _convert
-	movq %rax,%r13
-	jmp L125
+	jmp L144
 L99:
 	movl 24(%r15),%ebx
 	jmp L124
@@ -253,8 +251,7 @@ L131:
 L77:
 	movl 28(%r15),%ebx
 	incl %ebx
-	movl $3,%r12d
-	jmp L52
+	jmp L142
 L68:
 	movl 12(%r15),%ebx
 	jmp L123
@@ -286,9 +283,7 @@ L109:
 	movslq %ecx,%rcx
 	movq _tzname(,%rcx,8),%r13
 	movq %r13,%rdi
-	call _strlen
-	movq %rax,%r12
-	jmp L52
+	jmp L143
 L105:
 	movl 20(%r15),%ebx
 	jmp L123
@@ -298,9 +293,9 @@ L101:
 	movl $47,%ecx
 	movl 20(%r15),%edx
 	incl %edi
+L144:
 	call _convert
 	movq %rax,%r13
-L125:
 	movl $8,%r12d
 	jmp L52
 L94:
@@ -350,24 +345,18 @@ L61:
 	movq _months(,%rax,8),%rdi
 	movq %rdi,%r13
 	cmpb $98,%cl
-	jnz L63
-L62:
-	movl $3,%r12d
-	jmp L52
-L63:
-	call _strlen
-	movq %rax,%r12
-	jmp L52
+	jnz L143
+	jz L142
 L55:
 	movslq 24(%r15),%rax
 	movq _weekdays(,%rax,8),%rdi
 	movq %rdi,%r13
 	cmpb $97,%cl
-	jnz L57
-L56:
+	jnz L143
+L142:
 	movl $3,%r12d
 	jmp L52
-L57:
+L143:
 	call _strlen
 	movq %rax,%r12
 	jmp L52

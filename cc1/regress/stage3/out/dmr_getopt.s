@@ -76,8 +76,7 @@ L34:
 L37:
 	incl %edx
 	movl %edx,_optind(%rip)
-	movl $1,L4(%rip)
-	jmp L60
+	jmp L61
 L30:
 	movb 1(%rax),%r8b
 	movl _optind(%rip),%edi
@@ -104,7 +103,7 @@ L45:
 	jg L48
 L47:
 	cmpl $0,_opterr(%rip)
-	jz L52
+	jz L61
 L50:
 	pushq %rbx
 	pushq $L53
@@ -112,7 +111,7 @@ L50:
 	pushq $___stderr
 	call _fprintf
 	addq $32,%rsp
-L52:
+L61:
 	movl $1,L4(%rip)
 L60:
 	movl $63,%eax

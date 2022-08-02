@@ -16,15 +16,10 @@ L6:
 	jnz L8
 L7:
 	movl $1,%esi
-	movsbl (%rdi),%edx
-	incq %rdi
-	jmp L13
+	jmp L21
 L8:
 	cmpl $43,%edx
-	jnz L13
-L10:
-	movsbl (%rdi),%edx
-	incq %rdi
+	jz L21
 L13:
 	movl %edx,%ecx
 	subl $48,%ecx
@@ -35,6 +30,7 @@ L14:
 	addl %eax,%eax
 	addl %edx,%eax
 	subl $48,%eax
+L21:
 	movsbl (%rdi),%edx
 	incq %rdi
 	jmp L13

@@ -56,7 +56,7 @@ extern int opt_prohibit;            /* passes prohibited globally */
 #define OPT_LIR_HOIST       0x00000100
 #define OPT_LIR_DVN         0x00000200
 #define OPT_LIR_CMP         0x00000400
-#define OPT_LIR_MERGE       0x00000800
+#define OPT_MERGE           0x00000800
 #define OPT_MCH_EARLY       0x00001000
 #define OPT_MCH_CMP         0x00002000
 #define OPT_MCH_FUSE        0x00004000
@@ -65,7 +65,8 @@ extern int opt_prohibit;            /* passes prohibited globally */
 #define OPT_MCH_ZLQ         0x00020000
 
 #define OPT_ANY_PASSES      (   OPT_DEAD            \
-                            |   OPT_PRUNE           )
+                            |   OPT_PRUNE           \
+                            |   OPT_MERGE           )
 
 #define OPT_LIR_PASSES      (   OPT_LIR_FIXCC       \
                             |   OPT_LIR_NORM        \
@@ -75,8 +76,7 @@ extern int opt_prohibit;            /* passes prohibited globally */
                             |   OPT_LIR_FOLD        \
                             |   OPT_LIR_HOIST       \
                             |   OPT_LIR_DVN         \
-                            |   OPT_LIR_CMP         \
-                            |   OPT_LIR_MERGE       )
+                            |   OPT_LIR_CMP         )
 
 /* passes that can be run on the MCH code
    only before register allocation is done

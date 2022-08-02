@@ -125,8 +125,7 @@ L72:
 	movq $-1,%rax
 	xorl %edx,%edx
 	divq %rdi
-	movq %rdx,%rax
-	jmp L75
+	jmp L134
 L73:
 	movslq %r14d,%rdi
 	movq $9223372036854775807,%rax
@@ -136,6 +135,7 @@ L73:
 	movq $9223372036854775807,%rax
 	cqto 
 	idivq %rdi
+L134:
 	movq %rdx,%rax
 L75:
 	movl %r11d,%edx
@@ -247,20 +247,20 @@ L3:
 
 
 _strtol:
-L134:
 L135:
+L136:
 	xorl %ecx,%ecx
 	call ___strtoul
-L136:
+L137:
 	ret 
 
 
 _strtoul:
-L138:
 L139:
+L140:
 	movl $1,%ecx
 	call ___strtoul
-L140:
+L141:
 	ret 
 
 

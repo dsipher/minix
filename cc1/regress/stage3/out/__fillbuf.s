@@ -17,10 +17,14 @@ L7:
 	jnz L59
 L11:
 	testl $1,%eax
-	jz L13
+	jz L60
 L15:
 	testl $256,%eax
-	jnz L17
+	jz L19
+L60:
+	orl $32,%eax
+	movl %eax,8(%rbx)
+	jmp L59
 L19:
 	testl $128,%eax
 	jnz L23
@@ -99,19 +103,11 @@ L51:
 	jnz L55
 L54:
 	orl $16,%ecx
-	movl %ecx,8(%rbx)
-	jmp L59
+	jmp L61
 L55:
 	orl $32,%ecx
+L61:
 	movl %ecx,8(%rbx)
-	jmp L59
-L17:
-	orl $32,%eax
-	movl %eax,8(%rbx)
-	jmp L59
-L13:
-	orl $32,%eax
-	movl %eax,8(%rbx)
 L59:
 	movl $-1,%eax
 L3:

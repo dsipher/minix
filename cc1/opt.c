@@ -276,7 +276,7 @@ void opt_dead(void)
     } while (again);
 }
 
-/* opt_lir_merge() has found at least two predecessors of succ_b which share
+/* opt_merge() has found at least two predecessors of succ_b which share
    a final insn. create a new block, redirect the predecessors (in blocks)
    to the new block instead, and move all shared insns into it. this is a
    simple process that's surprisingly difficult to explain w/o diagrams */
@@ -323,14 +323,14 @@ static void merge0(struct block *succ_b, VECTOR(block) *blocks)
             delete_insn(b, LAST_INSN_INDEX(b));
         }
 
-        append_insn(insn, new);
+        insert_insn(insn, new, 0);
     }
 }
 
 /* tail merging. for each block B, we search for predecessors P1, P2, ... Pn
    which unconditionally proceed to block B and which share a final insn. */
 
-static void opt_lir_merge(void)
+static void opt_merge(void)
 {
     struct block *b;
     struct block *x, *y;
@@ -387,7 +387,7 @@ static struct { int bit; void (*pass)(void); char *name; } passes[] =
             OPT_LIR_HOIST,      opt_lir_hoist,      "lir_hoist",
             OPT_LIR_DVN,        opt_lir_dvn,        "lir_dvn",
             OPT_LIR_CMP,        opt_lir_cmp,        "lir_cmp",
-            OPT_LIR_MERGE,      opt_lir_merge,      "lir_merge",
+            OPT_MERGE,          opt_merge,          "lir_merge",
             OPT_MCH_EARLY,      opt_mch_early,      "mch_early",
             OPT_MCH_CMP,        opt_mch_cmp,        "mch_cmp",
             OPT_MCH_FUSE,       opt_mch_fuse,       "mch_fuse",

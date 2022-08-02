@@ -248,10 +248,14 @@ L119:
 	testl %eax,%eax
 	jz L125
 L124:
-	subl %ecx,-24(%rbp)
-	jmp L92
+	movl -24(%rbp),%eax
+	subl %ecx,%eax
+	jmp L161
 L125:
-	addl %ecx,-24(%rbp)
+	movl -24(%rbp),%eax
+	addl %ecx,%eax
+L161:
+	movl %eax,-24(%rbp)
 L92:
 	decq %r15
 	movq %r15,-16(%rbp)
@@ -305,12 +309,10 @@ L143:
 	movsd ___huge_val(%rip),%xmm8
 L145:
 	testl $1,%ebx
-	jz L147
+	jz L160
 L146:
 	mulsd L158(%rip),%xmm8
-	movsd %xmm8,%xmm0
-	jmp L3
-L147:
+L160:
 	movsd %xmm8,%xmm0
 	jmp L3
 L139:

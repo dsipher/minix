@@ -59,7 +59,7 @@
 
    the string_arena is backing storage for the string text. never freed. */
 
-#define DEFAULT_ARENA_SIZE      (1L << 29)              /* 512MB */
+#define DEFAULT_ARENA_SIZE      (1L << 27)              /* 128MB */
 
 #define GLOBAL_ARENA_SIZE       DEFAULT_ARENA_SIZE      /* global_arena */
 #define FUNC_ARENA_SIZE         DEFAULT_ARENA_SIZE      /* func_arena */
@@ -78,12 +78,9 @@ extern struct arena stmt_arena;
 extern struct arena local_arena;
 extern struct arena string_arena;
 
-void init_arenas(void);     /* call before using the above general arenas */
+/* allocate backing storage for the above arenas */
 
-/* create an arena of the specified size. idempotent: can be
-   called multiple times, only the first time does anything. */
-
-void init_arena(struct arena *a, size_t size);
+void init_arenas(void);
 
 /* allocate n (unaligned) bytes from the arena
    and return a pointer to the storage */

@@ -32,6 +32,7 @@
 *****************************************************************************/
 
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <sys/mman.h>
 #include "cc1.h"
@@ -45,24 +46,33 @@ struct arena string_arena;
 
 void init_arenas(void)
 {
-    init_arena(&global_arena, GLOBAL_ARENA_SIZE);
-    init_arena(&func_arena, FUNC_ARENA_SIZE);
-    init_arena(&stmt_arena, STMT_ARENA_SIZE);
-    init_arena(&local_arena, LOCAL_ARENA_SIZE);
-    init_arena(&string_arena, STRING_ARENA_SIZE);
-}
+    unsigned long adj;
+    char *p;
 
-void init_arena(struct arena *a, size_t size)
-{
-    void *p;
+    p = sbrk(0);
+    adj = (unsigned long) p;
 
-    if (a->bottom == 0) {
-        p = mmap(0, size, PROT_READ | PROT_WRITE,
-                 MAP_ANON | MAP_PRIVATE, -1, 0);
+    if (adj % UNIVERSAL_ALIGN) {
+        adj = UNIVERSAL_ALIGN - (adj % UNIVERSAL_ALIGN);
+        p = sbrk(adj);
 
-        if (p == MAP_FAILED) error(SYSTEM, 0, "init_arena: mmap failed");
-        a->bottom = a->top = p;
+        /* we don't bother to check for failure. if
+           this fails, so will the subsequent sbrk. */
     }
+
+    p = sbrk(   GLOBAL_ARENA_SIZE
+              + FUNC_ARENA_SIZE
+              + STMT_ARENA_SIZE
+              + LOCAL_ARENA_SIZE
+              + STRING_ARENA_SIZE );
+
+    if (p == (void *) -1) error(SYSTEM, 0, "arena allocations failed");
+
+    global_arena.top = global_arena.bottom = p;     p += GLOBAL_ARENA_SIZE;
+    func_arena.top   = func_arena.bottom   = p;     p += FUNC_ARENA_SIZE;
+    stmt_arena.top   = stmt_arena.bottom   = p;     p += STMT_ARENA_SIZE;
+    local_arena.top  = local_arena.bottom  = p;     p += LOCAL_ARENA_SIZE;
+    string_arena.top = string_arena.bottom = p; /*  p += STRING_ARENA_SIZE; */
 }
 
 /* helper for SLAB_ALLOC(). refill a slab by allocating space from the

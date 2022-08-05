@@ -49,13 +49,11 @@ struct token token;         /* last token seen */
 struct string *path;        /* path and line number, as modified by */
 int line_no;                /* # directives (for error reporting) */
 
-/* we mmap() the input file (read-only). text and pos are pointers
-   into the mapping. eof marks one past the end of the buffer; *eof
-   is guaranteed to be NUL so we never run past the end of input. */
+/* pointers into the source text (which is loaded in its entirety) */
 
 static char *text;          /* first character of this token */
 static char *pos;           /* current position */
-static char *eof;
+static char *eof;           /* position of EOF (*eof == 0) */
 
 /* standard ctype classes don't align with our needs, so we roll our own. */
 
@@ -361,6 +359,8 @@ static int ccon(void)
 
 /* string literals. when possible (no escapes and no concatenation) we reuse
    the token text from the lexical buffer. otherwise we use the string arena.
+   (it's tempting to overwrite the string in-place in the lexical buffer, but
+   that complicates lookahead, making it more trouble than it's worth.)
 
    we concatenate strings here. this is technically incorrect, because this
    should happen after all directives disappear; a #line or #pragma between
@@ -696,8 +696,8 @@ void lex(void)
     }
 }
 
-/* mmap() the input file. empty files and those whose length is exactly
-   a multiple of PAGE_SIZE are special cases we need to look out for. */
+/* read the entire file in one go into a dynamically-allocated buffer.
+   we append a NUL to the buffer to ensure we don't run off its end. */
 
 void init_lex(char *in_path)
 {
@@ -709,24 +709,17 @@ void init_lex(char *in_path)
     if (fd == -1) error(SYSTEM, 0, "can't open input");
     if (fstat(fd, &statbuf) == -1) error(SYSTEM, 0, "can't stat input");
 
-    if (statbuf.st_size > 0) {
-        /* the +1 here ensures that, if we need a guard page, the
-           virtual address after the text will not be occupied */
+    pos = sbrk(statbuf.st_size + 1); /* +1 for NUL terminator */
 
-        text = mmap(0, statbuf.st_size + 1, PROT_READ, MAP_PRIVATE, fd, 0);
-        if (text == MAP_FAILED) error(SYSTEM, 0, "can't mmap input");
-        eof = text + statbuf.st_size;
+    if (pos == (void *) -1) error(SYSTEM, 0, "can't allocate lexical buffer");
 
-        if ((statbuf.st_size % PAGE_SIZE) == 0) {
-            eof = mmap(eof, PAGE_SIZE, PROT_READ,
-                       MAP_FIXED | MAP_ANON | MAP_PRIVATE, -1, 0);
+    if (read(fd, pos, statbuf.st_size) != statbuf.st_size)
+        error(SYSTEM, 0, "can't read input");
 
-            if (eof == MAP_FAILED) error(SYSTEM, 0, "can't mmap guard");
-        }
-    } else
-        text = eof = "";    /* empty input is useless, but possible ... */
+    eof = pos + statbuf.st_size;
+    *eof = 0;
+    text = pos;
 
-    pos = text;
     close(fd);
     lex();  /* prime the pump */
 }

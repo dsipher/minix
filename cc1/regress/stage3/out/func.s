@@ -831,10 +831,15 @@ L121:
  .byte 100,121,32,100,105,100,32,116
  .byte 104,105,115,32,102,117,110,99
  .byte 116,105,111,110,32,37,76,0
+.globl _current_func
 .comm _current_func, 8, 8
+.globl _func_chain
 .comm _func_chain, 8, 8
+.globl _func_ret_sym
 .comm _func_ret_sym, 8, 8
+.globl _func_ret_type
 .comm _func_ret_type, 8, 8
+.globl _func_hidden_arg
 .comm _func_hidden_arg, 8, 8
 .local _frame_size
 .comm _frame_size, 4, 4

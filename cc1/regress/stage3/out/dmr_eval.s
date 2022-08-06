@@ -1333,9 +1333,13 @@ L77:
  .byte 32,42,32,111,114,32,38,32
  .byte 105,110,32,35,105,102,47,35
  .byte 101,108,115,105,102,0
+.globl _vals
 .comm _vals, 512, 8
+.globl _vp
 .comm _vp, 8, 8
+.globl _ops
 .comm _ops, 128, 4
+.globl _op
 .comm _op, 8, 8
 
 .globl _kwdefined

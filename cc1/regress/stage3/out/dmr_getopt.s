@@ -163,7 +163,9 @@ L35:
  .byte 37,115,37,99,10,0
 L23:
  .byte 45,45,0
+.globl _optopt
 .comm _optopt, 4, 4
+.globl _optarg
 .comm _optarg, 8, 8
 
 .globl _optarg

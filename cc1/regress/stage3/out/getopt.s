@@ -162,7 +162,9 @@ L52:
  .byte 114,101,115,32,97,110,32,97
  .byte 114,103,117,109,101,110,116,32
  .byte 45,45,32,37,99,10,0
+.globl _optarg
 .comm _optarg, 8, 8
+.globl _optopt
 .comm _optopt, 4, 4
 
 .globl _optarg

@@ -355,6 +355,7 @@ L100:
  .byte 114,114,111,114,32,105,110,32
  .byte 35,105,110,99,108,117,100,101
  .byte 0
+.globl _includelist
 .comm _includelist, 512, 8
 
 .globl _cursource

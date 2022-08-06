@@ -622,12 +622,15 @@ L230:
  .byte 117,108,116,32,118,97,108,117
  .byte 101,32,105,115,32,49,41,10
  .byte 0
+.globl _need_resync
 .comm _need_resync, 1, 1
+.globl _cxx_mode
 .comm _cxx_mode, 1, 1
 .local _out_fp
 .comm _out_fp, 8, 8
 .local _out_path
 .comm _out_path, 8, 8
+.globl _last_class
 .comm _last_class, 4, 4
 
 .globl _input_dir

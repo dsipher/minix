@@ -459,12 +459,16 @@ void init_bss(struct symbol *sym)
     size = size_of(sym->type, sym->id);
     align = align_of(sym->type);
 
-    /* can't use .lcomm, because that doesn't allow alignment,
-       so we have to use .comm, but that automatically exports
-       the declared symbol, unless we tell it not to... sigh.
-       once we get off gas, revisit to use a .bss directive. */
+    /* with gnu binutils, .comm automatically exports
+       symbol; .lcomm does not, but can't be aligned.
+       we must use .local followed by .comm.
 
-    if (sym->s & S_STATIC) out(".local %g\n", sym);
+       tahoe as does not automatically export .bss, so
+       .globl is required. as a favor to us for now, it
+       ignores .local and accepts .comm as a synonym for
+       .bss; once we ditch gas we can simplify all this. */
+
+    out("%s %g\n", ((sym->s & S_STATIC) ? ".local" : ".globl"), sym);
     out(".comm %g, %d, %d\n", sym, size, align);
 
     sym->s |= S_DEFINED;

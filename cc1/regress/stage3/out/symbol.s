@@ -1259,8 +1259,11 @@ L216:
  .byte 32,105,110,32,116,104,105,115
  .byte 32,115,99,111,112,101,32,37
  .byte 76,0
+.globl _current_scope
 .comm _current_scope, 4, 4
+.globl _outer_scope
 .comm _outer_scope, 4, 4
+.globl _reg_generation
 .comm _reg_generation, 4, 4
 .local _symtab
 .comm _symtab, 520, 8

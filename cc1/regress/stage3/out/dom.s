@@ -571,6 +571,7 @@ L226:
  .byte 100,93,0
 L209:
  .byte 32,37,76,0
+.globl _max_depth
 .comm _max_depth, 4, 4
 .local _all
 .comm _all, 24, 8

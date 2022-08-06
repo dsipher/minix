@@ -272,10 +272,15 @@ L13:
  .byte 105,110,105,116,95,97,114,101
  .byte 110,97,58,32,109,109,97,112
  .byte 32,102,97,105,108,101,100,0
+.globl _global_arena
 .comm _global_arena, 16, 8
+.globl _func_arena
 .comm _func_arena, 16, 8
+.globl _stmt_arena
 .comm _stmt_arena, 16, 8
+.globl _local_arena
 .comm _local_arena, 16, 8
+.globl _string_arena
 .comm _string_arena, 16, 8
 
 .globl _stmt_arena

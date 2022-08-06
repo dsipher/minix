@@ -280,8 +280,11 @@ L32:
  .byte 84,111,111,32,109,97,110,121
  .byte 32,45,73,32,100,105,114,101
  .byte 99,116,105,118,101,115,0
+.globl _Mflag
 .comm _Mflag, 4, 4
+.globl _verbose
 .comm _verbose, 4, 4
+.globl _objname
 .comm _objname, 8, 8
 
 .globl _objname

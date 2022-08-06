@@ -719,9 +719,13 @@ L77:
  .byte 46,116,101,120,116,10,0
 L20:
  .byte 37,102,0
+.globl _g_flag
 .comm _g_flag, 1, 1
+.globl _w_flag
 .comm _w_flag, 1, 1
+.globl _last_asmlab
 .comm _last_asmlab, 4, 4
+.globl _out_f
 .comm _out_f, 8, 8
 .local _out_path
 .comm _out_path, 8, 8

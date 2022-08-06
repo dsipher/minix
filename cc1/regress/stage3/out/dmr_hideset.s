@@ -254,6 +254,7 @@ L41:
  .byte 111,99,0
 L78:
  .byte 32,0
+.globl _hidesets
 .comm _hidesets, 8, 8
 
 .globl _newhideset

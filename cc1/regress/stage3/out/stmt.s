@@ -1021,6 +1021,7 @@ L49:
  .byte 109,117,115,116,32,98,101,32
  .byte 97,32,115,99,97,108,97,114
  .byte 0
+.globl _stmt_tree
 .comm _stmt_tree, 8, 8
 .local _break_block
 .comm _break_block, 8, 8

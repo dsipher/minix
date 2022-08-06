@@ -843,13 +843,21 @@ L237:
  .byte 97,120,32,102,111,114,32,99
  .byte 111,110,116,114,111,108,32,108
  .byte 105,110,101,0
+.globl _cursource
 .comm _cursource, 8, 8
+.globl _curtime
 .comm _curtime, 8, 8
+.globl _incdepth
 .comm _incdepth, 4, 4
+.globl _ifdepth
 .comm _ifdepth, 4, 4
+.globl _ifsatisfied
 .comm _ifsatisfied, 128, 4
+.globl _skipping
 .comm _skipping, 4, 4
+.globl _outbuf
 .comm _outbuf, 16384, 1
+.globl _nerrs
 .comm _nerrs, 4, 4
 
 .globl _free

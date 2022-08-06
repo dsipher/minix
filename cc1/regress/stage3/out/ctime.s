@@ -710,6 +710,7 @@ L267:
 L167:
  .byte 84,73,77,69,90,79,78,69
  .byte 0
+.globl _timezone
 .comm _timezone, 8, 8
 .local _tm
 .comm _tm, 36, 4

@@ -1390,7 +1390,9 @@ L4:
  .byte 37,114,97,120,0
 L52:
  .byte 37,114,49,50,0
+.globl _nr_assigned_regs
 .comm _nr_assigned_regs, 4, 4
+.globl _reg_to_symbol
 .comm _reg_to_symbol, 24, 8
 
 .globl _fargs

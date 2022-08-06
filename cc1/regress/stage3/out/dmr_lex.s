@@ -1247,8 +1247,11 @@ L168:
  .byte 105,110,103,32,111,114,32,99
  .byte 104,97,114,32,99,111,110,115
  .byte 116,0
+.globl _tottok
 .comm _tottok, 4, 4
+.globl _tokkind
 .comm _tokkind, 1024, 4
+.globl _bigfsm
 .comm _bigfsm, 16384, 2
 
 .globl _cursource

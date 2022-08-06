@@ -1806,9 +1806,13 @@ L337:
  .byte 97,98,101,108,0
 L526:
  .byte 37,76,58,0
+.globl _all_blocks
 .comm _all_blocks, 8, 8
+.globl _entry_block
 .comm _entry_block, 8, 8
+.globl _exit_block
 .comm _exit_block, 8, 8
+.globl _current_block
 .comm _current_block, 8, 8
 
 .globl _add_switch_succ

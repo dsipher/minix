@@ -266,10 +266,13 @@ L8:
  .byte 100,101,102,105,110,101,0
 L3:
  .byte 105,102,110,100,101,102,0
+.globl _namebit
 .comm _namebit, 512, 8
+.globl _kwdefined
 .comm _kwdefined, 8, 8
 .local _nlist
 .comm _nlist, 1024, 8
+.globl _np
 .comm _np, 8, 8
 
 .globl _kwdefined

@@ -2204,8 +2204,11 @@ L40:
 L53:
  .byte 97,114,103,117,109,101,110,116
  .byte 0
+.globl _token
 .comm _token, 32, 8
+.globl _path
 .comm _path, 8, 8
+.globl _line_no
 .comm _line_no, 4, 4
 .local _text
 .comm _text, 8, 8

@@ -828,7 +828,9 @@ L323:
  .byte 115,111,99,0
 L322:
  .byte 100,101,97,100,0
+.globl _opt_request
 .comm _opt_request, 4, 4
+.globl _opt_prohibit
 .comm _opt_prohibit, 4, 4
 .local _fixcc_map
 .comm _fixcc_map, 24, 8

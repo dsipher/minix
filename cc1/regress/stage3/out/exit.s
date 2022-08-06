@@ -17,6 +17,7 @@ L3:
 	popq %rbx
 	ret 
 
+.globl ___exit_cleanup
 .comm ___exit_cleanup, 8, 8
 
 .globl ___exit_cleanup

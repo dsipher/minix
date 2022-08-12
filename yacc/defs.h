@@ -294,6 +294,10 @@ extern char *allocate();
 
 extern void no_space(void);
 
+/* skeleton.c */
+
+extern void write_section(char *name[]);
+
 /* symtab.c */
 
 extern void create_symbol_table(void);

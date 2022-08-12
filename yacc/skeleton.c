@@ -299,13 +299,13 @@ char *trailer[] =
 };
 
 
-write_section(section)
-char *section[];
+void
+write_section(char *section[])
 {
-    register int c;
-    register int i;
-    register char *s;
-    register FILE *f;
+    int c;
+    int i;
+    char *s;
+    FILE *f;
 
     f = code_file;
     for (i = 0; s = section[i]; ++i)

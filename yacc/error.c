@@ -23,8 +23,8 @@ char *msg;
     done(2);
 }
 
-
-no_space()
+void
+no_space(void)
 {
     fprintf(stderr, "%s: f - out of space\n", myname);
     done(2);

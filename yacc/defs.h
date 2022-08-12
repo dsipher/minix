@@ -292,6 +292,14 @@ extern char *allocate();
 extern bucket *lookup();
 extern bucket *make_bucket();
 
+/* error.c */
+
+extern void no_space(void);
+
+/* verbose.c */
+
+extern void verbose(void);
+
 /* warshall.c */
 
 extern void reflexive_transitive_closure(unsigned *R, int n);

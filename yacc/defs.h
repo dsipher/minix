@@ -283,16 +283,12 @@ extern short *rules_used;
 extern short nunused;
 extern short final_state;
 
+
 /* global functions */
 
 extern char *allocate();
 extern bucket *lookup();
 extern bucket *make_bucket();
-
-
-/* system variables */
-
-extern int errno;
 
 
 /* system functions */

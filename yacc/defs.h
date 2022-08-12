@@ -289,12 +289,18 @@ extern short final_state;
 /* global functions */
 
 extern char *allocate();
-extern bucket *lookup();
-extern bucket *make_bucket();
 
 /* error.c */
 
 extern void no_space(void);
+
+/* symtab.c */
+
+extern void create_symbol_table(void);
+extern void free_symbol_table(void);
+extern void free_symbols(void);
+extern bucket *lookup(char *name);
+extern bucket *make_bucket(char *name);
 
 /* verbose.c */
 

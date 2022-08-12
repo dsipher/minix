@@ -291,3 +291,7 @@ extern short final_state;
 extern char *allocate();
 extern bucket *lookup();
 extern bucket *make_bucket();
+
+/* warshall.c */
+
+extern void reflexive_transitive_closure(unsigned *R, int n);

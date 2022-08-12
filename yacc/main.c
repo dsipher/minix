@@ -76,8 +76,8 @@ extern char *mktemp();
 extern char *getenv();
 
 
-done(k)
-int k;
+void
+done(int k)
 {
     if (action_file) { fclose(action_file); unlink(action_file_name); }
     if (text_file) { fclose(text_file); unlink(text_file_name); }

@@ -23,7 +23,7 @@ core *first_state;
 shifts *first_shift;
 reductions *first_reduction;
 
-int get_state();
+static int get_state();
 core *new_state();
 
 static core **state_set;
@@ -43,15 +43,16 @@ static short **kernel_end;
 static short *kernel_items;
 
 
-allocate_itemsets()
+static void
+allocate_itemsets(void)
 {
-    register short *itemp;
-    register short *item_end;
-    register int symbol;
-    register int i;
-    register int count;
-    register int max;
-    register short *symbol_count;
+    short *itemp;
+    short *item_end;
+    int symbol;
+    int i;
+    int count;
+    int max;
+    short *symbol_count;
 
     count = 0;
     symbol_count = NEW2(nsyms, short);
@@ -85,7 +86,8 @@ allocate_itemsets()
 }
 
 
-allocate_storage()
+static void
+allocate_storage(void)
 {
     allocate_itemsets();
     shiftset = NEW2(nsyms, short);
@@ -94,11 +96,12 @@ allocate_storage()
 }
 
 
-append_states()
+static void
+append_states(void)
 {
-    register int i;
-    register int j;
-    register int symbol;
+    int i;
+    int j;
+    int symbol;
 
 #ifdef	TRACE
     fprintf(stderr, "Entering append_states()\n");
@@ -123,7 +126,8 @@ append_states()
 }
 
 
-free_storage()
+static void
+free_storage(void)
 {
     FREE(shift_symbol);
     FREE(redset);
@@ -135,8 +139,156 @@ free_storage()
 }
 
 
+static void
+initialize_states(void)
+{
+    int i;
+    short *start_derives;
+    core *p;
 
-generate_states()
+    start_derives = derives[start_symbol];
+    for (i = 0; start_derives[i] >= 0; ++i)
+	continue;
+
+    p = (core *) MALLOC(sizeof(core) + i*sizeof(short));
+    if (p == 0) no_space();
+
+    p->next = 0;
+    p->link = 0;
+    p->number = 0;
+    p->accessing_symbol = 0;
+    p->nitems = i;
+
+    for (i = 0;  start_derives[i] >= 0; ++i)
+	p->items[i] = rrhs[start_derives[i]];
+
+    first_state = last_state = this_state = p;
+    nstates = 1;
+}
+
+
+static void
+new_itemsets(void)
+{
+    int i;
+    int shiftcount;
+    short *isp;
+    short *ksp;
+    int symbol;
+
+    for (i = 0; i < nsyms; i++)
+	kernel_end[i] = 0;
+
+    shiftcount = 0;
+    isp = itemset;
+    while (isp < itemsetend)
+    {
+	i = *isp++;
+	symbol = ritem[i];
+	if (symbol > 0)
+	{
+	    ksp = kernel_end[symbol];
+	    if (!ksp)
+	    {
+		shift_symbol[shiftcount++] = symbol;
+		ksp = kernel_base[symbol];
+	    }
+
+	    *ksp++ = i + 1;
+	    kernel_end[symbol] = ksp;
+	}
+    }
+
+    nshifts = shiftcount;
+}
+
+
+static void
+save_reductions(void)
+{
+    register short *isp;
+    register short *rp1;
+    register short *rp2;
+    register int item;
+    register int count;
+    register reductions *p;
+    register short *rend;
+
+    count = 0;
+    for (isp = itemset; isp < itemsetend; isp++)
+    {
+	item = ritem[*isp];
+	if (item < 0)
+	{
+	    redset[count++] = -item;
+	}
+    }
+
+    if (count)
+    {
+	p = (reductions *) allocate((unsigned) (sizeof(reductions) +
+					(count - 1) * sizeof(short)));
+
+	p->number = this_state->number;
+	p->nreds = count;
+
+	rp1 = redset;
+	rp2 = p->rules;
+	rend = rp1 + count;
+
+	while (rp1 < rend)
+	    *rp2++ = *rp1++;
+
+	if (last_reduction)
+	{
+	    last_reduction->next = p;
+	    last_reduction = p;
+	}
+	else
+	{
+	    first_reduction = p;
+	    last_reduction = p;
+	}
+    }
+}
+
+
+static void
+save_shifts(void)
+{
+    shifts *p;
+    short *sp1;
+    short *sp2;
+    short *send;
+
+    p = (shifts *) allocate((unsigned) (sizeof(shifts) +
+			(nshifts - 1) * sizeof(short)));
+
+    p->number = this_state->number;
+    p->nshifts = nshifts;
+
+    sp1 = shiftset;
+    sp2 = p->shift;
+    send = shiftset + nshifts;
+
+    while (sp1 < send)
+	*sp2++ = *sp1++;
+
+    if (last_shift)
+    {
+	last_shift->next = p;
+	last_shift = p;
+    }
+    else
+    {
+	first_shift = p;
+	last_shift = p;
+    }
+}
+
+
+static void
+generate_states(void)
 {
     allocate_storage();
     itemset = NEW2(nitems, short);
@@ -162,18 +314,17 @@ generate_states()
 }
 
 
-
-int
+static int
 get_state(symbol)
 int symbol;
 {
-    register int key;
-    register short *isp1;
-    register short *isp2;
-    register short *iend;
-    register core *sp;
-    register int found;
-    register int n;
+    int key;
+    short *isp1;
+    short *isp2;
+    short *iend;
+    core *sp;
+    int found;
+    int n;
 
 #ifdef	TRACE
     fprintf(stderr, "Entering get_state(%d)\n", symbol);
@@ -227,70 +378,6 @@ int symbol;
 }
 
 
-
-initialize_states()
-{
-    register int i;
-    register short *start_derives;
-    register core *p;
-
-    start_derives = derives[start_symbol];
-    for (i = 0; start_derives[i] >= 0; ++i)
-	continue;
-
-    p = (core *) MALLOC(sizeof(core) + i*sizeof(short));
-    if (p == 0) no_space();
-
-    p->next = 0;
-    p->link = 0;
-    p->number = 0;
-    p->accessing_symbol = 0;
-    p->nitems = i;
-
-    for (i = 0;  start_derives[i] >= 0; ++i)
-	p->items[i] = rrhs[start_derives[i]];
-
-    first_state = last_state = this_state = p;
-    nstates = 1;
-}
-
-
-new_itemsets()
-{
-    register int i;
-    register int shiftcount;
-    register short *isp;
-    register short *ksp;
-    register int symbol;
-
-    for (i = 0; i < nsyms; i++)
-	kernel_end[i] = 0;
-
-    shiftcount = 0;
-    isp = itemset;
-    while (isp < itemsetend)
-    {
-	i = *isp++;
-	symbol = ritem[i];
-	if (symbol > 0)
-	{
-	    ksp = kernel_end[symbol];
-	    if (!ksp)
-	    {
-		shift_symbol[shiftcount++] = symbol;
-		ksp = kernel_base[symbol];
-	    }
-
-	    *ksp++ = i + 1;
-	    kernel_end[symbol] = ksp;
-	}
-    }
-
-    nshifts = shiftcount;
-}
-
-
-
 core *
 new_state(symbol)
 int symbol;
@@ -332,7 +419,8 @@ int symbol;
 
 /* show_cores is used for debugging */
 
-show_cores()
+static void
+show_cores(void)
 {
     core *p;
     int i, j, k, n;
@@ -367,7 +455,8 @@ show_cores()
 
 /* show_ritems is used for debugging */
 
-show_ritems()
+static void
+show_ritems(void)
 {
     int i;
 
@@ -377,7 +466,9 @@ show_ritems()
 
 
 /* show_rrhs is used for debugging */
-show_rrhs()
+
+static void
+show_rrhs(void)
 {
     int i;
 
@@ -388,7 +479,8 @@ show_rrhs()
 
 /* show_shifts is used for debugging */
 
-show_shifts()
+static void
+show_shifts(void)
 {
     shifts *p;
     int i, j, k;
@@ -406,94 +498,12 @@ show_shifts()
 }
 
 
-save_shifts()
+static void
+set_derives(void)
 {
-    register shifts *p;
-    register short *sp1;
-    register short *sp2;
-    register short *send;
-
-    p = (shifts *) allocate((unsigned) (sizeof(shifts) +
-			(nshifts - 1) * sizeof(short)));
-
-    p->number = this_state->number;
-    p->nshifts = nshifts;
-
-    sp1 = shiftset;
-    sp2 = p->shift;
-    send = shiftset + nshifts;
-
-    while (sp1 < send)
-	*sp2++ = *sp1++;
-
-    if (last_shift)
-    {
-	last_shift->next = p;
-	last_shift = p;
-    }
-    else
-    {
-	first_shift = p;
-	last_shift = p;
-    }
-}
-
-
-
-save_reductions()
-{
-    register short *isp;
-    register short *rp1;
-    register short *rp2;
-    register int item;
-    register int count;
-    register reductions *p;
-    register short *rend;
-
-    count = 0;
-    for (isp = itemset; isp < itemsetend; isp++)
-    {
-	item = ritem[*isp];
-	if (item < 0)
-	{
-	    redset[count++] = -item;
-	}
-    }
-
-    if (count)
-    {
-	p = (reductions *) allocate((unsigned) (sizeof(reductions) +
-					(count - 1) * sizeof(short)));
-
-	p->number = this_state->number;
-	p->nreds = count;
-
-	rp1 = redset;
-	rp2 = p->rules;
-	rend = rp1 + count;
-
-	while (rp1 < rend)
-	    *rp2++ = *rp1++;
-
-	if (last_reduction)
-	{
-	    last_reduction->next = p;
-	    last_reduction = p;
-	}
-	else
-	{
-	    first_reduction = p;
-	    last_reduction = p;
-	}
-    }
-}
-
-
-set_derives()
-{
-    register int i, k;
-    register int lhs;
-    register short *rules;
+    int i, k;
+    int lhs;
+    short *rules;
 
     derives = NEW2(nsyms, short *);
     rules = NEW2(nvars + nrules, short);
@@ -519,7 +529,9 @@ set_derives()
 #endif
 }
 
-free_derives()
+
+static void
+free_derives(void)
 {
     FREE(derives[start_symbol]);
     FREE(derives);
@@ -548,10 +560,11 @@ print_derives()
 #endif
 
 
-set_nullable()
+static void
+set_nullable(void)
 {
-    register int i, j;
-    register int empty;
+    int i, j;
+    int empty;
     int done;
 
     nullable = MALLOC(nsyms);
@@ -597,7 +610,8 @@ set_nullable()
 }
 
 
-free_nullable()
+static void
+free_nullable(void)
 {
     FREE(nullable);
 }

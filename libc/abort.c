@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   stdlib.h                                      tahoe/64 standard library
+   abort.c                                       tahoe/64 standard library
 
 ******************************************************************************
 
@@ -31,60 +31,18 @@
 
 *****************************************************************************/
 
-#ifndef _STDLIB_H
-#define _STDLIB_H
+#include <signal.h>
 
-#include <sys/tahoe.h>
+void abort(void)
+{
+    raise(SIGABRT);
 
-#define NULL        __NULL
+    /* if we get here, then there was an installed
+       handler; POSIX says we need to exit as if
+       terminated by a SIGABRT, so do it .. harder. */
 
-#ifndef __SIZE_T
-#define __SIZE_T
-typedef __size_t size_t;
-#endif /* __SIZE_T */
-
-#define WEXITSTATUS     __WEXITSTATUS
-#define WIFEXITED       __WIFEXITED
-#define WIFSTOPPED      __WIFSTOPPED
-#define WIFSIGNALED     __WIFSIGNALED
-#define WSTOPSIG        __WSTOPSIG
-#define WTERMSIG        __WTERMSIG
-
-extern void (*__exit_cleanup)(void);
-extern void __stdio_cleanup(void);
-
-extern int atoi(const char *);
-extern long atol(const char *);
-
-extern void *bsearch(const void *, const void *, size_t, size_t,
-                     int (*)(const void *, const void *));
-
-/* _exit() is the system call; exit() ties up the
-   library's loose ends before calling _exit(). */
-
-#define EXIT_SUCCESS    0
-#define EXIT_FAILURE    1
-
-extern void abort(void);
-extern void _exit(int);
-extern void exit(int);
-
-extern void free(void *);
-extern char *getenv(const char *);
-extern void *malloc(size_t);
-extern float strtof(const char *, char **);
-extern double strtod(const char *, char **);
-extern long strtol(const char *, char **, int);
-extern unsigned long strtoul(const char *, char **, int);
-
-extern void qsort(void *, size_t, size_t,
-                  int (*compar)(const void *, const void *));
-
-#define RAND_MAX    32767
-
-extern int rand(void);
-extern void srand(unsigned);
-
-#endif /* _STDLIB_H */
+    signal(SIGABRT, SIG_DFL);
+    raise(SIGABRT);
+}
 
 /* vi: set ts=4 expandtab: */

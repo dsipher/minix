@@ -291,6 +291,12 @@ extern short final_state;
 
 extern char *allocate();
 
+/* closure.c */
+
+extern void closure(short *nucleus, int n);
+extern void set_first_derives(void);
+extern void finalize_closure(void);
+
 /* error.c */
 
 extern void fatal(char *msg);

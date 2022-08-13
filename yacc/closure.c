@@ -23,14 +23,15 @@ static unsigned *first_derives;
 static unsigned *EFF;
 
 
-set_EFF()
+static void
+set_EFF(void)
 {
-    register unsigned *row;
-    register int symbol;
-    register short *sp;
-    register int rowsize;
-    register int i;
-    register int rule;
+    unsigned *row;
+    int symbol;
+    short *sp;
+    int rowsize;
+    int i;
+    int rule;
 
     rowsize = WORDSIZE(nvars);
     EFF = NEW2(nvars * rowsize, unsigned);
@@ -59,14 +60,15 @@ set_EFF()
 }
 
 
-set_first_derives()
+void
+set_first_derives(void)
 {
-    register unsigned *rrow;
-    register unsigned *vrow;
-    register int j;
-    register unsigned k;
-    register unsigned cword;
-    register short *rp;
+    unsigned *rrow;
+    unsigned *vrow;
+    int j;
+    unsigned k;
+    unsigned cword;
+    short *rp;
 
     int rule;
     int i;
@@ -114,17 +116,16 @@ set_first_derives()
 }
 
 
-closure(nucleus, n)
-short *nucleus;
-int n;
+void
+closure(short *nucleus, int n)
 {
-    register int ruleno;
-    register unsigned word;
-    register unsigned i;
-    register short *csp;
-    register unsigned *dsp;
-    register unsigned *rsp;
-    register int rulesetsize;
+    int ruleno;
+    unsigned word;
+    unsigned i;
+    short *csp;
+    unsigned *dsp;
+    unsigned *rsp;
+    int rulesetsize;
 
     short *csend;
     unsigned *rsend;
@@ -183,34 +184,34 @@ int n;
 }
 
 
-
-finalize_closure()
+void
+finalize_closure(void)
 {
-  FREE(itemset);
-  FREE(ruleset);
-  FREE(first_derives + ntokens * WORDSIZE(nrules));
+    FREE(itemset);
+    FREE(ruleset);
+    FREE(first_derives + ntokens * WORDSIZE(nrules));
 }
 
 
 #ifdef	DEBUG
 
-print_closure(n)
-int n;
+static void
+print_closure(int n)
 {
-  register short *isp;
+    short *isp;
 
-  printf("\n\nn = %d\n\n", n);
-  for (isp = itemset; isp < itemsetend; isp++)
-    printf("   %d\n", *isp);
+    printf("\n\nn = %d\n\n", n);
+    for (isp = itemset; isp < itemsetend; isp++)
+        printf("   %d\n", *isp);
 }
 
-
-print_EFF()
+static void
+print_EFF(void)
 {
-    register int i, j;
-    register unsigned *rowp;
-    register unsigned word;
-    register unsigned k;
+    int i, j;
+    unsigned *rowp;
+    unsigned word;
+    unsigned k;
 
     printf("\n\nEpsilon Free Firsts\n");
 
@@ -236,13 +237,14 @@ print_EFF()
 }
 
 
-print_first_derives()
+static void
+print_first_derives(void)
 {
-    register int i;
-    register int j;
-    register unsigned *rp;
-    register unsigned cword;
-    register unsigned k;
+    int i;
+    int j;
+    unsigned *rp;
+    unsigned cword;
+    unsigned k;
 
     printf("\n\n\nFirst Derives\n");
 
@@ -264,7 +266,7 @@ print_first_derives()
 	}
     }
 
-  fflush(stdout);
+    fflush(stdout);
 }
 
 #endif

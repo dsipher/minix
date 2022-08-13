@@ -329,6 +329,10 @@ extern void undefined_symbol_warning(char *s);
 
 extern void done(int k);
 
+/* reader.c */
+
+extern void reader(void);
+
 /* skeleton.c */
 
 extern void write_section(char *name[]);

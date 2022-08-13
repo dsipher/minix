@@ -206,13 +206,13 @@ new_itemsets(void)
 static void
 save_reductions(void)
 {
-    register short *isp;
-    register short *rp1;
-    register short *rp2;
-    register int item;
-    register int count;
-    register reductions *p;
-    register short *rend;
+    short *isp;
+    short *rp1;
+    short *rp2;
+    int item;
+    int count;
+    reductions *p;
+    short *rend;
 
     count = 0;
     for (isp = itemset; isp < itemsetend; isp++)
@@ -382,11 +382,11 @@ core *
 new_state(symbol)
 int symbol;
 {
-    register int n;
-    register core *p;
-    register short *isp1;
-    register short *isp2;
-    register short *iend;
+    int n;
+    core *p;
+    short *isp1;
+    short *isp2;
+    short *iend;
 
 #ifdef	TRACE
     fprintf(stderr, "Entering new_state(%d)\n", symbol);
@@ -540,8 +540,8 @@ free_derives(void)
 #ifdef	DEBUG
 print_derives()
 {
-    register int i;
-    register short *sp;
+    int i;
+    short *sp;
 
     printf("\nDERIVES\n\n");
 

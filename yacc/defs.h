@@ -289,7 +289,7 @@ extern short final_state;
 
 /* global functions */
 
-extern char *allocate();
+extern char *allocate(size_t n);
 
 /* closure.c */
 

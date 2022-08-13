@@ -224,10 +224,9 @@ no_more_options:;
 
 
 char *
-allocate(n)
-unsigned n;
+allocate(size_t n)
 {
-    register char *p;
+    char *p;
 
     p = NULL;
     if (n)

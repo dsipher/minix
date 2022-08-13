@@ -739,8 +739,8 @@ output_actions(void)
 static int
 is_C_identifier(char *name)
 {
-    register char *s;
-    register int c;
+    char *s;
+    int c;
 
     s = name;
     c = *s;
@@ -771,8 +771,8 @@ is_C_identifier(char *name)
 static void
 output_defines(void)
 {
-    register int c, i;
-    register char *s;
+    int c, i;
+    char *s;
 
     for (i = 2; i < ntokens; ++i)
     {

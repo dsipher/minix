@@ -192,6 +192,13 @@ _waitpid:       movl $61, %eax
                 xorl %r10d, %r10d
                 jmp do_syscall
 
+# int kill(pid_t pid, int sig);
+
+.global _kill
+
+_kill:          movl $62, %eax
+                jmp do_syscall
+
 # int rename(const char *old, const char *new);
 
 .global _rename

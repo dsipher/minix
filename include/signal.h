@@ -34,12 +34,21 @@
 #ifndef _SIGNAL_H
 #define _SIGNAL_H
 
+#include <sys/tahoe.h>
+
+#ifndef __PID_T
+#define __PID_T
+typedef __pid_t pid_t;
+#endif /* __PID_T */
+
 #define SIGINT      2
 #define SIGILL      4
 #define SIGABRT     6
 #define SIGFPE      8
 #define SIGSEGV     11
 #define SIGTERM     15
+
+extern int kill(pid_t, int);
 
 typedef void(*__sighandler_t)(int);
 

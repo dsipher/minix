@@ -329,6 +329,14 @@ extern void undefined_symbol_warning(char *s);
 
 extern void done(int k);
 
+/* mkpar.c */
+
+extern void free_parser(void);
+
+/* output.c */
+
+extern void output(void);
+
 /* reader.c */
 
 extern void reader(void);

@@ -358,13 +358,15 @@ register action *p;
     }
 }
 
-free_parser()
+
+void
+free_parser(void)
 {
-  register int i;
+    int i;
 
-  for (i = 0; i < nstates; i++)
-    free_action_row(parser[i]);
+    for (i = 0; i < nstates; i++)
+        free_action_row(parser[i]);
 
-  FREE(parser);
+    FREE(parser);
 }
 

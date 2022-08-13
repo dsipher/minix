@@ -59,13 +59,13 @@ extern long atol(const char *);
 extern void *bsearch(const void *, const void *, size_t, size_t,
                      int (*)(const void *, const void *));
 
-/* __exit() is the system call; exit() ties up the
-   library's loose ends before calling __exit(). */
+/* _exit() is the system call; exit() ties up the
+   library's loose ends before calling _exit(). */
 
 #define EXIT_SUCCESS    0
 #define EXIT_FAILURE    1
 
-extern void __exit(int);
+extern void _exit(int);
 extern void exit(int);
 
 extern void free(void *);

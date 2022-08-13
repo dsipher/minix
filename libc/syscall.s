@@ -35,11 +35,11 @@
 
 .text
 
-# void __exit(int status);
+# void _exit(int status);
 
-.global ___exit
+.global __exit
 
-___exit:        movl $60, %eax
+__exit:         movl $60, %eax
 
                 # fall though to syscall, which doesn't return. this
                 # is an unnecessary trick to save a couple of bytes...

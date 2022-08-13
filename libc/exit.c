@@ -47,7 +47,7 @@ void exit(int status)
     if (__exit_cleanup)
         __exit_cleanup();
 
-    __exit(status);
+    _exit(status);
 }
 
 /* vi: set ts=4 expandtab: */

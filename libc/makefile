@@ -18,31 +18,31 @@ clean:
 
 crt0.o:	crt0.s
 
-HDRS=		../include/ctype.h 	../include/fcntl.h 	\
-		../include/float.h 	../include/limits.h 	\
-		../include/math.h 	../include/signal.h 	\
-		../include/stdarg.h 	../include/stddef.h 	\
-		../include/stdint.h 	../include/stdio.h 	\
-		../include/stdlib.h 	../include/string.h 	\
-		../include/termios.h 	../include/time.h 	\
-		../include/unistd.h 	../include/sys/ioctl.h	\
-		../include/sys/tahoe.h	../include/sys/types.h 	\
-		../include/sys/wait.h
+HDRS=		../include/assert.h  	../include/ctype.h 	\
+		../include/fcntl.h 	../include/float.h 	\
+		../include/limits.h 	../include/math.h 	\
+		../include/signal.h 	../include/stdarg.h 	\
+		../include/stddef.h 	../include/stdint.h 	\
+		../include/stdio.h 	../include/stdlib.h 	\
+		../include/string.h 	../include/termios.h 	\
+		../include/time.h 	../include/unistd.h 	\
+		../include/sys/ioctl.h	../include/sys/tahoe.h	\
+		../include/sys/types.h 	../include/sys/wait.h
 
-OBJS=		__ctype.o __dtefg.o __fillbuf.o __flushbuf.o 	\
-		__ieee_val.o __pow10.o abort.o atoi.o atol.o 	\
-		brk.o bsearch.o clearerr.o ctime.o exit.o 	\
-		execvp.o execvpe.o fclose.o fflush.o fgetpos.o 	\
-		fgets.o fileno.o fopen.o fprintf.o fputc.o 	\
-		fputs.o fread.o freopen.o frexp.o fscanf.o 	\
-		fseek.o fsetpos.o ftell.o fwrite.o getenv.o 	\
-		getopt.o gets.o isalnum.o isalpha.o iscntrl.o 	\
-		isdigit.o isgraph.o islower.o isprint.o 	\
-		ispunct.o isspace.o isupper.o isxdigit.o 	\
-		isatty.o malloc.o memchr.o memcmp.o memcpy.o 	\
-		memmove.o memset.o modf.o printf.o puts.o 	\
-		qsort.o raise.o rand.o remove.o rewind.o 	\
-		scanf.o setbuf.o setvbuf.o sigaction.o 		\
+OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 	\
+		__flushbuf.o __ieee_val.o __pow10.o abort.o 	\
+		atoi.o atol.o brk.o bsearch.o clearerr.o 	\
+		ctime.o exit.o execvp.o execvpe.o fclose.o 	\
+		fflush.o fgetpos.o fgets.o fileno.o fopen.o 	\
+		fprintf.o fputc.o fputs.o fread.o freopen.o 	\
+		frexp.o fscanf.o fseek.o fsetpos.o ftell.o 	\
+		fwrite.o getenv.o getopt.o gets.o isalnum.o 	\
+		isalpha.o iscntrl.o isdigit.o isgraph.o 	\
+		islower.o isprint.o ispunct.o isspace.o 	\
+		isupper.o isxdigit.o isatty.o malloc.o memchr.o \
+		memcmp.o memcpy.o memmove.o memset.o modf.o 	\
+		printf.o puts.o qsort.o raise.o rand.o remove.o \
+		rewind.o scanf.o setbuf.o setvbuf.o sigaction.o	\
 		sigemptyset.o signal.o sprintf.o sscanf.o 	\
 		stdio.o strcat.o strchr.o strcmp.o strcpy.o 	\
 		strerror.o strftime.o strlen.o strncat.o 	\
@@ -60,6 +60,7 @@ memmove.o:		memmove.s
 memset.o:		memset.s
 syscall.o:		syscall.s
 
+__assert.o:		__assert.c $(HDRS)
 __ctype.o:		__ctype.c $(HDRS)
 __fillbuf.o:		__fillbuf.c $(HDRS)
 __flushbuf.o:		__flushbuf.c $(HDRS)

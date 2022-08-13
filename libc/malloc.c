@@ -36,6 +36,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+#include <errno.h>
 
 /* this is a simple but fast allocator in the vein of Chris Kingsley's
    allocator (as found in 4.3BSD). we round up every request to a power
@@ -58,21 +59,28 @@
 
 #define PAGE_SIZE       4096
 
-#define ROUND_UP(a,b)       ((((a) + ((b) - 1)) / (b)) * (b))
+#define LOG2_SMALLEST   5       /* log2 smallest region (32 bytes) */
+#define LOG2_LARGEST    30      /* log2 largest region (1GB) */
 
-#define LOG2_SMALLEST   5           /* log2 smallest block (32 bytes) */
-#define LOG2_LARGEST    30          /* log2 largest block (1GB) */
+#define ROUND_UP(a,b)           ((((a) + ((b) - 1)) / (b)) * (b))
+#define NR_BUCKETS              ((LOG2_LARGEST - LOG2_SMALLEST) + 1)
 
-#define NR_BUCKETS      ((LOG2_LARGEST - LOG2_SMALLEST) + 1)
+/* return the size of regions in bucket `b' */
 
 #define BUCKET_TO_SIZE(b)       (((size_t) 1) << ((b) + LOG2_SMALLEST))
+
+/* return the size of the data[] payload of regions in bucket `b' */
+
+#define BUCKET_TO_CAP(b)        (BUCKET_TO_SIZE(b) -                    \
+                                        offsetof(struct region, data))
 
 #define REGION_MAGIC    0x4B696E67      /* 'King', homage to original */
 
 struct region
 {
-    /* regions are allocated starting on page boundaries, and the header union
-       is 8 bytes, so data is guaranteed aligned on an 8-byte boundary. */
+    /* regions are allocated starting on page boundaries,
+       and the header union is 8 bytes, so the data field
+       is guaranteed to be aligned on an 8-byte boundary. */
 
     union {
         struct region *next_free;       /* when in a bucket */
@@ -87,6 +95,11 @@ struct region
 };
 
 static struct region *buckets[NR_BUCKETS];
+
+/* convert pointer to region data[] -> pointer to region header */
+
+#define TO_REGION(ptr)      ((struct region *) ((char *) (ptr) -        \
+                                offsetof(struct region, data)))
 
 /* get memory from the system to put at least
    one free region in the given bucket. returns
@@ -113,8 +126,8 @@ static int refill(int bucket)
     alloc += n * size;
     new = sbrk(alloc);
 
-    if (new == (void *) -1)
-        return 0;
+    if (new == (void *) -1)     /* sbrk() has already */
+        return 0;               /* set errno = ENOMEM */
 
     for (i = 0; i < n; ++i) {
         new->next_free = buckets[bucket];
@@ -125,23 +138,29 @@ static int refill(int bucket)
     return n;
 }
 
-void *malloc(size_t bytes)
+void *malloc(size_t size)
 {
     struct region *r;
     int bucket;
 
-    bytes += offsetof(struct region, data);
+    if (size == 0) return 0;
 
     for (bucket = 0; bucket < NR_BUCKETS; ++bucket)
-        if (bytes <= BUCKET_TO_SIZE(bucket))
+        if (size <= BUCKET_TO_CAP(bucket))
             break;
 
-    if (bucket == NR_BUCKETS)
+    if (bucket == NR_BUCKETS) {
+        /* this is a fib; it's not that we don't have
+           memory, we simply don't support allocations
+           this large. EINVAL would probably be better. */
+
+        errno = ENOMEM;
         return 0;
+    }
 
     if (buckets[bucket] == 0)
-        if (refill(bucket) == 0)
-            return 0;
+        if (refill(bucket) == 0)        /* we pass through the */
+            return 0;                   /* ENOMEM from refill() */
 
     r = buckets[bucket];
     buckets[bucket] = r->next_free;
@@ -152,12 +171,41 @@ void *malloc(size_t bytes)
     return r->data;
 }
 
+void *realloc(void *ptr, size_t size)
+{
+    struct region *r;
+    void *newptr;
+    int bucket;
+    size_t old_size;
+
+    if (ptr == 0) return malloc(size);
+    r = TO_REGION(ptr);
+
+    if (r->magic == REGION_MAGIC) {
+        old_size = BUCKET_TO_CAP(r->bucket);
+
+        if (size > old_size) {
+            newptr = malloc(size);
+            if (newptr == 0) return 0;
+            memcpy(newptr, ptr, old_size);
+            free(ptr);
+            newptr = ptr;
+        } else
+            /* nothing to do; the existing
+               region is big enough, and we
+               never attempt to downsize */ ;
+    }
+
+    return ptr;
+}
+
 void free(void *ptr)
 {
     struct region *r;
     int bucket;
 
-    r = (struct region *) ((char *) ptr - offsetof(struct region, data));
+    if (ptr == 0) return;
+    r = TO_REGION(ptr);
 
     if (r->magic == REGION_MAGIC) {
         bucket = r->bucket;

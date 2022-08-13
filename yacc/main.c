@@ -86,13 +86,15 @@ done(int k)
 }
 
 
-onintr()
+static void
+onintr(int sig)
 {
     done(1);
 }
 
 
-set_signals()
+static void
+set_signals(void)
 {
 #ifdef SIGINT
     if (signal(SIGINT, SIG_IGN) != SIG_IGN)
@@ -109,19 +111,19 @@ set_signals()
 }
 
 
-usage()
+static void
+usage(void)
 {
     fprintf(stderr, "usage: %s [-dlrtv] [-b file_prefix] [-p symbol_prefix] filename\n", myname);
     exit(1);
 }
 
 
-getargs(argc, argv)
-int argc;
-char *argv[];
+static void
+getargs(int argc, char *argv[])
 {
-    register int i;
-    register char *s;
+    int i;
+    char *s;
 
     if (argc > 0) myname = argv[0];
     for (i = 1; i < argc; ++i)
@@ -237,7 +239,8 @@ unsigned n;
 }
 
 
-create_file_names()
+static void
+create_file_names(void)
 {
     int i, len;
     char *tmpdir;
@@ -320,7 +323,8 @@ create_file_names()
 }
 
 
-open_files()
+static void
+open_files(void)
 {
     create_file_names();
 
@@ -372,9 +376,7 @@ open_files()
 
 
 int
-main(argc, argv)
-int argc;
-char *argv[];
+main(int argc, char *argv[])
 {
     set_signals();
     getargs(argc, argv);

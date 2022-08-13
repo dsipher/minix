@@ -603,7 +603,8 @@ free_nullable()
 }
 
 
-lr0()
+void
+lr0(void)
 {
     set_derives();
     set_nullable();

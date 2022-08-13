@@ -49,7 +49,8 @@ static short *VERTICES;
 static int top;
 
 
-lalr()
+void
+lalr(void)
 {
     tokensetsize = WORDSIZE(ntokens);
 

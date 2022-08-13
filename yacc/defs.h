@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 
 /*  machine-dependent definitions			*/
@@ -324,6 +325,14 @@ extern void unknown_rhs(int i);
 extern void default_action_warning(void);
 extern void undefined_goal(char *s);
 extern void undefined_symbol_warning(char *s);
+
+/* lalr.c */
+
+extern void lalr(void);
+
+/* lr0.c */
+
+extern void lr0(void);
 
 /* main.c */
 

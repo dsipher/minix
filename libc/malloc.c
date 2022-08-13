@@ -189,7 +189,7 @@ void *realloc(void *ptr, size_t size)
             if (newptr == 0) return 0;
             memcpy(newptr, ptr, old_size);
             free(ptr);
-            newptr = ptr;
+            ptr = newptr;
         } else
             /* nothing to do; the existing
                region is big enough, and we

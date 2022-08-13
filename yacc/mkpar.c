@@ -27,33 +27,13 @@ short final_state;
 static int SRcount;
 static int RRcount;
 
-extern action *parse_actions();
-extern action *get_shifts();
-extern action *add_reductions();
 extern action *add_reduce();
 
 
-make_parser()
-{
-    register int i;
-
-    parser = NEW2(nstates, action *);
-    for (i = 0; i < nstates; i++)
-	parser[i] = parse_actions(i);
-
-    find_final_state();
-    remove_conflicts();
-    unused_rules();
-    if (SRtotal + RRtotal > 0) total_conflicts();
-    defreds();
-}
-
-
 action *
-parse_actions(stateno)
-register int stateno;
+parse_actions(int stateno)
 {
-    register action *actions;
+    action *actions;
 
     actions = get_shifts(stateno);
     actions = add_reductions(stateno, actions);
@@ -62,14 +42,13 @@ register int stateno;
 
 
 action *
-get_shifts(stateno)
-int stateno;
+get_shifts(int stateno)
 {
-    register action *actions, *temp;
-    register shifts *sp;
-    register short *to_state;
-    register int i, k;
-    register int symbol;
+    action *actions, *temp;
+    shifts *sp;
+    short *to_state;
+    int i, k;
+    int symbol;
 
     actions = 0;
     sp = shift_table[stateno];
@@ -96,14 +75,13 @@ int stateno;
     return (actions);
 }
 
+
 action *
-add_reductions(stateno, actions)
-int stateno;
-register action *actions;
+add_reductions(int stateno, action *actions)
 {
-    register int i, j, m, n;
-    register int ruleno, tokensetsize;
-    register unsigned *rowp;
+    int i, j, m, n;
+    int ruleno, tokensetsize;
+    unsigned *rowp;
 
     tokensetsize = WORDSIZE(ntokens);
     m = lookaheads[stateno];
@@ -123,11 +101,9 @@ register action *actions;
 
 
 action *
-add_reduce(actions, ruleno, symbol)
-register action *actions;
-register int ruleno, symbol;
+add_reduce(action *actions, int ruleno, int symbol)
 {
-    register action *temp, *prev, *next;
+    action *temp, *prev, *next;
 
     prev = 0;
     for (next = actions; next && next->symbol < symbol; next = next->next)
@@ -163,11 +139,12 @@ register int ruleno, symbol;
 }
 
 
-find_final_state()
+static void
+find_final_state(void)
 {
-    register int goal, i;
-    register short *to_state;
-    register shifts *p;
+    int goal, i;
+    short *to_state;
+    shifts *p;
 
     p = shift_table[0];
     to_state = p->shift;
@@ -180,10 +157,11 @@ find_final_state()
 }
 
 
-unused_rules()
+static void
+unused_rules(void)
 {
-    register int i;
-    register action *p;
+    int i;
+    action *p;
 
     rules_used = (short *) MALLOC(nrules*sizeof(short));
     if (rules_used == 0) no_space();
@@ -212,11 +190,12 @@ unused_rules()
 }
 
 
-remove_conflicts()
+static void
+remove_conflicts(void)
 {
-    register int i;
-    register int symbol;
-    register action *p, *pref;
+    int i;
+    int symbol;
+    action *p, *pref;
 
     SRtotal = 0;
     RRtotal = 0;
@@ -287,7 +266,8 @@ remove_conflicts()
 }
 
 
-total_conflicts()
+static void
+total_conflicts(void)
 {
     fprintf(stderr, "%s: ", myname);
     if (SRtotal == 1)
@@ -307,12 +287,11 @@ total_conflicts()
 }
 
 
-int
-sole_reduction(stateno)
-int stateno;
+static int
+sole_reduction(int stateno)
 {
-    register int count, ruleno;
-    register action *p;
+    int count, ruleno;
+    action *p;
 
     count = 0;
     ruleno = 0;
@@ -336,25 +315,27 @@ int stateno;
 }
 
 
-defreds()
+static void
+defreds(void)
 {
-    register int i;
+    int i;
 
     defred = NEW2(nstates, short);
     for (i = 0; i < nstates; i++)
 	defred[i] = sole_reduction(i);
 }
 
-free_action_row(p)
-register action *p;
-{
-  register action *q;
 
-  while (p)
+static void
+free_action_row(action *p)
+{
+    action *q;
+
+    while (p)
     {
-      q = p->next;
-      FREE(p);
-      p = q;
+        q = p->next;
+        FREE(p);
+        p = q;
     }
 }
 
@@ -368,5 +349,22 @@ free_parser(void)
         free_action_row(parser[i]);
 
     FREE(parser);
+}
+
+
+void
+make_parser(void)
+{
+    int i;
+
+    parser = NEW2(nstates, action *);
+    for (i = 0; i < nstates; i++)
+	parser[i] = parse_actions(i);
+
+    find_final_state();
+    remove_conflicts();
+    unused_rules();
+    if (SRtotal + RRtotal > 0) total_conflicts();
+    defreds();
 }
 

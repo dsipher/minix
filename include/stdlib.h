@@ -73,6 +73,7 @@ extern void *calloc(size_t, size_t);
 extern void free(void *);
 extern char *getenv(const char *);
 extern void *malloc(size_t);
+extern char *mktemp(char *);
 extern void *realloc(void *, size_t);
 extern float strtof(const char *, char **);
 extern double strtod(const char *, char **);

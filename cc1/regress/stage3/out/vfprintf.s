@@ -707,7 +707,7 @@ L293:
 	jmp L289
 
 L170:
- .byte 123,78,85,76,76,125,0
+	.byte 123,78,85,76,76,125,0
 
 .globl ___flushbuf
 .globl _vfprintf

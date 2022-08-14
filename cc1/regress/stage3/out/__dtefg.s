@@ -376,7 +376,7 @@ L135:
 	ret 
 
 L186:
- .byte 37,43,48,51,100,0
+	.byte 37,43,48,51,100,0
 
 .globl _sprintf
 .globl ___pow10

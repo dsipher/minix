@@ -97,9 +97,9 @@ L3:
 	ret 
 
 L8:
- .byte 0
+	.byte 0
 L7:
- .byte 80,65,84,72,0
+	.byte 80,65,84,72,0
 
 .globl _getenv
 .globl _execve

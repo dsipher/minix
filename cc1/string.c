@@ -190,7 +190,7 @@ void out_literal(struct string *s, int n)
             OUTC(',');
         else {
             if (i) OUTC('\n');
-            OUTS(" .byte ");
+            OUTS("\t.byte ");
         }
 
         out("%d", c & 0xFF);

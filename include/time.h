@@ -54,6 +54,12 @@ struct tm
     int tm_isdst;
 };
 
+struct timespec
+{
+    time_t tv_sec;      /* seconds */
+    long   tv_nsec;     /* nanoseconds */
+};
+
 extern char *asctime(const struct tm *);
 extern char *ctime(const time_t *);
 extern struct tm *localtime(const time_t *);

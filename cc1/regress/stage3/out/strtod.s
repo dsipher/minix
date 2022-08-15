@@ -248,14 +248,10 @@ L119:
 	testl %eax,%eax
 	jz L125
 L124:
-	movl -24(%rbp),%eax
-	subl %ecx,%eax
-	jmp L161
+	subl %ecx,-24(%rbp)
+	jmp L92
 L125:
-	movl -24(%rbp),%eax
-	addl %ecx,%eax
-L161:
-	movl %eax,-24(%rbp)
+	addl %ecx,-24(%rbp)
 L92:
 	decq %r15
 	movq %r15,-16(%rbp)
@@ -295,9 +291,9 @@ L27:
 	cmpq $0,-8(%rbp)
 	jz L138
 L136:
-	movq -8(%rbp),%rax
-	movq -16(%rbp),%r15
-	movq %r15,(%rax)
+	movq -8(%rbp),%rcx
+	movq -16(%rbp),%rax
+	movq %rax,(%rcx)
 L138:
 	testl $32,%ebx
 	jnz L139

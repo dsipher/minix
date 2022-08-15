@@ -2626,21 +2626,20 @@ L1339:
 	testq $1,(%rdi)
 	jz L1342
 L1341:
-	xorl %eax,%eax
-	jmp L1391
+	movq $0,-8(%rbp)
+	jmp L1343
 L1342:
 	call _temp
-L1391:
 	movq %rax,-8(%rbp)
+L1343:
 	movl 4(%r15),%esi
 	movl $-1493172218,%edi
 	call _new_insn
 	movq %rax,%r14
-	xorl %r13d,%r13d
-L1392:
-	movl %r13d,-20(%rbp)
-	movl -20(%rbp),%r13d
-	cmpl 4(%r15),%r13d
+	movl $0,-20(%rbp)
+L1344:
+	movl -20(%rbp),%eax
+	cmpl 4(%r15),%eax
 	jge L1347
 L1345:
 	movl -20(%rbp),%r13d
@@ -2699,9 +2698,8 @@ L1351:
 	orl %eax,%ecx
 	movl %ecx,12(%r14,%r13)
 L1353:
-	movl -20(%rbp),%r13d
-	incl %r13d
-	jmp L1392
+	incl -20(%rbp)
+	jmp L1344
 L1347:
 	movq 16(%r15),%rdi
 	call _gen0
@@ -2772,19 +2770,20 @@ L1340:
 	ret 
 
 .align 2
-L1514:
+L1512:
+	.short L1444-_gen0
 	.short L1446-_gen0
-	.short L1448-_gen0
-	.short L1395-_gen0
-	.short L1395-_gen0
-	.short L1395-_gen0
+	.short L1393-_gen0
+	.short L1393-_gen0
+	.short L1393-_gen0
+	.short L1454-_gen0
 	.short L1456-_gen0
 	.short L1458-_gen0
-	.short L1460-_gen0
-	.short L1467-_gen0
-	.short L1467-_gen0
+	.short L1465-_gen0
+	.short L1465-_gen0
 .align 2
-L1515:
+L1513:
+	.short L1428-_gen0
 	.short L1430-_gen0
 	.short L1432-_gen0
 	.short L1434-_gen0
@@ -2792,72 +2791,71 @@ L1515:
 	.short L1438-_gen0
 	.short L1440-_gen0
 	.short L1442-_gen0
-	.short L1444-_gen0
-	.short L1395-_gen0
-	.short L1395-_gen0
+	.short L1393-_gen0
+	.short L1393-_gen0
+	.short L1448-_gen0
 	.short L1450-_gen0
 	.short L1452-_gen0
-	.short L1454-_gen0
-	.short L1395-_gen0
-	.short L1395-_gen0
-	.short L1395-_gen0
-	.short L1395-_gen0
-	.short L1395-_gen0
-	.short L1467-_gen0
-	.short L1467-_gen0
-	.short L1467-_gen0
-	.short L1467-_gen0
-	.short L1470-_gen0
+	.short L1393-_gen0
+	.short L1393-_gen0
+	.short L1393-_gen0
+	.short L1393-_gen0
+	.short L1393-_gen0
+	.short L1465-_gen0
+	.short L1465-_gen0
+	.short L1465-_gen0
+	.short L1465-_gen0
+	.short L1468-_gen0
+	.short L1468-_gen0
 	.short L1470-_gen0
 	.short L1472-_gen0
 	.short L1474-_gen0
 	.short L1476-_gen0
 	.short L1478-_gen0
 	.short L1480-_gen0
-	.short L1482-_gen0
 .align 2
-L1516:
+L1514:
+	.short L1418-_gen0
 	.short L1420-_gen0
 	.short L1422-_gen0
 	.short L1424-_gen0
 	.short L1426-_gen0
-	.short L1428-_gen0
 .align 2
-L1517:
+L1515:
+	.short L1402-_gen0
 	.short L1404-_gen0
 	.short L1406-_gen0
 	.short L1408-_gen0
 	.short L1410-_gen0
 	.short L1412-_gen0
 	.short L1414-_gen0
-	.short L1416-_gen0
 
 _gen0:
-L1393:
+L1391:
 	pushq %rbx
-L1394:
+L1392:
 	movq %rdi,%rbx
 	movl (%rbx),%ecx
 	cmpl $17,%ecx
-	jl L1490
-L1492:
+	jl L1488
+L1490:
 	cmpl $46,%ecx
-	jg L1490
-L1489:
+	jg L1488
+L1487:
 	addl $-17,%ecx
-	movzwl L1515(,%rcx,2),%ecx
+	movzwl L1513(,%rcx,2),%ecx
 	addl $_gen0,%ecx
 	jmp *%rcx
-L1482:
-	movl $822083623,%esi
-	jmp L1522
 L1480:
+	movl $822083623,%esi
+	jmp L1520
+L1478:
 	movl $855638054,%esi
-L1522:
+L1520:
 	movq %rbx,%rdi
 	call _gen_blk
-	jmp L1395
-L1478:
+	jmp L1393
+L1476:
 	movq 16(%rbx),%rdi
 	call _gen0
 	movq %rax,16(%rbx)
@@ -2865,8 +2863,8 @@ L1478:
 	call _gen0
 	movq %rax,24(%rbx)
 	movl $_void_tree,%eax
-	jmp L1395
-L1476:
+	jmp L1393
+L1474:
 	movq 16(%rbx),%rdi
 	call _gen0
 	movq %rax,16(%rbx)
@@ -2875,209 +2873,209 @@ L1476:
 	movq %rax,24(%rbx)
 	movq %rbx,%rdi
 	call _chop_right
-	jmp L1395
-L1474:
+	jmp L1393
+L1472:
 	movq 16(%rbx),%rdi
 	call _gen0
 	movq %rax,16(%rbx)
 	movq 24(%rbx),%rdi
 	call _gen0
 	movq %rax,24(%rbx)
-	jmp L1488
-L1472:
-	movq %rbx,%rdi
-	call _gen_ternary
-	jmp L1395
+	jmp L1486
 L1470:
 	movq %rbx,%rdi
+	call _gen_ternary
+	jmp L1393
+L1468:
+	movq %rbx,%rdi
 	call _gen_log
-	jmp L1395
-L1454:
-	movl $-1275068396,%esi
-	jmp L1521
+	jmp L1393
 L1452:
-	movl $-1275068397,%esi
-	jmp L1521
-L1450:
-	movl $-1342177265,%esi
-	jmp L1521
-L1444:
-	movl $-1275068398,%esi
-	jmp L1521
-L1442:
-	movl $-1342177263,%esi
-	jmp L1521
-L1440:
-	jmp L1520
-L1438:
-	movl $-1275068393,%esi
-	jmp L1519
-L1436:
-	movl $-1275068394,%esi
-	jmp L1519
-L1434:
-	movl $-1275068395,%esi
-	jmp L1519
-L1432:
-	movl $-1275068397,%esi
-	jmp L1519
-L1430:
 	movl $-1275068396,%esi
 	jmp L1519
-L1490:
+L1450:
+	movl $-1275068397,%esi
+	jmp L1519
+L1448:
+	movl $-1342177265,%esi
+	jmp L1519
+L1442:
+	movl $-1275068398,%esi
+	jmp L1519
+L1440:
+	movl $-1342177263,%esi
+	jmp L1519
+L1438:
+	jmp L1518
+L1436:
+	movl $-1275068393,%esi
+	jmp L1517
+L1434:
+	movl $-1275068394,%esi
+	jmp L1517
+L1432:
+	movl $-1275068395,%esi
+	jmp L1517
+L1430:
+	movl $-1275068397,%esi
+	jmp L1517
+L1428:
+	movl $-1275068396,%esi
+	jmp L1517
+L1488:
 	cmpl $536870937,%ecx
-	jl L1494
-L1496:
+	jl L1492
+L1494:
 	cmpl $536870946,%ecx
-	jg L1494
-L1493:
+	jg L1492
+L1491:
 	addl $-536870937,%ecx
-	movzwl L1514(,%rcx,2),%ecx
+	movzwl L1512(,%rcx,2),%ecx
 	addl $_gen0,%ecx
 	jmp *%rcx
-L1467:
+L1465:
 	movq %rbx,%rdi
 	call _gen_rel
-	jmp L1395
-L1460:
-	movl $-1275068394,%esi
-	jmp L1521
+	jmp L1393
 L1458:
-	movl $-1275068395,%esi
-	jmp L1521
+	movl $-1275068394,%esi
+	jmp L1519
 L1456:
+	movl $-1275068395,%esi
+	jmp L1519
+L1454:
 	movl $-1275068393,%esi
-	jmp L1521
-L1448:
-	movl $-1342177266,%esi
-	jmp L1521
+	jmp L1519
 L1446:
+	movl $-1342177266,%esi
+	jmp L1519
+L1444:
 	movl $-1342177264,%esi
-L1521:
+L1519:
 	movq %rbx,%rdi
 	call _gen_binary
-	jmp L1395
-L1494:
+	jmp L1393
+L1492:
 	cmpl $1073741828,%ecx
-	jl L1498
-L1500:
+	jl L1496
+L1498:
 	cmpl $1073741834,%ecx
-	jg L1498
-L1497:
+	jg L1496
+L1495:
 	addl $-1073741828,%ecx
-	movzwl L1517(,%rcx,2),%ecx
+	movzwl L1515(,%rcx,2),%ecx
 	addl $_gen0,%ecx
 	jmp *%rcx
-L1416:
+L1414:
 	movq %rbx,%rdi
 	call _chop
 	movq %rax,%rdi
 	call _gen0
-	jmp L1395
-L1414:
-	movl $-1543503859,%esi
-	jmp L1518
+	jmp L1393
 L1412:
-	movl $-1610612724,%esi
-	jmp L1518
+	movl $-1543503859,%esi
+	jmp L1516
 L1410:
-	movq %rbx,%rdi
-	call _gen_addrof
-	jmp L1395
+	movl $-1610612724,%esi
+	jmp L1516
 L1408:
 	movq %rbx,%rdi
-	call _gen_cast
-	jmp L1395
+	call _gen_addrof
+	jmp L1393
 L1406:
 	movq %rbx,%rdi
+	call _gen_cast
+	jmp L1393
+L1404:
+	movq %rbx,%rdi
 	call _gen_call
-	jmp L1395
-L1498:
+	jmp L1393
+L1496:
 	cmpl $134217740,%ecx
-	jl L1502
-L1504:
+	jl L1500
+L1502:
 	cmpl $134217744,%ecx
-	jg L1502
-L1501:
+	jg L1500
+L1499:
 	addl $-134217740,%ecx
-	movzwl L1516(,%rcx,2),%ecx
+	movzwl L1514(,%rcx,2),%ecx
 	addl $_gen0,%ecx
 	jmp *%rcx
-L1428:
-	movl $-1342177265,%esi
-	jmp L1519
 L1426:
-L1520:
-	movl $-1342177266,%esi
-	jmp L1519
+	movl $-1342177265,%esi
+	jmp L1517
 L1424:
-	movl $-1275068398,%esi
-	jmp L1519
+L1518:
+	movl $-1342177266,%esi
+	jmp L1517
 L1422:
-	movl $-1342177263,%esi
-	jmp L1519
+	movl $-1275068398,%esi
+	jmp L1517
 L1420:
+	movl $-1342177263,%esi
+	jmp L1517
+L1418:
 	movl $-1342177264,%esi
-L1519:
+L1517:
 	movq %rbx,%rdi
 	call _gen_compound
-	jmp L1395
-L1502:
+	jmp L1393
+L1500:
 	cmpl $-2147483648,%ecx
-	jz L1488
-L1506:
-	cmpl $-2147483646,%ecx
-	jz L1488
-L1507:
-	cmpl $-1879048191,%ecx
-	jz L1488
-L1508:
-	cmpl $11,%ecx
-	jz L1418
-L1509:
-	cmpl $1073741871,%ecx
-	jz L1484
-L1510:
-	cmpl $1073741872,%ecx
 	jz L1486
-L1511:
+L1504:
+	cmpl $-2147483646,%ecx
+	jz L1486
+L1505:
+	cmpl $-1879048191,%ecx
+	jz L1486
+L1506:
+	cmpl $11,%ecx
+	jz L1416
+L1507:
+	cmpl $1073741871,%ecx
+	jz L1482
+L1508:
+	cmpl $1073741872,%ecx
+	jz L1484
+L1509:
 	cmpl $1342177283,%ecx
-	jnz L1395
-L1404:
+	jnz L1393
+L1402:
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _gen_fetch
-	jmp L1395
-L1486:
-	movl $-1543503835,%esi
-	jmp L1518
+	jmp L1393
 L1484:
+	movl $-1543503835,%esi
+	jmp L1516
+L1482:
 	movl $-1543503836,%esi
-L1518:
+L1516:
 	movq %rbx,%rdi
 	call _gen_unary
-	jmp L1395
-L1418:
+	jmp L1393
+L1416:
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _gen_assign
-	jmp L1395
-L1488:
+	jmp L1393
+L1486:
 	movq %rbx,%rax
-L1395:
+L1393:
 	popq %rbx
 	ret 
 
 
 _gen:
-L1523:
-L1524:
+L1521:
+L1522:
 	call _simplify
 	movq %rax,%rdi
 	call _rewrite_volatiles
 	movq %rax,%rdi
 	call _gen0
-L1525:
+L1523:
 	ret 
 
 

@@ -748,7 +748,7 @@ L107:
 	movslq %ebx,%rbx
 	movswl _bigfsm(%rax,%rbx,2),%ebx
 	cmpl $0,%ebx
-	jge L194
+	jge L193
 L113:
 	notl %ebx
 L115:
@@ -787,7 +787,7 @@ L175:
 	subq 16(%r14),%r13
 	subq %r13,32(%r15)
 	movq 16(%r14),%r13
-	jmp L194
+	jmp L193
 L127:
 	movq %r13,%rax
 	subq 16(%r14),%rax
@@ -829,7 +829,7 @@ L125:
 	shll %cl,%eax
 	andl %edx,%eax
 	orl %eax,-4(%rbp)
-	jmp L193
+	jmp L192
 L171:
 	pushq $L172
 	pushq $2
@@ -847,7 +847,7 @@ L120:
 L195:
 	subq 16(%r14),%rax
 	movl %eax,8(%r14)
-L193:
+L192:
 	addq $24,%r14
 	jmp L103
 L167:
@@ -863,27 +863,27 @@ L169:
 	incl 12(%r15)
 	incq %r13
 	movq %r13,24(%r15)
-	jmp L191
+	jmp L194
 L153:
 	movb $0,(%r14)
 	movl $0,8(%r14)
 	movq %r13,24(%r15)
 	movq -16(%rbp),%rax
 	cmpq 8(%rax),%r14
-	jz L191
+	jz L194
 L161:
 	cmpb $6,-24(%r14)
-	jz L191
+	jz L194
 L162:
 	movq _cursource(%rip),%rax
 	cmpq $0,40(%rax)
-	jz L191
+	jz L194
 L158:
 	pushq $L165
 	pushq $0
 	call _error
 	addq $16,%rsp
-L191:
+L194:
 	addq $24,%r14
 	movq -16(%rbp),%rax
 	movq %r14,16(%rax)
@@ -899,7 +899,7 @@ L89:
 	ret 
 L116:
 	testl $64,%ebx
-	jz L194
+	jz L193
 L131:
 	andl $-65,%ebx
 	movq %r13,24(%r15)
@@ -921,7 +921,7 @@ L143:
 	pushq $0
 	call _error
 	addq $16,%rsp
-	jmp L194
+	jmp L193
 L133:
 	movq %r15,%rdi
 	call _trigraph
@@ -930,7 +930,7 @@ L133:
 L185:
 	movl -28(%rbp),%ebx
 	jmp L107
-L194:
+L193:
 	incq %r13
 	jmp L107
 

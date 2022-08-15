@@ -303,23 +303,22 @@ L132:
 	jnz L126
 L125:
 	movq 64(%r15),%rax
-	movq 16(%rax),%rcx
-	movq %rcx,-8(%rbp)
-	xorl %eax,%eax
-L171:
-	movl %eax,-12(%rbp)
+	movq 16(%rax),%rax
+	movq %rax,-8(%rbp)
+	movl $0,-12(%rbp)
+L138:
 	movq -8(%rbp),%rcx
 	movl -12(%rbp),%eax
 	cmpl 556(%rcx),%eax
 	jge L107
 L139:
-	movq -8(%rbp),%rcx
-	movq 560(%rcx),%rcx
+	movq -8(%rbp),%rax
+	movq 560(%rax),%rcx
 	movslq -12(%rbp),%rax
-	movq (%rcx,%rax,8),%rax
-	movq -8(%rbp),%rcx
-	movq %rax,576(%rcx)
-	movq (%rax),%rbx
+	movq (%rcx,%rax,8),%rcx
+	movq -8(%rbp),%rax
+	movq %rcx,576(%rax)
+	movq (%rcx),%rbx
 	cmpl $0,_tmp_regs(%rip)
 	jl L146
 L145:
@@ -426,9 +425,8 @@ L168:
 L170:
 	orl $132,_opt_request(%rip)
 L157:
-	movl -12(%rbp),%eax
-	incl %eax
-	jmp L171
+	incl -12(%rbp)
+	jmp L138
 L107:
 	movq %r15,%rdi
 	call _eval
@@ -444,8 +442,8 @@ L103:
 
 
 _opt_lir_hoist:
-L172:
-L175:
+L171:
+L174:
 	movl $0,_defd_regs(%rip)
 	movl $0,_defd_regs+4(%rip)
 	movq $0,_defd_regs+8(%rip)
@@ -459,24 +457,24 @@ L175:
 	movq $0,_tmp2_regs+8(%rip)
 	movq $_local_arena,_tmp2_regs+16(%rip)
 	movq _all_blocks(%rip),%rax
-L184:
+L183:
 	testq %rax,%rax
-	jz L187
-L188:
+	jz L186
+L187:
 	movl $0,552(%rax)
 	movl $0,556(%rax)
 	movq $0,560(%rax)
 	movq $_local_arena,568(%rax)
 	movq 112(%rax),%rax
-	jmp L184
-L187:
+	jmp L183
+L186:
 	movl $_hoist0,%edx
 	xorl %esi,%esi
 	xorl %edi,%edi
 	call _walk_blocks
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)
-L174:
+L173:
 	ret 
 
 .local _defd_regs

@@ -586,8 +586,8 @@ L245:
 	movq %rdi,%r15
 	movq %rsi,-40(%rbp)
 	movq %rdx,-48(%rbp)
-	movq -48(%rbp),%rcx
-	movl $-1,(%rcx)
+	movq -48(%rbp),%rax
+	movl $-1,(%rax)
 	movl $1,%r14d
 	xorl %ebx,%ebx
 L247:
@@ -616,8 +616,8 @@ L260:
 	jz L247
 	jnz L324
 L258:
-	movq -48(%rbp),%rcx
-	movl $0,(%rcx)
+	movq -48(%rbp),%rax
+	movl $0,(%rax)
 	incl %ebx
 	movl %ebx,%r13d
 	addq $24,(%r15)
@@ -716,8 +716,8 @@ L315:
 	cmpb $22,-24(%rbx)
 	jz L292
 L304:
-	movq -48(%rbp),%rcx
-	cmpl $31,(%rcx)
+	movq -48(%rbp),%rax
+	cmpl $31,(%rax)
 	jl L321
 L319:
 	pushq $L322

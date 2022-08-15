@@ -614,12 +614,17 @@ again:
     return lowest;
 }
 
-/* we need to spill a web. pick the one with the lowest spill cost (above).
-   we spill the entire web, inserting loads and stores using a new temporary
-   we allocate here. we don't re-use the pseudo-reg being spilled or its
-   storage (if it has any), which is suboptimal, as that's often possible.
-   we would need to constrain coalescing to make that safe; we'll need to
-   determine, empirically, if it's worth the effort to make that happen. */
+/* spill the web with the lowest cost. we allocate a new temporary with frame
+   storage and replace all mentions of the web with the temp, inserting loads
+   before uses and stores after defs to keep the value in memory. we make no
+   attempt to be clever, instead relying on interleaved optimizers to clean
+   up excessive memory traffic (OPT_MCH_CSE, which doesn't exist yet...) */
+
+#define NEXT_SPILL_SUB()    do {                                            \
+                                ++sub;                                      \
+                                REG_SET_SUB(new, sub);                      \
+                                REG_OPERAND(&reg, 0, t, new);               \
+                            } while (0)
 
 static void spill0(void)
 {
@@ -632,53 +637,58 @@ static void spill0(void)
     long t;
     int old, new;
     int i, j;
+    int sub = 0;
 
     n = cost0();
     old = n->reg;
 
-    /* allocate a temporary for the inserted loads and stores.
-       we perform all loads and stores using the type of the
-       node's underlying symbol, which is guaranteed to be
-       large enough. build its frame address into addr. */
+    /* allocate the temp for the inserted loads and stores.
+       we perform all memory operations using the type of
+       the node's underlying symbol, which is guaranteed to
+       be large enough. build its frame address into addr. */
 
     sym = temp(REG_TO_SYMBOL(old)->type);
     new = symbol_to_reg(sym);
     t = TYPE_BASE(sym->type);
-    REG_OPERAND(&reg, 0, t, new);
     BASED_OPERAND(&addr, 0, t, O_MEM, REG_RBP, symbol_offset(sym));
     sym->s |= S_NOSPILL; /* automatically disqualified */
 
-    /* now replace all occurrences of the spilled reg old with
-       new, inserting load-before-use and store-after-def insns. */
+    /* now perform the replacement. note that reach_analyze() has already
+       been run and can't be repeated, so we must split the temp into webs
+       `manually' or it will appear overly constrained in the interference
+       graph. we achieve this, at least partially, by assigning a unique
+       sub to the temp in each block in which it appears. */
 
     FOR_EACH_BLOCK(n->blocks, j, b) {
+        NEXT_SPILL_SUB();
+
         FOR_EACH_INSN(b, i, insn) {
-            TRUNC_VECTOR(tmp_regs);             /* remember if the */
-            insn_uses(insn, &tmp_regs, 0);      /* insn USEs the reg */
-
-            /* if the insn DEFs the reg, insert a store afterward.
-               if the reg is an update operand, this might also
-               substitute out the only USE, hence the above */
-
-            if (insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_DEFS))
-                insert_insn(move(t, &addr, &reg), b, i + 1);
-
-            /* if the insn USEs the reg, insert a load beforehand. if
-               this fails, but we know the insn USEd the reg, it is an
-               update operand, and we want the type from the DEF operand. */
-
-            insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_USES);
+            TRUNC_VECTOR(tmp_regs);             /* insert load before USE */
+            insn_uses(insn, &tmp_regs, 0);
 
             if (contains_reg(&tmp_regs, old)) {
                 insert_insn(move(t, &reg, &addr), b, i);
-                ++i;  /* we moved the current insn, don't re-examine it */
+                ++i;  /* bumped current insn */
             }
+
+            TRUNC_VECTOR(tmp_regs);             /* insert store after DEF */
+            insn_defs(insn, &tmp_regs, 0);
+
+            if (contains_reg(&tmp_regs, old))
+                insert_insn(move(t, &addr, &reg), b, i + 1);
+
+            /* and rewrite. we do this last so substitutions
+               of updated operands don't confuse us above */
+
+            insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_USES |
+                                                INSN_SUBSTITUTE_DEFS);
         }
 
         if (SWITCH_BLOCK(b)             /* spilling the reg used as */
           && OPERAND_REG(&b->control)   /* the branch target would be */
-          && (b->control.reg == old))   /* stupid, but it's possible, so .. */
+          && (b->control.reg == old))   /* stupid, but it's possible */
         {
+            NEXT_SPILL_SUB();
             append_insn(move(t, &reg, &addr), b);
             b->control.reg = new;
         }

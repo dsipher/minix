@@ -1167,9 +1167,9 @@ L543:
 	call _new_block
 	movq %rax,-64(%rbp)
 	call _new_block
-	movq %rax,%rbx
-	call _new_block
 	movq %rax,-80(%rbp)
+	call _new_block
+	movq %rax,%rbx
 	movl $1,%edi
 	call _seg
 	movl _last_asmlab(%rip),%esi
@@ -1315,11 +1315,11 @@ L556:
 	movq -64(%rbp),%rsi
 	movq %r14,%rdi
 	call _append_insn
-	movq %rbx,%rdx
+	movq -80(%rbp),%rdx
 	xorl %esi,%esi
 	movq -64(%rbp),%rdi
 	call _add_succ
-	movq -80(%rbp),%rdx
+	movq %rbx,%rdx
 	movl $1,%esi
 	movq -64(%rbp),%rdi
 	call _add_succ
@@ -1339,7 +1339,7 @@ L556:
 	movq -16(%rbp),%rcx
 	movq %rcx,56(%rax)
 	movq $0,64(%rax)
-	movq -80(%rbp),%rsi
+	movq %rbx,%rsi
 	movq %rax,%rdi
 	call _append_insn
 	xorl %esi,%esi
@@ -1361,17 +1361,17 @@ L556:
 	movq -24(%rbp),%rcx
 	movq %rcx,56(%rax)
 	movq $0,64(%rax)
-	movq -80(%rbp),%rsi
+	movq %rbx,%rsi
 	movq %rax,%rdi
 	call _append_insn
 	movq -64(%rbp),%rdx
 	movl $11,%esi
-	movq -80(%rbp),%rdi
+	movq %rbx,%rdi
 	call _add_succ
 	movq 64(%r13),%rax
 	movq 16(%rax),%rdx
 	movl $10,%esi
-	movq -80(%rbp),%rdi
+	movq %rbx,%rdi
 	call _add_succ
 	cmpl $0,-36(%rbp)
 	jz L687
@@ -1417,7 +1417,7 @@ L687:
 	movq $0,56(%rax)
 	movq -48(%rbp),%rcx
 	movq %rcx,64(%rax)
-	movq %rbx,%rsi
+	movq -80(%rbp),%rsi
 	movq %rax,%rdi
 	call _append_insn
 	xorl %esi,%esi
@@ -1437,20 +1437,23 @@ L687:
 	movq _current_func(%rip),%rcx
 L790:
 	movq %rcx,64(%rax)
-	movq %rbx,%rsi
+	movq -80(%rbp),%rsi
 	movq %rax,%rdi
 	call _append_insn
 	movq %r13,%rsi
-	movq %rbx,%rdi
+	movq -80(%rbp),%rdi
 	call _dup_succs
-	movl 80(%rbx),%eax
-	andl $-8,%eax
-	orl $1,%eax
+	movq -80(%rbp),%rax
+	movl 80(%rax),%edx
+	andl $-8,%edx
+	orl $1,%edx
 	movl -68(%rbp),%ecx
-	movl %ecx,88(%rbx)
-	andl $-4194273,%eax
-	orl $8192,%eax
-	movl %eax,80(%rbx)
+	movq -80(%rbp),%rax
+	movl %ecx,88(%rax)
+	andl $-4194273,%edx
+	orl $8192,%edx
+	movq -80(%rbp),%rax
+	movl %edx,80(%rax)
 	movq %r13,%rdi
 	call _remove_succs
 	movq -64(%rbp),%rdx

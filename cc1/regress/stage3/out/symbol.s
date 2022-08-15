@@ -631,21 +631,20 @@ L231:
 	pushq %r15
 L232:
 	movq %rdi,-8(%rbp)
-	movq %rsi,%r15
-	movq %rdx,%r14
+	movq %rsi,-16(%rbp)
+	movq %rdx,%r15
 	movq -8(%rbp),%rcx
 	movl _current_scope(%rip),%edx
 	movl $2048,%esi
-	movq %r15,%rdi
+	movq -16(%rbp),%rdi
 	call _unique
-	movq %r14,%rdi
+	movq %r15,%rdi
 	call _align_of
-	movl %eax,-12(%rbp)
+	movl %eax,%r14d
 	movq -8(%rbp),%rax
 	movl 36(%rax),%ecx
-	cmpl %ecx,-12(%rbp)
-	movl -12(%rbp),%eax
-	cmovgel %eax,%ecx
+	cmpl %ecx,%r14d
+	cmovgel %r14d,%ecx
 	movq -8(%rbp),%rax
 	movl %ecx,36(%rax)
 	movq -8(%rbp),%rax
@@ -664,29 +663,29 @@ L239:
 	jz L242
 L240:
 	pushq $L243
-	pushq %r15
+	pushq -16(%rbp)
 	pushq $4
 	call _error
 	addq $24,%rsp
 L242:
-	movq (%r14),%rax
+	movq (%r15),%rax
 	testq $131072,%rax
 	jnz L244
 L247:
 	testq $8192,%rax
 	jz L246
 L251:
-	movq 16(%r14),%rax
+	movq 16(%r15),%rax
 	testl $4194304,12(%rax)
 	jz L246
 L244:
 	movq -8(%rbp),%rax
 	orl $4194304,12(%rax)
 L246:
-	testq $16384,(%r14)
+	testq $16384,(%r15)
 	jz L256
 L258:
-	cmpl $0,16(%r14)
+	cmpl $0,16(%r15)
 	jnz L256
 L255:
 	xorl %r12d,%r12d
@@ -697,19 +696,19 @@ L255:
 	jnz L257
 L262:
 	pushq $L265
-	pushq %r15
+	pushq -16(%rbp)
 	pushq $4
 	call _error
 	addq $24,%rsp
 	jmp L257
 L256:
 	xorl %esi,%esi
-	movq %r14,%rdi
+	movq %r15,%rdi
 	call _size_of
 	shll $3,%eax
 	movl %eax,%r12d
 L257:
-	movq (%r14),%rcx
+	movq (%r15),%rcx
 	movq $549755813888,%rax
 	testq %rcx,%rax
 	jz L267
@@ -749,12 +748,12 @@ L271:
 	movq %r13,%rax
 	cqto 
 	idivq %r12
-	movq %r14,%rdi
+	movq %r15,%rdi
 	call _fieldify
-	movq %rax,%r14
+	movq %rax,%r15
 	jmp L268
 L267:
-	movl -12(%rbp),%ecx
+	movl %r14d,%ecx
 	shll $3,%ecx
 	movl %ecx,%eax
 	decl %eax
@@ -771,11 +770,11 @@ L268:
 	movq %r13,%rax
 	cqto 
 	idivq %rcx
-	movslq -12(%rbp),%rcx
+	movslq %r14d,%rcx
 	cqto 
 	idivq %rcx
 	movl %eax,%r12d
-	imull -12(%rbp),%r12d
+	imull %r14d,%r12d
 	movq -8(%rbp),%rax
 	testl $2,12(%rax)
 	jz L277
@@ -803,13 +802,13 @@ L282:
 	call _error
 	addq $32,%rsp
 L284:
-	testq %r15,%r15
+	cmpq $0,-16(%rbp)
 	jnz L288
 L286:
-	testq $8192,(%r14)
+	testq $8192,(%r15)
 	jz L233
 L292:
-	movq 16(%r14),%rsi
+	movq 16(%r15),%rsi
 	cmpq $0,(%rsi)
 	jnz L233
 L289:
@@ -818,10 +817,11 @@ L289:
 	call _absorb
 L288:
 	movl $2048,%esi
-	movq %r15,%rdi
+	movq -16(%rbp),%rdi
 	call _new_symbol
-	movq %r15,(%rax)
-	movq %r14,32(%rax)
+	movq -16(%rbp),%rcx
+	movq %rcx,(%rax)
+	movq %r15,32(%rax)
 	movl %r12d,48(%rax)
 	movl _current_scope(%rip),%esi
 	movq %rax,%rdi

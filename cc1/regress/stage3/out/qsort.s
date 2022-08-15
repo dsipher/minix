@@ -56,8 +56,8 @@ L14:
 	movq %rsi,-8(%rbp)
 	movq %rdx,%r15
 L16:
-	movq -16(%rbp),%rbx
-	cmpq -8(%rbp),%rbx
+	movq -16(%rbp),%rax
+	cmpq -8(%rbp),%rax
 	jae L15
 L22:
 	movq -16(%rbp),%r14

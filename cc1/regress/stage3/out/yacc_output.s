@@ -473,19 +473,19 @@ L118:
 	movq (%rsi),%rsi
 	jmp L112
 L115:
-	movslq %r14d,%rcx
-	movq %rcx,-8(%rbp)
-	movq _tally(%rip),%rax
-	movq -8(%rbp),%rcx
-	movw %r13w,(%rax,%rcx,2)
+	movslq %r14d,%rax
+	movq %rax,-8(%rbp)
+	movq _tally(%rip),%rcx
+	movq -8(%rbp),%rax
+	movw %r13w,(%rcx,%rax,2)
 	movl _nstates(%rip),%eax
 	addl %r14d,%eax
 	movslq %eax,%rax
 	movq _tally(%rip),%rcx
 	movw %bx,(%rcx,%rax,2)
-	movq _width(%rip),%rax
-	movq -8(%rbp),%rcx
-	movw $0,(%rax,%rcx,2)
+	movq _width(%rip),%rcx
+	movq -8(%rbp),%rax
+	movw $0,(%rcx,%rax,2)
 	movl _nstates(%rip),%eax
 	addl %r14d,%eax
 	movslq %eax,%rax

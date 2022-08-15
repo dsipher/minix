@@ -55,8 +55,8 @@ L17:
 	incq %rsi
 	leaq -256(%rbp),%rdi
 	call _strncpy
-	xorl %eax,%eax
-	jmp L102
+	movl $0,-516(%rbp)
+	jmp L19
 L18:
 	cmpb $33,%al
 	jnz L7
@@ -87,9 +87,8 @@ L31:
 	movq %rax,(%r15)
 	jmp L26
 L28:
-	movl $1,%eax
-L102:
-	movl %eax,-516(%rbp)
+	movl $1,-516(%rbp)
+L19:
 	movq (%r15),%rax
 	addq $48,%rax
 	movq %rax,(%r15)
@@ -241,25 +240,25 @@ L3:
 
 .data
 .align 8
-L106:
+L105:
 	.byte 1
 	.fill 23, 1, 0
 .align 8
-L107:
-	.quad L106
-	.quad L106
-	.quad L106+24
+L106:
+	.quad L105
+	.quad L105
+	.quad L105+24
 	.int 1
 	.fill 4, 1, 0
 .text
 
 _genline:
-L103:
+L102:
 	pushq %rbx
-L104:
+L103:
 	movq _outp(%rip),%rbx
-	movq %rbx,L106+16(%rip)
-	movl $L108,%esi
+	movq %rbx,L105+16(%rip)
+	movl $L107,%esi
 	movq %rbx,%rdi
 	call _strcpy
 	movq _cursource(%rip),%rax
@@ -280,22 +279,22 @@ L104:
 	leaq 4(%rbx,%rax),%rcx
 	movq %rcx,%rax
 	subq _outp(%rip),%rax
-	movl %eax,L106+8(%rip)
+	movl %eax,L105+8(%rip)
 	movq %rcx,_outp(%rip)
-	movq L107+8(%rip),%rax
-	movq %rax,L107(%rip)
-	movl $L107,%edi
+	movq L106+8(%rip),%rax
+	movq %rax,L106(%rip)
+	movl $L106,%edi
 	call _puttokens
-L105:
+L104:
 	popq %rbx
 	ret 
 
 
 _setobjname:
-L109:
+L108:
 	pushq %rbx
 	pushq %r12
-L110:
+L109:
 	movq %rdi,%r12
 	movq %r12,%rdi
 	call _strlen
@@ -312,17 +311,17 @@ L110:
 	movq _objname(%rip),%rdi
 	movslq %ebx,%rbx
 	cmpb $46,(%rax,%rdi)
-	jnz L113
-L112:
-	movl $L115,%esi
-	leaq -1(%rdi,%rbx),%rdi
-	jmp L116
-L113:
-	movl $L115,%esi
-	addq %rbx,%rdi
-L116:
-	call _strcpy
+	jnz L112
 L111:
+	movl $L114,%esi
+	leaq -1(%rdi,%rbx),%rdi
+	jmp L115
+L112:
+	movl $L114,%esi
+	addq %rbx,%rdi
+L115:
+	call _strcpy
+L110:
 	popq %r12
 	popq %rbx
 	ret 
@@ -332,7 +331,7 @@ L98:
 	.byte 116,32,102,105,110,100,32,105
 	.byte 110,99,108,117,100,101,32,102
 	.byte 105,108,101,32,37,114,0
-L108:
+L107:
 	.byte 35,108,105,110,101,32,0
 L90:
 	.byte 10,0
@@ -348,7 +347,7 @@ L49:
 	.byte 114,0
 L74:
 	.byte 47,0
-L115:
+L114:
 	.byte 36,79,58,32,0
 L100:
 	.byte 83,121,110,116,97,120,32,101

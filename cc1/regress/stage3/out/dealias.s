@@ -230,18 +230,17 @@ L108:
 	testq %r15,%r15
 	jz L111
 L109:
-	xorl %eax,%eax
-L204:
-	movl %eax,-24(%rbp)
+	movl $0,-24(%rbp)
+L112:
 	movl -24(%rbp),%eax
 	cmpl 12(%r15),%eax
 	jge L118
 L116:
-	movq 16(%r15),%rax
-	movslq -24(%rbp),%rcx
-	movq %rcx,-16(%rbp)
-	movq -16(%rbp),%rcx
-	movq (%rax,%rcx,8),%r14
+	movq 16(%r15),%rcx
+	movslq -24(%rbp),%rax
+	movq %rax,-16(%rbp)
+	movq -16(%rbp),%rax
+	movq (%rcx,%rax,8),%r14
 	testq %r14,%r14
 	jz L118
 L117:
@@ -402,9 +401,8 @@ L151:
 	incl %r13d
 	jmp L145
 L148:
-	movl -24(%rbp),%eax
-	incl %eax
-	jmp L204
+	incl -24(%rbp)
+	jmp L112
 L118:
 	movq 112(%r15),%r15
 	jmp L108

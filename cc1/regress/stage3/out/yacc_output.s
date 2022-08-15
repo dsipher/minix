@@ -719,14 +719,14 @@ L196:
 	shll $1,%r13d
 	movq %r13,%rdi
 	call _allocate
+	movq %rax,%r12
 	movq %rax,-16(%rbp)
-	movq -16(%rbp),%r12
-	movslq %ebx,%rcx
-	movq %rcx,-32(%rbp)
+	movslq %ebx,%rax
+	movq %rax,-32(%rbp)
 	movq _froms(%rip),%rdx
-	movq -16(%rbp),%rax
-	movq -32(%rbp),%rcx
-	movq %rax,(%rdx,%rcx,8)
+	movq -16(%rbp),%rcx
+	movq -32(%rbp),%rax
+	movq %rcx,(%rdx,%rax,8)
 	movq %r13,%rdi
 	call _allocate
 	movq _tos(%rip),%rdx
@@ -1035,26 +1035,26 @@ _pack_vector:
 L297:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $40,%rsp
+	subq $48,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
 L298:
+	movslq %edi,%rax
+	movq %rax,-40(%rbp)
 	movl %edi,-12(%rbp)
-	movslq -12(%rbp),%rcx
-	movq _order(%rip),%rax
-	movswl (%rax,%rcx,2),%eax
-	movq %rax,-32(%rbp)
-	movq -32(%rbp),%rax
+	movq _order(%rip),%rcx
+	movq -40(%rbp),%rax
+	movswl (%rcx,%rax,2),%eax
 	movslq %eax,%rax
 	movq %rax,-32(%rbp)
 	movq _tally(%rip),%rcx
 	movq -32(%rbp),%rax
 	movswl (%rcx,%rax,2),%eax
+	testl %eax,%eax
 	movl %eax,-16(%rbp)
-	cmpl $0,-16(%rbp)
 	jnz L302
 L300:
 	movl $472,%edx
@@ -1073,14 +1073,14 @@ L302:
 	movq -24(%rbp),%rax
 	movswl (%rax),%ecx
 	movl _lowzero(%rip),%eax
-	movl %eax,-36(%rbp)
-	subl %ecx,-36(%rbp)
+	subl %ecx,%eax
+	movl %eax,-44(%rbp)
 	movl $1,%edx
 L305:
 	cmpl %edx,-16(%rbp)
 	jg L306
 L312:
-	cmpl $0,-36(%rbp)
+	cmpl $0,-44(%rbp)
 	jz L314
 L318:
 	movl $1,%r14d
@@ -1092,7 +1092,7 @@ L321:
 	movslq %r15d,%rcx
 	movq -24(%rbp),%rax
 	movswl (%rax,%rcx,2),%ebx
-	addl -36(%rbp),%ebx
+	addl -44(%rbp),%ebx
 	cmpl _maxtable(%rip),%ebx
 	jl L330
 L328:
@@ -1163,7 +1163,7 @@ L352:
 	movslq %edx,%rcx
 	movq _pos(%rip),%rax
 	movswl (%rax,%rcx,2),%eax
-	cmpl %eax,-36(%rbp)
+	cmpl %eax,-44(%rbp)
 	movl $0,%eax
 	cmovzl %eax,%r14d
 	incl %edx
@@ -1172,7 +1172,7 @@ L354:
 	testl %r14d,%r14d
 	jnz L362
 L314:
-	incl -36(%rbp)
+	incl -44(%rbp)
 	jmp L312
 L362:
 	xorl %r8d,%r8d
@@ -1190,7 +1190,7 @@ L373:
 	movl %edx,_lowzero(%rip)
 	jmp L372
 L374:
-	movl -36(%rbp),%eax
+	movl -44(%rbp),%eax
 L299:
 	popq %r15
 	popq %r14
@@ -1204,7 +1204,7 @@ L366:
 	movslq %r8d,%rsi
 	movq -24(%rbp),%rax
 	movswl (%rax,%rsi,2),%edx
-	addl -36(%rbp),%edx
+	addl -44(%rbp),%edx
 	movq -8(%rbp),%rax
 	movw (%rax,%rsi,2),%ax
 	movslq %edx,%rcx
@@ -1227,10 +1227,10 @@ L306:
 	movswl (%rax,%rcx,2),%eax
 	movl _lowzero(%rip),%ecx
 	subl %eax,%ecx
-	cmpl %ecx,-36(%rbp)
-	movl -36(%rbp),%eax
+	movl -44(%rbp),%eax
+	cmpl %ecx,%eax
 	cmovll %ecx,%eax
-	movl %eax,-36(%rbp)
+	movl %eax,-44(%rbp)
 	incl %edx
 	jmp L305
 
@@ -2155,8 +2155,8 @@ L674:
 	movslq %edx,%rcx
 	movq _symbol_value(%rip),%rax
 	movswl (%rax,%rcx,2),%ecx
-	cmpl %ecx,-4(%rbp)
 	movl -4(%rbp),%eax
+	cmpl %ecx,%eax
 	cmovll %ecx,%eax
 	movl %eax,-4(%rbp)
 	incl %edx

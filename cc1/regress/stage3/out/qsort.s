@@ -62,7 +62,7 @@ L16:
 L22:
 	movq -16(%rbp),%r14
 	movq -8(%rbp),%r12
-	movq -8(%rbp),%rax
+	movq %r12,%rax
 	subq -16(%rbp),%rax
 	movq %r15,%rcx
 	shlq $1,%rcx

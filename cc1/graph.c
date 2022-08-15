@@ -616,22 +616,43 @@ again:
 
 /* spill the web with the lowest cost. we allocate a new temporary with frame
    storage and replace all mentions of the web with the temp, inserting loads
-   before uses and stores after defs to keep the value in memory. we make no
-   attempt to be clever, instead relying on interleaved optimizers to clean
-   up excessive memory traffic (OPT_MCH_CSE, which doesn't exist yet...) */
+   before uses and stores after defs to keep the value in memory. */
+
+#define NEXT_SPILL_SUB()        do {                                        \
+                                    ++sub;                                  \
+                                    REG_SET_SUB(new, sub);                  \
+                                    REG_OPERAND(&reg, 0, t, new);           \
+                                } while (0)
+
+/* we try to limit the number of memory operations by eliminating duplicate
+   loads and delaying stores as long as possible, without unduly extending
+   the live range of the temp (which would defeat the purpose of spilling). */
+
+#define SPILL_NONE      0   /* no temp is assigned; value unknown */
+#define SPILL_LOADED    1   /* value is in `new' and no store is needed */
+#define SPILL_DIRTY     2   /* value is in `new' and needs to be stored */
+
+#define SPILL_UNDIRTY()                                                     \
+    do {                                                                    \
+        if (state == SPILL_DIRTY)                                           \
+            insert_insn(move(t, &addr, &reg), b, i);                        \
+                                                                            \
+        state = SPILL_NONE;                                                 \
+    } while (0)
 
 static void spill0(void)
 {
     struct block *b;
     struct insn *insn;
-    struct node *n;
-    struct operand reg;
-    struct operand addr;
-    struct symbol *sym;
-    long t;
-    int old, new;
     int i, j;
-    int sub = 0;
+
+    struct node *n;         /* node being spilled */
+    int old;                /* ... and its register */
+    long t;                 /* ... and its type */
+    struct operand addr;    /* allocated spill location on frame */
+    struct symbol *sym;     /* symbol allocated for spill temp */
+    int new;                /* ... and its associated register */
+    int sub = 0;            /* ... and its current incarnation */
 
     n = cost0();
     old = n->reg;
@@ -645,40 +666,70 @@ static void spill0(void)
     new = symbol_to_reg(sym);
     t = TYPE_BASE(sym->type);
     BASED_OPERAND(&addr, 0, t, O_MEM, REG_RBP, symbol_offset(sym));
-    sym->s |= S_NOSPILL; /* automatically disqualified */
+    sym->s |= S_NOSPILL; /* never spill a temp we use for spilling */
 
     /* now perform the replacement. note that reach_analyze() has already
        been run and can't be repeated, so we must split the temp into webs
        `manually' or it will appear overly constrained in the interference
-       graph. we achieve this, at least partially, by assigning a unique
-       sub to the temp in each block in which it appears. */
+       graph. we achieve this by assigning a unique sub each time we start
+       a disjoint live range, effecting a similar result as reach_analyze() */
 
     FOR_EACH_BLOCK(n->blocks, j, b) {
-        ++sub;
-        REG_SET_SUB(new, sub);
-        REG_OPERAND(&reg, 0, t, new);
+        int state = SPILL_NONE;
+        struct operand reg;         /* for the spill reg */
 
         FOR_EACH_INSN(b, i, insn) {
-            TRUNC_VECTOR(tmp_regs);             /* insert load before USE */
-            insn_uses(insn, &tmp_regs, 0);
+            int used, defd;
 
-            if (contains_reg(&tmp_regs, old)) {
+            TRUNC_VECTOR(tmp_regs);
+            insn_uses(insn, &tmp_regs, 0);
+            used = contains_reg(&tmp_regs, old);
+
+            TRUNC_VECTOR(tmp_regs);
+            insn_defs(insn, &tmp_regs, 0);
+            defd = contains_reg(&tmp_regs, old);
+
+            if (used && state == SPILL_NONE) {
+                /* the insn references the spilled value,
+                   and we don't have it in a temp. thus we
+                   are starting a new live range, so bump
+                   the temp reg's sub, and load the value */
+
+                NEXT_SPILL_SUB();
                 insert_insn(move(t, &reg, &addr), b, i);
-                ++i;  /* bumped current insn */
+                ++i; /* we bumped the current insn */
+                state = SPILL_LOADED;
             }
 
-            TRUNC_VECTOR(tmp_regs);             /* insert store after DEF */
-            insn_defs(insn, &tmp_regs, 0);
+            if (defd) {
+                /* the insn defs the web. if we don't have a
+                   temp already, we need a place to put it */
 
-            if (contains_reg(&tmp_regs, old))
-                insert_insn(move(t, &addr, &reg), b, i + 1);
+                if (state == SPILL_NONE)
+                    NEXT_SPILL_SUB();
 
-            /* and rewrite. we do this last so substitutions
-               of updated operands don't confuse us above */
+                state = SPILL_DIRTY;    /* remember to store it */
+            }
 
-            insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_USES |
-                                                INSN_SUBSTITUTE_DEFS);
+            if (used || defd)
+                /* the web appeared in this insn, so let's
+                   substitute it with the current temporary */
+
+                insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_USES
+                                                  | INSN_SUBSTITUTE_DEFS);
+
+            else
+                /* the web did NOT appear in this insn. to avoid extending
+                   the live range of the temp too far, store it if necessary
+                   and then forget about it. */
+
+                SPILL_UNDIRTY();
         }
+
+        /* in case we fall off the end of the
+           block while still holding the value */
+
+        SPILL_UNDIRTY();
     }
 }
 

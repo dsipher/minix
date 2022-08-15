@@ -309,13 +309,13 @@ L11:
 	movl %r15d,%r12d
 	shrl $8,%r12d
 	andl $7,%r12d
-	movl %r15d,-44(%rbp)
-	shrl $11,-44(%rbp)
-	andl $63,-44(%rbp)
+	movl %r15d,%eax
+	shrl $11,%eax
+	andl $63,%eax
+	movl %eax,-44(%rbp)
 	xorl %r14d,%r14d
-	movslq %ebx,%rax
-	movq %rax,-32(%rbp)
-	movq -32(%rbp),%rcx
+	movslq %ebx,%rcx
+	movq %rcx,-32(%rbp)
 	shlq $6,%rcx
 	movslq %r12d,%rax
 	movq _filters(%rcx,%rax,8),%rax

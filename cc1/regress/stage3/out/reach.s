@@ -377,9 +377,8 @@ L120:
 	pushq %r14
 	pushq %r15
 L121:
+	movq 8(%rdi),%rax
 	movq %rdi,-8(%rbp)
-	movq -8(%rbp),%rax
-	movq 8(%rax),%rax
 	movl (%rax),%eax
 	movq %rax,-24(%rbp)
 	xorl %ebx,%ebx
@@ -452,8 +451,8 @@ L132:
 	movslq %ebx,%rax
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
+	addq %rax,%rdx
 	movq %rax,-16(%rbp)
-	addq -16(%rbp),%rdx
 	movq -8(%rbp),%rsi
 	movl $_merge_regs,%edi
 	call _union_regs
@@ -512,18 +511,15 @@ L155:
 	incl %r15d
 	jmp L149
 L133:
-	movq _webs+8(%rip),%rcx
+	movq _webs+8(%rip),%rdx
 	movq -24(%rbp),%rax
 	andl $1073725440,%eax
-	movq %rax,-24(%rbp)
-	movq -24(%rbp),%rax
 	sarl $14,%eax
-	movq %rax,-24(%rbp)
-	movq -24(%rbp),%rax
 	movslq %eax,%rax
+	leaq (%rax,%rax,2),%rcx
+	shlq $3,%rcx
 	movq %rax,-24(%rbp)
-	imulq $24,-24(%rbp),%rax
-	movq 8(%rcx,%rax),%rcx
+	movq 8(%rdx,%rcx),%rcx
 	movslq %ebx,%rbx
 	leaq (%rbx,%rbx,2),%rax
 	shlq $3,%rax

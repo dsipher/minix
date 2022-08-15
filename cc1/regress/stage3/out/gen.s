@@ -198,8 +198,10 @@ L131:
 L107:
 	movq %r14,%rdi
 	call _symbol_offset
-	movl -16(%rbp),%ecx
-	incl -16(%rbp)
+	movl -16(%rbp),%edx
+	movl %edx,%ecx
+	incl %edx
+	movl %edx,-16(%rbp)
 	movq -8(%rbp),%rdx
 	movl %eax,%esi
 	movl $_ulong_type,%edi
@@ -2649,9 +2651,8 @@ L1345:
 	movq 24(%r15),%rax
 	movslq -20(%rbp),%r12
 	movq (%rax,%r12,8),%rax
-	movq %rax,-16(%rbp)
-	movq -16(%rbp),%rax
 	movq 8(%rax),%rbx
+	movq %rax,-16(%rbp)
 	testq $8192,(%rbx)
 	jz L1350
 L1348:

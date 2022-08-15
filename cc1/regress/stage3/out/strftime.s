@@ -173,12 +173,13 @@ L34:
 	xorl %r14d,%r14d
 L36:
 	movq -40(%rbp),%rax
-	movb (%rax),%cl
-	incq -40(%rbp)
+	movb (%rax),%dl
+	incq %rax
+	movq %rax,-40(%rbp)
 	leaq -1(%rbp),%rax
 	movq %rax,-24(%rbp)
-	movb %cl,-1(%rbp)
-	cmpb $37,%cl
+	movb %dl,-1(%rbp)
+	cmpb $37,%dl
 	jz L41
 L40:
 	incq %r14
@@ -186,8 +187,10 @@ L40:
 	jb L126
 L45:
 	movq -32(%rbp),%rax
-	incq -32(%rbp)
-	movb %cl,(%rax)
+	movq %rax,%rcx
+	incq %rax
+	movq %rax,-32(%rbp)
+	movb %dl,(%rcx)
 	cmpb $0,-1(%rbp)
 	jnz L36
 L47:
@@ -197,7 +200,8 @@ L41:
 	xorl %r13d,%r13d
 	movq -40(%rbp),%rax
 	movb (%rax),%cl
-	incq -40(%rbp)
+	incq %rax
+	movq %rax,-40(%rbp)
 	movb %cl,-1(%rbp)
 	cmpb $83,%cl
 	jl L128

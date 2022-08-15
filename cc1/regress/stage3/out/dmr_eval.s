@@ -1194,7 +1194,6 @@ L370:
 	movq -8(%rbp),%rcx
 	movq -24(%rbp),%rax
 	movq %rcx,8(%rax)
-	movq -24(%rbp),%rax
 	popq %r15
 	popq %r14
 	popq %r13

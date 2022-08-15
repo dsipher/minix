@@ -275,11 +275,9 @@ L86:
 	movl $0,-540(%rbp)
 L83:
 	leaq -512(%rbp),%rax
-	movq %rax,-584(%rbp)
-	movq -584(%rbp),%rax
 	movq %rax,-592(%rbp)
-	movq -584(%rbp),%rax
 	movq %rax,-560(%rbp)
+	movq %rax,-584(%rbp)
 	movl $0,-548(%rbp)
 	movl $0,-568(%rbp)
 	xorl %ebx,%ebx

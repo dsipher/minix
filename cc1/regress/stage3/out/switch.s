@@ -231,7 +231,7 @@ _chain0:
 L84:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $56,%rsp
+	subq $64,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -239,7 +239,7 @@ L84:
 	pushq %r15
 L85:
 	movq %rdi,%r15
-	movq %rsi,-56(%rbp)
+	movq %rsi,%r12
 	movq $0,-8(%rbp)
 	movq $0,-16(%rbp)
 	movq 64(%r15),%rax
@@ -249,32 +249,37 @@ L85:
 	shll $10,%ebx
 	shrl $15,%ebx
 	call _new_block
+	movq %rax,%r14
 	movq %rax,-40(%rbp)
-	movq -40(%rbp),%r14
 	call _new_block
 	movq %rax,%r13
-	cmpq %rbx,-56(%rbp)
+	cmpq %rbx,%r12
 	jz L89
 L87:
-	movq 64(%r15),%r12
-	leaq 24(%r12),%rax
-	movq %rax,-8(%rbp)
+	movq 64(%r15),%rax
+	leaq 24(%rax),%rcx
+	movq %rax,-64(%rbp)
+	movq %rcx,-8(%rbp)
 	movl 60(%r15),%eax
 	decl %eax
 	movslq %eax,%rax
-	leaq (%rax,%rax,2),%rax
-	shlq $3,%rax
-	movq %rax,-48(%rbp)
-	movq -48(%rbp),%rax
-	addq %r12,%rax
+	leaq (%rax,%rax,2),%rcx
+	shlq $3,%rcx
+	movq -64(%rbp),%rax
+	addq %rcx,%rax
+	movq %rax,-56(%rbp)
+	movq %rcx,-48(%rbp)
+	movq -56(%rbp),%rax
 	movq %rax,-16(%rbp)
-	movq 32(%r12),%rsi
+	movq -64(%rbp),%rax
+	movq 32(%rax),%rsi
 	leaq 80(%r15),%rdi
 	call _cmp0
 	movq -40(%rbp),%rsi
 	movq %rax,%rdi
 	call _append_insn
-	movq 40(%r12),%rdx
+	movq -64(%rbp),%rax
+	movq 40(%rax),%rdx
 	xorl %esi,%esi
 	movq -40(%rbp),%rdi
 	call _add_succ
@@ -294,15 +299,17 @@ L87:
 	call _add_succ
 	call _new_block
 	movq %rax,%r14
-	movq -48(%rbp),%rax
-	movq 8(%r12,%rax),%rsi
+	movq -48(%rbp),%rcx
+	movq -64(%rbp),%rax
+	movq 8(%rax,%rcx),%rsi
 	leaq 80(%r15),%rdi
 	call _cmp0
 	movq %r13,%rsi
 	movq %rax,%rdi
 	call _append_insn
-	movq -48(%rbp),%rax
-	movq 16(%r12,%rax),%rdx
+	movq -48(%rbp),%rcx
+	movq -64(%rbp),%rax
+	movq 16(%rax,%rcx),%rdx
 	xorl %esi,%esi
 	movq %r13,%rdi
 	call _add_succ
@@ -322,7 +329,7 @@ L87:
 	call _add_succ
 	call _new_block
 	movq %rax,%r13
-	movq -56(%rbp),%rdi
+	movq %r12,%rdi
 	call _temp_reg
 	movl %eax,-28(%rbp)
 	xorl %esi,%esi
@@ -335,18 +342,13 @@ L87:
 	movl %ecx,8(%rbx)
 	movl -28(%rbp),%eax
 	movl %eax,16(%rbx)
-	cmpq $0,-56(%rbp)
+	testq %r12,%r12
 	jz L116
 L114:
-	movq -56(%rbp),%rax
-	andl $131071,%eax
-	movq %rax,-56(%rbp)
-	movq -56(%rbp),%rax
-	shll $5,%eax
-	movq %rax,-56(%rbp)
+	andl $131071,%r12d
+	shll $5,%r12d
 	andl $-4194273,%ecx
-	movq -56(%rbp),%rax
-	orl %eax,%ecx
+	orl %r12d,%ecx
 	movl %ecx,8(%rbx)
 L116:
 	movl $32,%ecx

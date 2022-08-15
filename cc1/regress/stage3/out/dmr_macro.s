@@ -14,9 +14,8 @@ L2:
 	movq %rdi,%r15
 	movq (%r15),%rbx
 	leaq 24(%rbx),%rax
-	movq %rax,-24(%rbp)
-	movq -24(%rbp),%rax
 	cmpq 16(%r15),%rax
+	movq %rax,-24(%rbp)
 	jae L8
 L7:
 	cmpb $2,24(%rbx)
@@ -28,9 +27,8 @@ L9:
 	movl $1,%esi
 	leaq 24(%rbx),%rdi
 	call _lookup
-	movq %rax,-32(%rbp)
-	movq -32(%rbp),%rax
 	testb $4,41(%rax)
+	movq %rax,-32(%rbp)
 	jnz L13
 L15:
 	leaq 48(%rbx),%r14
@@ -183,7 +181,6 @@ L92:
 	movq -16(%rbp),%rcx
 	movq -32(%rbp),%rax
 	movq %rcx,24(%rax)
-	movq -32(%rbp),%rax
 	orb $1,41(%rax)
 	jmp L3
 L13:
@@ -585,9 +582,8 @@ L244:
 L245:
 	movq %rdi,%r15
 	movq %rsi,-40(%rbp)
+	movl $-1,(%rdx)
 	movq %rdx,-48(%rbp)
-	movq -48(%rbp),%rax
-	movl $-1,(%rax)
 	movl $1,%r14d
 	xorl %ebx,%ebx
 L247:

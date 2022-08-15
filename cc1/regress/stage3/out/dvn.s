@@ -633,9 +633,8 @@ L258:
 	shlq $5,%r13
 	movq 16(%r15),%rcx
 	movslq -16(%rbp),%rax
-	movq %rax,-24(%rbp)
-	movq -24(%rbp),%rax
 	movq (%rcx,%rax,8),%rcx
+	movq %rax,-24(%rbp)
 	movl 16(%rcx),%eax
 	movl %eax,-28(%rbp)
 	movl 8(%rcx),%r12d
@@ -1157,9 +1156,8 @@ L560:
 	movq 16(%r15),%rcx
 	movslq -36(%rbp),%rax
 	movq (%rcx,%rax,8),%rax
-	movq %rax,-56(%rbp)
-	movq -56(%rbp),%rax
 	testl $1,4(%rax)
+	movq %rax,-56(%rbp)
 	jnz L562
 L564:
 	movl $1,%edx
@@ -1391,12 +1389,11 @@ L628:
 L629:
 	movq %rdi,%r15
 	movl %esi,%ebx
-	movq 16(%r15),%rcx
-	movslq %ebx,%rax
-	movq %rax,-40(%rbp)
-	movq -40(%rbp),%rax
-	movq (%rcx,%rax,8),%rax
+	movq 16(%r15),%rax
+	movslq %ebx,%rcx
+	movq (%rax,%rcx,8),%rax
 	movq %rax,-48(%rbp)
+	movq %rcx,-40(%rbp)
 	xorl %edx,%edx
 	movl %ebx,%esi
 	movq %r15,%rdi
@@ -1669,8 +1666,8 @@ L741:
 	cmpl 708(%rcx),%eax
 	jge L743
 L742:
-	movq 712(%r15),%rsi
-	movq %rsi,-40(%rbp)
+	movq 712(%r15),%rax
+	movq %rax,-40(%rbp)
 	movslq %ebx,%r14
 	shlq $5,%r14
 	movq -8(%rbp),%rax

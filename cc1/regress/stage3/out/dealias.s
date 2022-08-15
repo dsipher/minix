@@ -238,9 +238,8 @@ L112:
 L116:
 	movq 16(%r15),%rcx
 	movslq -24(%rbp),%rax
-	movq %rax,-16(%rbp)
-	movq -16(%rbp),%rax
 	movq (%rcx,%rax,8),%r14
+	movq %rax,-16(%rbp)
 	testq %r14,%r14
 	jz L118
 L117:

@@ -1069,9 +1069,8 @@ L430:
 L435:
 	movq 8(%r15),%rcx
 	movslq %r13d,%rax
-	movq %rax,-8(%rbp)
-	movq -8(%rbp),%rax
 	movl (%rcx,%rax,4),%ecx
+	movq %rax,-8(%rbp)
 	andl $-16384,%ecx
 	movq 8(%r14),%rax
 	movslq %r12d,%rbx

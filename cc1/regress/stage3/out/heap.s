@@ -115,9 +115,8 @@ L29:
 	movl %ecx,%r14d
 	movl 4(%r15),%edx
 	leal (%rdx,%rbx),%eax
-	movl %eax,-4(%rbp)
-	movl -4(%rbp),%eax
 	cmpl (%r15),%eax
+	movl %eax,-4(%rbp)
 	jle L32
 L31:
 	bsrl -4(%rbp),%eax

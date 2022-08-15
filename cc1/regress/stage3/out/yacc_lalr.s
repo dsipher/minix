@@ -606,8 +606,8 @@ L175:
 	movslq %r15d,%rcx
 	movq _to_state(%rip),%rax
 	movswl (%rax,%rcx,2),%eax
+	movslq %eax,%rcx
 	movl %eax,-28(%rbp)
-	movslq -28(%rbp),%rcx
 	movq _shift_table(%rip),%rax
 	movq (%rax,%rcx,8),%r14
 	testq %r14,%r14
@@ -983,8 +983,8 @@ L277:
 	pushq %r15
 L278:
 	movq %rdi,-16(%rbp)
+	movl %esi,%edi
 	movl %esi,-20(%rbp)
-	movl -20(%rbp),%edi
 	shll $1,%edi
 	call _allocate
 	movq %rax,%r15

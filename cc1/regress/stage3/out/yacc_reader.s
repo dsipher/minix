@@ -597,8 +597,7 @@ L312:
 	call _dup_line
 	movq %rax,-24(%rbp)
 	movq _cptr(%rip),%rcx
-	movq %rcx,-16(%rbp)
-	movq -16(%rbp),%rax
+	movq %rcx,%rax
 	subq _line(%rip),%rax
 	movq %rax,-16(%rbp)
 	cmpb $10,(%rcx)
@@ -608,10 +607,9 @@ L314:
 	cmpq $0,_line(%rip)
 	jnz L316
 L317:
-	movq -16(%rbp),%rcx
-	movq -24(%rbp),%rax
-	leaq -2(%rcx,%rax),%rdx
+	movq -16(%rbp),%rax
 	movq -24(%rbp),%rsi
+	leaq -2(%rax,%rsi),%rdx
 	movl -28(%rbp),%edi
 	call _unterminated_text
 L316:
@@ -865,10 +863,9 @@ L331:
 	cmpq $0,_line(%rip)
 	jnz L323
 L334:
-	movq -16(%rbp),%rcx
-	movq -24(%rbp),%rax
-	leaq -2(%rcx,%rax),%rdx
+	movq -16(%rbp),%rax
 	movq -24(%rbp),%rsi
+	leaq -2(%rax,%rsi),%rdx
 	movl -4(%rbp),%edi
 	call _unterminated_text
 L337:
@@ -975,8 +972,7 @@ L452:
 	call _dup_line
 	movq %rax,-24(%rbp)
 	movq _cptr(%rip),%rcx
-	movq %rcx,-16(%rbp)
-	movq -16(%rbp),%rax
+	movq %rcx,%rax
 	subq _line(%rip),%rax
 	movq %rax,-16(%rbp)
 	cmpb $0,_unionized(%rip)
@@ -1456,7 +1452,7 @@ L479:
 	movq -16(%rbp),%rcx
 	movq -24(%rbp),%rax
 	leaq -6(%rcx,%rax),%rdx
-	movq -24(%rbp),%rsi
+	movq %rax,%rsi
 	movl -4(%rbp),%edi
 	call _unterminated_union
 	jmp L464
@@ -2919,8 +2915,6 @@ L1312:
 	call _dup_line
 	movq %rax,-16(%rbp)
 	movq _cptr(%rip),%rax
-	movq %rax,-24(%rbp)
-	movq -24(%rbp),%rax
 	subq _line(%rip),%rax
 	movq %rax,-24(%rbp)
 	cmpb $0,_last_was_action(%rip)
@@ -3048,7 +3042,7 @@ L1529:
 L1353:
 	movq -48(%rbp),%rax
 	leaq (%r12,%rax),%rdx
-	movq -48(%rbp),%rsi
+	movq %rax,%rsi
 	movl -40(%rbp),%edi
 	call _dollar_error
 	jmp L1331
@@ -3444,7 +3438,7 @@ L1431:
 	movq -16(%rbp),%rcx
 	movq -24(%rbp),%rax
 	leaq (%rax,%rcx),%rdx
-	movq -16(%rbp),%rsi
+	movq %rcx,%rsi
 	movl -4(%rbp),%edi
 	call _unterminated_action
 L1433:

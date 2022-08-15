@@ -313,9 +313,8 @@ L54:
 	shll $10,%edi
 	shrl $15,%edi
 	movslq %ebx,%rax
-	movq %rax,-8(%rbp)
-	movq -8(%rbp),%rax
 	movq (%rdx,%rax,8),%r12
+	movq %rax,-8(%rbp)
 	movl (%r12),%eax
 	movzbq %al,%rax
 	testb $1,_flags(%rax)
@@ -596,9 +595,8 @@ L207:
 	jz L277
 L211:
 	movslq %r12d,%rax
-	movq %rax,-8(%rbp)
-	movq -8(%rbp),%rax
 	movq (%rcx,%rax,8),%rbx
+	movq %rax,-8(%rbp)
 	movl (%rbx),%ecx
 	movq _load(%rip),%rax
 	movq (%rax),%rax

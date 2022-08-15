@@ -195,8 +195,9 @@ L93:
 	cmpl $69,%r14d
 	jnz L92
 L94:
-	movq %r15,-16(%rbp)
-	decq -16(%rbp)
+	movq %r15,%rax
+	decq %rax
+	movq %rax,-16(%rbp)
 	movsbl (%r15),%esi
 	incq %r15
 	cmpl $45,%esi
@@ -261,10 +262,11 @@ L127:
 	orl $32,%ebx
 	jmp L27
 L128:
-	movl -24(%rbp),%eax
-	addl %eax,-20(%rbp)
-	decl -20(%rbp)
-	cmpl $308,-20(%rbp)
+	movl -20(%rbp),%eax
+	addl -24(%rbp),%eax
+	decl %eax
+	cmpl $308,%eax
+	movl %eax,-20(%rbp)
 	jl L131
 L130:
 	orl $16,%ebx

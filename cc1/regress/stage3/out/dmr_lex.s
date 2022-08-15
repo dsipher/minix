@@ -707,11 +707,10 @@ L96:
 	movq %rcx,24(%r15)
 	movq %rcx,%r13
 L92:
-	movq -16(%rbp),%rax
-	movq 8(%rax),%rax
+	movq -16(%rbp),%rcx
+	movq 8(%rcx),%rax
 	movq %rax,-24(%rbp)
-	movq -16(%rbp),%rax
-	movslq 24(%rax),%rax
+	movslq 24(%rcx),%rax
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
 	addq %rax,-24(%rbp)
@@ -719,16 +718,14 @@ L103:
 	cmpq -24(%rbp),%r14
 	jb L106
 L104:
-	movq -16(%rbp),%rax
-	movq %r14,16(%rax)
 	movq -16(%rbp),%rdi
+	movq %r14,16(%rdi)
 	call _growtokenrow
 	movq %rax,%r14
-	movq -16(%rbp),%rax
-	movq 8(%rax),%rax
+	movq -16(%rbp),%rcx
+	movq 8(%rcx),%rax
 	movq %rax,-24(%rbp)
-	movq -16(%rbp),%rax
-	movslq 24(%rax),%rax
+	movslq 24(%rcx),%rax
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
 	addq %rax,-24(%rbp)

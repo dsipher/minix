@@ -193,16 +193,15 @@ L88:
 L89:
 	movq 560(%r15),%rcx
 	movslq %r13d,%rax
+	movq (%rcx,%rax,8),%rcx
 	movq %rax,-8(%rbp)
-	movq -8(%rbp),%rax
-	movq (%rcx,%rax,8),%rax
-	movq (%rax),%r12
+	movq (%rcx),%r12
 	movl (%r12),%eax
 	cmpl (%r14),%eax
 	jnz L90
 L94:
-	movl 16(%r14),%ecx
-	movl %ecx,-12(%rbp)
+	movl 16(%r14),%eax
+	movl %eax,-12(%rbp)
 	movl 16(%r12),%ebx
 	movl $0,16(%r14)
 	movl $0,16(%r12)

@@ -647,7 +647,6 @@ L232:
 	cmovgel %r14d,%ecx
 	movq -8(%rbp),%rax
 	movl %ecx,36(%rax)
-	movq -8(%rbp),%rax
 	movl 12(%rax),%ecx
 	testl $2,%ecx
 	jz L238

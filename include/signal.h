@@ -43,6 +43,7 @@ typedef __pid_t pid_t;
 
 #define SIGHUP      1
 #define SIGINT      2
+#define SIGQUIT     3
 #define SIGILL      4
 #define SIGABRT     6
 #define SIGFPE      8

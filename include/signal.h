@@ -41,6 +41,7 @@
 typedef __pid_t pid_t;
 #endif /* __PID_T */
 
+#define SIGHUP      1
 #define SIGINT      2
 #define SIGILL      4
 #define SIGABRT     6

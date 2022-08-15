@@ -547,9 +547,9 @@ static void dense1(struct block *b, int long_func)
     ttab = anon_static(&void_type, ++last_asmlab);
     treg = temp_reg(T_LONG);
 
-    /* it's hard to predict how the table-switching code would
-       interact with spilling, so don't ever spill it. it's
-       not clear how it would ever be a good choice anyway. */
+    /* the `treg' ends up in the b->control field when we're done.
+       it's never a good spill candidate, so mark it unspillable.
+       (the graph allocator will not handle it properly anyway.) */
 
     REG_TO_SYMBOL(treg)->s |= S_NOSPILL;
 

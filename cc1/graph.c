@@ -620,12 +620,6 @@ again:
    attempt to be clever, instead relying on interleaved optimizers to clean
    up excessive memory traffic (OPT_MCH_CSE, which doesn't exist yet...) */
 
-#define NEXT_SPILL_SUB()    do {                                            \
-                                ++sub;                                      \
-                                REG_SET_SUB(new, sub);                      \
-                                REG_OPERAND(&reg, 0, t, new);               \
-                            } while (0)
-
 static void spill0(void)
 {
     struct block *b;
@@ -660,7 +654,9 @@ static void spill0(void)
        sub to the temp in each block in which it appears. */
 
     FOR_EACH_BLOCK(n->blocks, j, b) {
-        NEXT_SPILL_SUB();
+        ++sub;
+        REG_SET_SUB(new, sub);
+        REG_OPERAND(&reg, 0, t, new);
 
         FOR_EACH_INSN(b, i, insn) {
             TRUNC_VECTOR(tmp_regs);             /* insert load before USE */
@@ -682,15 +678,6 @@ static void spill0(void)
 
             insn_substitute_reg(insn, old, new, INSN_SUBSTITUTE_USES |
                                                 INSN_SUBSTITUTE_DEFS);
-        }
-
-        if (SWITCH_BLOCK(b)             /* spilling the reg used as */
-          && OPERAND_REG(&b->control)   /* the branch target would be */
-          && (b->control.reg == old))   /* stupid, but it's possible */
-        {
-            NEXT_SPILL_SUB();
-            append_insn(move(t, &reg, &addr), b);
-            b->control.reg = new;
         }
     }
 }

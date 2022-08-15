@@ -47,6 +47,7 @@ typedef long            __off_t;
 typedef int             __pid_t;
 typedef unsigned long   __size_t;
 typedef long            __ssize_t;
+typedef long            __time_t;
 typedef unsigned        __uid_t;
 typedef char            *__va_list;
 

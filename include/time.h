@@ -36,7 +36,10 @@
 
 #include <sys/tahoe.h>
 
-typedef long time_t;
+#ifndef __TIME_T
+#define __TIME_T
+typedef __time_t time_t;
+#endif /* __TIME_T */
 
 struct tm
 {

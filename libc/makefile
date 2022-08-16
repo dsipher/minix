@@ -42,8 +42,8 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 	\
 		isgraph.o islower.o isprint.o ispunct.o 	\
 		isspace.o isupper.o isxdigit.o isatty.o 	\
 		malloc.o memchr.o memcmp.o memcpy.o memmove.o 	\
-		memset.o modf.o mktemp.o printf.o puts.o 	\
-		qsort.o raise.o rand.o remove.o rewind.o 	\
+		memset.o modf.o mktemp.o perror.o printf.o 	\
+		puts.o qsort.o raise.o rand.o remove.o rewind.o \
 		scanf.o setbuf.o setvbuf.o sigaction.o 		\
 		sigemptyset.o signal.o sprintf.o sscanf.o 	\
 		stdio.o strcat.o strchr.o strcmp.o strcpy.o 	\
@@ -116,6 +116,7 @@ memchr.o:		memchr.c $(HDRS)
 memcmp.o:		memcmp.c $(HDRS)
 modf.o:			modf.c $(HDRS)
 mktemp.o:		mktemp.c $(HDRS)
+perror.o:		perror.c $(HDRS)
 printf.o:		printf.c $(HDRS)
 puts.o:			puts.c $(HDRS)
 qsort.o:		qsort.c $(HDRS)

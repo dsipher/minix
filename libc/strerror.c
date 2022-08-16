@@ -37,7 +37,7 @@ static const char * const errors[] =
 {
     /*  0 */    "no error",
     /*  1 */    0,
-    /*  2 */    0,
+    /*  2 */    "no such file or directory",                /* ENOENT */
     /*  3 */    0,
     /*  4 */    0,
     /*  5 */    0,

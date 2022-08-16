@@ -115,6 +115,7 @@ extern int fseek(FILE *, long, int);
 extern long ftell(FILE *);
 extern size_t fwrite(const void *, size_t, size_t, FILE *);
 extern char *gets(char *);
+extern void perror(const char *s);
 extern int printf(const char *, ...);
 extern int puts(const char *);
 extern int remove(const char *);

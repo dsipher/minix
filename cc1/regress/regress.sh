@@ -34,7 +34,7 @@
 set -e
 ROOT=`pwd`
 
-TESTS="		cpp directive evaluate input macro token vstring	\
+TESTS="		ar cpp directive evaluate input macro token vstring	\
 		block builtin cc1 dealias decl dom dvn expr fold 	\
 		func fuse gen graph heap hoist init insn lex live	\
 		lower norm opt prop reach reassoc reg stmt string	\

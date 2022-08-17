@@ -173,4 +173,42 @@ struct insn i_jnle[] =
     { 0 }
 };
 
+struct insn i_addb[] =
+{
+    { 0,            1,  { 0x04       }, { { O_ACC_8                  },
+                                          { O_IMM_8                  }  }  },
+
+    { 0,            2,  { 0x80, 0x00 }, { { O_REG_8 | O_MEM, F_MODRM },
+                                          { O_IMM_8                  }  }  },
+
+    { 0,            2,  { 0x00, 0x00 }, { { O_REG_8 | O_MEM, F_MODRM },
+                                          { O_REG_8,         F_MID   }  }   },
+
+    { 0,            2,  { 0x02, 0x00 }, { { O_REG_8,         F_MID   },
+                                          { O_REG_8 | O_MEM, F_MODRM }  }   },
+
+    { 0 }
+};
+
+struct insn i_addw[] =
+{
+    { I_DATA_16,    1,  { 0x05       }, { { O_ACC_16 },
+                                          { O_IMM_16 } }     },
+    { 0 }
+};
+
+struct insn i_addl[] =
+{
+    { I_DATA_32,    1,  { 0x05       }, { { O_ACC_32 },
+                                          { O_IMM_32 } }     },
+    { 0 }
+};
+
+struct insn i_addq[] =
+{
+    { I_DATA_64,    1,  { 0x05       }, { { O_ACC_64  },
+                                          { O_IMM_S32 } }     },
+    { 0 }
+};
+
 /* vi: set ts=4 expandtab: */

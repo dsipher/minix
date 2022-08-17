@@ -253,28 +253,42 @@ void emit(int byte)
 
 void emit_value(struct operand *o)
 {
-    int size = 0;
+    int size;
     int i;
     char *p;
     int rel = 0;
 
-    switch (o->classes)
+    switch (o->classes & (O_REL | O_IMM | O_MABS))
     {
-    case O_REL_8:   rel = 1;
-    case O_IMM_8:   size = 1; break;
+    case O_REL_8:       rel = 1;
+    case O_IMM_8:
+    case O_IMM_S8:
+    case O_IMM_U8:
+    case O_MABS_8:      size = 1;
+                        break;
 
-    case O_REL_16:  rel = 1;
-    case O_IMM_16:  size = 2; break;
+    case O_REL_16:      rel = 1;
+    case O_IMM_16:
+    case O_IMM_S16:
+    case O_IMM_U16:
+    case O_MABS_16:     size = 2;
+                        break;
 
-    case O_REL_32:  rel = 1;
-    case O_IMM_32:  size = 4; break;
+    case O_REL_32:      rel = 1;
+    case O_IMM_32:
+    case O_IMM_S32:
+    case O_IMM_U32:
+    case O_MABS_32:     size = 4;
+                        break;
 
-    case O_IMM_64:  size = 8; break;
+    case O_IMM_64:
+    case O_MABS_64:     size = 8;
+                        break;
+
+    default:            return;     /* nothing to emit */
     }
 
     if (rel) resolve(o, size, 1);
-
-    for (p = (char *) &o->value, i = 0; i < size; ++p, ++i) emit(*p);
 
     if (o->sym) {
         struct reloc *r = &relocs[header.a_relocs];
@@ -288,6 +302,8 @@ void emit_value(struct operand *o)
         r->r_size = size2(size, 0);
         r->r_offset = *segofs;
     }
+
+    for (p = (char *) &o->value, i = 0; i < size; ++p, ++i) emit(*p);
 }
 
 /* recompute the value of an operand as %rip-relative, after applying a
@@ -490,19 +506,135 @@ static struct insn *match(struct insn *insns, struct operand **operands)
             if (!(insn->formals[i].classes & operands[i]->classes))
                 goto mismatch;  /* classes do not match */
         }
-match:
-        return insn;
+
+        goto match;
 
 mismatch:
         ++insn;
     } while (insn->nr_opcodes);
 
     error("invalid instruction or operand(s)");
+
+match:
+    /* now, we prune the classes of the actual operands to match
+       the template, so we will know how to interpret/encode them. */
+
+    for (i = 0; i < MAX_OPERANDS && insn->formals[i].classes; ++i)
+        operands[i]->classes &= insn->formals[i].classes;
+
+    return insn;
+}
+
+/* true if `reg' is a new low-byte register */
+
+static int lobyte(int reg)
+{
+    switch (reg)
+    {
+    case SIL:
+    case DIL:
+    case BPL:
+    case SPL:   return 1;
+
+    default:    return 0;
+    }
+}
+
+/* true if `reg' is a legacy high-byte register */
+
+static int hibyte(int reg)
+{
+    switch (reg)
+    {
+    case AH:
+    case BH:
+    case CH:
+    case DH:    return 1;
+
+    default:    return 0;
+    }
+}
+
+/* return the 4-bit encoding of `reg'. this is tiresome,
+   but thankfully the compiler does a good job with this. */
+
+static int encode_reg(int reg)
+{
+    switch (reg)
+    {
+    case AL:    case AX:    case EAX:
+    case RAX:   case CR0:   case XMM0:      return 0;
+
+    case CL:    case CX:    case ECX:
+    case RCX:   case CR1:   case XMM1:      return 1;
+
+    case DL:    case DX:    case EDX:
+    case RDX:   case CR2:   case XMM2:      return 2;
+
+    case BL:    case BX:    case EBX:
+    case RBX:   case CR3:   case XMM3:      return 3;
+
+    case AH:
+    case SPL:   case SP:    case ESP:
+    case RSP:   case CR4:   case XMM4:      return 4;
+
+    case CH:
+    case BPL:   case BP:    case EBP:
+    case RBP:   case CR5:   case XMM5:      return 5;
+
+    case DH:
+    case SIL:   case SI:    case ESI:
+    case RSI:   case CR6:   case XMM6:      return 6;
+
+    case BH:
+    case DIL:   case DI:    case EDI:
+    case RDI:   case CR7:   case XMM7:      return 7;
+
+    case R8B:   case R8W:   case R8D:
+    case R8:    case CR8:   case XMM8:      return 8;
+
+    case R9B:   case R9W:   case R9D:
+    case R9:    case CR9:   case XMM9:      return 9;
+
+    case R10B:  case R10W:  case R10D:
+    case R10:   case CR10:  case XMM10:     return 10;
+
+    case R11B:  case R11W:  case R11D:
+    case R11:   case CR11:  case XMM11:     return 11;
+
+    case R12B:  case R12W:  case R12D:
+    case R12:   case CR12:  case XMM12:     return 12;
+
+    case R13B:  case R13W:  case R13D:
+    case R13:   case CR13:  case XMM13:     return 13;
+
+    case R14B:  case R14W:  case R14D:
+    case R14:   case CR14:  case XMM14:     return 14;
+
+    case R15B:  case R15W:  case R15D:
+    case R15:   case CR15:  case XMM15:     return 15;
+    }
+}
+
+/* XXX */
+
+#define SET_MODRM_MOD(b, n)     ((b) = (((b) & 0x3F) | (((n) & 0x03) << 6)))
+#define SET_MODRM_RM(b, n)      ((b) = (((b) & 0xF8) | ((n) & 0x07)))
+
+static void modrm(struct operand **operands, int i, int byte)
+{
+    /* XXX */ error("mod/rm");
 }
 
 /* try to encode an insn given a set of templates and operands.
    note that the operands are backwards with respect to how they
    appear in the source, i.e., they are in intel syntax order. */
+
+#define REX     0x40
+#define REX_B   0x01
+#define REX_X   0x02
+#define REX_R   0x04
+#define REX_W   0x08
 
 void encode(struct insn *insns, struct operand *operand0,
                                 struct operand *operand1,
@@ -511,37 +643,153 @@ void encode(struct insn *insns, struct operand *operand0,
     struct operand *operands[4] = { operand0, operand1, operand2, 0 };
     struct insn *insn = match(insns, operands);
     char byte;
+    int enc;
     int i;
 
-    /* XXX 1. operand size override prefix */
-    /* XXX 2. address size override prefix */
-    /* XXX 3. other prefixes */
-    /* XXX 4. REX prefix */
+    /* 1. operand size override prefix. if we issue an insn
+          with a specified data size which doesn't match the
+          current default, we need to issue this prefix. */
 
-    /* 5. output the opcode bytes. we output all but the last byte in
-          the table, as the last byte is subject to modification when
-          the operands are processed (it might be the mod/rm byte). */
+    if (  ((insn->i_flags & I_DATA_16) && (code_size != O_MEM_16))
+       || ((insn->i_flags & I_DATA_32) && (code_size == O_MEM_16)) )
+    {
+        emit(0x66);         /* data-size override */
+    }
+
+    /* 2. address-size override prefix. the insn template doesn't know
+          about address sizes; we must locate an O_MEM_* and examine it. */
+
+    for (i = 0; operands[i]; ++i)
+    {
+        if ((operands[i]->classes & O_MEM) == 0) continue;
+
+        if (  ((operands[i]->classes & O_MEM_64) && (code_size != O_MEM_64))
+           || ((operands[i]->classes & O_MEM_16) && (code_size == O_MEM_64)) )
+        {
+            error("%d-bit address modes not available", code_size == O_MEM_64
+                                                            ? 16 : 64);
+        }
+
+        if (  ((code_size == O_MEM_16) && (operands[i]->classes & O_MEM_32))
+           || ((code_size == O_MEM_32) && (operands[i]->classes & O_MEM_16))
+           || ((code_size == O_MEM_64) && (operands[i]->classes & O_MEM_32)) )
+        {
+            emit(0x67);     /* address-size override */
+        }
+
+        break;  /* found the O_MEM_*; there's at most one, so stop looking */
+    }
+
+    /* 3. other prefixes. the difference between a `hard-coded' prefix and
+          and opcode byte is that the prefixes are emitted before any REX.
+          (this is unimportant but it aligns our output with that of gas).
+          interestingly, these LOOK like other prefixes but obviously have
+          alternate meanings (c.f. data-size override and rep prefixes) */
+
+    if (insn->i_flags & I_PREFIX_66) emit(0x66);
+    if (insn->i_flags & I_PREFIX_F2) emit(0xF2);
+    if (insn->i_flags & I_PREFIX_F3) emit(0xF3);
+
+    /* 4. REX prefix. a REX prefix is issued when:
+
+            (a) the insn has 64-bit data size (I_DATA_64)
+            (b) when new byte registers are (%sil, %dil, %bpl, %spl) used
+            (c) when high registers (%r8-%r15, %xmm8-%xmm15, ...) are used */
+
+    byte = 0;
+
+    if (insn->i_flags & I_DATA_64)
+        byte = REX | REX_W; /* (a) */
+
+    for (i = 0; operands[i]; ++i)
+        if (operands[i]->classes & O_REG)
+            if (lobyte(operands[i]->reg))
+                byte |= REX; /* (b) */
+
+    for (i = 0; operands[i]; ++i) { /* (c) */
+        if (insn->formals[i].f_flags & (F_END | F_MID)) {
+            enc = encode_reg(operands[i]->reg);
+
+            if (enc & 8) {
+                if (insn->formals[i].f_flags & F_END)
+                    byte |= REX | REX_B; /* (c) high bit -> REX.B */
+                else if (insn->formals[i].f_flags & F_MID)
+                     byte |= REX | REX_R; /* (c) high bit -> REX.R */
+            }
+        } else if (insn->formals[i].f_flags & F_MODRM) {
+            enc = operands[i]->reg ? encode_reg(operands[i]->reg) : 0;
+            if (enc & 8) byte |= REX | REX_B; /* (c) high bit -> REX.B */
+
+            enc = operands[i]->index ? encode_reg(operands[i]->index) : 0;
+            if (enc & 8) byte |= REX | REX_X; /* (c) high bit -> REX.X */
+        }
+    }
+
+    if (byte) {
+        /* we issued a REX; the encodings for high-byte
+           regs are occupied by the new low-byte regs. */
+
+        for (i = 0; operands[i]; ++i)
+            if ((operands[i]->classes & O_REG) && hibyte(operands[i]->reg))
+                error("legacy register(s) not available");
+
+        emit(byte);
+    }
+
+    /* 5. output the opcode bytes. output all but the last byte,
+          as it is subject to modification in the next steps. */
 
     for (i = 0; i < insn->nr_opcodes - 1; ++i) emit(insn->opcodes[i]);
-    byte = insn->opcodes[i];    /* last byte, possibly mod/rm */
+    byte = insn->opcodes[i]; /* next steps will modify this byte */
 
-    /* XXX 6. process pure register operands */
-    /* XXX 7. process mod/rm operand */
+    /* 6. process pure register operands. registers that are not encoded
+          into mod/rm fields go into one of two places: the end (F_END)
+          or the middle (F_MID). only the lower 3 bits are encoded here,
+          as any high bits have been inserted into the REX prefix above. */
 
-    for (i = 0; i < MAX_OPERANDS; ++i) { /* XXX */; }
+    for (i = 0; operands[i]; ++i)
+        if (insn->formals[i].f_flags & (F_END | F_MID)) {
+            enc = encode_reg(operands[i]->reg) & 7;
+            if (insn->formals[i].f_flags & F_MID) enc <<= 3;
+            byte |= enc;
+        }
 
-    if (i == MAX_OPERANDS) emit(byte);  /* no mod/rm, emit untouched */
+    /* 7. process mod/rm operand, if present. */
+
+    for (i = 0; operands[i]; ++i) {
+        if (insn->formals[i].f_flags & F_MODRM) {
+            if (operands[i]->classes & O_REG) {
+                /* we can fill in the mod/rm
+                   for a reg straightaway */
+
+                SET_MODRM_MOD(byte, 3);
+                SET_MODRM_RM(byte, encode_reg(operands[i]->reg));
+                emit(byte);
+            } else
+                /* modrm() will emit the `byte' for us after it's
+                   been appropriately modified. it will also rewrite
+                   this operand to be O_IMM_*, O_REL_*, or nothing,
+                   depending on what it wants emitted in step 8. */
+
+                modrm(operands, i, byte);
+
+            /* exit early here since (a) there is only one mod/rm operand
+               possible, and (b) we want the following code to know we've
+               processed a mod/rm field, so it won't emit the byte again */
+
+            break;
+        }
+    }
+
+    if (operands[i] == 0) emit(byte);   /* no mod/rm, so emit untouched */
 
     /* 8. process the remaining operands. these are immediates (O_IMM_*)
-          absolute memory addresses (O_MOFS_*), and relatives (O_REL_*).
+          absolute memory addresses (O_MABS_*), and relatives (O_REL_*).
           all the work is really handled by emit_value(). */
 
-    for (i = 0; i < MAX_OPERANDS; ++i)
-        if (insn->formals[i].classes & (/* XXX O_IMM | O_MOFS |*/ O_REL))
-        {
-            operands[i]->classes &= insn->formals[i].classes;
+    for (i = 0; operands[i]; ++i)
+        if (operands[i]->classes & (O_IMM | O_MABS | O_REL))
             emit_value(operands[i]);
-        }
 }
 
 /* simple safe wrapper for fopen() */

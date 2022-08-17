@@ -43,6 +43,7 @@
 #include <limits.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/types.h>
 #include "../include/crc32c.h"      /* FIXME */
 #include "../include/a.out.h"       /* FIXME */
 #include "y.tab.h"
@@ -165,7 +166,14 @@ struct name
 
 extern struct name *table[NR_BUCKETS];
 
-/* XXX */
+/* operand classes. a parsed operand has one or more of these bits set
+   to indicate which classes of operand it can possibly represent; an
+   `actual' operand is considered to match a `template' operand iff:
+
+       (actual->classes & template->classes) == template->classes
+
+   it is possible to use a bit to represent an ad hoc constraint that
+   must be met by the operand in order to match; see e.g. O_NO_SYM */
 
 #define O_REG_8         0x00000001      /* general-purpose register */
 #define O_REG_16        0x00000002
@@ -201,18 +209,27 @@ extern struct name *table[NR_BUCKETS];
 #define O_IMM_32        (O_IMM_S32 | O_IMM_U32)
 #define O_IMM           (O_IMM_8 | O_IMM_16 | O_IMM_32 | O_IMM_64)
 
-#define O_MOFS_8        0x00100000      /* absolute memory operands */
-#define O_MOFS_16       0x00200000      /* (these only appear in legacy */
-#define O_MOFS_32       0x00400000      /* MOVs between memory and %rax) */
-#define O_MOFS_64       0x00800000
+#define O_MABS_8        0x00100000      /* absolute memory operands */
+#define O_MABS_16       0x00200000
+#define O_MABS_32       0x00400000
+#define O_MABS_64       0x00800000
 
-#define O_MOFS          (O_MOFS_8 | O_MOFS_16 | O_MOFS_32 | O_MOFS_64)
+#define O_MABS          (O_MABS_8 | O_MABS_16 | O_MABS_32 | O_MABS_64)
 
 #define O_REL_8         0x01000000      /* relative addresses */
 #define O_REL_16        0x02000000      /* (for branch targets) */
 #define O_REL_32        0x04000000
 
 #define O_REL           (O_REL_8 | O_REL_16 | O_REL_32)
+
+    /* O_NO_SYM is set on O_IMM_* operands which have no symbol.
+       templates use this to avoid abbreviated encodings based
+       solely a constant value when that is ill-advised, e.g.:
+
+                    pushq $8        is encoded with an 8-bit immediate
+            but     pushq $bob+8    almost certainly should not be */
+
+#define O_NO_SYM        0x80000000      /* immediate operand w/o symbol */
 
 struct operand
 {
@@ -242,8 +259,8 @@ struct insn
 {
     int i_flags;                /* (I_*) flags apply to entire template */
 
-    char nr_opcodes;            /* 1..MAX_INSN_OPCODES (nr_opcodes == 0 ... */
-    char opcodes[MAX_OPCODES];  /* ... means this is the terminating entry) */
+    char nr_opcodes;            /* 1..MAX_INSN_OPCODES (nr_opcodes == 0 */
+    char opcodes[MAX_OPCODES];  /* means this is the terminating entry) */
 
     struct
     {
@@ -252,9 +269,24 @@ struct insn
     } formals[MAX_OPERANDS];
 };
 
-#define I_NO_CODE16     0x00000001          /* insn not allowed in .code16 */
-#define I_NO_CODE32     0x00000002          /* ................... .code32 */
-#define I_NO_CODE64     0x00000004          /* ................... .code64 */
+#define I_NO_CODE16     0x00000001      /* ignore template in .code16 */
+#define I_NO_CODE32     0x00000002      /* .................. .code32 */
+#define I_NO_CODE64     0x00000004      /* .................. .code64 */
+
+    /* the difference between I_PREFIX_* and opcodes[] is subtle, and
+       has to do with their position relative to REXes. see encode(). */
+
+#define I_PREFIX_F2     0x00000008      /* prefix opcodes[] with 0xF2 */
+#define I_PREFIX_F3     0x00000010      /* ..................... 0xF3 */
+#define I_PREFIX_66     0x00000020      /* ..................... 0x66 */
+
+#define I_DATA_16       0x00000040      /* insn has 16-bit data size */
+#define I_DATA_32       0x00000080      /* ........ 32-bit ......... */
+#define I_DATA_64       0x00000100      /* ........ 64-bit ......... */
+
+#define F_END           0x00000001      /* encode reg in REX.B/bits[2:0] */
+#define F_MID           0x00000002      /* encode reg in REX.R/bits[5:3] */
+#define F_MODRM         0x00000004      /* encode operand in mod/rm field */
 
 /* as.c */
 

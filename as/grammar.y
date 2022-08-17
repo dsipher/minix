@@ -221,14 +221,20 @@ static_expr     :   expr
 operand         :   reg
                 |   imm
                 |   mem
-                |   indirect { $1->classes &= ~(O_REL | O_MOFS); $$ = $1; }
+                |   indirect { $1->classes &= ~(O_REL | O_MABS); $$ = $1; }
                 ;
 
 indirect        :   '*' mem  { $$ = $2; }
                 |   '*' reg  { $$ = $2; }
                 ;
 
-imm             :   '$' expr { $2->classes = immclass($2->value); $$ = $2; }
+imm             :   '$' expr
+                    {
+                        $2->classes = immclass($2->value);
+                        if ($2->sym == 0) $2->classes |= O_NO_SYM;
+                        $$ = $2;
+                    }
+                ;
 
 mem             :   expr
                     {
@@ -239,11 +245,11 @@ mem             :   expr
                           conveniently) already the right kind of O_MEM_*. */
 
                         $1->classes = O_REL_16 | O_REL_32
-                                    | O_MOFS_64 | code_size;
+                                    | O_MABS_64 | code_size;
 
-                        if (immclasses & O_IMM_8)  $1->classes |= O_MOFS_8;
-                        if (immclasses & O_IMM_16) $1->classes |= O_MOFS_16;
-                        if (immclasses & O_IMM_32) $1->classes |= O_MOFS_32;
+                        if (immclasses & O_IMM_8)  $1->classes |= O_MABS_8;
+                        if (immclasses & O_IMM_16) $1->classes |= O_MABS_16;
+                        if (immclasses & O_IMM_32) $1->classes |= O_MABS_32;
 
                         /* we cheat here a little bit: O_REL_8 is only for
                            short branches, which are all 2 bytes long, so

@@ -666,10 +666,12 @@ longt(void)
     }
 
     cp = ctime(&arbuf.ar_date);
-    printf("  %-12.12s %-4.4s", cp+4, cp+20);
 
-    printf("  %d/%d", arbuf.ar_uid, arbuf.ar_gid);
-    printf("  %ld", arbuf.ar_size);
+    printf("  %-12.12s %-4.4s (%d/%d) %ld", cp+4,
+                                            cp+20,
+                                            arbuf.ar_uid,
+                                            arbuf.ar_gid,
+                                            arbuf.ar_size);
 }
 
 /* t: table of contents */
@@ -681,7 +683,7 @@ tcmd(void)
 
     while(!getdir()) {
         if(namc == 0 || match()) {
-            printf("%-*s", DIRSIZ, trim(file));
+            printf("%-*s", DIRSIZ + 2, trim(file));
 
             if(flg['v'-'a'])
                 longt();

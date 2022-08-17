@@ -92,6 +92,13 @@ S               [ \t\v\f]
 
 "%rip"          return RIP;
 
+"%cs"           return CS;
+"%ds"           return DS;
+"%ss"           return SS;
+"%es"           return ES;
+"%fs"           return FS;
+"%gs"           return GS;
+
 "%al"           return AL;
 "%ah"           return AH;
 "%ax"           return AX;

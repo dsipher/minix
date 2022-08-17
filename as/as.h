@@ -166,74 +166,81 @@ struct name
 
 extern struct name *table[NR_BUCKETS];
 
-/* operand classes. a parsed operand has one or more of these bits set
-   to indicate which classes of operand it can possibly represent; an
-   `actual' operand is considered to match a `template' operand iff:
+/* operand classes. a parsed operand has one or more of O_CLASSES bits
+   set to indicate which classes of operand it can possibly represent;
+   an actual operand is considered to match a template operand iff it
+   matches ANY of the template classes, and ALL of the O_CONSTRAINTS. */
 
-       (actual->classes & template->classes) == template->classes
+#define O_GPR_8         0x00000001L     /* general-purpose register */
+#define O_GPR_16        0x00000002L
+#define O_GPR_32        0x00000004L
+#define O_GPR_64        0x00000008L
 
-   it is possible to use a bit to represent an ad hoc constraint that
-   must be met by the operand in order to match; see e.g. O_NO_SYM */
+#define O_GPR           (O_GPR_8 | O_GPR_16 | O_GPR_32 | O_GPR_64)
 
-#define O_REG_8         0x00000001      /* general-purpose register */
-#define O_REG_16        0x00000002
-#define O_REG_32        0x00000004
-#define O_REG_64        0x00000008
+#define O_XMM           0x00000010L     /* sse register (%xmm0..15) */
+#define O_CR            0x00000020L     /* control register (%cr0..15) */
+#define O_SEG_2         0x00000040L     /* segment reg with 2-bit encoding */
+#define O_SEG_3         0x00000080L     /* ................ 3-bit ........ */
 
-#define O_REG           (O_REG_8 | O_REG_16 | O_REG_32 | O_REG_64)
+#define O_SEG           (O_SEG_2 | O_SEG_3)
+#define O_REG           (O_GPR | O_XMM | O_CR | O_SEG)
 
-#define O_ACC_8         0x00000010      /* accumulator (i.e., %rax) */
-#define O_ACC_16        0x00000020
-#define O_ACC_32        0x00000040
-#define O_ACC_64        0x00000080
+#define O_ACC_8         0x00000100L     /* accumulator (i.e., %rax) */
+#define O_ACC_16        0x00000200L
+#define O_ACC_32        0x00000400L
+#define O_ACC_64        0x00000800L
 
-#define O_XMM           0x00000100      /* sse register (%xmm0..15) */
-#define O_CR            0x00000200      /* control register (%cr0..15) */
-
-#define O_MEM_16        0x00000400      /* value in memory: the size */
-#define O_MEM_32        0x00000800      /* refers to the address size, */
-#define O_MEM_64        0x00001000      /* not that of referenced data */
+#define O_MEM_16        0x00001000L     /* value in memory: the size */
+#define O_MEM_32        0x00002000L     /* refers to the address size, */
+#define O_MEM_64        0x00004000L     /* not that of referenced data */
 
 #define O_MEM           (O_MEM_16 | O_MEM_32 | O_MEM_64)
 
-#define O_IMM_S8        0x00002000      /* immediate value */
-#define O_IMM_U8        0x00004000
-#define O_IMM_S16       0x00008000
-#define O_IMM_U16       0x00010000
-#define O_IMM_S32       0x00020000
-#define O_IMM_U32       0x00040000
-#define O_IMM_64        0x00080000
+#define O_IMM_S8        0x00008000L     /* immediate value */
+#define O_IMM_U8        0x00010000L
+#define O_IMM_S16       0x00020000L
+#define O_IMM_U16       0x00040000L
+#define O_IMM_S32       0x00080000L
+#define O_IMM_U32       0x00100000L
+#define O_IMM_64        0x00200000L
 
 #define O_IMM_8         (O_IMM_S8 | O_IMM_U8)
 #define O_IMM_16        (O_IMM_S16 | O_IMM_U16)
 #define O_IMM_32        (O_IMM_S32 | O_IMM_U32)
 #define O_IMM           (O_IMM_8 | O_IMM_16 | O_IMM_32 | O_IMM_64)
 
-#define O_MABS_8        0x00100000      /* absolute memory operands */
-#define O_MABS_16       0x00200000
-#define O_MABS_32       0x00400000
-#define O_MABS_64       0x00800000
+#define O_HI16          0x00400000L     /* unsigned O_IMM_* which may be */
+#define O_HI32          0x00800000L     /* recast as signed 8-bit value */
 
-#define O_MABS          (O_MABS_8 | O_MABS_16 | O_MABS_32 | O_MABS_64)
+#define O_ABS_8         0x01000000L     /* absolute operands */
+#define O_ABS_16        0x02000000L
+#define O_ABS_32        0x04000000L
+#define O_ABS_64        0x08000000L
 
-#define O_REL_8         0x01000000      /* relative addresses */
-#define O_REL_16        0x02000000      /* (for branch targets) */
-#define O_REL_32        0x04000000
+#define O_ABS           (O_ABS_8 | O_ABS_16 | O_ABS_32 | O_ABS_64)
+
+#define O_REL_8         0x10000000L     /* relative addresses */
+#define O_REL_16        0x20000000L     /* (for branch targets) */
+#define O_REL_32        0x40000000L
 
 #define O_REL           (O_REL_8 | O_REL_16 | O_REL_32)
 
-    /* O_NO_SYM is set on O_IMM_* operands which have no symbol.
+#define O_CLASSES       0x7FFFFFFFL     /* `match any' bits (above) */
+#define O_CONSTRAINTS   0x80000000L     /* `match all' bits (below) */
+
+    /* O_PURE is set on operands with no relocatable symbol.
        templates use this to avoid abbreviated encodings based
-       solely a constant value when that is ill-advised, e.g.:
+       solely the constant value when that is ill-advised, e.g.:
 
                     pushq $8        is encoded with an 8-bit immediate
             but     pushq $bob+8    almost certainly should not be */
 
-#define O_NO_SYM        0x80000000      /* immediate operand w/o symbol */
+#define O_PURE        0x80000000        /* operand w/o symbol */
 
 struct operand
 {
-    int classes;            /* set of all applicable classes (O_* above) */
+    long classes;           /* set of all applicable classes (O_* above) */
     int reg;                /* [base] register */
     int index;              /* index register */
     int scale;              /* scaling factor */
@@ -264,7 +271,7 @@ struct insn
 
     struct
     {
-        int classes;            /* (O_*) matching operand classes */
+        long classes;           /* (O_*) matching operand classes */
         int f_flags;            /* (F_*) flags specific to operand */
     } formals[MAX_OPERANDS];
 };

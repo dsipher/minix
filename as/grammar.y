@@ -49,10 +49,12 @@
 %token          CR8     CR9     CR10    CR11
 %token          CR12    CR13    CR14    CR15
 
+%token          CS      DS      SS      ES      FS      GS
+
 %type<i>        data_op data_def
 %type<o>        expr static_expr
 %type<o>        operand imm indirect
-%type<o>        reg reg8 reg16 reg32 reg64
+%type<o>        reg reg8 reg16 reg32 reg64 sreg
 %type<o>        mem disp base index scale
 
 %left           '+' '-'
@@ -221,7 +223,8 @@ static_expr     :   expr
 operand         :   reg
                 |   imm
                 |   mem
-                |   indirect { $1->classes &= ~(O_REL | O_MABS); $$ = $1; }
+                |   sreg
+                |   indirect { $1->classes &= ~(O_REL | O_ABS); $$ = $1; }
                 ;
 
 indirect        :   '*' mem  { $$ = $2; }
@@ -231,7 +234,7 @@ indirect        :   '*' mem  { $$ = $2; }
 imm             :   '$' expr
                     {
                         $2->classes = immclass($2->value);
-                        if ($2->sym == 0) $2->classes |= O_NO_SYM;
+                        if ($2->sym == 0) $2->classes |= O_PURE;
                         $$ = $2;
                     }
                 ;
@@ -241,15 +244,15 @@ mem             :   expr
                         int immclasses = immclass($1->value);
 
                         /* with no registers to indicate the address_size,
-                          we assume the current code_size, which is (quite
-                          conveniently) already the right kind of O_MEM_*. */
+                           we assume the current code_size, which is (quite
+                           conveniently) already the right kind of O_MEM_*. */
 
                         $1->classes = O_REL_16 | O_REL_32
-                                    | O_MABS_64 | code_size;
+                                    | O_ABS_64 | code_size;
 
-                        if (immclasses & O_IMM_8)  $1->classes |= O_MABS_8;
-                        if (immclasses & O_IMM_16) $1->classes |= O_MABS_16;
-                        if (immclasses & O_IMM_32) $1->classes |= O_MABS_32;
+                        if (immclasses & O_IMM_8)  $1->classes |= O_ABS_8;
+                        if (immclasses & O_IMM_16) $1->classes |= O_ABS_16;
+                        if (immclasses & O_IMM_32) $1->classes |= O_ABS_32;
 
                         /* we cheat here a little bit: O_REL_8 is only for
                            short branches, which are all 2 bytes long, so
@@ -277,13 +280,13 @@ mem             :   expr
 
                         if ($3) {   /* base */
                             $$->reg = $3->reg;
-                            base_class = $3->classes & O_REG;
+                            base_class = $3->classes & O_GPR;
                         }
 
                         if ($4) {   /* ,index,scale */
                             $$->index = $4->index;
                             $$->scale = $4->scale;
-                            index_class = $4->classes & O_REG;
+                            index_class = $4->classes & O_GPR;
                         }
 
                         /* this check ensures that, if both a base and
@@ -298,14 +301,14 @@ mem             :   expr
 
                         switch (base_class | index_class)
                         {
-                        case O_REG_16:  $$->classes = O_MEM_16; break;
-                        case O_REG_32:  $$->classes = O_MEM_32; break;
-                        case O_REG_64:  $$->classes = O_MEM_64; break;
+                        case O_GPR_16:  $$->classes = O_MEM_16; break;
+                        case O_GPR_32:  $$->classes = O_MEM_32; break;
+                        case O_GPR_64:  $$->classes = O_MEM_64; break;
 
                                         /* catches 8-bit registers,
                                            or no registers at all */
 
-                        default:        error("invalid address mode");
+                        default:        error("malformed address");
                         }
 
                         /* we leave the remaining validation to encoding */
@@ -328,84 +331,91 @@ index           :   ',' reg scale
 
 reg             :   reg8    |   reg16   |   reg32   |   reg64   ;
 
-reg8            :   AL      {   $$ = REG(O_REG_8 | O_ACC_8,     AL);    }
-                |   AH      {   $$ = REG(O_REG_8,               AH);    }
-                |   BL      {   $$ = REG(O_REG_8,               BL);    }
-                |   BH      {   $$ = REG(O_REG_8,               BH);    }
-                |   CL      {   $$ = REG(O_REG_8,               CL);    }
-                |   CH      {   $$ = REG(O_REG_8,               CH);    }
-                |   DL      {   $$ = REG(O_REG_8,               DL);    }
-                |   DH      {   $$ = REG(O_REG_8,               DH);    }
-                |   SIL     {   $$ = REG(O_REG_8,               SIL);   }
-                |   DIL     {   $$ = REG(O_REG_8,               DIL);   }
-                |   BPL     {   $$ = REG(O_REG_8,               BPL);   }
-                |   SPL     {   $$ = REG(O_REG_8,               SPL);   }
-                |   R8B     {   $$ = REG(O_REG_8,               R8B);   }
-                |   R9B     {   $$ = REG(O_REG_8,               R9B);   }
-                |   R10B    {   $$ = REG(O_REG_8,               R10B);  }
-                |   R11B    {   $$ = REG(O_REG_8,               R11B);  }
-                |   R12B    {   $$ = REG(O_REG_8,               R12B);  }
-                |   R13B    {   $$ = REG(O_REG_8,               R13B);  }
-                |   R14B    {   $$ = REG(O_REG_8,               R14B);  }
-                |   R15B    {   $$ = REG(O_REG_8,               R15B);  }
+reg8            :   AL      {   $$ = REG(O_GPR_8 | O_ACC_8,     AL);    }
+                |   AH      {   $$ = REG(O_GPR_8,               AH);    }
+                |   BL      {   $$ = REG(O_GPR_8,               BL);    }
+                |   BH      {   $$ = REG(O_GPR_8,               BH);    }
+                |   CL      {   $$ = REG(O_GPR_8,               CL);    }
+                |   CH      {   $$ = REG(O_GPR_8,               CH);    }
+                |   DL      {   $$ = REG(O_GPR_8,               DL);    }
+                |   DH      {   $$ = REG(O_GPR_8,               DH);    }
+                |   SIL     {   $$ = REG(O_GPR_8,               SIL);   }
+                |   DIL     {   $$ = REG(O_GPR_8,               DIL);   }
+                |   BPL     {   $$ = REG(O_GPR_8,               BPL);   }
+                |   SPL     {   $$ = REG(O_GPR_8,               SPL);   }
+                |   R8B     {   $$ = REG(O_GPR_8,               R8B);   }
+                |   R9B     {   $$ = REG(O_GPR_8,               R9B);   }
+                |   R10B    {   $$ = REG(O_GPR_8,               R10B);  }
+                |   R11B    {   $$ = REG(O_GPR_8,               R11B);  }
+                |   R12B    {   $$ = REG(O_GPR_8,               R12B);  }
+                |   R13B    {   $$ = REG(O_GPR_8,               R13B);  }
+                |   R14B    {   $$ = REG(O_GPR_8,               R14B);  }
+                |   R15B    {   $$ = REG(O_GPR_8,               R15B);  }
                 ;
 
-reg16           :   AX      {   $$ = REG(O_REG_16 | O_ACC_16,   AX);    }
-                |   BX      {   $$ = REG(O_REG_16,              BX);    }
-                |   CX      {   $$ = REG(O_REG_16,              CX);    }
-                |   DX      {   $$ = REG(O_REG_16,              DX);    }
-                |   SI      {   $$ = REG(O_REG_16,              SI);    }
-                |   DI      {   $$ = REG(O_REG_16,              DI);    }
-                |   BP      {   $$ = REG(O_REG_16,              BP);    }
-                |   SP      {   $$ = REG(O_REG_16,              SP);    }
-                |   R8W     {   $$ = REG(O_REG_16,              R8W);   }
-                |   R9W     {   $$ = REG(O_REG_16,              R9W);   }
-                |   R10W    {   $$ = REG(O_REG_16,              R10W);  }
-                |   R11W    {   $$ = REG(O_REG_16,              R11W);  }
-                |   R12W    {   $$ = REG(O_REG_16,              R12W);  }
-                |   R13W    {   $$ = REG(O_REG_16,              R13W);  }
-                |   R14W    {   $$ = REG(O_REG_16,              R14W);  }
-                |   R15W    {   $$ = REG(O_REG_16,              R15W);  }
+reg16           :   AX      {   $$ = REG(O_GPR_16 | O_ACC_16,   AX);    }
+                |   BX      {   $$ = REG(O_GPR_16,              BX);    }
+                |   CX      {   $$ = REG(O_GPR_16,              CX);    }
+                |   DX      {   $$ = REG(O_GPR_16,              DX);    }
+                |   SI      {   $$ = REG(O_GPR_16,              SI);    }
+                |   DI      {   $$ = REG(O_GPR_16,              DI);    }
+                |   BP      {   $$ = REG(O_GPR_16,              BP);    }
+                |   SP      {   $$ = REG(O_GPR_16,              SP);    }
+                |   R8W     {   $$ = REG(O_GPR_16,              R8W);   }
+                |   R9W     {   $$ = REG(O_GPR_16,              R9W);   }
+                |   R10W    {   $$ = REG(O_GPR_16,              R10W);  }
+                |   R11W    {   $$ = REG(O_GPR_16,              R11W);  }
+                |   R12W    {   $$ = REG(O_GPR_16,              R12W);  }
+                |   R13W    {   $$ = REG(O_GPR_16,              R13W);  }
+                |   R14W    {   $$ = REG(O_GPR_16,              R14W);  }
+                |   R15W    {   $$ = REG(O_GPR_16,              R15W);  }
                 ;
 
-reg32           :   EAX     {   $$ = REG(O_REG_32 | O_ACC_32,   EAX);   }
-                |   EBX     {   $$ = REG(O_REG_32,              EBX);   }
-                |   ECX     {   $$ = REG(O_REG_32,              ECX);   }
-                |   EDX     {   $$ = REG(O_REG_32,              EDX);   }
-                |   ESI     {   $$ = REG(O_REG_32,              ESI);   }
-                |   EDI     {   $$ = REG(O_REG_32,              EDI);   }
-                |   EBP     {   $$ = REG(O_REG_32,              EBP);   }
-                |   ESP     {   $$ = REG(O_REG_32,              ESP);   }
-                |   R8D     {   $$ = REG(O_REG_32,              R8D);   }
-                |   R9D     {   $$ = REG(O_REG_32,              R9D);   }
-                |   R10D    {   $$ = REG(O_REG_32,              R10D);  }
-                |   R11D    {   $$ = REG(O_REG_32,              R11D);  }
-                |   R12D    {   $$ = REG(O_REG_32,              R12D);  }
-                |   R13D    {   $$ = REG(O_REG_32,              R13D);  }
-                |   R14D    {   $$ = REG(O_REG_32,              R14D);  }
-                |   R15D    {   $$ = REG(O_REG_32,              R15D);  }
+reg32           :   EAX     {   $$ = REG(O_GPR_32 | O_ACC_32,   EAX);   }
+                |   EBX     {   $$ = REG(O_GPR_32,              EBX);   }
+                |   ECX     {   $$ = REG(O_GPR_32,              ECX);   }
+                |   EDX     {   $$ = REG(O_GPR_32,              EDX);   }
+                |   ESI     {   $$ = REG(O_GPR_32,              ESI);   }
+                |   EDI     {   $$ = REG(O_GPR_32,              EDI);   }
+                |   EBP     {   $$ = REG(O_GPR_32,              EBP);   }
+                |   ESP     {   $$ = REG(O_GPR_32,              ESP);   }
+                |   R8D     {   $$ = REG(O_GPR_32,              R8D);   }
+                |   R9D     {   $$ = REG(O_GPR_32,              R9D);   }
+                |   R10D    {   $$ = REG(O_GPR_32,              R10D);  }
+                |   R11D    {   $$ = REG(O_GPR_32,              R11D);  }
+                |   R12D    {   $$ = REG(O_GPR_32,              R12D);  }
+                |   R13D    {   $$ = REG(O_GPR_32,              R13D);  }
+                |   R14D    {   $$ = REG(O_GPR_32,              R14D);  }
+                |   R15D    {   $$ = REG(O_GPR_32,              R15D);  }
                 ;
 
-reg64           :   RAX     {   $$ = REG(O_REG_64 | O_ACC_64,   RAX);   }
-                |   RBX     {   $$ = REG(O_REG_64,              RBX);   }
-                |   RCX     {   $$ = REG(O_REG_64,              RCX);   }
-                |   RDX     {   $$ = REG(O_REG_64,              RDX);   }
-                |   RSI     {   $$ = REG(O_REG_64,              RSI);   }
-                |   RDI     {   $$ = REG(O_REG_64,              RDI);   }
-                |   RBP     {   $$ = REG(O_REG_64,              RBP);   }
-                |   RSP     {   $$ = REG(O_REG_64,              RSP);   }
-                |   R8      {   $$ = REG(O_REG_64,              R8);    }
-                |   R9      {   $$ = REG(O_REG_64,              R9);    }
-                |   R10     {   $$ = REG(O_REG_64,              R10);   }
-                |   R11     {   $$ = REG(O_REG_64,              R11);   }
-                |   R12     {   $$ = REG(O_REG_64,              R12);   }
-                |   R13     {   $$ = REG(O_REG_64,              R13);   }
-                |   R14     {   $$ = REG(O_REG_64,              R14);   }
-                |   R15     {   $$ = REG(O_REG_64,              R15);   }
+reg64           :   RAX     {   $$ = REG(O_GPR_64 | O_ACC_64,   RAX);   }
+                |   RBX     {   $$ = REG(O_GPR_64,              RBX);   }
+                |   RCX     {   $$ = REG(O_GPR_64,              RCX);   }
+                |   RDX     {   $$ = REG(O_GPR_64,              RDX);   }
+                |   RSI     {   $$ = REG(O_GPR_64,              RSI);   }
+                |   RDI     {   $$ = REG(O_GPR_64,              RDI);   }
+                |   RBP     {   $$ = REG(O_GPR_64,              RBP);   }
+                |   RSP     {   $$ = REG(O_GPR_64,              RSP);   }
+                |   R8      {   $$ = REG(O_GPR_64,              R8);    }
+                |   R9      {   $$ = REG(O_GPR_64,              R9);    }
+                |   R10     {   $$ = REG(O_GPR_64,              R10);   }
+                |   R11     {   $$ = REG(O_GPR_64,              R11);   }
+                |   R12     {   $$ = REG(O_GPR_64,              R12);   }
+                |   R13     {   $$ = REG(O_GPR_64,              R13);   }
+                |   R14     {   $$ = REG(O_GPR_64,              R14);   }
+                |   R15     {   $$ = REG(O_GPR_64,              R15);   }
+                ;
+
+sreg            :   CS      {   $$ = REG(O_SEG_2 | O_SEG_3,     CS);    }
+                |   DS      {   $$ = REG(O_SEG_2 | O_SEG_3,     DS);    }
+                |   SS      {   $$ = REG(O_SEG_2 | O_SEG_3,     SS);    }
+                |   ES      {   $$ = REG(O_SEG_2 | O_SEG_3,     ES);    }
+                |   FS      {   $$ = REG(          O_SEG_3,     FS);    }
+                |   GS      {   $$ = REG(          O_SEG_3,     GS);    }
                 ;
 
 %%
-
 
 #define NEW_OPERAND()           ({                                          \
                                     struct operand *_o;                     \

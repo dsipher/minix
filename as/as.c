@@ -258,31 +258,31 @@ void emit_value(struct operand *o)
     char *p;
     int rel = 0;
 
-    switch (o->classes & (O_REL | O_IMM | O_MABS))
+    switch (o->classes & (O_REL | O_IMM | O_ABS))
     {
     case O_REL_8:       rel = 1;
+    case O_ABS_8:
     case O_IMM_8:
     case O_IMM_S8:
-    case O_IMM_U8:
-    case O_MABS_8:      size = 1;
+    case O_IMM_U8:      size = 1;
                         break;
 
     case O_REL_16:      rel = 1;
+    case O_ABS_16:      size = 2;
     case O_IMM_16:
     case O_IMM_S16:
-    case O_IMM_U16:
-    case O_MABS_16:     size = 2;
+    case O_IMM_U16:     size = 2;
                         break;
 
     case O_REL_32:      rel = 1;
+    case O_ABS_32:
     case O_IMM_32:
     case O_IMM_S32:
-    case O_IMM_U32:
-    case O_MABS_32:     size = 4;
+    case O_IMM_U32:     size = 4;
                         break;
 
-    case O_IMM_64:
-    case O_MABS_64:     size = 8;
+    case O_ABS_64:
+    case O_IMM_64:      size = 8;
                         break;
 
     default:            return;     /* nothing to emit */
@@ -459,19 +459,21 @@ void undef(struct nlist *sym)
     }
 }
 
-/* return the O_IMM_* classes in which `value' can be represented.
-   this could be done faster with less branching, but who cares? */
+/* return the O_IMM_* classes in which `value' can be represented. */
 
 int immclass(long value)
 {
     int classes = O_IMM_64;     /* of course, everything fits in 64 bits */
 
-    if ( value >= CHAR_MIN  &&  value <= CHAR_MAX  ) classes |= O_IMM_S8;
-    if ( value >= 0         &&  value <= UCHAR_MAX ) classes |= O_IMM_U8;
-    if ( value >= SHRT_MIN  &&  value <= SHRT_MAX  ) classes |= O_IMM_S16;
-    if ( value >= 0         &&  value <= USHRT_MAX ) classes |= O_IMM_U16;
-    if ( value >= INT_MIN   &&  value <= INT_MAX   ) classes |= O_IMM_S32;
-    if ( value >= 0         &&  value <= UINT_MAX  ) classes |= O_IMM_U32;
+    if (value >= CHAR_MIN  &&  value <= CHAR_MAX)   classes |= O_IMM_S8;
+    if (value >= 0         &&  value <= UCHAR_MAX)  classes |= O_IMM_U8;
+    if (value >= SHRT_MIN  &&  value <= SHRT_MAX)   classes |= O_IMM_S16;
+    if (value >= 0         &&  value <= USHRT_MAX)  classes |= O_IMM_U16;
+    if (value >= INT_MIN   &&  value <= INT_MAX)    classes |= O_IMM_S32;
+    if (value >= 0         &&  value <= UINT_MAX)   classes |= O_IMM_U32;
+
+    if (value >= (USHRT_MAX - 127) && value <= USHRT_MAX) classes |= O_HI16;
+    if (value >=  (UINT_MAX - 127) &&  value <= UINT_MAX) classes |= O_HI32;
 
     return classes;
 }
@@ -487,8 +489,8 @@ static struct insn *match(struct insn *insns, struct operand **operands)
 
     switch (code_size)
     {
-    case O_MEM_16:  bad_i_flags = I_NO_CODE16; break;
-    case O_MEM_32:  bad_i_flags = I_NO_CODE32; break;
+    case O_MEM_16:  bad_i_flags = I_NO_CODE16 | I_DATA_64; break;
+    case O_MEM_32:  bad_i_flags = I_NO_CODE32 | I_DATA_64; break;
     case O_MEM_64:  bad_i_flags = I_NO_CODE64; break;
     }
 
@@ -503,8 +505,16 @@ static struct insn *match(struct insn *insns, struct operand **operands)
             if (!insn->formals[i].classes || !operands[i])
                 goto mismatch; /* operand counts do not agree */
 
-            if (!(insn->formals[i].classes & operands[i]->classes))
-                goto mismatch;  /* classes do not match */
+            if ((  O_CLASSES                        /* classes must have */
+                 & insn->formals[i].classes     /* non-empty intersection */
+                 & operands[i]->classes ) == 0)
+                goto mismatch;
+
+            if ((  O_CONSTRAINTS                /* constraints must match */
+                 & insn->formals[i].classes
+                 & operands[i]->classes )    != (insn->formals[i].classes
+                                                        & O_CONSTRAINTS))
+                goto mismatch;
         }
 
         goto match;
@@ -516,11 +526,23 @@ mismatch:
     error("invalid instruction or operand(s)");
 
 match:
-    /* now, we prune the classes of the actual operands to match
-       the template, so we will know how to interpret/encode them. */
+    /* now, normalize the operands by pruning their classes
+       to match their templates, and normalizing them. */
 
-    for (i = 0; i < MAX_OPERANDS && insn->formals[i].classes; ++i)
-        operands[i]->classes &= insn->formals[i].classes;
+    for (i = 0; i < MAX_OPERANDS && insn->formals[i].classes; ++i) {
+        operands[i]->classes &= insn->formals[i].classes & O_CLASSES;
+
+        switch (operands[i]->classes)
+        {
+                        /* O_HI_* means high unsigned values should be
+                           recast as [negative] 8-bit signed quantities. */
+
+        case O_HI16:
+        case O_HI32:    operands[i]->value = (char) operands[i]->value;
+                        operands[i]->classes = O_IMM_S8;
+                        break;
+        }
+    }
 
     return insn;
 }
@@ -556,29 +578,37 @@ static int hibyte(int reg)
 }
 
 /* return the 4-bit encoding of `reg'. this is tiresome,
-   but thankfully the compiler does a good job with this. */
+   but thankfully the compiler does a good job with this.
+   if `reg' has no encoding (e.g., it's not a valid reg,
+   or otherwise), we return 0; this overlaps with %al et
+   al., but is intentional: it means that a test for the
+   high register bit (bit 3) will return 0 for not-a-reg */
 
 static int encode_reg(int reg)
 {
     switch (reg)
     {
+    case ES:    default:
     case AL:    case AX:    case EAX:
     case RAX:   case CR0:   case XMM0:      return 0;
 
+    case CS:
     case CL:    case CX:    case ECX:
     case RCX:   case CR1:   case XMM1:      return 1;
 
+    case SS:
     case DL:    case DX:    case EDX:
     case RDX:   case CR2:   case XMM2:      return 2;
 
+    case DS:
     case BL:    case BX:    case EBX:
     case RBX:   case CR3:   case XMM3:      return 3;
 
-    case AH:
+    case FS:    case AH:
     case SPL:   case SP:    case ESP:
     case RSP:   case CR4:   case XMM4:      return 4;
 
-    case CH:
+    case GS:    case CH:
     case BPL:   case BP:    case EBP:
     case RBP:   case CR5:   case XMM5:      return 5;
 
@@ -616,14 +646,163 @@ static int encode_reg(int reg)
     }
 }
 
-/* XXX */
+/* valid index forms for 16-bit addresses. order
+   is important! the index into rm16[] is the value
+   to stuf into the rm field of the mod/rm byte. */
+
+static struct { int reg; int index; } rm16[] =  {   { BX, SI },
+                                                    { BX, DI },
+                                                    { BP, SI },
+                                                    { BP, DI },
+                                                    { SI     },
+                                                    { DI     },
+                                                    { BP     },
+                                                    { BX     }  };
+
+static int lookup_rm16(struct operand *o)
+{
+    int i;
+
+    for (i = 0; i < (sizeof(rm16) / sizeof(*rm16)); ++i)
+        if ((o->reg == rm16[i].reg) && (o->index == rm16[i].index))
+            return i;
+
+    error("invalid base/index combination");
+}
+
+#define NR_RM16 (sizeof(rm16) / sizeof(*rm16))
+
+/* encode the mod/rm field. start with `modrm' as a template.
+   the operand to encode is `operands' at index `i'. emit the
+   mod/rm byte, the sib if necessary, and any displacement.
+
+   this is a giant pain in the @$$, because of the myriad
+   variations of address sizes and index modes. an effort
+   has been made to keep it clean and tidy, but ... sigh.
+
+   grammar.y has only done minimal validation on address modes.
+   it has ensured that if base and index are both present, they
+   are the same size, but it hasn't checked for invalid combos. */
 
 #define SET_MODRM_MOD(b, n)     ((b) = (((b) & 0x3F) | (((n) & 0x03) << 6)))
 #define SET_MODRM_RM(b, n)      ((b) = (((b) & 0xF8) | ((n) & 0x07)))
 
-static void modrm(struct operand **operands, int i, int byte)
+#define SET_SIB_SCALE(b, n)     ((b) |= (((n) & 0x03) << 6))
+#define SET_SIB_BASE(b, n)      ((b) |= ((n) & 0x07))
+#define SET_SIB_INDEX(b, n)     ((b) |= (((n) & 0x07) << 3))
+
+static void modrm(struct operand **operands, int i, int modrm)
 {
-    /* XXX */ error("mod/rm");
+    struct operand *o = operands[i];    /* operand we're encoding */
+    int range = 0;                      /* for range check at exit */
+    int need_sib = 0;
+    char sib = 0;
+
+    if (o->reg == RIP) {                                /* %rip-relative */
+        SET_MODRM_RM(modrm, 5);
+        range = O_IMM_S32;
+        o->classes = O_REL_32;
+
+        /* this is ugly. with %rip-relative addresses came the
+           possibility that a relative address would be output
+           at a position OTHER than the last in an encoding.
+           we need to account for bytes that might follow. */
+
+        while (operands[++i])
+        {
+           if (operands[i]->classes & O_IMM_8)  o->value -= 1;
+           if (operands[i]->classes & O_IMM_16) o->value -= 2;
+           if (operands[i]->classes & O_IMM_32) o->value -= 4;
+           if (operands[i]->classes & O_IMM_64) o->value -= 8;
+        }
+    } else if (o->classes & O_MEM_16) {                 /* 16-bit */
+        if (!o->reg && !o->index) {
+            SET_MODRM_RM(modrm, 6);
+            range = o->classes = O_IMM_16;
+        } else {
+            SET_MODRM_RM(modrm, lookup_rm16(o));
+            if (o->scale) error("illegal scaling");
+
+            o->classes = 0;     /* default to no displacement */
+
+            if ((o->reg == BP) && !o->index && !o->sym && !o->value)
+                o->classes = O_IMM_S8;          /* (%bp) -> 0(%bp) */
+            else if (o->value && !o->sym && (immclass(o->value) & O_IMM_S8))
+                o->classes = O_IMM_S8;          /* 8-bit signed, constant */
+            else if (o->value || o->sym)
+                range = o->classes = O_IMM_16;  /* assume 16-bit, reloc */
+
+            if (o->classes & O_IMM_S8) SET_MODRM_MOD(modrm, 1);
+            if (o->classes & O_IMM_16) SET_MODRM_MOD(modrm, 2);
+        }
+    } else {                                            /* 32- or 64-bit */
+        if (!o->reg && !o->index) {
+            if (o->classes & O_MEM_64) {        /* pure 32-bit offsets */
+                SET_MODRM_RM(modrm, 4);         /* have a long-winded */
+                ++need_sib;                     /* encoding in 64-bit */
+                SET_SIB_BASE(sib, 5);           /* since %rip-relative */
+                SET_SIB_INDEX(sib, 4);          /* is more common. */
+            } else
+                SET_MODRM_RM(modrm, 5);
+
+            range = o->classes = O_IMM_32;
+        } else {
+            if ((o->index == ESP) || (o->index == RSP))
+                error("%%esp/%%rsp can't be the index");
+
+            o->classes = 0;     /* default to no displacement */
+
+            if (!o->sym && !o->value && ((o->reg == EBP) ||
+                                         (o->reg == RBP) ||
+                                         (o->reg == R13D) ||
+                                         (o->reg == R13)))
+                /* similar to 16-bit addressing, the frame pointer can't
+                   be encoded without displacement. %r13 can't either! */
+
+                o->classes = O_IMM_S8;
+            else if (o->value && !o->sym && (immclass(o->value) & O_IMM_S8))
+                o->classes = O_IMM_S8;          /* 8-bit signed, constant */
+            else if (o->value || o->sym)
+                range = o->classes = O_IMM_32;  /* assume 32-bit, reloc */
+
+            if (o->classes & O_IMM_8) SET_MODRM_MOD(modrm, 1);
+            if (o->classes & O_IMM_32) SET_MODRM_MOD(modrm, 2);
+
+            if (!o->index && (o->reg != ESP)    /* if there's only a */
+                          && (o->reg != RSP)    /* base reg (no index) */
+                          && (o->reg != R12D)   /* and it's not one of */
+                          && (o->reg != R12))   /* these, use short form */
+                SET_MODRM_RM(modrm, encode_reg(o->reg));
+            else {
+                ++need_sib;
+                SET_MODRM_RM(modrm, 4);
+
+                if (o->reg)
+                    SET_SIB_BASE(sib, encode_reg(o->reg));
+                else {
+                    SET_MODRM_MOD(modrm, 0);        /* if no base reg, */
+                    SET_SIB_BASE(sib, 5);           /* we must use a */
+                    range = o->classes = O_IMM_32;  /* full displacement */
+                }
+
+                if (o->index)
+                    SET_SIB_INDEX(sib, encode_reg(o->index));
+                else
+                    SET_SIB_INDEX(sib, 4);
+
+                SET_SIB_SCALE(sib, o->scale);
+            }
+        }
+    }
+
+    if (range && ((immclass(o->value) & range) == 0))
+        error("offset/displacement out of range");
+
+    emit(modrm);
+    if (need_sib) emit(sib);
+
+    emit_value(o);      /* we output the value (if any) now, */
+    o->classes = 0;     /* so we must suppress output later */
 }
 
 /* try to encode an insn given a set of templates and operands.
@@ -783,12 +962,11 @@ void encode(struct insn *insns, struct operand *operand0,
 
     if (operands[i] == 0) emit(byte);   /* no mod/rm, so emit untouched */
 
-    /* 8. process the remaining operands. these are immediates (O_IMM_*)
-          absolute memory addresses (O_MABS_*), and relatives (O_REL_*).
-          all the work is really handled by emit_value(). */
+    /* 8. process the remaining operands. all the
+          work is really handled by emit_value(). */
 
     for (i = 0; operands[i]; ++i)
-        if (operands[i]->classes & (O_IMM | O_MABS | O_REL))
+        if (operands[i]->classes & (O_IMM | O_ABS | O_REL))
             emit_value(operands[i]);
 }
 

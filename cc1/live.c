@@ -322,13 +322,13 @@ int live_across(struct block *b, int reg, int i)
     return 0;
 }
 
-/* two registers X and Y interfere iff X is live when Y is DEFd,
-   except when that DEF is a copy of X to Y or vice-versa. this
-   can be computed fairly efficiently directly from the ranges,
-   since they are ordered by DEFs. we simply scan forward from
-   the range in question to find all the DEFs in its span. this
-   is technically O(n) but in reality most ranges are short, so
-   we only scan some fraction of n ranges.
+/* register Y interferes a range r of register X iff r is live
+   when Y is DEFd, except when that DEF is a copy [or extension -- TODO]
+   of X to Y. this relation can be computed fairly efficiently
+   since the ranges are ordered by DEFs: we simply scan forward
+   from the range to find all the DEFs in its span. technically
+   this is O(n) in the number of range entries, but in practice
+   most ranges are short so we only scan a subset of entries.
 
    GP and XMM registers never interfere, as they are disjoint.
 
@@ -359,9 +359,8 @@ void range_interf(struct block *b, int r, VECTOR(reg) *regs)
             if ( (def >= INSN_INDEX_FIRST)
               && (def <= INSN_INDEX_LAST)
               && insn_is_copy(INSN(b, def), &dst, &src)
-              && (((dst == x) && (src == y))
-              || ((dst == y) && (src == x))))
-                /* copies from x -> y or y -> x don't count */ ;
+              && (dst == y) && (src == x))
+                /* copies from x -> y don't count */ ;
             else
                 if ((def != x_def)        /* simultaneous DEFs don't count */
                  && (REG_TYPE(x) == REG_TYPE(y))) /* must be in same class */

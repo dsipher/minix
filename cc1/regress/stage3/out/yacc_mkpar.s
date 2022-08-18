@@ -24,9 +24,9 @@ L5:
 	pushq %r15
 L6:
 	xorl %r15d,%r15d
-	movslq %edi,%rdi
+	movslq %edi,%rcx
 	movq _shift_table(%rip),%rax
-	movq (%rax,%rdi,8),%r14
+	movq (%rax,%rcx,8),%r14
 	testq %r14,%r14
 	jz L10
 L8:
@@ -36,11 +36,11 @@ L11:
 	cmpl $0,%r13d
 	jl L10
 L12:
-	movslq %r13d,%rax
-	movswl 12(%r14,%rax,2),%r12d
-	movslq %r12d,%rcx
+	movslq %r13d,%r13
+	movswl 12(%r14,%r13,2),%r12d
+	movslq %r12d,%r12
 	movq _accessing_symbol(%rip),%rax
-	movswl (%rax,%rcx,2),%ebx
+	movswl (%rax,%r12,2),%ebx
 	cmpl _start_symbol(%rip),%ebx
 	jge L17
 L15:
@@ -91,19 +91,19 @@ L20:
 	cltd 
 	idivl %ecx
 	movl %eax,-4(%rbp)
-	movslq %r8d,%rcx
-	movq _lookaheads(%rip),%rax
-	movswl (%rax,%rcx,2),%r14d
-	incl %r8d
 	movslq %r8d,%r8
-	movswl (%rax,%r8,2),%r15d
+	movq _lookaheads(%rip),%rcx
+	movswl (%rcx,%r8,2),%r14d
+	incl %r8d
+	movslq %r8d,%rax
+	movswl (%rcx,%rax,2),%r15d
 L22:
 	cmpl %r14d,%r15d
 	jle L25
 L23:
-	movslq %r14d,%rcx
+	movslq %r14d,%r14
 	movq _LAruleno(%rip),%rax
-	movswl (%rax,%rcx,2),%r13d
+	movswl (%rax,%r14,2),%r13d
 	movl %r14d,%ecx
 	imull -4(%rbp),%ecx
 	movslq %ecx,%rcx
@@ -250,8 +250,8 @@ L78:
 	cmpl $0,%edx
 	jl L77
 L79:
-	movslq %edx,%rax
-	movw 12(%rdi,%rax,2),%cx
+	movslq %edx,%rdx
+	movw 12(%rdi,%rdx,2),%cx
 	movw %cx,_final_state(%rip)
 	movswq %cx,%rcx
 	movq _accessing_symbol(%rip),%rax
@@ -277,15 +277,15 @@ L87:
 L89:
 	call _no_space
 L91:
-	xorl %ecx,%ecx
+	xorl %eax,%eax
 L92:
-	cmpl %ecx,_nrules(%rip)
+	cmpl %eax,_nrules(%rip)
 	jle L95
 L93:
-	movslq %ecx,%rax
-	movq _rules_used(%rip),%rdx
-	movw $0,(%rdx,%rax,2)
-	incl %ecx
+	movslq %eax,%rax
+	movq _rules_used(%rip),%rcx
+	movw $0,(%rcx,%rax,2)
+	incl %eax
 	jmp L92
 L95:
 	xorl %edx,%edx
@@ -293,9 +293,9 @@ L96:
 	cmpl _nstates(%rip),%edx
 	jge L99
 L97:
-	movslq %edx,%rcx
+	movslq %edx,%rdx
 	movq _parser(%rip),%rax
-	movq (%rax,%rcx,8),%rcx
+	movq (%rax,%rdx,8),%rcx
 L100:
 	testq %rcx,%rcx
 	jz L103
@@ -317,19 +317,19 @@ L103:
 	jmp L96
 L99:
 	movw $0,_nunused(%rip)
-	movl $3,%ecx
+	movl $3,%eax
 L111:
-	cmpl %ecx,_nrules(%rip)
+	cmpl %eax,_nrules(%rip)
 	jle L114
 L112:
-	movslq %ecx,%rax
-	movq _rules_used(%rip),%rdx
-	cmpw $0,(%rdx,%rax,2)
+	movslq %eax,%rax
+	movq _rules_used(%rip),%rcx
+	cmpw $0,(%rcx,%rax,2)
 	jnz L117
 L115:
 	incw _nunused(%rip)
 L117:
-	incl %ecx
+	incl %eax
 	jmp L111
 L114:
 	movw _nunused(%rip),%cx
@@ -380,9 +380,9 @@ L130:
 	movl $0,_SRcount(%rip)
 	movl $0,_RRcount(%rip)
 	movl $-1,%edi
-	movslq %eax,%rdx
+	movslq %eax,%rax
 	movq _parser(%rip),%rcx
-	movq (%rcx,%rdx,8),%rsi
+	movq (%rcx,%rax,8),%rsi
 L133:
 	testq %rsi,%rsi
 	jz L136
@@ -450,12 +450,12 @@ L136:
 	movl _RRtotal(%rip),%esi
 	addl _RRcount(%rip),%esi
 	movl %esi,_RRtotal(%rip)
-	movslq %eax,%rcx
-	movq _SRconflicts(%rip),%rsi
-	movw %dx,(%rsi,%rcx,2)
-	movl _RRcount(%rip),%edx
-	movq _RRconflicts(%rip),%rsi
-	movw %dx,(%rsi,%rcx,2)
+	movslq %eax,%rax
+	movq _SRconflicts(%rip),%rcx
+	movw %dx,(%rcx,%rax,2)
+	movl _RRcount(%rip),%ecx
+	movq _RRconflicts(%rip),%rdx
+	movw %cx,(%rdx,%rax,2)
 	incl %eax
 	jmp L129
 L128:
@@ -529,9 +529,9 @@ L204:
 L205:
 	xorl %esi,%esi
 	xorl %eax,%eax
-	movslq %edi,%rdi
+	movslq %edi,%rdx
 	movq _parser(%rip),%rcx
-	movq (%rcx,%rdi,8),%rdx
+	movq (%rcx,%rdx,8),%rdx
 L207:
 	testq %rdx,%rdx
 	jz L210
@@ -589,9 +589,9 @@ L246:
 L247:
 	movl %ebx,%edi
 	call _sole_reduction
-	movslq %ebx,%rcx
-	movq _defred(%rip),%rdx
-	movw %ax,(%rdx,%rcx,2)
+	movslq %ebx,%rbx
+	movq _defred(%rip),%rcx
+	movw %ax,(%rcx,%rbx,2)
 	incl %ebx
 	jmp L246
 L245:
@@ -626,8 +626,8 @@ L259:
 	cmpl %eax,%ebx
 	jge L262
 L260:
-	movslq %ebx,%rax
-	movq (%rdi,%rax,8),%rdi
+	movslq %ebx,%rbx
+	movq (%rdi,%rbx,8),%rdi
 	call _free_action_row
 	incl %ebx
 	jmp L259
@@ -653,9 +653,9 @@ L266:
 L267:
 	movl %ebx,%edi
 	call _parse_actions
-	movslq %ebx,%rcx
-	movq _parser(%rip),%rdx
-	movq %rax,(%rdx,%rcx,8)
+	movslq %ebx,%rbx
+	movq _parser(%rip),%rcx
+	movq %rax,(%rcx,%rbx,8)
 	incl %ebx
 	jmp L266
 L269:

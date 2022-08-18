@@ -267,8 +267,8 @@ L170:
 	movq %rdi,%r14
 	xorl %r12d,%r12d
 L172:
-	movslq %r12d,%rax
-	movq (%r14,%rax,8),%rbx
+	movslq %r12d,%r12
+	movq (%r14,%r12,8),%rbx
 	testq %rbx,%rbx
 	jz L171
 L173:

@@ -45,17 +45,16 @@ L2:
 	cmpb $92,%r14b
 	jnz L5
 L4:
-	movb 1(%r12),%cl
-	movsbl %cl,%edi
+	movsbl 1(%r12),%edi
 	movl %edi,%eax
 	subl $48,%eax
 	cmpl $10,%eax
 	jae L8
 L14:
-	cmpb $56,%cl
+	cmpb $56,%dil
 	jz L8
 L10:
-	cmpb $57,%cl
+	cmpb $57,%dil
 	jz L8
 L7:
 	call _toupper
@@ -65,17 +64,16 @@ L7:
 	subq $_digits,%rax
 	movl %eax,%r14d
 	leaq 2(%r12),%rbx
-	movb 2(%r12),%cl
-	movsbl %cl,%edi
+	movsbl 2(%r12),%edi
 	movl %edi,%eax
 	subl $48,%eax
 	cmpl $10,%eax
 	jae L6
 L25:
-	cmpb $56,%cl
+	cmpb $56,%dil
 	jz L6
 L21:
-	cmpb $57,%cl
+	cmpb $57,%dil
 	jz L6
 L18:
 	call _toupper
@@ -85,17 +83,16 @@ L18:
 	subq $_digits,%rax
 	leal (%rax,%r14,8),%r14d
 	leaq 3(%r12),%rbx
-	movb 3(%r12),%cl
-	movsbl %cl,%edi
+	movsbl 3(%r12),%edi
 	movl %edi,%eax
 	subl $48,%eax
 	cmpl $10,%eax
 	jae L6
 L36:
-	cmpb $56,%cl
+	cmpb $56,%dil
 	jz L6
 L32:
-	cmpb $57,%cl
+	cmpb $57,%dil
 	jz L6
 L29:
 	call _toupper
@@ -109,7 +106,7 @@ L29:
 	jle L6
 	jg L82
 L8:
-	cmpb $120,%cl
+	cmpb $120,%dil
 	jnz L45
 L44:
 	leaq 2(%r12),%rbx
@@ -119,15 +116,14 @@ L44:
 L49:
 	xorl %r14d,%r14d
 L51:
-	movb (%rbx),%dil
-	movsbq %dil,%rax
+	movsbq (%rbx),%rax
 	testb $68,___ctype+1(%rax)
 	jz L6
 L52:
 	testl $240,%r14d
 	jnz L82
 L56:
-	movsbl %dil,%edi
+	movsbl %al,%edi
 	shll $4,%r14d
 	call _toupper
 	movl %eax,%esi
@@ -140,7 +136,7 @@ L56:
 L45:
 	xorl %eax,%eax
 L83:
-	cmpb L86(,%rax),%cl
+	cmpb L86(,%rax),%dil
 	jz L84
 L85:
 	incl %eax
@@ -832,11 +828,11 @@ L336:
 	cmpb $0,%al
 	jle L339
 L341:
-	movsbq %al,%rcx
-	cmpq $128,%rcx
+	movsbq %al,%rax
+	cmpq $128,%rax
 	jae L339
 L338:
-	movl _classes(,%rcx,4),%r12d
+	movl _classes(,%rax,4),%r12d
 	jmp L340
 L339:
 	xorl %r12d,%r12d
@@ -852,12 +848,11 @@ L483:
 	addl $_token_scan,%eax
 	jmp *%rax
 L426:
-	movb (%r13),%cl
-	movsbq %cl,%rax
+	movsbq (%r13),%rax
 	testb $7,___ctype+1(%rax)
 	jnz L427
 L429:
-	cmpb $95,%cl
+	cmpb $95,%al
 	jnz L346
 L427:
 	incq %r13
@@ -942,8 +937,8 @@ L462:
 	cmpb (%r15),%dl
 	jnz L465
 L467:
-	movslq %eax,%rcx
-	movl _modifiers(,%rcx,8),%ecx
+	movslq %eax,%rax
+	movl _modifiers(,%rax,8),%ecx
 	testl %ecx,%ecx
 	jz L465
 L464:
@@ -1007,18 +1002,17 @@ L385:
 	cmpl $10,%eax
 	jae L392
 L397:
-	movb (%r13),%dil
-	movsbq %dil,%rax
+	movsbq (%r13),%rax
 	testb $7,___ctype+1(%rax)
 	jnz L398
 L404:
-	cmpb $46,%dil
+	cmpb $46,%al
 	jz L398
 L400:
-	cmpb $95,%dil
+	cmpb $95,%al
 	jnz L346
 L398:
-	movsbl %dil,%edi
+	movsbl %al,%edi
 	call _toupper
 	cmpl $69,%eax
 	jnz L410
@@ -1672,33 +1666,33 @@ L754:
 	jmp L745
 L748:
 	movq (%r12),%r14
-	xorl %r13d,%r13d
+	xorl %r12d,%r12d
 L755:
 	testq %r14,%r14
 	jz L744
 L756:
-	movq (%rbx),%r12
+	movq (%rbx),%r13
 L759:
-	testq %r12,%r12
+	testq %r13,%r13
 	jz L762
 L760:
-	movq %r12,%rsi
+	movq %r13,%rsi
 	movq %r14,%rdi
 	call _token_same
 	testl %eax,%eax
 	jz L765
 L763:
-	leaq 8(%r12),%rdi
+	leaq 8(%r13),%rdi
 	call _vstring_free
-	movl $-2147483587,(%r12)
-	movslq %r13d,%rax
-	movq %rax,8(%r12)
+	movl $-2147483587,(%r13)
+	movslq %r12d,%r12
+	movq %r12,8(%r13)
 L765:
-	movq 32(%r12),%r12
+	movq 32(%r13),%r13
 	jmp L759
 L762:
 	movq 32(%r14),%r14
-	incl %r13d
+	incl %r12d
 	jmp L755
 L744:
 	popq %r14

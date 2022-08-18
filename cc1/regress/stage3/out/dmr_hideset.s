@@ -52,10 +52,10 @@ L16:
 	pushq %r12
 L17:
 	movl %edi,%r12d
-	movslq %r12d,%rcx
+	movslq %r12d,%r12
 	movq _hidesets(%rip),%rax
 	movq %rsi,%rdx
-	movq (%rax,%rcx,8),%rsi
+	movq (%rax,%r12,8),%rsi
 	leaq -280(%rbp),%rdi
 	call _inserths
 	movl %eax,%ebx
@@ -66,9 +66,9 @@ L19:
 	jge L22
 L20:
 	leaq -280(%rbp),%rsi
-	movslq %eax,%rcx
-	movq _hidesets(%rip),%rdx
-	movq (%rdx,%rcx,8),%rdx
+	movslq %eax,%rax
+	movq _hidesets(%rip),%rcx
+	movq (%rcx,%rax,8),%rdx
 L23:
 	movq (%rsi),%rcx
 	cmpq (%rdx),%rcx
@@ -180,9 +180,9 @@ _unionhideset:
 L60:
 	pushq %rbx
 L61:
-	movslq %esi,%rsi
+	movslq %esi,%rcx
 	movq _hidesets(%rip),%rax
-	movq (%rax,%rsi,8),%rbx
+	movq (%rax,%rcx,8),%rbx
 L63:
 	movq (%rbx),%rsi
 	testq %rsi,%rsi
@@ -222,9 +222,9 @@ _prhideset:
 L71:
 	pushq %rbx
 L72:
-	movslq %edi,%rdi
+	movslq %edi,%rcx
 	movq _hidesets(%rip),%rax
-	movq (%rax,%rdi,8),%rbx
+	movq (%rax,%rcx,8),%rbx
 L74:
 	movq (%rbx),%rax
 	testq %rax,%rax

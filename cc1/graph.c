@@ -390,18 +390,16 @@ restart:
 
             FOR_EACH_INSN(b, i, insn)
                 if (insn_is_copy(insn, &dst, &src))
+                {
                     if (dst == src) {
-                        /* earlier merges can create self-copies
-                           in oblique ways. pruning would take
-                           care of these eventually, but might
-                           as well clean up after ourselves ... */
+                        /* self-copy, probably from an earlier merge.
+                           pruning would take care of this eventually,
+                           but it's easy enough to clean up ourselves. */
 
                         INSN(b, i) = &nop_insn;
-                    } else if (merge0(dst, src)) {
-                        INSN(b, i) = &nop_insn;
+                    } else if (merge0(dst, src))
                         goto success;
-                    }
-
+                }
         }
 
     /* next, we look for LEAx that are really three-address
@@ -457,38 +455,18 @@ restart:
             }
         }
 
-    /* finally, try to merge the source/destination of casts. (among other
-       things, this helps us eliminate them later if they are unnecessary.) */
+    /* finally, try to merge non-destructive sign extensions.
+       LIR requires that different-size values be in different
+       registers, but MCH does not, so if we can keep a value
+       and its sign extension in the same register, let's do. */
 
     for (depth = loop_max_depth; depth >= 0; --depth)
         FOR_ALL_BLOCKS(b) {
             if (b->loop_depth != depth) continue;
 
-            FOR_EACH_INSN(b, i, insn) {
-                struct operand *src;
-                struct operand *dst;
-
-                switch (insn->op)
-                {
-                case I_MCH_MOVZBW: case I_MCH_MOVZBL: case I_MCH_MOVZBQ:
-                case I_MCH_MOVSBW: case I_MCH_MOVSBL: case I_MCH_MOVSBQ:
-                case I_MCH_MOVZWL: case I_MCH_MOVZWQ: case I_MCH_MOVSWL:
-                case I_MCH_MOVSWQ: case I_MCH_MOVZLQ: case I_MCH_MOVSLQ:
-
-                case I_MCH_CVTSS2SD:
-                case I_MCH_CVTSD2SS:   break;
-
-                default:                continue;
-                }
-
-                dst = &insn->operand[0];
-                src = &insn->operand[1];
-
-                if (!OPERAND_REG(dst) || !OPERAND_REG(src))
-                    continue;
-
-                if (merge0(dst->reg, src->reg)) goto success;
-            }
+            FOR_EACH_INSN(b, i, insn)
+                if (insn_is_ext(insn, &dst, &src) && merge0(dst, src))
+                    goto success;
         }
 
     return total;

@@ -4,15 +4,14 @@ _strchr:
 L1:
 L2:
 	movq %rdi,%rax
-	movsbl %sil,%esi
+	movsbl %sil,%edx
 L4:
-	movb (%rax),%dl
-	movsbl %dl,%ecx
-	cmpl %ecx,%esi
+	movsbl (%rax),%ecx
+	cmpl %ecx,%edx
 	jz L3
 L5:
 	incq %rax
-	testb %dl,%dl
+	testb %cl,%cl
 	jnz L4
 L7:
 	xorl %eax,%eax

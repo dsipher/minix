@@ -58,42 +58,42 @@ L6:
 _refill_slab:
 L14:
 L15:
-	movl (%rdi),%r8d
-	movl 4(%rdi),%esi
-	movq _global_arena+8(%rip),%rdx
-	movq %rdx,%rcx
-	andl $7,%ecx
+	movl (%rdi),%ecx
+	movl 4(%rdi),%r8d
+	movq _global_arena+8(%rip),%rsi
+	movq %rsi,%rdx
+	andl $7,%edx
 	jz L22
 L20:
 	movl $8,%eax
-	subq %rcx,%rax
-	addq %rax,%rdx
-	movq %rdx,_global_arena+8(%rip)
+	subq %rdx,%rax
+	addq %rax,%rsi
+	movq %rsi,_global_arena+8(%rip)
 L22:
 	movq _global_arena+8(%rip),%rax
-	movl %r8d,%ecx
-	imull %esi,%ecx
-	movslq %ecx,%rcx
-	addq %rax,%rcx
-	movq %rcx,_global_arena+8(%rip)
-	xorl %edx,%edx
+	movl %ecx,%edx
+	imull %r8d,%edx
+	movslq %edx,%rdx
+	addq %rax,%rdx
+	movq %rdx,_global_arena+8(%rip)
+	xorl %esi,%esi
 L23:
-	movl %esi,%ecx
-	decl %ecx
-	cmpl %ecx,%edx
+	movl %r8d,%edx
+	decl %edx
+	cmpl %edx,%esi
 	jge L26
 L24:
-	movq 8(%rdi),%rcx
-	movq %rcx,(%rax)
+	movq 8(%rdi),%rdx
+	movq %rdx,(%rax)
 	movq %rax,8(%rdi)
-	incl %edx
-	movslq %r8d,%rcx
+	incl %esi
+	movslq %ecx,%rcx
 	addq %rcx,%rax
 	jmp L23
 L26:
-	addl %esi,16(%rdi)
-	addl 20(%rdi),%esi
-	movl %esi,20(%rdi)
+	addl %r8d,16(%rdi)
+	addl 20(%rdi),%r8d
+	movl %r8d,20(%rdi)
 L16:
 	ret 
 

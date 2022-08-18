@@ -55,8 +55,8 @@ L32:
 L26:
 	xorl %r12d,%r12d
 L35:
-	movslq %r12d,%rax
-	movq ___iotab(,%rax,8),%rdi
+	movslq %r12d,%r12
+	movq ___iotab(,%r12,8),%rdi
 	testq %rdi,%rdi
 	jz L40
 L41:

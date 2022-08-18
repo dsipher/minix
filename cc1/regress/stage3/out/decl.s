@@ -50,14 +50,14 @@ _s_k_map:
 _s_to_k:
 L23:
 L24:
-	xorl %edx,%edx
+	xorl %ecx,%ecx
 L27:
-	movslq %edx,%rcx
+	movslq %ecx,%rcx
 	cmpl _s_k_map(,%rcx,8),%edi
 	jz L30
 L32:
-	incl %edx
-	cmpl $5,%edx
+	incl %ecx
+	cmpl $5,%ecx
 	jl L27
 	ret
 L30:
@@ -69,14 +69,14 @@ L25:
 _k_to_s:
 L34:
 L35:
-	xorl %edx,%edx
+	xorl %ecx,%ecx
 L38:
-	movslq %edx,%rcx
+	movslq %ecx,%rcx
 	cmpl _s_k_map+4(,%rcx,8),%edi
 	jz L41
 L43:
-	incl %edx
-	cmpl $5,%edx
+	incl %ecx
+	cmpl $5,%ecx
 	jl L38
 	ret
 L41:

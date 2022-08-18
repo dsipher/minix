@@ -507,123 +507,123 @@ _fsm:
 _expandlex:
 L1:
 L2:
-	movl $_fsm,%ecx
+	movl $_fsm,%r8d
 L4:
 	xorl %eax,%eax
-	cmpl $0,(%rcx)
+	cmpl $0,(%r8)
 	jl L56
 L8:
-	movslq %eax,%rdx
-	movb 4(%rcx,%rdx),%sil
-	testb %sil,%sil
+	movslq %eax,%rax
+	movb 4(%r8,%rax),%dl
+	testb %dl,%dl
 	jz L11
 L9:
-	movl 8(%rcx),%r8d
-	cmpl $32,%r8d
+	movl 8(%r8),%edi
+	cmpl $32,%edi
 	jl L14
 L12:
-	notl %r8d
+	notl %edi
 L14:
-	cmpb $5,%sil
+	cmpb $5,%dl
 	jz L18
 L77:
-	cmpb $2,%sil
+	cmpb $2,%dl
 	jz L24
 L78:
-	cmpb $3,%sil
+	cmpb $3,%dl
 	jz L49
 L79:
-	movzbq %sil,%rsi
-	shlq $6,%rsi
-	movslq (%rcx),%rdx
-	movw %r8w,_bigfsm(%rsi,%rdx,2)
+	movzbq %dl,%rdx
+	shlq $6,%rdx
+	movslq (%r8),%rcx
+	movw %di,_bigfsm(%rdx,%rcx,2)
 	jmp L10
 L49:
-	movl $48,%edi
+	movl $48,%esi
 L51:
-	movslq %edi,%rsi
-	shlq $6,%rsi
-	movslq (%rcx),%rdx
-	movw %r8w,_bigfsm(%rsi,%rdx,2)
-	incl %edi
-	cmpl $57,%edi
+	movslq %esi,%rdx
+	shlq $6,%rdx
+	movslq (%r8),%rcx
+	movw %di,_bigfsm(%rdx,%rcx,2)
+	incl %esi
+	cmpl $57,%esi
 	jle L51
 	jg L10
 L24:
-	xorl %edi,%edi
+	xorl %esi,%esi
 L31:
-	incl %edi
-	cmpl $256,%edi
+	incl %esi
+	cmpl $256,%esi
 	jg L10
 L26:
-	cmpl $97,%edi
+	cmpl $97,%esi
 	jl L36
 L40:
-	cmpl $122,%edi
+	cmpl $122,%esi
 	jle L29
 L36:
-	cmpl $65,%edi
+	cmpl $65,%esi
 	jl L32
 L44:
-	cmpl $90,%edi
+	cmpl $90,%esi
 	jle L29
 L32:
-	cmpl $95,%edi
+	cmpl $95,%esi
 	jnz L31
 L29:
-	movslq %edi,%rsi
-	shlq $6,%rsi
-	movslq (%rcx),%rdx
-	movw %r8w,_bigfsm(%rsi,%rdx,2)
+	movslq %esi,%rdx
+	shlq $6,%rdx
+	movslq (%r8),%rcx
+	movw %di,_bigfsm(%rdx,%rcx,2)
 	jmp L31
 L18:
-	xorl %edi,%edi
+	xorl %esi,%esi
 L20:
-	movslq %edi,%rsi
-	shlq $6,%rsi
-	movslq (%rcx),%rdx
-	movw %r8w,_bigfsm(%rsi,%rdx,2)
-	incl %edi
-	cmpl $256,%edi
+	movslq %esi,%rdx
+	shlq $6,%rdx
+	movslq (%r8),%rcx
+	movw %di,_bigfsm(%rdx,%rcx,2)
+	incl %esi
+	cmpl $256,%esi
 	jl L20
 L10:
 	incl %eax
 	jmp L8
 L11:
-	addq $12,%rcx
+	addq $12,%r8
 	jmp L4
 L56:
-	xorl %edi,%edi
+	xorl %esi,%esi
 L65:
-	incl %edi
-	cmpl $255,%edi
+	incl %esi
+	cmpl $255,%esi
 	jge L62
 L60:
-	cmpl $63,%edi
+	cmpl $63,%esi
 	jz L63
 L66:
-	cmpl $92,%edi
+	cmpl $92,%esi
 	jnz L65
 L63:
-	movslq %edi,%rsi
-	shlq $6,%rsi
-	movslq %eax,%rdx
-	movw _bigfsm(%rsi,%rdx,2),%cx
+	movslq %esi,%rdx
+	shlq $6,%rdx
+	movslq %eax,%rax
+	movw _bigfsm(%rdx,%rax,2),%cx
 	cmpw $0,%cx
 	jle L72
 L70:
 	notw %cx
-	movw %cx,_bigfsm(%rsi,%rdx,2)
+	movw %cx,_bigfsm(%rdx,%rax,2)
 L72:
-	andw $-65,_bigfsm(%rsi,%rdx,2)
+	andw $-65,_bigfsm(%rdx,%rax,2)
 	jmp L65
 L62:
-	movslq %eax,%rcx
-	movw $-42,_bigfsm+16256(,%rcx,2)
-	cmpw $0,_bigfsm+16192(,%rcx,2)
+	movslq %eax,%rax
+	movw $-42,_bigfsm+16256(,%rax,2)
+	cmpw $0,_bigfsm+16192(,%rax,2)
 	jl L75
 L73:
-	movw $-35,_bigfsm+16192(,%rcx,2)
+	movw $-35,_bigfsm+16192(,%rax,2)
 L75:
 	incl %eax
 	cmpl $32,%eax
@@ -1105,11 +1105,11 @@ L271:
 L276:
 	movb $253,(%rcx)
 L278:
-	movslq %eax,%rsi
+	movslq %eax,%rax
 	movq 32(%rbx),%rdx
-	leaq (%rsi,%rdx),%rcx
+	leaq (%rax,%rdx),%rcx
 	movq %rcx,32(%rbx)
-	movb $254,3(%rsi,%rdx)
+	movb $254,3(%rax,%rdx)
 	movq 32(%rbx),%rcx
 	movb $254,2(%rcx)
 	movq 32(%rbx),%rcx

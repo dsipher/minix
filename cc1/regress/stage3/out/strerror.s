@@ -47,8 +47,8 @@ L16:
 	cmpl $35,%edi
 	jge L9
 L12:
-	movslq %edi,%rdi
-	movq _errors(,%rdi,8),%rax
+	movslq %edi,%rax
+	movq _errors(,%rax,8),%rax
 	testq %rax,%rax
 	jnz L8
 L9:

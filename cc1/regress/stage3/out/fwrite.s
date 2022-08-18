@@ -25,14 +25,13 @@ L8:
 	movq %r15,%rbx
 L10:
 	decl (%r14)
-	movb (%r13),%al
-	movzbl %al,%edi
+	movzbl (%r13),%edi
 	js L17
 L16:
-	movq 24(%r14),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%r14)
-	movb %al,(%rdx)
+	movq 24(%r14),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%r14)
+	movb %dil,(%rcx)
 	movl %edi,%eax
 	jmp L18
 L17:

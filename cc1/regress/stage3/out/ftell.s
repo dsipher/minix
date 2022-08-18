@@ -35,8 +35,8 @@ L6:
 	cmpq $-1,%rax
 	jz L3
 L20:
-	movslq %ebx,%rbx
-	addq %rbx,%rax
+	movslq %ebx,%rcx
+	addq %rcx,%rax
 L3:
 	popq %rbx
 	ret 

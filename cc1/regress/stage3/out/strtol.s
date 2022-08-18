@@ -2,94 +2,93 @@
 
 ___strtoul:
 L1:
-	pushq %rbp
-	movq %rsp,%rbp
-	subq $8,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
 L2:
-	movl %edx,%r14d
-	movq %rdi,%r13
-	movl $0,-4(%rbp)
+	movq %rsi,%r8
+	movl %edx,%esi
+	movl %ecx,%r15d
+	movq %rdi,%r14
+	xorl %r13d,%r13d
 	xorl %r12d,%r12d
 	xorl %eax,%eax
 	xorl %ebx,%ebx
 L4:
-	movsbl (%r13),%r8d
-	leaq 1(%r13),%r9
-	movq %r9,%r13
-	movl %r8d,%r11d
-	movslq %r8d,%rdx
-	testb $8,___ctype+1(%rdx)
+	movsbl (%r14),%ecx
+	leaq 1(%r14),%rdx
+	movq %rdx,%r14
+	movl %ecx,%r11d
+	movslq %ecx,%rcx
+	testb $8,___ctype+1(%rcx)
 	jnz L4
 L6:
-	cmpl $45,%r8d
+	cmpl $45,%ecx
 	jz L10
 L131:
-	cmpl $43,%r8d
+	cmpl $43,%ecx
 	jz L11
 	jnz L8
 L10:
-	movl $1,-4(%rbp)
+	movl $1,%r13d
 L11:
-	movsbl (%r9),%edx
-	incq %r9
-	movq %r9,%r13
-	movl %edx,%r11d
+	movsbl (%rdx),%ecx
+	incq %rdx
+	movq %rdx,%r14
+	movl %ecx,%r11d
 L8:
-	testl %r14d,%r14d
+	testl %esi,%esi
 	jnz L14
 L12:
 	cmpl $48,%r11d
 	jnz L16
 L15:
-	movb (%r13),%dl
-	cmpb $120,%dl
+	movb (%r14),%cl
+	cmpb $120,%cl
 	jz L22
 L21:
-	cmpb $88,%dl
+	cmpb $88,%cl
 	jnz L23
 L22:
-	movl $16,%edx
+	movl $16,%ecx
 	jmp L20
 L23:
-	movl $8,%edx
+	movl $8,%ecx
 L20:
-	movl %edx,%r14d
+	movl %ecx,%esi
 L14:
-	cmpl $16,%r14d
+	cmpl $16,%esi
 	jnz L32
 L37:
 	cmpl $48,%r11d
 	jnz L32
 L38:
-	movb (%r13),%dl
-	cmpb $120,%dl
+	movb (%r14),%cl
+	cmpb $120,%cl
 	jz L42
 L41:
-	cmpb $88,%dl
+	cmpb $88,%cl
 	jnz L32
 L42:
 	movl $1,%eax
-	movsbl 1(%r13),%edx
-	leaq 2(%r13),%r8
-	movq %r8,%r13
-	movl %edx,%r11d
+	movsbl 1(%r14),%ecx
+	leaq 2(%r14),%rdx
+	movq %rdx,%r14
+	movl %ecx,%r11d
 	jmp L32
 L16:
-	movl %r11d,%edx
-	subl $48,%edx
-	cmpl $10,%edx
+	movl %r11d,%ecx
+	subl $48,%ecx
+	cmpl $10,%ecx
 	jae L28
 L25:
-	movl $10,%r14d
+	movl $10,%esi
 L32:
-	leal 48(%r14),%r10d
-	leal 55(%r14),%r9d
-	leal 87(%r14),%r8d
+	leal 48(%rsi),%r10d
+	leal 55(%rsi),%r9d
+	leal 87(%rsi),%ecx
 	movl %r11d,%edx
 	subl $48,%edx
 	cmpl $10,%edx
@@ -111,30 +110,30 @@ L62:
 	cmpl $26,%edx
 	jae L66
 L64:
-	cmpl %r8d,%r11d
+	cmpl %ecx,%r11d
 	jge L66
 L49:
-	testl %ecx,%ecx
+	testl %r15d,%r15d
 	jz L73
 L72:
-	movslq %r14d,%rdi
+	movslq %esi,%rsi
 	movq $-1,%rax
 	xorl %edx,%edx
-	divq %rdi
-	movq %rax,%r15
+	divq %rsi
+	movq %rax,%rdi
 	movq $-1,%rax
 	xorl %edx,%edx
-	divq %rdi
+	divq %rsi
 	jmp L134
 L73:
-	movslq %r14d,%rdi
+	movslq %esi,%rsi
 	movq $9223372036854775807,%rax
 	cqto 
-	idivq %rdi
-	movq %rax,%r15
+	idivq %rsi
+	movq %rax,%rdi
 	movq $9223372036854775807,%rax
 	cqto 
-	idivq %rdi
+	idivq %rsi
 L134:
 	movq %rdx,%rax
 L75:
@@ -163,55 +162,55 @@ L91:
 	cmpl $26,%edx
 	jae L98
 L96:
-	cmpl %r8d,%r11d
+	cmpl %ecx,%r11d
 	jge L98
 L97:
 	movl %r11d,%edx
 	subl $87,%edx
 L81:
-	cmpq %r15,%rbx
+	cmpq %rdi,%rbx
 	jb L105
 	ja L110
 L108:
-	movslq %edx,%rdi
-	cmpq %rdi,%rax
+	movslq %edx,%rdx
+	cmpq %rdx,%rax
 	jae L105
 L110:
 	leal 1(%r12),%edx
 	movl %edx,%r12d
 	jmp L103
 L105:
-	movslq %r14d,%rdi
+	movslq %esi,%rsi
 	movq %rbx,%r11
-	imulq %rdi,%r11
+	imulq %rsi,%r11
 	movslq %edx,%rdx
 	addq %rdx,%r11
 	movq %r11,%rbx
 L103:
-	movsbl (%r13),%edx
-	leaq 1(%r13),%rdi
-	movq %rdi,%r13
+	movsbl (%r14),%edx
+	leaq 1(%r14),%r11
+	movq %r11,%r14
 	movl %edx,%r11d
 	jmp L75
 L98:
-	leaq -1(%r13),%rdi
+	leaq -1(%r14),%rdi
 	jmp L28
 L66:
 	testl %eax,%eax
 	jz L28
 L68:
-	movq %r13,%rdi
+	movq %r14,%rdi
 	subq $2,%rdi
 L28:
-	testq %rsi,%rsi
+	testq %r8,%r8
 	jz L114
 L112:
-	movq %rdi,(%rsi)
+	movq %rdi,(%r8)
 L114:
 	testl %r12d,%r12d
 	jnz L115
 L117:
-	cmpl $0,-4(%rbp)
+	testl %r13d,%r13d
 	jz L127
 L126:
 	movq %rbx,%rax
@@ -222,10 +221,10 @@ L127:
 	jmp L3
 L115:
 	movl $34,_errno(%rip)
-	testl %ecx,%ecx
+	testl %r15d,%r15d
 	jnz L118
 L120:
-	cmpl $0,-4(%rbp)
+	testl %r13d,%r13d
 	jz L123
 L122:
 	movq $-9223372036854775808,%rax
@@ -241,8 +240,6 @@ L3:
 	popq %r13
 	popq %r12
 	popq %rbx
-	movq %rbp,%rsp
-	popq %rbp
 	ret 
 
 

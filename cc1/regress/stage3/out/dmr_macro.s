@@ -4,7 +4,7 @@ _dodefine:
 L1:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $32,%rsp
+	subq $40,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -28,7 +28,7 @@ L9:
 	leaq 24(%rbx),%rdi
 	call _lookup
 	testb $4,41(%rax)
-	movq %rax,-32(%rbp)
+	movq %rax,-40(%rbp)
 	jnz L13
 L15:
 	leaq 48(%rbx),%r14
@@ -127,27 +127,28 @@ L68:
 L70:
 	movq %r15,%rdi
 	call _normtokenrow
-	movq %rax,-16(%rbp)
-	movq -32(%rbp),%rax
+	movq %rax,-8(%rbp)
+	movq -40(%rbp),%rax
 	testb $1,41(%rax)
 	jz L73
 L71:
-	movq -32(%rbp),%rax
+	movq -40(%rbp),%rax
 	movq 24(%rax),%rsi
-	movq -16(%rbp),%rdi
+	movq -8(%rbp),%rdi
 	call _comparetokens
 	testl %eax,%eax
 	jnz L78
 L81:
-	movq -32(%rbp),%rax
+	movq -40(%rbp),%rax
 	movq 32(%rax),%rsi
 	testq %rsi,%rsi
-	setz %cl
-	movzbl %cl,%ecx
+	setz %al
+	movzbl %al,%eax
+	movl %eax,-28(%rbp)
 	testq %r13,%r13
 	setz %al
 	movzbl %al,%eax
-	cmpl %eax,%ecx
+	cmpl %eax,-28(%rbp)
 	jnz L78
 L83:
 	testq %rsi,%rsi
@@ -171,15 +172,15 @@ L73:
 L90:
 	movq %r13,%rdi
 	call _normtokenrow
-	movq %rax,-8(%rbp)
+	movq %rax,-16(%rbp)
 	movq 8(%r13),%rdi
 	call _dofree
-	movq -8(%rbp),%r13
+	movq -16(%rbp),%r13
 L92:
-	movq -32(%rbp),%rax
+	movq -40(%rbp),%rax
 	movq %r13,32(%rax)
-	movq -16(%rbp),%rcx
-	movq -32(%rbp),%rax
+	movq -8(%rbp),%rcx
+	movq -40(%rbp),%rax
 	movq %rcx,24(%rax)
 	orb $1,41(%rax)
 	jmp L3
@@ -445,7 +446,6 @@ L214:
 	pushq %r12
 	pushq %r13
 	pushq %r14
-	pushq %r15
 L215:
 	movq %rdi,%r13
 	movq %rsi,%r12
@@ -481,18 +481,18 @@ L226:
 	leaq -32(%rbp),%rsi
 	movq %r12,%rdi
 	call _substargs
-	xorl %r15d,%r15d
+	xorl %r14d,%r14d
 L229:
-	cmpl %r15d,-300(%rbp)
+	cmpl %r14d,-300(%rbp)
 	jle L219
 L230:
-	movslq %r15d,%r14
+	movslq %r14d,%r14
 	movq -296(%rbp,%r14,8),%rax
 	movq 8(%rax),%rdi
 	call _dofree
 	movq -296(%rbp,%r14,8),%rdi
 	call _dofree
-	incl %r15d
+	incl %r14d
 	jmp L229
 L219:
 	leaq -32(%rbp),%rdi
@@ -559,7 +559,6 @@ L224:
 	addq (%r13),%rcx
 	movq %rcx,(%r13)
 L216:
-	popq %r15
 	popq %r14
 	popq %r13
 	popq %r12
@@ -671,8 +670,8 @@ L266:
 	cmpl $0,%r14d
 	jg L267
 L268:
-	movslq %r13d,%rax
-	leaq (%rax,%rax,2),%rax
+	movslq %r13d,%r13
+	leaq (%r13,%r13,2),%rax
 	shlq $3,%rax
 	movq (%r15),%r12
 	subq %rax,%r12

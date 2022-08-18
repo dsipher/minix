@@ -106,21 +106,21 @@ L33:
 	pushq %r13
 	pushq %r14
 L34:
-	movl %edi,%r13d
-	movq %rsi,%r12
-	cmpl $0,%r13d
+	movl %edi,%r14d
+	movq %rsi,%r13
+	cmpl $0,%r14d
 	jle L38
 L36:
-	movq (%r12),%rax
+	movq (%r13),%rax
 	movq %rax,_myname(%rip)
 L38:
-	movl $1,%r14d
+	movl $1,%r12d
 L39:
-	cmpl %r14d,%r13d
+	cmpl %r12d,%r14d
 	jle L56
 L40:
-	movslq %r14d,%rax
-	movq (%r12,%rax,8),%rcx
+	movslq %r12d,%r12
+	movq (%r13,%r12,8),%rcx
 	cmpb $45,(%rcx)
 	jnz L56
 L45:
@@ -158,12 +158,12 @@ L70:
 	cmpb $0,2(%rcx)
 	jnz L133
 L72:
-	incl %r14d
-	cmpl %r14d,%r13d
+	incl %r12d
+	cmpl %r12d,%r14d
 	jle L113
 L74:
-	movslq %r14d,%rax
-	movq (%r12,%rax,8),%rax
+	movslq %r12d,%rax
+	movq (%r13,%rax,8),%rax
 L133:
 	movq %rax,_symbol_prefix(%rip)
 	jmp L41
@@ -210,40 +210,40 @@ L58:
 	cmpb $0,2(%rcx)
 	jnz L134
 L60:
-	incl %r14d
-	cmpl %r14d,%r13d
+	incl %r12d
+	cmpl %r12d,%r14d
 	jg L62
 L113:
 	call _usage
 	jmp L41
 L62:
-	movslq %r14d,%rax
-	movq (%r12,%rax,8),%rax
+	movslq %r12d,%rax
+	movq (%r13,%rax,8),%rax
 L134:
 	movq %rax,_file_prefix(%rip)
 L41:
-	incl %r14d
+	incl %r12d
 	jmp L39
 L55:
-	incl %r14d
+	incl %r12d
 	jmp L56
 L50:
 	movq $___stdin,_input_file(%rip)
-	incl %r14d
-	cmpl %r14d,%r13d
+	incl %r12d
+	cmpl %r12d,%r14d
 	jle L35
 L51:
 	call _usage
 	jmp L35
 L56:
-	leal 1(%r14),%eax
-	cmpl %eax,%r13d
+	leal 1(%r12),%eax
+	cmpl %eax,%r14d
 	jz L106
 L104:
 	call _usage
 L106:
-	movslq %r14d,%r14
-	movq (%r12,%r14,8),%rax
+	movslq %r12d,%rax
+	movq (%r13,%rax,8),%rax
 	movq %rax,_input_file_name(%rip)
 L35:
 	popq %r14
@@ -354,27 +354,27 @@ L169:
 	movb $47,(%rax,%rcx)
 	incl %r12d
 L171:
-	movslq %r12d,%rbx
+	movslq %r12d,%r12
 	movq _action_file_name(%rip),%rdi
 	movq _temp_form(%rip),%rsi
-	addq %rbx,%rdi
+	addq %r12,%rdi
 	call _strcpy
 	movq _text_file_name(%rip),%rdi
 	movq _temp_form(%rip),%rsi
-	addq %rbx,%rdi
+	addq %r12,%rdi
 	call _strcpy
 	movq _union_file_name(%rip),%rdi
 	movq _temp_form(%rip),%rsi
-	addq %rbx,%rdi
+	addq %r12,%rdi
 	call _strcpy
 	addl $5,%r12d
-	movslq %r12d,%r12
-	movq _action_file_name(%rip),%rax
-	movb $97,(%r12,%rax)
-	movq _text_file_name(%rip),%rax
-	movb $116,(%r12,%rax)
-	movq _union_file_name(%rip),%rax
-	movb $117,(%r12,%rax)
+	movslq %r12d,%rax
+	movq _action_file_name(%rip),%rcx
+	movb $97,(%rax,%rcx)
+	movq _text_file_name(%rip),%rcx
+	movb $116,(%rax,%rcx)
+	movq _union_file_name(%rip),%rcx
+	movb $117,(%rax,%rcx)
 	movq _action_file_name(%rip),%rdi
 	call _mktemp
 	movq _text_file_name(%rip),%rdi

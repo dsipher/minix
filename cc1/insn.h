@@ -1677,11 +1677,19 @@ int insn_substitute_con(struct insn *insn, int reg,
 
 int insn_substitute_reg(struct insn *insn, int src, int dst, int flags);
 
-/* determine if insn merely effects a copy from one register to another.
-   if so, populate dst and src with the destination and source registers
-   (respectively) and return true. return false otherwise */
+/* determine if insn merely effects a copy from one register to another. if
+   so, populate *dst and *src with the destination and source registers and
+   return true; otherwise return false, leaving *dst and *src unchanged. */
 
 int insn_is_copy(struct insn *insn, int *dst, int *src);
+
+/* determine if an insn is a non-destructive sign extension, i.e., a cast
+   from register to register which preserves the significant bits of `src'
+   in the `dst' reg (by `significant' here we mean those bits which are
+   needed to represent all values possible for the type of the `src'). the
+   return values and behavior w/r/t to *dst and *src are the same as above. */
+
+int insn_is_ext(struct insn *insn, int *dst, int *src);
 
 /* determine if insn compares a register with 0. if so, populate reg
    with the reg that is compared and return true. false otherwise */

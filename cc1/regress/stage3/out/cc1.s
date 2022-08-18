@@ -125,8 +125,8 @@ L49:
 L47:
 	movl (%rbx),%esi
 	addq $16,%rbx
-	movq -8(%rbx),%rdx
-	movslq %edx,%rdx
+	movq -8(%rbx),%rax
+	movslq %eax,%rdx
 L67:
 	call _print_reg
 	jmp L9
@@ -265,8 +265,8 @@ L104:
 	call _fprintf
 	addq $16,%rsp
 L101:
-	movslq %r12d,%rax
-	pushq L85(,%rax,8)
+	movslq %r12d,%r12
+	pushq L85(,%r12,8)
 	pushq $L107
 	pushq $___stderr
 	call _fprintf

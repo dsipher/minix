@@ -532,8 +532,8 @@ L162:
 L165:
 	movq 8(%rbx),%rdi
 	cmpb $39,(%rdi)
-	setnz %cl
-	movzbl %cl,%ecx
+	setnz %al
+	movzbl %al,%ecx
 	movl $0,%eax
 	movl $96,%esi
 	cmovzl %eax,%esi
@@ -586,63 +586,60 @@ _escape:
 L175:
 	pushq %rbx
 L176:
-	movq _pos(%rip),%rsi
-	leaq 1(%rsi),%rax
+	movq _pos(%rip),%rdx
+	leaq 1(%rdx),%rax
 	movq %rax,_pos(%rip)
-	movb 1(%rsi),%dl
-	movzbq %dl,%rax
+	movb 1(%rdx),%cl
+	movzbq %cl,%rax
 	testw $4,_ctype(,%rax,2)
 	jz L179
 L178:
-	movsbl %dl,%edx
-	subl $48,%edx
-	leaq 2(%rsi),%rax
+	movsbl %cl,%ecx
+	subl $48,%ecx
+	leaq 2(%rdx),%rax
 	movq %rax,_pos(%rip)
-	movb 2(%rsi),%al
-	movzbq %al,%rcx
-	testw $4,_ctype(,%rcx,2)
+	movzbq 2(%rdx),%rax
+	testw $4,_ctype(,%rax,2)
 	jz L180
 L181:
 	movsbl %al,%eax
-	leal -48(%rax,%rdx,8),%edx
-	leaq 3(%rsi),%rax
+	leal -48(%rax,%rcx,8),%ecx
+	leaq 3(%rdx),%rax
 	movq %rax,_pos(%rip)
-	movb 3(%rsi),%al
-	movzbq %al,%rcx
-	testw $4,_ctype(,%rcx,2)
+	movzbq 3(%rdx),%rax
+	testw $4,_ctype(,%rax,2)
 	jz L180
 L184:
 	movsbl %al,%eax
-	leal -48(%rax,%rdx,8),%edx
-	addq $4,%rsi
-	movq %rsi,_pos(%rip)
-	cmpl $255,%edx
+	leal -48(%rax,%rcx,8),%ecx
+	addq $4,%rdx
+	movq %rdx,_pos(%rip)
+	cmpl $255,%ecx
 	jle L180
 	jg L190
 L179:
-	cmpb $120,%dl
+	cmpb $120,%cl
 	jnz L193
 L192:
-	xorl %edx,%edx
-	leaq 2(%rsi),%rax
+	xorl %ecx,%ecx
+	leaq 2(%rdx),%rax
 	movq %rax,_pos(%rip)
-	movzbq 2(%rsi),%rax
+	movzbq 2(%rdx),%rax
 	testw $8,_ctype(,%rax,2)
 	jz L198
 L200:
 	movq _pos(%rip),%rsi
-	movb (%rsi),%al
-	movzbq %al,%rcx
-	movw _ctype(,%rcx,2),%cx
-	testw $8,%cx
+	movzbq (%rsi),%rdx
+	movw _ctype(,%rdx,2),%ax
+	testw $8,%ax
 	jz L180
 L201:
-	testl $240,%edx
+	testl $240,%ecx
 	jnz L190
 L205:
-	shll $4,%edx
-	testw $2,%cx
-	movsbl %al,%eax
+	shll $4,%ecx
+	testw $2,%ax
+	movsbl %dl,%eax
 	jz L208
 L207:
 	subl $48,%eax
@@ -651,14 +648,14 @@ L208:
 	orl $32,%eax
 	subl $87,%eax
 L209:
-	addl %eax,%edx
+	addl %eax,%ecx
 	incq %rsi
 	movq %rsi,_pos(%rip)
 	jmp L200
 L193:
 	xorl %eax,%eax
 L236:
-	cmpb L239(,%rax),%dl
+	cmpb L239(,%rax),%cl
 	jz L237
 L238:
 	incl %eax
@@ -670,33 +667,33 @@ L237:
 	addl $_escape,%eax
 	jmp *%rax
 L225:
-	movl $11,%edx
+	movl $11,%ecx
 	jmp L211
 L223:
-	movl $9,%edx
+	movl $9,%ecx
 	jmp L211
 L221:
-	movl $13,%edx
+	movl $13,%ecx
 	jmp L211
 L219:
-	movl $10,%edx
+	movl $10,%ecx
 	jmp L211
 L217:
-	movl $12,%edx
+	movl $12,%ecx
 	jmp L211
 L215:
-	movl $8,%edx
+	movl $8,%ecx
 	jmp L211
 L213:
-	movl $7,%edx
+	movl $7,%ecx
 	jmp L211
 L230:
-	movsbl %dl,%edx
+	movsbl %cl,%ecx
 L211:
-	addq $2,%rsi
-	movq %rsi,_pos(%rip)
+	addq $2,%rdx
+	movq %rdx,_pos(%rip)
 L180:
-	movl %edx,%ebx
+	movl %ecx,%ebx
 	jmp L177
 L198:
 	pushq $L234
@@ -734,33 +731,32 @@ L241:
 L242:
 	movq _text(%rip),%rax
 	movq %rax,_token+8(%rip)
+	xorl %r12d,%r12d
 	xorl %ebx,%ebx
-	xorl %r13d,%r13d
 	incq _pos(%rip)
 L244:
-	movq _pos(%rip),%rdx
-	movb (%rdx),%cl
-	movzbq %cl,%rax
+	movq _pos(%rip),%rcx
+	movzbq (%rcx),%rax
 	testw $53248,_ctype(,%rax,2)
 	jnz L246
 L245:
-	cmpb $92,%cl
+	cmpb $92,%al
 	jnz L248
 L247:
 	call _escape
 	jmp L249
 L248:
-	leaq 1(%rdx),%rax
+	leaq 1(%rcx),%rax
 	movq %rax,_pos(%rip)
-	movzbl (%rdx),%eax
+	movzbl (%rcx),%eax
 L249:
-	shlq $8,%r13
+	shlq $8,%rbx
 	movslq %eax,%rax
-	addq %rax,%r13
-	incl %ebx
+	addq %rax,%rbx
+	incl %r12d
 	jmp L244
 L246:
-	cmpb $39,%cl
+	cmpb $39,%al
 	jz L252
 L250:
 	pushq $L253
@@ -769,26 +765,26 @@ L250:
 	call _error
 	addq $24,%rsp
 L252:
-	cmpl $1,%ebx
+	cmpl $1,%r12d
 	jl L254
 L272:
-	cmpl $8,%ebx
+	cmpl $8,%r12d
 	jg L254
 L270:
-	decl %ebx
-	movzwl L273(,%rbx,2),%eax
+	decl %r12d
+	movzwl L273(,%r12,2),%eax
 	addl $_ccon,%eax
 	jmp *%rax
 L266:
-	movl $1073741829,%r12d
+	movl $1073741829,%r13d
 	jmp L255
 L261:
-	movl $1073741827,%r12d
-	movslq %r13d,%r13
+	movl $1073741827,%r13d
+	movslq %ebx,%rbx
 	jmp L255
 L257:
-	movl $1073741827,%r12d
-	movsbq %r13b,%r13
+	movl $1073741827,%r13d
+	movsbq %bl,%rbx
 	jmp L255
 L254:
 	pushq $L268
@@ -802,8 +798,8 @@ L255:
 	movq %rax,_pos(%rip)
 	subq _text(%rip),%rax
 	movl %eax,_token+16(%rip)
-	movq %r13,_token+24(%rip)
-	movl %r12d,%eax
+	movq %rbx,_token+24(%rip)
+	movl %r13d,%eax
 L243:
 	popq %r13
 	popq %r12
@@ -820,22 +816,21 @@ L277:
 	incq _pos(%rip)
 	incl %ebx
 L281:
-	movq _pos(%rip),%rdx
-	movb (%rdx),%cl
-	movzbq %cl,%rax
+	movq _pos(%rip),%rcx
+	movzbq (%rcx),%rax
 	testw $45056,_ctype(,%rax,2)
 	jnz L283
 L282:
-	cmpb $92,%cl
+	cmpb $92,%al
 	jnz L285
 L284:
 	call _escape
 	incl %ebx
 	jmp L286
 L285:
-	leaq 1(%rdx),%rax
+	leaq 1(%rcx),%rax
 	movq %rax,_pos(%rip)
-	movsbl (%rdx),%eax
+	movsbl (%rcx),%eax
 L286:
 	movq _string_arena+8(%rip),%rdx
 	leaq 1(%rdx),%rcx
@@ -843,7 +838,7 @@ L286:
 	movb %al,(%rdx)
 	jmp L281
 L283:
-	cmpb $34,%cl
+	cmpb $34,%al
 	jz L289
 L287:
 	pushq $L290
@@ -852,29 +847,28 @@ L287:
 	call _error
 	addq $24,%rsp
 L289:
-	movq _pos(%rip),%rsi
-	incq %rsi
-	movq %rsi,_pos(%rip)
-	xorl %edx,%edx
+	movq _pos(%rip),%rdx
+	incq %rdx
+	movq %rdx,_pos(%rip)
+	xorl %ecx,%ecx
 L291:
-	movb (%rsi),%cl
-	movzbq %cl,%rax
+	movzbq (%rdx),%rax
 	testw $33792,_ctype(,%rax,2)
 	jz L293
 L292:
-	cmpb $10,%cl
+	cmpb $10,%al
 	jnz L296
 L294:
-	incl %edx
+	incl %ecx
 L296:
-	incq %rsi
+	incq %rdx
 	jmp L291
 L293:
-	cmpb $34,%cl
+	cmpb $34,%al
 	jnz L298
 L297:
-	addl %edx,_line_no(%rip)
-	movq %rsi,_pos(%rip)
+	addl %ecx,_line_no(%rip)
+	movq %rdx,_pos(%rip)
 	jmp L277
 L298:
 	movq _string_arena(%rip),%rdi
@@ -1618,8 +1612,8 @@ L740:
 	xorl %ebx,%ebx
 	jmp L401
 L405:
-	movzbl %cl,%ecx
-	pushq %rcx
+	movzbl %cl,%eax
+	pushq %rax
 	pushq $L744
 	pushq $0
 	pushq $4

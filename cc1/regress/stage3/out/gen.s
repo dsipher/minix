@@ -2616,7 +2616,7 @@ _gen_call:
 L1338:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $24,%rsp
+	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -2638,18 +2638,16 @@ L1343:
 	movl $-1493172218,%edi
 	call _new_insn
 	movq %rax,%r14
-	movl $0,-20(%rbp)
+	xorl %r12d,%r12d
 L1344:
-	movl -20(%rbp),%eax
-	cmpl 4(%r15),%eax
+	cmpl 4(%r15),%r12d
 	jge L1347
 L1345:
-	movl -20(%rbp),%r13d
-	addl $2,%r13d
+	leal 2(%r12),%r13d
 	movslq %r13d,%r13
 	shlq $5,%r13
 	movq 24(%r15),%rax
-	movslq -20(%rbp),%r12
+	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rax
 	movq 8(%rax),%rbx
 	movq %rax,-16(%rbp)
@@ -2699,7 +2697,7 @@ L1351:
 	orl %eax,%ecx
 	movl %ecx,12(%r14,%r13)
 L1353:
-	incl -20(%rbp)
+	incl %r12d
 	jmp L1344
 L1347:
 	movq 16(%r15),%rdi

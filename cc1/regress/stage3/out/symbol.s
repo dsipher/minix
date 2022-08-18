@@ -125,11 +125,11 @@ L43:
 	testl %esi,%esi
 	jz L26
 L44:
-	movslq %esi,%rsi
-	movq _linkp(,%rsi,8),%rax
+	movslq %esi,%rcx
+	movq _linkp(,%rcx,8),%rax
 	movq %rdi,(%rax)
 	addq $56,%rdi
-	movq %rdi,_linkp(,%rsi,8)
+	movq %rdi,_linkp(,%rcx,8)
 L26:
 	ret 
 
@@ -420,8 +420,8 @@ L161:
 L162:
 	movl %esi,%r13d
 	movq %rdx,%r12
-	movslq %edi,%rdi
-	movq _chains(,%rdi,8),%rbx
+	movslq %edi,%rax
+	movq _chains(,%rax,8),%rbx
 L164:
 	testq %rbx,%rbx
 	jz L163
@@ -640,24 +640,24 @@ L232:
 	call _unique
 	movq %r15,%rdi
 	call _align_of
-	movl %eax,%r14d
+	movl %eax,%r13d
 	movq -8(%rbp),%rax
 	movl 36(%rax),%ecx
-	cmpl %ecx,%r14d
-	cmovgel %r14d,%ecx
+	cmpl %ecx,%r13d
+	cmovgel %r13d,%ecx
 	movq -8(%rbp),%rax
 	movl %ecx,36(%rax)
 	movl 12(%rax),%ecx
 	testl $2,%ecx
 	jz L238
 L237:
-	xorl %r13d,%r13d
+	xorl %r14d,%r14d
 	jmp L239
 L238:
 	movq -8(%rbp),%rax
-	movl 32(%rax),%r13d
+	movl 32(%rax),%r14d
 L239:
-	movslq %r13d,%r13
+	movslq %r14d,%r14
 	testl $67108864,%ecx
 	jz L242
 L240:
@@ -720,13 +720,13 @@ L266:
 	jz L269
 L272:
 	movslq %r12d,%rdi
-	movq %r13,%rax
+	movq %r14,%rax
 	cqto 
 	idivq %rdi
 	movq %rax,%rcx
 	imulq %rdi,%rcx
 	movslq %esi,%rax
-	leaq -1(%r13,%rax),%rax
+	leaq -1(%r14,%rax),%rax
 	cqto 
 	idivq %rdi
 	imulq %rdi,%rax
@@ -737,14 +737,14 @@ L269:
 	decl %eax
 	movslq %eax,%rax
 	movslq %r12d,%rcx
-	addq %r13,%rax
+	addq %r14,%rax
 	cqto 
 	idivq %rcx
 	imulq %rcx,%rax
-	movq %rax,%r13
+	movq %rax,%r14
 L271:
 	movslq %r12d,%r12
-	movq %r13,%rax
+	movq %r14,%rax
 	cqto 
 	idivq %r12
 	movq %r15,%rdi
@@ -752,28 +752,28 @@ L271:
 	movq %rax,%r15
 	jmp L268
 L267:
-	movl %r14d,%ecx
+	movl %r13d,%ecx
 	shll $3,%ecx
 	movl %ecx,%eax
 	decl %eax
 	movslq %eax,%rax
 	movslq %ecx,%rcx
-	addq %r13,%rax
+	addq %r14,%rax
 	cqto 
 	idivq %rcx
 	imulq %rcx,%rax
-	movq %rax,%r13
+	movq %rax,%r14
 	movl %r12d,%ebx
 L268:
 	movl $8,%ecx
-	movq %r13,%rax
+	movq %r14,%rax
 	cqto 
 	idivq %rcx
-	movslq %r14d,%rcx
+	movslq %r13d,%r13
 	cqto 
-	idivq %rcx
+	idivq %r13
 	movl %eax,%r12d
-	imull %r14d,%r12d
+	imull %r13d,%r12d
 	movq -8(%rbp),%rax
 	testl $2,12(%rax)
 	jz L277
@@ -787,11 +787,11 @@ L276:
 	jmp L278
 L277:
 	movslq %ebx,%rbx
-	addq %rbx,%r13
+	addq %rbx,%r14
 	movq -8(%rbp),%rax
-	movl %r13d,32(%rax)
+	movl %r14d,32(%rax)
 L278:
-	cmpq $1073741824,%r13
+	cmpq $1073741824,%r14
 	jle L284
 L282:
 	pushq -8(%rbp)
@@ -1157,8 +1157,8 @@ L405:
 L406:
 	xorl %r12d,%r12d
 L408:
-	movslq %r12d,%rax
-	movq _symtab(,%rax,8),%rbx
+	movslq %r12d,%r12
+	movq _symtab(,%r12,8),%rbx
 L411:
 	testq %rbx,%rbx
 	jz L414

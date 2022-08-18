@@ -323,7 +323,7 @@ int live_across(struct block *b, int reg, int i)
 }
 
 /* register Y interferes a range r of register X iff r is live
-   when Y is DEFd, except when that DEF is a copy [or extension -- TODO]
+   when Y is DEFd, except when that DEF is a copy [or extension]
    of X to Y. this relation can be computed fairly efficiently
    since the ranges are ordered by DEFs: we simply scan forward
    from the range to find all the DEFs in its span. technically
@@ -358,7 +358,8 @@ void range_interf(struct block *b, int r, VECTOR(reg) *regs)
 
             if ( (def >= INSN_INDEX_FIRST)
               && (def <= INSN_INDEX_LAST)
-              && insn_is_copy(INSN(b, def), &dst, &src)
+              &&    (insn_is_copy(INSN(b, def), &dst, &src)
+                  ||  insn_is_ext(INSN(b, def), &dst, &src) )
               && (dst == y) && (src == x))
                 /* copies from x -> y don't count */ ;
             else

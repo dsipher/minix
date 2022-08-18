@@ -48,9 +48,9 @@ L37:
 	cmpl 12(%r15),%r14d
 	jge L43
 L41:
-	movq 16(%r15),%rcx
-	movslq %r14d,%rax
-	movq (%rcx,%rax,8),%r13
+	movq 16(%r15),%rax
+	movslq %r14d,%r14
+	movq (%rax,%r14,8),%r13
 	testq %r13,%r13
 	jz L43
 L42:
@@ -134,9 +134,9 @@ L67:
 	cmpl _tmp_defs+4(%rip),%ebx
 	jge L73
 L71:
-	movq _tmp_defs+8(%rip),%rcx
-	movslq %ebx,%rax
-	movl (%rcx,%rax,4),%eax
+	movq _tmp_defs+8(%rip),%rax
+	movslq %ebx,%rbx
+	movl (%rax,%rbx,4),%eax
 	movl %eax,-28(%rbp)
 	testl %eax,%eax
 	jz L73
@@ -447,33 +447,33 @@ L176:
 	movb $255,%al
 	rep 
 	stosb 
-	movl 532(%rbx),%edi
-	xorl %esi,%esi
+	movl 532(%rbx),%esi
+	xorl %edx,%edx
 L181:
-	cmpl %esi,%edi
+	cmpl %edx,%esi
 	jle L184
 L182:
 	movq 488(%rbx),%rax
-	movslq %esi,%rdx
+	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	notq %rcx
 	movq 536(%rbx),%rax
 	andq %rcx,(%rax,%rdx,8)
-	incl %esi
+	incl %edx
 	jmp L181
 L184:
-	movl 532(%rbx),%edi
-	xorl %esi,%esi
+	movl 532(%rbx),%esi
+	xorl %edx,%edx
 L188:
-	cmpl %esi,%edi
+	cmpl %edx,%esi
 	jle L156
 L189:
 	movq 464(%rbx),%rax
-	movslq %esi,%rdx
+	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq 536(%rbx),%rax
 	orq %rcx,(%rax,%rdx,8)
-	incl %esi
+	incl %edx
 	jmp L188
 L156:
 	popq %rbx
@@ -497,9 +497,9 @@ L195:
 	cmpl 36(%r12),%ebx
 	jge L198
 L196:
-	movq 40(%r12),%rcx
-	movslq %ebx,%rax
-	movq (%rcx,%rax,8),%rsi
+	movq 40(%r12),%rax
+	movslq %ebx,%rbx
+	movq (%rax,%rbx,8),%rsi
 	testl %ebx,%ebx
 	jnz L205
 L202:
@@ -509,37 +509,37 @@ L202:
 	call _dup_vector
 	jmp L201
 L205:
-	movl _tmp_bits+4(%rip),%r8d
-	xorl %edi,%edi
+	movl _tmp_bits+4(%rip),%edi
+	xorl %edx,%edx
 L208:
-	cmpl %edi,%r8d
+	cmpl %edx,%edi
 	jle L201
 L209:
 	movq 536(%rsi),%rax
-	movslq %edi,%rdx
+	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq _tmp_bits+8(%rip),%rax
 	andq %rcx,(%rax,%rdx,8)
-	incl %edi
+	incl %edx
 	jmp L208
 L201:
 	incl %ebx
 	jmp L195
 L198:
-	movl _tmp_bits+4(%rip),%edi
-	xorl %esi,%esi
+	movl _tmp_bits+4(%rip),%esi
+	xorl %edx,%edx
 L215:
-	cmpl %esi,%edi
+	cmpl %edx,%esi
 	jle L218
 L216:
 	movq _tmp_bits+8(%rip),%rax
-	movslq %esi,%rdx
+	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq 512(%r12),%rax
 	cmpq (%rax,%rdx,8),%rcx
 	jnz L219
 L221:
-	incl %esi
+	incl %edx
 	jmp L215
 L219:
 	movl $8,%edx
@@ -550,33 +550,33 @@ L219:
 	movl $_tmp_bits,%esi
 	leaq 528(%r12),%rdi
 	call _dup_vector
-	movl 532(%r12),%edi
-	xorl %esi,%esi
+	movl 532(%r12),%esi
+	xorl %edx,%edx
 L233:
-	cmpl %esi,%edi
+	cmpl %edx,%esi
 	jle L236
 L234:
 	movq 488(%r12),%rax
-	movslq %esi,%rdx
+	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	notq %rcx
 	movq 536(%r12),%rax
 	andq %rcx,(%rax,%rdx,8)
-	incl %esi
+	incl %edx
 	jmp L233
 L236:
-	movl 532(%r12),%edi
-	xorl %esi,%esi
+	movl 532(%r12),%esi
+	xorl %edx,%edx
 L240:
-	cmpl %esi,%edi
+	cmpl %edx,%esi
 	jle L243
 L241:
 	movq 464(%r12),%rax
-	movslq %esi,%rdx
+	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq 536(%r12),%rax
 	orq %rcx,(%rax,%rdx,8)
-	incl %esi
+	incl %edx
 	jmp L240
 L243:
 	movl $1,%eax

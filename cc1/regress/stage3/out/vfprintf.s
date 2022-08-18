@@ -41,7 +41,7 @@ L1:
 	movq %rsp,%rbp
 	subq $24,%rsp
 L2:
-	movl %edx,%r11d
+	movl %edx,%r8d
 	cmpl $120,%ecx
 	movl $_digits,%eax
 	movl $_ldigits,%r10d
@@ -49,7 +49,7 @@ L2:
 	leaq -1(%rbp),%r9
 	movb $0,-1(%rbp)
 L7:
-	movl %r11d,%r8d
+	movl %r8d,%r8d
 	movq %rsi,%rax
 	xorl %edx,%edx
 	divq %r8
@@ -297,29 +297,29 @@ L118:
 	jmp L116
 L166:
 	addq $8,%r13
-	movq -8(%r13),%rdx
-	testq %rdx,%rdx
+	movq -8(%r13),%rcx
+	testq %rcx,%rcx
 	movl $L170,%eax
-	cmovzq %rax,%rdx
-	movq %rdx,-592(%rbp)
-	movq %rdx,%rsi
+	cmovzq %rax,%rcx
+	movq %rcx,-592(%rbp)
+	movq %rcx,%rdx
 L171:
-	movb (%rsi),%al
-	incq %rsi
+	movb (%rdx),%al
+	incq %rdx
 	testb %al,%al
 	jz L173
 L172:
 	cmpl $0,%r12d
 	jl L171
 L177:
-	movq %rsi,%rcx
-	subq %rdx,%rcx
-	movslq %r12d,%rax
-	cmpq %rax,%rcx
+	movq %rdx,%rax
+	subq %rcx,%rax
+	movslq %r12d,%r12
+	cmpq %r12,%rax
 	jle L171
 L173:
-	decq %rsi
-	movq %rsi,-560(%rbp)
+	decq %rdx
+	movq %rdx,-560(%rbp)
 	jmp L100
 L183:
 	movl $108,-540(%rbp)

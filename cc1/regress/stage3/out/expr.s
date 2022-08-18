@@ -889,8 +889,8 @@ L316:
 	testq $65536,%rax
 	jz L322
 L321:
-	movslq %ebx,%rbx
-	movq %rbx,-8(%rbp)
+	movslq %ebx,%rax
+	movq %rax,-8(%rbp)
 	leaq -8(%rbp),%rsi
 	movl $_long_type,%edi
 	jmp L332
@@ -1967,8 +1967,8 @@ L703:
 	movq %r12,%rcx
 	movq 8(%r12),%rdx
 	testq $8192,(%rdx)
-	setnz %bl
-	movzbl %bl,%ebx
+	setnz %al
+	movzbl %al,%ebx
 	jz L708
 L706:
 	xorl %esi,%esi

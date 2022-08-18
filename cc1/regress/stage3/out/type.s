@@ -414,10 +414,10 @@ L122:
 	call _new_tnode
 	movq %rbx,8(%rax)
 	andl $127,%ebx
-	movslq %ebx,%rbx
-	movq _buckets(,%rbx,8),%rcx
+	movslq %ebx,%rdx
+	movq _buckets(,%rdx,8),%rcx
 	movq %rcx,32(%rax)
-	movq %rax,_buckets(,%rbx,8)
+	movq %rax,_buckets(,%rdx,8)
 L121:
 	popq %r14
 	popq %r13
@@ -455,9 +455,9 @@ L133:
 	testq %rdx,%rdx
 	jnz L136
 L138:
-	movq 8(%rbx),%rcx
-	andl $127,%ecx
-	movslq %ecx,%rcx
+	movq 8(%rbx),%rax
+	andl $127,%eax
+	movslq %eax,%rcx
 	movq _buckets(,%rcx,8),%rax
 	movq %rax,32(%rbx)
 	movq %rbx,_buckets(,%rcx,8)
@@ -499,29 +499,29 @@ L155:
 	pushq %rbx
 	pushq %r12
 L156:
-	xorl %ebx,%ebx
+	xorl %r12d,%r12d
 L159:
-	movslq %ebx,%rax
+	movslq %r12d,%rax
 	shlq $4,%rax
-	movq _map+8(%rax),%r12
-	cmpq $0,8(%r12)
+	movq _map+8(%rax),%rbx
+	cmpq $0,8(%rbx)
 	jnz L164
 L162:
 	xorl %edx,%edx
 	xorl %esi,%esi
-	movq (%r12),%rdi
+	movq (%rbx),%rdi
 	call _tnode_hash
-	movq %rax,8(%r12)
+	movq %rax,8(%rbx)
 	incl _nr_static_tnodes(%rip)
-	movq 8(%r12),%rcx
-	andl $127,%ecx
-	movslq %ecx,%rcx
+	movq 8(%rbx),%rax
+	andl $127,%eax
+	movslq %eax,%rcx
 	movq _buckets(,%rcx,8),%rax
-	movq %rax,32(%r12)
-	movq %r12,_buckets(,%rcx,8)
+	movq %rax,32(%rbx)
+	movq %rbx,_buckets(,%rcx,8)
 L164:
-	incl %ebx
-	cmpl $24,%ebx
+	incl %r12d
+	cmpl $24,%r12d
 	jl L159
 L157:
 	popq %r12
@@ -1100,19 +1100,19 @@ L467:
 	pushq %rbx
 	pushq %r12
 L468:
-	movq %rsi,%r12
+	movq %rsi,%rbx
 	movq (%rdi),%rdi
 	testq $73726,%rdi
 	jz L474
 L484:
-	movq (%r12),%rax
-	testq $73726,%rax
+	movq (%rbx),%rdx
+	testq $73726,%rdx
 	jz L474
 L480:
 	testq $7168,%rdi
-	setz %cl
-	movzbl %cl,%ecx
-	testq $7168,%rax
+	setz %al
+	movzbl %al,%ecx
+	testq $7168,%rdx
 	setz %al
 	movzbl %al,%eax
 	cmpl %eax,%ecx
@@ -1120,11 +1120,11 @@ L480:
 L476:
 	andl $131071,%edi
 	call _t_size
-	movl %eax,%ebx
-	movq (%r12),%rdi
+	movl %eax,%r12d
+	movq (%rbx),%rdi
 	andl $131071,%edi
 	call _t_size
-	cmpl %eax,%ebx
+	cmpl %eax,%r12d
 	jnz L474
 L473:
 	movl $1,%eax
@@ -1142,19 +1142,19 @@ L490:
 	pushq %rbx
 	pushq %r12
 L491:
-	movq %rsi,%r12
+	movq %rsi,%rbx
 	movq (%rdi),%rdi
 	testq $73726,%rdi
 	jz L497
 L507:
-	movq (%r12),%rax
-	testq $73726,%rax
+	movq (%rbx),%rdx
+	testq $73726,%rdx
 	jz L497
 L503:
 	testq $7168,%rdi
-	setz %cl
-	movzbl %cl,%ecx
-	testq $7168,%rax
+	setz %al
+	movzbl %al,%ecx
+	testq $7168,%rdx
 	setz %al
 	movzbl %al,%eax
 	cmpl %eax,%ecx
@@ -1162,11 +1162,11 @@ L503:
 L499:
 	andl $131071,%edi
 	call _t_size
-	movl %eax,%ebx
-	movq (%r12),%rdi
+	movl %eax,%r12d
+	movq (%rbx),%rdi
 	andl $131071,%edi
 	call _t_size
-	cmpl %eax,%ebx
+	cmpl %eax,%r12d
 	jge L497
 L496:
 	movl $1,%eax
@@ -1184,19 +1184,19 @@ L513:
 	pushq %rbx
 	pushq %r12
 L514:
-	movq %rsi,%r12
+	movq %rsi,%rbx
 	movq (%rdi),%rdi
 	testq $73726,%rdi
 	jz L520
 L530:
-	movq (%r12),%rax
-	testq $73726,%rax
+	movq (%rbx),%rdx
+	testq $73726,%rdx
 	jz L520
 L526:
 	testq $7168,%rdi
-	setz %cl
-	movzbl %cl,%ecx
-	testq $7168,%rax
+	setz %al
+	movzbl %al,%ecx
+	testq $7168,%rdx
 	setz %al
 	movzbl %al,%eax
 	cmpl %eax,%ecx
@@ -1204,11 +1204,11 @@ L526:
 L522:
 	andl $131071,%edi
 	call _t_size
-	movl %eax,%ebx
-	movq (%r12),%rdi
+	movl %eax,%r12d
+	movq (%rbx),%rdi
 	andl $131071,%edi
 	call _t_size
-	cmpl %eax,%ebx
+	cmpl %eax,%r12d
 	jle L520
 L519:
 	movl $1,%eax
@@ -1224,19 +1224,19 @@ L515:
 _fieldify:
 L536:
 L537:
-	movq (%rdi),%rcx
-	movq %rcx,%rax
-	andl $131071,%eax
-	andl $393216,%ecx
-	orq %rax,%rcx
-	movq $549755813888,%rax
+	movq (%rdi),%rax
+	movq %rax,%rcx
+	andl $131071,%ecx
+	andl $393216,%eax
 	orq %rcx,%rax
-	movslq %esi,%rsi
-	shlq $32,%rsi
-	orq %rax,%rsi
+	movq $549755813888,%rcx
+	orq %rax,%rcx
+	movslq %esi,%rax
+	shlq $32,%rax
+	orq %rcx,%rax
 	movslq %edx,%rdi
 	shlq $40,%rdi
-	orq %rsi,%rdi
+	orq %rax,%rdi
 	xorl %edx,%edx
 	xorl %esi,%esi
 	call _get_tnode

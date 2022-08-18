@@ -146,8 +146,8 @@ L53:
 	leal 1(%r13),%esi
 	call _newstring
 	movq %rax,%r15
-	movslq %r13d,%r13
-	movb $0,(%rax,%r13)
+	movslq %r13d,%rcx
+	movb $0,(%rax,%rcx)
 L55:
 	movslq _optind(%rip),%rax
 	movq (%rbx,%rax,8),%r13

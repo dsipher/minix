@@ -210,8 +210,8 @@ L130:
 	jg L128
 L127:
 	addb $-83,%cl
-	movzbl %cl,%ecx
-	movzwl L135(,%rcx,2),%eax
+	movzbl %cl,%eax
+	movzwl L135(,%rax,2),%eax
 	addl $_strftime,%eax
 	jmp *%rax
 L107:

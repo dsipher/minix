@@ -181,9 +181,9 @@ L62:
 	movl $12,%eax
 	ret
 L35:
-	xorl %r9d,%r9d
+	xorl %r8d,%r8d
 L42:
-	movslq %r9d,%r8
+	movslq %r8d,%r8
 	movsbl _ccops(,%r8,4),%edi
 	cmpl %edi,%eax
 	jnz L48
@@ -199,8 +199,8 @@ L56:
 	cmpl %edx,%eax
 	jz L45
 L47:
-	incl %r9d
-	cmpl $30,%r9d
+	incl %r8d
+	cmpl $30,%r8d
 	jl L42
 	jge L44
 L45:
@@ -241,9 +241,9 @@ L112:
 	movl $13,%eax
 	ret
 L85:
-	xorl %r9d,%r9d
+	xorl %r8d,%r8d
 L92:
-	movslq %r9d,%r8
+	movslq %r8d,%r8
 	movsbl _ccops(,%r8,4),%edi
 	cmpl %edi,%eax
 	jnz L98
@@ -259,8 +259,8 @@ L106:
 	cmpl %edx,%eax
 	jz L95
 L97:
-	incl %r9d
-	cmpl $30,%r9d
+	incl %r8d
+	cmpl $30,%r8d
 	jl L92
 	jge L94
 L95:
@@ -1206,8 +1206,8 @@ L649:
 	testl %r12d,%eax
 	jz L654
 L652:
-	movslq %ebx,%rax
-	pushq L634(,%rax,8)
+	movslq %ebx,%rbx
+	pushq L634(,%rbx,8)
 	pushq $L655
 	call _out
 	addq $16,%rsp
@@ -1267,12 +1267,12 @@ L710:
 	testl %eax,%eax
 	jz L663
 L711:
-	movslq %ebx,%rax
-	shlq $5,%rax
+	movslq %ebx,%rcx
+	shlq $5,%rcx
 	cmpl $385878080,(%r12)
-	setz %sil
-	movzbl %sil,%esi
-	leaq 8(%r12,%rax),%rdi
+	setz %al
+	movzbl %al,%esi
+	leaq 8(%r12,%rcx),%rdi
 	call _out_operand
 	testl %ebx,%ebx
 	jz L710
@@ -1493,8 +1493,8 @@ L778:
 	jz L768
 L765:
 	testl $1073741824,%eax
-	setz %cl
-	movzbl %cl,%ecx
+	setz %al
+	movzbl %al,%ecx
 L768:
 	movl (%rdi),%eax
 	andl $805306368,%eax
@@ -1658,8 +1658,8 @@ L834:
 	cmpl %eax,%ebx
 	jae L837
 L835:
-	movslq %ebx,%rax
-	movl _iargs(,%rax,4),%esi
+	movslq %ebx,%rbx
+	movl _iargs(,%rbx,4),%esi
 	movq %r14,%rdi
 	call _add_reg
 	incl %ebx
@@ -1673,8 +1673,8 @@ L838:
 	cmpl %eax,%ebx
 	jae L822
 L839:
-	movslq %ebx,%rax
-	movl _fargs(,%rax,4),%esi
+	movslq %ebx,%rbx
+	movl _fargs(,%rbx,4),%esi
 	movq %r14,%rdi
 	call _add_reg
 	incl %ebx
@@ -1896,8 +1896,8 @@ L981:
 L943:
 	xorl %r12d,%r12d
 L945:
-	movslq %r12d,%rax
-	movl _iscratch(,%rax,4),%esi
+	movslq %r12d,%r12
+	movl _iscratch(,%r12,4),%esi
 	movq %rbx,%rdi
 	call _add_reg
 	incl %r12d
@@ -1906,8 +1906,8 @@ L945:
 L947:
 	xorl %r12d,%r12d
 L949:
-	movslq %r12d,%rax
-	movl _fscratch(,%rax,4),%esi
+	movslq %r12d,%r12
+	movl _fscratch(,%r12,4),%esi
 	movq %rbx,%rdi
 	call _add_reg
 	incl %r12d

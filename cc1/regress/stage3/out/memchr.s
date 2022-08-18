@@ -3,7 +3,7 @@
 _memchr:
 L1:
 L2:
-	movzbl %sil,%esi
+	movzbl %sil,%ecx
 	testq %rdx,%rdx
 	jz L6
 L4:
@@ -15,7 +15,7 @@ L7:
 L8:
 	movzbl (%rdi),%eax
 	incq %rdi
-	cmpl %eax,%esi
+	cmpl %eax,%ecx
 	jnz L7
 L12:
 	leaq -1(%rdi),%rax

@@ -98,10 +98,10 @@ L35:
 	movq %rdi,%r13
 	movq %r13,%rdi
 	call _hash
-	movslq %eax,%rax
-	movq _symbol_table(%rip),%rcx
-	leaq (%rcx,%rax,8),%r12
-	movq (%rcx,%rax,8),%rbx
+	movslq %eax,%rcx
+	movq _symbol_table(%rip),%rax
+	leaq (%rax,%rcx,8),%r12
+	movq (%rax,%rcx,8),%rbx
 L37:
 	testq %rbx,%rbx
 	jz L39
@@ -144,13 +144,13 @@ L46:
 L48:
 	call _no_space
 L50:
-	xorl %ecx,%ecx
+	xorl %eax,%eax
 L52:
-	movslq %ecx,%rax
-	movq _symbol_table(%rip),%rdx
-	movq $0,(%rdx,%rax,8)
-	incl %ecx
-	cmpl $1024,%ecx
+	movslq %eax,%rax
+	movq _symbol_table(%rip),%rcx
+	movq $0,(%rcx,%rax,8)
+	incl %eax
+	cmpl $1024,%eax
 	jl L52
 L54:
 	movl $L55,%edi

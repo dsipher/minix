@@ -25,7 +25,7 @@ L2:
 L4:
 	xorl %ebx,%ebx
 L8:
-	movslq %ebx,%rax
+	movslq %ebx,%rbx
 	testl $1,8(%r12)
 	jz L15
 L14:
@@ -34,7 +34,7 @@ L14:
 L15:
 	movq 24(%r12),%rsi
 L16:
-	leaq _directives(,%rax,8),%rdi
+	leaq _directives(,%rbx,8),%rdi
 	call _strcmp
 	testl %eax,%eax
 	jz L11
@@ -125,8 +125,8 @@ L43:
 	jz L47
 L45:
 	testl %edi,%edi
-	setz %dil
-	movzbl %dil,%edi
+	setz %al
+	movzbl %al,%edi
 L47:
 	call _state_push
 	movq -8(%rbp),%rdi

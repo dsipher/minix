@@ -12,8 +12,8 @@ L2:
 	cltd 
 	idivl %ecx
 	imull %eax,%esi
-	movslq %esi,%rsi
-	leaq (%rdi,%rsi,4),%r11
+	movslq %esi,%rcx
+	leaq (%rdi,%rcx,4),%r11
 	movq %rdi,%r10
 	xorl %r9d,%r9d
 	movq %rdi,%r8
@@ -32,8 +32,8 @@ L8:
 	movl $1,%ebx
 	shll %cl,%ebx
 	testl %r12d,%ebx
-	movslq %eax,%rcx
-	leaq (%rdx,%rcx,4),%rcx
+	movslq %eax,%rax
+	leaq (%rdx,%rax,4),%rcx
 	jz L11
 L10:
 	movq %r8,%r14
@@ -52,8 +52,8 @@ L14:
 L11:
 	movq %rcx,%rdx
 L12:
-	movslq %eax,%rcx
-	leaq (%rsi,%rcx,4),%rsi
+	movslq %eax,%rax
+	leaq (%rsi,%rax,4),%rsi
 	jmp L7
 L9:
 	incl %r9d
@@ -63,8 +63,8 @@ L16:
 	xorl %r9d,%r9d
 	addq $4,%r10
 L18:
-	movslq %eax,%rcx
-	leaq (%r8,%rcx,4),%r8
+	movslq %eax,%rax
+	leaq (%r8,%rax,4),%r8
 	jmp L4
 L3:
 	popq %r14
@@ -108,8 +108,8 @@ L25:
 	xorl %esi,%esi
 	addq $4,%rbx
 L27:
-	movslq %eax,%rcx
-	leaq (%rbx,%rcx,4),%rbx
+	movslq %eax,%rax
+	leaq (%rbx,%rax,4),%rbx
 	jmp L22
 L21:
 	popq %r12

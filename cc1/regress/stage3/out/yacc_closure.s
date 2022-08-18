@@ -14,45 +14,45 @@ L2:
 	shll $2,%edi
 	call _allocate
 	movq %rax,_EFF(%rip)
-	movl _start_symbol(%rip),%edx
+	movl _start_symbol(%rip),%r8d
 L4:
-	cmpl _nsyms(%rip),%edx
+	cmpl _nsyms(%rip),%r8d
 	jge L7
 L5:
-	movslq %edx,%rsi
+	movslq %r8d,%r8
 	movq _derives(%rip),%rcx
-	movq (%rcx,%rsi,8),%r8
-	movswl (%r8),%esi
+	movq (%rcx,%r8,8),%rdi
+	movswl (%rdi),%edx
 L8:
-	cmpl $0,%esi
+	cmpl $0,%edx
 	jle L11
 L9:
-	movslq %esi,%rsi
+	movslq %edx,%rdx
 	movq _rrhs(%rip),%rcx
-	movswq (%rcx,%rsi,2),%rsi
+	movswq (%rcx,%rdx,2),%rdx
 	movq _ritem(%rip),%rcx
-	movswl (%rcx,%rsi,2),%esi
+	movswl (%rcx,%rdx,2),%edx
 	movl _start_symbol(%rip),%ecx
-	cmpl %esi,%ecx
+	cmpl %edx,%ecx
 	jg L14
 L12:
-	subl %ecx,%esi
-	movb %sil,%cl
+	subl %ecx,%edx
+	movb %dl,%cl
 	andb $31,%cl
-	movl $1,%edi
-	shll %cl,%edi
-	sarl $5,%esi
-	movslq %esi,%rsi
-	orl %edi,(%rax,%rsi,4)
+	movl $1,%esi
+	shll %cl,%esi
+	sarl $5,%edx
+	movslq %edx,%rdx
+	orl %esi,(%rax,%rdx,4)
 L14:
-	leaq 2(%r8),%rcx
-	movswl 2(%r8),%esi
-	movq %rcx,%r8
+	leaq 2(%rdi),%rcx
+	movswl 2(%rdi),%edx
+	movq %rcx,%rdi
 	jmp L8
 L11:
-	movslq %ebx,%rcx
-	leaq (%rax,%rcx,4),%rax
-	incl %edx
+	movslq %ebx,%rbx
+	leaq (%rax,%rbx,4),%rax
+	incl %r8d
 	jmp L4
 L7:
 	movl _nvars(%rip),%esi
@@ -75,83 +75,83 @@ L16:
 	addl $31,%eax
 	cltd 
 	idivl %ecx
-	movl %eax,%r12d
+	movl %eax,%ebx
 	movl $32,%ecx
 	leal 31(%rdi),%eax
 	cltd 
 	idivl %ecx
-	movl %eax,%ebx
-	imull %r12d,%edi
+	movl %eax,%r13d
+	imull %ebx,%edi
 	shll $2,%edi
 	call _allocate
 	movl _ntokens(%rip),%ecx
-	imull %r12d,%ecx
+	imull %ebx,%ecx
 	movslq %ecx,%rcx
 	shlq $2,%rcx
 	subq %rcx,%rax
 	movq %rax,_first_derives(%rip)
 	call _set_EFF
 	movl _ntokens(%rip),%eax
-	imull %r12d,%eax
-	movslq %eax,%rax
-	movq _first_derives(%rip),%rcx
-	leaq (%rcx,%rax,4),%r9
-	movl _start_symbol(%rip),%r8d
-L18:
-	movl _nsyms(%rip),%eax
-	movq _EFF(%rip),%rdi
-	cmpl %eax,%r8d
-	jge L21
-L19:
-	movl %r8d,%eax
-	subl _ntokens(%rip),%eax
 	imull %ebx,%eax
 	movslq %eax,%rax
-	leaq (%rdi,%rax,4),%rsi
-	movl $32,%edx
+	movq _first_derives(%rip),%rcx
+	leaq (%rcx,%rax,4),%rdx
 	movl _start_symbol(%rip),%eax
+L18:
+	movl _nsyms(%rip),%ecx
+	movq _EFF(%rip),%rdi
+	cmpl %ecx,%eax
+	jge L21
+L19:
+	movl %eax,%ecx
+	subl _ntokens(%rip),%ecx
+	imull %r13d,%ecx
+	movslq %ecx,%rcx
+	leaq (%rdi,%rcx,4),%r11
+	movl $32,%r10d
+	movl _start_symbol(%rip),%r9d
 L22:
-	cmpl %eax,_nsyms(%rip)
+	cmpl %r9d,_nsyms(%rip)
 	jle L25
 L23:
-	cmpl $32,%edx
+	cmpl $32,%r10d
 	jb L28
 L26:
-	movl (%rsi),%r13d
-	addq $4,%rsi
-	xorl %edx,%edx
+	movl (%r11),%r12d
+	addq $4,%r11
+	xorl %r10d,%r10d
 L28:
-	movb %dl,%cl
-	movl $1,%edi
-	shll %cl,%edi
-	testl %r13d,%edi
+	movb %r10b,%cl
+	movl $1,%esi
+	shll %cl,%esi
+	testl %r12d,%esi
 	jz L31
 L29:
-	movslq %eax,%rdi
+	movslq %r9d,%r9
 	movq _derives(%rip),%rcx
-	movq (%rcx,%rdi,8),%r11
+	movq (%rcx,%r9,8),%r8
 L32:
-	movswl (%r11),%edi
-	addq $2,%r11
-	cmpl $0,%edi
+	movswl (%r8),%esi
+	addq $2,%r8
+	cmpl $0,%esi
 	jl L31
 L33:
-	movb %dil,%cl
+	movb %sil,%cl
 	andb $31,%cl
-	movl $1,%r10d
-	shll %cl,%r10d
-	sarl $5,%edi
-	movslq %edi,%rdi
-	orl %r10d,(%r9,%rdi,4)
+	movl $1,%edi
+	shll %cl,%edi
+	sarl $5,%esi
+	movslq %esi,%rsi
+	orl %edi,(%rdx,%rsi,4)
 	jmp L32
 L31:
-	incl %edx
-	incl %eax
+	incl %r10d
+	incl %r9d
 	jmp L22
 L25:
-	movslq %r12d,%rax
-	leaq (%r9,%rax,4),%r9
-	incl %r8d
+	movslq %ebx,%rbx
+	leaq (%rdx,%rbx,4),%rdx
+	incl %eax
 	jmp L18
 L21:
 	call _free
@@ -172,19 +172,19 @@ L36:
 	addl $31,%eax
 	cltd 
 	idivl %ecx
-	movslq %eax,%rcx
-	movq _ruleset(%rip),%rdx
-	leaq (%rdx,%rcx,4),%r9
+	movslq %eax,%rax
+	movq _ruleset(%rip),%rcx
+	leaq (%rcx,%rax,4),%r9
 L38:
-	cmpq %r9,%rdx
+	cmpq %r9,%rcx
 	jae L41
 L39:
-	movl $0,(%rdx)
-	addq $4,%rdx
+	movl $0,(%rcx)
+	addq $4,%rcx
 	jmp L38
 L41:
-	movslq %esi,%rsi
-	leaq (%rdi,%rsi,2),%r8
+	movslq %esi,%rcx
+	leaq (%rdi,%rcx,2),%r8
 	movq %rdi,%r11
 L42:
 	cmpq %r11,%r8
@@ -259,9 +259,8 @@ L66:
 	cmpq %rdi,%r8
 	jbe L68
 L69:
-	movw (%rdi),%r11w
-	movswl %r11w,%ecx
-	cmpl %ecx,%ebx
+	movswl (%rdi),%r11d
+	cmpl %r11d,%ebx
 	jle L68
 L67:
 	movq _itemsetend(%rip),%r12
@@ -308,9 +307,9 @@ L84:
 	cltd 
 	idivl %ecx
 	imull _ntokens(%rip),%eax
-	movslq %eax,%rax
-	movq _first_derives(%rip),%rcx
-	leaq (%rcx,%rax,4),%rdi
+	movslq %eax,%rcx
+	movq _first_derives(%rip),%rax
+	leaq (%rax,%rcx,4),%rdi
 	call _free
 L85:
 	ret 

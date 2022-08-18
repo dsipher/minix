@@ -70,21 +70,21 @@ L4:
 	cmpl $16,%edi
 	jge L8
 L7:
-	movslq %edi,%rdi
-	movsd _powtab0(,%rdi,8),%xmm0
+	movslq %edi,%rax
+	movsd _powtab0(,%rax,8),%xmm0
 	ret
 L8:
 	cmpl $307,%edi
 	jg L12
 L11:
-	movl %edi,%eax
-	andl $15,%eax
-	movslq %eax,%rax
+	movl %edi,%ecx
+	andl $15,%ecx
+	movslq %ecx,%rcx
 	sarl $4,%edi
 	decl %edi
-	movslq %edi,%rdi
-	movsd _powtab0(,%rax,8),%xmm0
-	divsd _powtab2(,%rdi,8),%xmm0
+	movslq %edi,%rax
+	movsd _powtab0(,%rcx,8),%xmm0
+	divsd _powtab2(,%rax,8),%xmm0
 	ret
 L12:
 	movsd L25(%rip),%xmm0
@@ -93,8 +93,8 @@ L5:
 	cmpl $16,%edi
 	jge L17
 L16:
-	movslq %edi,%rdi
-	movsd _powtab1(,%rdi,8),%xmm0
+	movslq %edi,%rax
+	movsd _powtab1(,%rax,8),%xmm0
 	ret
 L17:
 	cmpl $308,%edi
@@ -106,8 +106,8 @@ L20:
 	movsd _powtab1(,%rax,8),%xmm1
 	sarl $4,%edi
 	decl %edi
-	movslq %edi,%rdi
-	movsd _powtab2(,%rdi,8),%xmm0
+	movslq %edi,%rax
+	movsd _powtab2(,%rax,8),%xmm0
 	mulsd %xmm1,%xmm0
 	ret
 L21:

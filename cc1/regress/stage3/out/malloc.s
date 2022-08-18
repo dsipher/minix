@@ -12,10 +12,10 @@ L2:
 	shlq %cl,%r12
 	xorl %edi,%edi
 	call _sbrk
-	leaq 4095(%rax),%rdi
-	shrq $12,%rdi
-	shll $12,%edi
-	subl %eax,%edi
+	leaq 4095(%rax),%rcx
+	shrq $12,%rcx
+	shll $12,%ecx
+	subl %eax,%ecx
 	cmpq $4096,%r12
 	jae L5
 L4:
@@ -29,22 +29,22 @@ L5:
 L6:
 	movl %r12d,%eax
 	imull %ebx,%eax
-	addl %eax,%edi
-	movslq %edi,%rdi
+	addl %eax,%ecx
+	movslq %ecx,%rdi
 	call _sbrk
-	movq %rax,%rsi
+	movq %rax,%rdx
 	xorl %eax,%eax
-	cmpq $-1,%rsi
+	cmpq $-1,%rdx
 	jz L3
 L11:
 	cmpl %eax,%ebx
 	jle L14
 L12:
-	movslq %r13d,%rdx
-	movq _buckets(,%rdx,8),%rcx
-	movq %rcx,(%rsi)
-	movq %rsi,_buckets(,%rdx,8)
-	addq %r12,%rsi
+	movslq %r13d,%r13
+	movq _buckets(,%r13,8),%rcx
+	movq %rcx,(%rdx)
+	movq %rdx,_buckets(,%r13,8)
+	addq %r12,%rdx
 	incl %eax
 	jmp L11
 L14:
@@ -59,29 +59,28 @@ L3:
 _malloc:
 L16:
 	pushq %rbx
-	pushq %r12
 L17:
 	addq $8,%rdi
-	xorl %r12d,%r12d
+	xorl %ebx,%ebx
 L20:
-	leal 5(%r12),%ecx
+	leal 5(%rbx),%ecx
 	movl $1,%eax
 	shlq %cl,%rax
 	cmpq %rax,%rdi
 	jbe L22
 L25:
-	incl %r12d
-	cmpl $26,%r12d
+	incl %ebx
+	cmpl $26,%ebx
 	jl L20
 L22:
-	cmpl $26,%r12d
+	cmpl $26,%ebx
 	jz L39
 L29:
-	movslq %r12d,%rbx
+	movslq %ebx,%rbx
 	cmpq $0,_buckets(,%rbx,8)
 	jnz L33
 L31:
-	movl %r12d,%edi
+	movl %ebx,%edi
 	call _refill
 	testl %eax,%eax
 	jnz L33
@@ -92,11 +91,10 @@ L33:
 	movq _buckets(,%rbx,8),%rax
 	movq (%rax),%rcx
 	movq %rcx,_buckets(,%rbx,8)
-	movl %r12d,4(%rax)
+	movl %ebx,4(%rax)
 	movl $1265200743,(%rax)
 	addq $8,%rax
 L18:
-	popq %r12
 	popq %rbx
 	ret 
 

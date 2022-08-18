@@ -71,8 +71,8 @@ L20:
 	testl %esi,%esi
 	jz L23
 L22:
-	movsbl %cl,%eax
-	cmpl %eax,%esi
+	movsbl %cl,%ecx
+	cmpl %ecx,%esi
 	movl $0,%eax
 	cmovzl %eax,%esi
 	cmpb $92,%cl
@@ -227,8 +227,8 @@ L108:
 L110:
 	movq _input_stack(%rip),%rax
 	cmpl $92,%r12d
-	setz %bl
-	movzbl %bl,%ebx
+	setz %cl
+	movzbl %cl,%ebx
 	movq (%rax),%rax
 	decl (%rax)
 	movq _input_stack(%rip),%rax

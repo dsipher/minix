@@ -179,8 +179,8 @@ L23:
 	jnz L43
 L37:
 	cmpl $0,4(%r12)
-	setz %cl
-	movzbl %cl,%ecx
+	setz %al
+	movzbl %al,%ecx
 	cmpl $0,4(%rbx)
 	setz %al
 	movzbl %al,%eax
@@ -317,10 +317,10 @@ L49:
 _movetokenrow:
 L86:
 L87:
-	movq 16(%rsi),%rdx
+	movq 16(%rsi),%rax
 	movq 8(%rsi),%rsi
-	subq %rsi,%rdx
-	movslq %edx,%rdx
+	subq %rsi,%rax
+	movslq %eax,%rdx
 	movq (%rdi),%rdi
 	call _memmove
 L88:
@@ -352,16 +352,16 @@ L97:
 	call _growtokenrow
 	jmp L96
 L98:
-	movq 16(%rbx),%rdx
+	movq 16(%rbx),%rcx
 	movq (%rbx),%rsi
-	subq %rsi,%rdx
-	testl %edx,%edx
+	subq %rsi,%rcx
+	testl %ecx,%ecx
 	jz L101
 L99:
 	movslq %r12d,%rax
 	leaq (%rax,%rax,2),%rdi
 	shlq $3,%rdi
-	movslq %edx,%rdx
+	movslq %ecx,%rdx
 	addq %rsi,%rdi
 	call _memmove
 L101:
@@ -624,18 +624,17 @@ L179:
 	cmpq %rax,%r12
 	jae L184
 L182:
-	movslq %r14d,%rsi
-	addq %rbx,%rsi
+	movslq %r14d,%rdx
+	addq %rbx,%rdx
 	movq 40(%r12),%rax
-	movl 28(%r12),%edx
-	movl %edx,%ecx
+	movl 28(%r12),%ecx
 	subq %rcx,%rax
-	cmpq %rax,%rsi
+	cmpq %rax,%rdx
 	jnz L184
 L183:
 	addq $24,%r12
-	addl 8(%r12),%edx
-	addl %edx,%r14d
+	addl 8(%r12),%ecx
+	addl %ecx,%r14d
 	jmp L179
 L184:
 	movq _wbp(%rip),%rdi

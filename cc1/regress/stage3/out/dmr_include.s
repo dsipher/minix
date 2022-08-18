@@ -77,9 +77,9 @@ L32:
 	cmpl $256,%eax
 	jae L7
 L31:
-	movslq %ebx,%rax
+	movslq %ebx,%rbx
 	movq 16(%rcx),%rsi
-	leaq -256(%rbp,%rax),%rdi
+	leaq -256(%rbp,%rbx),%rdi
 	call _strncpy
 	movq (%r15),%rax
 	addl 8(%rax),%ebx
@@ -104,8 +104,8 @@ L7:
 	addq $16,%rsp
 	jmp L3
 L40:
-	movslq %ebx,%rbx
-	movb $0,-256(%rbp,%rbx)
+	movslq %ebx,%rax
+	movb $0,-256(%rbp,%rax)
 	cmpb $47,-256(%rbp)
 	jnz L47
 L46:

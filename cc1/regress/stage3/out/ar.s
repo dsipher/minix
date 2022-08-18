@@ -32,13 +32,13 @@ L2:
 	cmpl $56,%eax
 	jnz L5
 L7:
-	xorl %edx,%edx
+	xorl %ecx,%ecx
 L13:
-	movslq %edx,%rcx
+	movslq %ecx,%rcx
 	movb _arbuf(%rcx),%al
 	movb %al,L4(%rcx)
-	incl %edx
-	cmpl $28,%edx
+	incl %ecx
+	cmpl $28,%ecx
 	jl L13
 L15:
 	movq $L4,_file(%rip)
@@ -62,19 +62,19 @@ _morefil:
 L17:
 L18:
 	xorl %eax,%eax
-	xorl %esi,%esi
+	xorl %edx,%edx
 L20:
-	cmpl _namc(%rip),%esi
+	cmpl _namc(%rip),%edx
 	jge L19
 L21:
-	movslq %esi,%rdx
+	movslq %edx,%rdx
 	movq _namv(%rip),%rcx
 	cmpq $0,(%rcx,%rdx,8)
 	jz L26
 L24:
 	incl %eax
 L26:
-	incl %esi
+	incl %edx
 	jmp L20
 L19:
 	ret 
@@ -535,8 +535,8 @@ L204:
 L205:
 	xorl %ebx,%ebx
 L207:
-	movslq %ebx,%rax
-	movl _signum(,%rax,4),%edi
+	movslq %ebx,%rbx
+	movl _signum(,%rbx,4),%edi
 	testl %edi,%edi
 	jz L210
 L208:
@@ -595,18 +595,18 @@ L223:
 	movl %edi,%ebx
 	movq _file(%rip),%rdi
 	call _trim
-	xorl %esi,%esi
+	xorl %ecx,%ecx
 L226:
 	movb (%rax),%dl
-	movslq %esi,%rcx
+	movslq %ecx,%rcx
 	movb %dl,_arbuf(%rcx)
 	testb %dl,%dl
 	jz L231
 L229:
 	incq %rax
 L231:
-	incl %esi
-	cmpl $28,%esi
+	incl %ecx
+	cmpl $28,%ecx
 	jl L226
 L228:
 	movq _stbuf+48(%rip),%rax
@@ -633,14 +633,13 @@ L224:
 _match:
 L232:
 	pushq %rbx
-	pushq %r12
 L233:
-	xorl %r12d,%r12d
+	xorl %ebx,%ebx
 L235:
-	cmpl _namc(%rip),%r12d
+	cmpl _namc(%rip),%ebx
 	jge L238
 L236:
-	movslq %r12d,%rbx
+	movslq %ebx,%rbx
 	movq _namv(%rip),%rax
 	movq (%rax,%rbx,8),%rdi
 	testq %rdi,%rdi
@@ -653,7 +652,7 @@ L241:
 	testl %eax,%eax
 	jz L243
 L237:
-	incl %r12d
+	incl %ebx
 	jmp L235
 L243:
 	movq _namv(%rip),%rcx
@@ -665,7 +664,6 @@ L243:
 L238:
 	xorl %eax,%eax
 L234:
-	popq %r12
 	popq %rbx
 	ret 
 
@@ -738,14 +736,14 @@ L278:
 	cmpl %ebx,_namc(%rip)
 	jle L281
 L279:
-	movslq %ebx,%rdx
+	movslq %ebx,%rbx
 	movq _namv(%rip),%rcx
-	movq (%rcx,%rdx,8),%rax
+	movq (%rcx,%rbx,8),%rax
 	movq %rax,_file(%rip)
 	testq %rax,%rax
 	jz L280
 L284:
-	movq $0,(%rcx,%rdx,8)
+	movq $0,(%rcx,%rbx,8)
 	movl $97,%edi
 	call _mesg
 	call _stats
@@ -1260,8 +1258,8 @@ L428:
 	call _getqf
 	xorl %ebx,%ebx
 L434:
-	movslq %ebx,%rax
-	movl _signum(,%rax,4),%edi
+	movslq %ebx,%rbx
+	movl _signum(,%rbx,4),%edi
 	testl %edi,%edi
 	jz L437
 L435:
@@ -1279,14 +1277,14 @@ L438:
 	cmpl _namc(%rip),%ebx
 	jge L425
 L439:
-	movslq %ebx,%rdx
+	movslq %ebx,%rbx
 	movq _namv(%rip),%rcx
-	movq (%rcx,%rdx,8),%rax
+	movq (%rcx,%rbx,8),%rax
 	movq %rax,_file(%rip)
 	testq %rax,%rax
 	jz L440
 L444:
-	movq $0,(%rcx,%rdx,8)
+	movq $0,(%rcx,%rbx,8)
 	movl $113,%edi
 	call _mesg
 	call _stats
@@ -1325,9 +1323,9 @@ L452:
 	cmpl _namc(%rip),%ebx
 	jge L455
 L453:
-	movslq %ebx,%rcx
+	movslq %ebx,%rbx
 	movq _namv(%rip),%rax
-	movq (%rax,%rcx,8),%rax
+	movq (%rax,%rbx,8),%rax
 	testq %rax,%rax
 	jz L458
 L456:
@@ -1402,13 +1400,12 @@ L468:
 	pushq %r12
 	pushq %r13
 	pushq %r14
-	pushq %r15
 L469:
 	movl %edi,%r12d
-	movq %rsi,%r15
-	xorl %r14d,%r14d
+	movq %rsi,%r14
+	xorl %r13d,%r13d
 L471:
-	movslq %r14d,%r13
+	movslq %r13d,%r13
 	movl _signum(,%r13,4),%edi
 	testl %edi,%edi
 	jz L474
@@ -1422,7 +1419,7 @@ L475:
 	movl _signum(,%r13,4),%edi
 	call _signal
 L477:
-	incl %r14d
+	incl %r13d
 	jmp L471
 L474:
 	cmpl $3,%r12d
@@ -1430,7 +1427,7 @@ L474:
 L478:
 	call _usage
 L480:
-	movq 8(%r15),%r13
+	movq 8(%r14),%r13
 L481:
 	movb (%r13),%cl
 	testb %cl,%cl
@@ -1514,20 +1511,20 @@ L522:
 	jz L521
 L523:
 	movl $1,_bastate(%rip)
-	movq 16(%r15),%rdi
+	movq 16(%r14),%rdi
 	call _trim
 	movq %rax,_ponam(%rip)
-	addq $8,%r15
+	addq $8,%r14
 	decl %r12d
 	cmpl $3,%r12d
 	jge L521
 L526:
 	call _usage
 L521:
-	movq 16(%r15),%rax
+	movq 16(%r14),%rax
 	movq %rax,_arnam(%rip)
-	addq $24,%r15
-	movq %r15,_namv(%rip)
+	addq $24,%r14
+	movq %r14,_namv(%rip)
 	subl $3,%r12d
 	movl %r12d,_namc(%rip)
 	cmpq $0,_comfun(%rip)
@@ -1554,7 +1551,6 @@ L531:
 	call _done
 L470:
 	movl %ebx,%eax
-	popq %r15
 	popq %r14
 	popq %r13
 	popq %r12

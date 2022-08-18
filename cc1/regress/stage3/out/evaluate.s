@@ -794,8 +794,8 @@ L270:
 L272:
 	movq (%r12),%rsi
 	cmpq $0,8(%rsi)
-	setnz %bl
-	movzbl %bl,%ebx
+	setnz %al
+	movzbl %al,%ebx
 	movq %r12,%rdi
 	call _list_drop
 	movl %ebx,%eax

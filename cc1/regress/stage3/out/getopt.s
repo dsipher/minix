@@ -64,9 +64,8 @@ L32:
 	call _fprintf
 	addq $32,%rsp
 L34:
-	movl _optind(%rip),%edx
-	movslq %edx,%rax
-	movq (%r13,%rax,8),%rcx
+	movslq _optind(%rip),%rdx
+	movq (%r13,%rdx,8),%rcx
 	movl L4(%rip),%eax
 	incl %eax
 	movl %eax,L4(%rip)
@@ -78,26 +77,26 @@ L36:
 	movl %edx,_optind(%rip)
 	jmp L60
 L30:
-	movb 1(%rax),%r8b
-	movl _optind(%rip),%edi
-	movl L4(%rip),%esi
-	movslq %edi,%rdx
-	incl %esi
-	movslq %esi,%rcx
+	movb 1(%rax),%dil
+	movl _optind(%rip),%esi
+	movl L4(%rip),%ecx
+	movslq %esi,%rdx
+	incl %ecx
+	movslq %ecx,%rcx
 	movq (%r13,%rdx,8),%rax
-	cmpb $58,%r8b
+	cmpb $58,%dil
 	jnz L41
 L40:
 	cmpb $0,(%rcx,%rax)
 	jz L44
 L43:
-	incl %edi
-	movl %edi,_optind(%rip)
+	incl %esi
+	movl %esi,_optind(%rip)
 	addq (%r13,%rdx,8),%rcx
 	movq %rcx,_optarg(%rip)
 	jmp L45
 L44:
-	leal 1(%rdi),%eax
+	leal 1(%rsi),%eax
 	movl %eax,_optind(%rip)
 	cmpl %eax,%r14d
 	jg L47
@@ -117,8 +116,8 @@ L59:
 	movl $63,%eax
 	jmp L3
 L47:
-	addl $2,%edi
-	movl %edi,_optind(%rip)
+	addl $2,%esi
+	movl %esi,_optind(%rip)
 	movslq %eax,%rax
 	movq (%r13,%rax,8),%rax
 	movq %rax,_optarg(%rip)
@@ -126,13 +125,13 @@ L45:
 	movl $1,L4(%rip)
 	jmp L42
 L41:
-	movl %esi,L4(%rip)
+	movl %ecx,L4(%rip)
 	cmpb $0,(%rcx,%rax)
 	jnz L56
 L54:
 	movl $1,L4(%rip)
-	incl %edi
-	movl %edi,_optind(%rip)
+	incl %esi
+	movl %esi,_optind(%rip)
 L56:
 	movq $0,_optarg(%rip)
 L42:

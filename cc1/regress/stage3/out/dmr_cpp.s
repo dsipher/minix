@@ -52,8 +52,8 @@ L3:
 	movl $___stderr,%edi
 	call _fflush
 	cmpl $0,_nerrs(%rip)
-	setg %dil
-	movzbl %dil,%edi
+	setg %al
+	movzbl %al,%edi
 	call _exit
 	xorl %eax,%eax
 L4:
@@ -261,19 +261,19 @@ L102:
 	cmpl _ifdepth(%rip),%ecx
 	jl L51
 L80:
-	movb 40(%r12),%sil
-	cmpb $0,%sil
+	movb 40(%r12),%al
+	cmpb $0,%al
 	jl L109
 L250:
-	cmpb $18,%sil
+	cmpb $18,%al
 	jg L109
 L248:
-	movzbl %sil,%eax
-	movzwl L254(,%rax,2),%eax
-	addl $_control,%eax
-	jmp *%rax
+	movzbl %al,%ecx
+	movzwl L254(,%rcx,2),%ecx
+	addl $_control,%ecx
+	jmp *%rcx
 L241:
-	movsbl %sil,%esi
+	movsbl %al,%esi
 	movq %r13,%rdi
 	call _eval
 	jmp L246
@@ -394,11 +394,10 @@ L171:
 	call _error
 	addq $16,%rsp
 L173:
-	movl _ifdepth(%rip),%edx
-	movslq %edx,%rcx
+	movslq _ifdepth(%rip),%rcx
 	cmpl $0,_ifsatisfied(,%rcx,4)
 	movl $0,%eax
-	cmovnzl %edx,%eax
+	cmovnzl %ecx,%eax
 	movl %eax,_skipping(%rip)
 	movl $2,_ifsatisfied(,%rcx,4)
 	jmp L246
@@ -423,13 +422,12 @@ L148:
 	testq %rax,%rax
 	jz L260
 L150:
-	movslq %ecx,%rax
-	cmpl $0,_ifsatisfied(,%rax,4)
+	movslq %ecx,%rcx
+	cmpl $0,_ifsatisfied(,%rcx,4)
 	jnz L260
 L154:
 	movl $0,_skipping(%rip)
-	movl $1,_ifsatisfied(,%rax,4)
-	jmp L246
+	jmp L261
 L141:
 	pushq $L144
 	jmp L256
@@ -460,6 +458,7 @@ L260:
 	jmp L246
 L136:
 	movslq %ecx,%rcx
+L261:
 	movl $1,_ifsatisfied(,%rcx,4)
 	jmp L246
 L109:
@@ -563,36 +562,36 @@ L51:
 
 
 _domalloc:
-L261:
-	pushq %rbx
 L262:
+	pushq %rbx
+L263:
 	movslq %edi,%rdi
 	call _malloc
 	movq %rax,%rbx
 	testq %rbx,%rbx
-	jnz L266
-L264:
-	pushq $L267
+	jnz L267
+L265:
+	pushq $L268
 	pushq $2
 	call _error
 	addq $16,%rsp
-L266:
+L267:
 	movq %rbx,%rax
-L263:
+L264:
 	popq %rbx
 	ret 
 
 
 _dofree:
-L269:
 L270:
-	call _free
 L271:
+	call _free
+L272:
 	ret 
 
 
 _error:
-L272:
+L273:
 	pushq %rbp
 	movq %rsp,%rbp
 	pushq %rbx
@@ -600,139 +599,139 @@ L272:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-L273:
+L274:
 	movl 16(%rbp),%r12d
 	movq 24(%rbp),%rax
 	movq %rax,24(%rbp)
-	pushq $L275
+	pushq $L276
 	pushq $___stderr
 	call _fprintf
 	addq $16,%rsp
 	movq _cursource(%rip),%rbx
-L276:
-	testq %rbx,%rbx
-	jz L279
 L277:
+	testq %rbx,%rbx
+	jz L280
+L278:
 	movq (%rbx),%rcx
 	cmpb $0,(%rcx)
-	jz L282
-L280:
+	jz L283
+L281:
 	movl 8(%rbx),%eax
 	pushq %rax
 	pushq %rcx
-	pushq $L283
+	pushq $L284
 	pushq $___stderr
 	call _fprintf
 	addq $32,%rsp
-L282:
+L283:
 	movq 56(%rbx),%rbx
-	jmp L276
-L279:
+	jmp L277
+L280:
 	leaq 32(%rbp),%rbx
 	movq 24(%rbp),%r15
-L284:
+L285:
 	movb (%r15),%dil
 	testb %dil,%dil
-	jz L287
-L285:
+	jz L288
+L286:
 	cmpb $37,%dil
-	jnz L335
-L288:
+	jnz L336
+L289:
 	leaq 1(%r15),%rax
 	movb 1(%r15),%dil
 	movq %rax,%r15
 	cmpb $115,%dil
-	jz L294
-L328:
-	cmpb $100,%dil
-	jz L297
+	jz L295
 L329:
-	cmpb $116,%dil
-	jz L300
+	cmpb $100,%dil
+	jz L298
 L330:
+	cmpb $116,%dil
+	jz L301
+L331:
 	cmpb $114,%dil
-	jz L303
-L335:
+	jz L304
+L336:
 	movsbl %dil,%edi
 	movl $___stderr,%esi
 	call _fputc
-	jmp L290
-L303:
+	jmp L291
+L304:
 	addq $8,%rbx
 	movq -8(%rbx),%r13
 	movq (%r13),%r14
-L304:
+L305:
 	cmpq 16(%r13),%r14
-	jae L290
-L308:
-	cmpb $6,(%r14)
-	jz L290
+	jae L291
 L309:
+	cmpb $6,(%r14)
+	jz L291
+L310:
 	cmpq (%r13),%r14
-	jbe L314
-L315:
-	cmpl $0,4(%r14)
-	jz L314
+	jbe L315
 L316:
+	cmpl $0,4(%r14)
+	jz L315
+L317:
 	movl $___stderr,%esi
 	movl $32,%edi
 	call _fputc
-L314:
+L315:
 	movl 8(%r14),%eax
 	pushq 16(%r14)
 	pushq %rax
-	pushq $L301
+	pushq $L302
 	pushq $___stderr
 	call _fprintf
 	addq $32,%rsp
 	addq $24,%r14
-	jmp L304
-L300:
+	jmp L305
+L301:
 	addq $8,%rbx
 	movq -8(%rbx),%rcx
 	movl 8(%rcx),%eax
 	pushq 16(%rcx)
 	pushq %rax
-	pushq $L301
+	pushq $L302
 	pushq $___stderr
 	call _fprintf
 	addq $32,%rsp
-	jmp L290
-L297:
+	jmp L291
+L298:
 	addq $8,%rbx
 	movl -8(%rbx),%eax
 	pushq %rax
-	pushq $L298
-	jmp L334
-L294:
+	pushq $L299
+	jmp L335
+L295:
 	addq $8,%rbx
 	pushq -8(%rbx)
-	pushq $L295
-L334:
+	pushq $L296
+L335:
 	pushq $___stderr
 	call _fprintf
 	addq $24,%rsp
-L290:
+L291:
 	incq %r15
-	jmp L284
-L287:
+	jmp L285
+L288:
 	movl $___stderr,%esi
 	movl $10,%edi
 	call _fputc
 	cmpl $2,%r12d
-	jnz L323
-L321:
+	jnz L324
+L322:
 	movl $1,%edi
 	call _exit
-L323:
-	testl %r12d,%r12d
-	jz L326
 L324:
+	testl %r12d,%r12d
+	jz L327
+L325:
 	movl $1,_nerrs(%rip)
-L326:
+L327:
 	movl $___stderr,%edi
 	call _fflush
-L274:
+L275:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -741,13 +740,13 @@ L274:
 	popq %rbp
 	ret 
 
-L298:
+L299:
 	.byte 37,100,0
 L174:
 	.byte 83,121,110,116,97,120,32,101
 	.byte 114,114,111,114,32,105,110,32
 	.byte 35,101,108,115,101,0
-L283:
+L284:
 	.byte 37,115,58,37,100,32,0
 L170:
 	.byte 35,101,108,115,101,32,97,102
@@ -759,7 +758,7 @@ L231:
 	.byte 110,117,109,98,101,114,32,111
 	.byte 117,116,32,111,102,32,114,97
 	.byte 110,103,101,0
-L275:
+L276:
 	.byte 99,112,112,58,32,0
 L195:
 	.byte 35,101,114,114,111,114,32,100
@@ -775,7 +774,7 @@ L122:
 	.byte 35,117,110,100,101,102,0
 L1:
 	.byte 10,0
-L301:
+L302:
 	.byte 37,46,42,115,0
 L63:
 	.byte 85,110,105,100,101,110,116,105
@@ -791,7 +790,7 @@ L99:
 	.byte 35,105,102,32,116,111,111,32
 	.byte 100,101,101,112,108,121,32,110
 	.byte 101,115,116,101,100,0
-L295:
+L296:
 	.byte 37,115,0
 L25:
 	.byte 85,110,116,101,114,109,105,110
@@ -821,7 +820,7 @@ L187:
 	.byte 35,101,110,100,105,102,32,119
 	.byte 105,116,104,32,110,111,32,35
 	.byte 105,102,0
-L267:
+L268:
 	.byte 79,117,116,32,111,102,32,109
 	.byte 101,109,111,114,121,32,102,114
 	.byte 111,109,32,109,97,108,108,111

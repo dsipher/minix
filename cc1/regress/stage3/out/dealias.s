@@ -24,9 +24,9 @@ L11:
 	cmpl 12(%r12),%ebx
 	jge L17
 L15:
-	movq 16(%r12),%rcx
-	movslq %ebx,%rax
-	movq (%rcx,%rax,8),%r14
+	movq 16(%r12),%rax
+	movslq %ebx,%rbx
+	movq (%rax,%rbx,8),%r14
 	testq %r14,%r14
 	jz L17
 L16:
@@ -53,9 +53,9 @@ L28:
 	cmpl %esi,%r13d
 	jge L34
 L32:
-	movq -16(%rbp),%rcx
-	movslq %r13d,%rax
-	movl (%rcx,%rax,4),%eax
+	movq -16(%rbp),%rax
+	movslq %r13d,%r13
+	movl (%rax,%r13,4),%eax
 	testl %eax,%eax
 	jz L34
 L33:
@@ -114,9 +114,9 @@ L58:
 	cmpl -20(%rbp),%r13d
 	jge L64
 L62:
-	movq -16(%rbp),%rcx
-	movslq %r13d,%rax
-	movl (%rcx,%rax,4),%eax
+	movq -16(%rbp),%rax
+	movslq %r13d,%r13
+	movl (%rax,%r13,4),%eax
 	testl %eax,%eax
 	jz L64
 L63:
@@ -225,21 +225,22 @@ L105:
 	pushq %r15
 L106:
 	movl $0,-20(%rbp)
-	movq _all_blocks(%rip),%r15
-L108:
-	testq %r15,%r15
+	movq _all_blocks(%rip),%rax
+L203:
+	movq %rax,-16(%rbp)
+	cmpq $0,-16(%rbp)
 	jz L111
 L109:
-	movl $0,-24(%rbp)
+	xorl %r15d,%r15d
 L112:
-	movl -24(%rbp),%eax
-	cmpl 12(%r15),%eax
+	movq -16(%rbp),%rax
+	cmpl 12(%rax),%r15d
 	jge L118
 L116:
-	movq 16(%r15),%rcx
-	movslq -24(%rbp),%rax
-	movq (%rcx,%rax,8),%r14
-	movq %rax,-16(%rbp)
+	movq -16(%rbp),%rax
+	movq 16(%rax),%rax
+	movslq %r15d,%r15
+	movq (%rax,%r15,8),%r14
 	testq %r14,%r14
 	jz L118
 L117:
@@ -285,9 +286,9 @@ L142:
 	movl %ecx,72(%rax)
 L144:
 	movq %rax,%r14
-	movq 16(%r15),%rdx
 	movq -16(%rbp),%rcx
-	movq %rax,(%rdx,%rcx,8)
+	movq 16(%rcx),%rcx
+	movq %rax,(%rcx,%r15,8)
 L122:
 	xorl %r13d,%r13d
 L145:
@@ -317,8 +318,8 @@ L153:
 	movsd 24(%r14,%r12),%xmm0
 	call _floateral
 	movq %rax,%rbx
-	movl -24(%rbp),%ecx
-	movq %r15,%rdx
+	movl %r15d,%ecx
+	movq -16(%rbp),%rdx
 	movq %rbx,%rsi
 	movl $-1577058300,%edi
 	call _loadstore
@@ -329,7 +330,7 @@ L153:
 	movq %rbx,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%r14,%r12)
-	jmp L203
+	jmp L204
 L154:
 	cmpl $2,%eax
 	jnz L151
@@ -385,8 +386,8 @@ L192:
 	orl %edx,%ecx
 	movl %ecx,40(%rax)
 L200:
-	movl -24(%rbp),%edx
-	movq %r15,%rsi
+	movl %r15d,%edx
+	movq -16(%rbp),%rsi
 	movq %rax,%rdi
 	call _insert_insn
 	movl 8(%r14,%r12),%eax
@@ -394,17 +395,18 @@ L200:
 	orl $1,%eax
 	movl %eax,8(%r14,%r12)
 	movl %ebx,16(%r14,%r12)
-L203:
+L204:
 	incl -20(%rbp)
 L151:
 	incl %r13d
 	jmp L145
 L148:
-	incl -24(%rbp)
+	incl %r15d
 	jmp L112
 L118:
-	movq 112(%r15),%r15
-	jmp L108
+	movq -16(%rbp),%rax
+	movq 112(%rax),%rax
+	jmp L203
 L111:
 	movl -20(%rbp),%eax
 L107:

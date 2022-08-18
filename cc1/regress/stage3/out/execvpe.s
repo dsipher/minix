@@ -24,8 +24,8 @@ L2:
 	movq %r15,%rdi
 	call _strchr
 	testq %rax,%rax
-	setnz %bl
-	movzbl %bl,%ebx
+	setnz %al
+	movzbl %al,%ebx
 L9:
 	leaq -256(%rbp),%rdx
 	testl %ebx,%ebx

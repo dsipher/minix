@@ -952,6 +952,65 @@ int insn_is_copy(struct insn *insn, int *dst, int *src)
     }
 }
 
+int insn_is_ext(struct insn *insn, int *dst, int *src)
+{
+    struct symbol *sym;
+    long ts = 0;
+
+    switch (insn->op)
+    {
+    case I_LIR_CAST:        /* since a reg in LIR always appears with a type
+                               simpatico with its symbol's, we need only be
+                               sure that the target type is in the same cast
+                               class, and that the cast is not a downcast. */
+
+                            if (!OPERAND_REG(&insn->operand[0])) break;
+                            if (!OPERAND_REG(&insn->operand[1])) break;
+
+                            if (T_CAST_CLASS(insn->operand[0].t) !=
+                                T_CAST_CLASS(insn->operand[1].t)) break;
+
+                            if (t_size(insn->operand[0].t)
+                                < t_size(insn->operand[1].t)) break;
+
+                            *dst = insn->operand[0].reg;
+                            *src = insn->operand[1].reg;
+                            return 1;
+
+
+                            /* for machine casts, we need an explicit check
+                               that we're extending the entirety of the range
+                               possible for the reg's backing symbol. */
+
+    case I_MCH_MOVSLQ:
+    case I_MCH_MOVZLQ:      ts |= T_INTS;
+
+    case I_MCH_MOVSWL:
+    case I_MCH_MOVZWL:
+    case I_MCH_MOVSWQ:
+    case I_MCH_MOVZWQ:      ts |= T_SHORTS;
+
+    case I_MCH_MOVSBW:
+    case I_MCH_MOVZBW:
+    case I_MCH_MOVSBL:
+    case I_MCH_MOVZBL:
+    case I_MCH_MOVSBQ:
+    case I_MCH_MOVZBQ:      ts |= T_CHARS;
+
+                            if (!OPERAND_REG(&insn->operand[0])) break;
+                            if (!OPERAND_REG(&insn->operand[1])) break;
+                            if (MACHINE_REG(insn->operand[1].reg)) break;
+                            sym = REG_TO_SYMBOL(insn->operand[1].reg);
+                            if ((TYPE_BASE(sym->type) & ts) == 0) break;
+
+                            *dst = insn->operand[0].reg;
+                            *src = insn->operand[1].reg;
+                            return 1;
+    }
+
+    return 0;
+}
+
 #define CMPZ0(opr0, opr1)                                                   \
     do {                                                                    \
         if (OPERAND_ZERO(&insn->operand[opr0])                              \

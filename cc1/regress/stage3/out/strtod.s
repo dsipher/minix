@@ -28,8 +28,8 @@ L2:
 L4:
 	movsbl (%r15),%r14d
 	incq %r15
-	movslq %r14d,%rax
-	testb $8,___ctype+1(%rax)
+	movslq %r14d,%r14
+	testb $8,___ctype+1(%r14)
 	jnz L4
 L6:
 	cmpl $45,%r14d

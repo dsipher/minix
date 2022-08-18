@@ -3,8 +3,8 @@
 _isspace:
 L1:
 L2:
-	movslq %edi,%rdi
-	movb ___ctype+1(%rdi),%al
+	movslq %edi,%rax
+	movb ___ctype+1(%rax),%al
 	andb $8,%al
 	movsbl %al,%eax
 L3:

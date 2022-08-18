@@ -146,19 +146,12 @@ static int zlq1(struct block *b)
 
    by itself, this optimization yields only a modest benefit (we eliminate
    117 insns, ~0.2%, in the regression suite). ultimately, synergy between
-   this pass and not-yet-written other transformations is the goal, e.g.:
+   this pass and not-yet-written other transformations is the goal, e.g.,
+   we need to rewrite MOVSLQs as MOVZLQs when the value is known to be
+   non-negative. this should yield many more removable MOVZLQ-self insns
+   (such MOVSLQs arise frequently, from array operations with int indices).
 
-        (1) we need to rewrite MOVSLQs as MOVZLQs when the value is
-            known to be non-negative. the former are far more common,
-            often arising from indexing arrays with ints.
-
-        (2) the register allocator needs to recognize when a value and
-            its sign-extended value can inhabit the same register and
-            coalsece them accordingly.
-
-   these two alone should yield many more removable MOVZLQ-self insns.
-
-   this pass must run last, as we have no means of indicating a dependency
+   this pass must run last, as we have no means of maintaining a dependency
    on the _size_ of a previous write. if we try to interleave other passes
    they might pull the rug out from underneath us. on the bright side, this
    allows us to optimize for working on the small set of machine regs. */

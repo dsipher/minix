@@ -309,23 +309,23 @@ L133:
 	addq %rcx,%rsi
 	movq %rsi,_stmt_arena+8(%rip)
 L135:
-	movq _stmt_arena+8(%rip),%rsi
+	movq _stmt_arena+8(%rip),%rdx
 	movslq %eax,%rax
-	leaq (%rsi,%rax,8),%rax
+	leaq (%rdx,%rax,8),%rax
 	movq %rax,_stmt_arena+8(%rip)
-	xorl %edx,%edx
+	xorl %ecx,%ecx
 L136:
-	cmpl 4(%r12),%edx
+	cmpl 4(%r12),%ecx
 	jge L139
 L137:
 	movq 24(%r12),%rax
-	movslq %edx,%rcx
+	movslq %ecx,%rcx
 	movq (%rax,%rcx,8),%rax
-	movq %rax,(%rsi,%rcx,8)
-	incl %edx
+	movq %rax,(%rdx,%rcx,8)
+	incl %ecx
 	jmp L136
 L139:
-	movq %rsi,24(%r12)
+	movq %rdx,24(%r12)
 L114:
 	movq 24(%r12),%rcx
 	movslq 4(%r12),%rax
@@ -431,8 +431,8 @@ L185:
 	movq (%rax),%rsi
 	andl $131071,%esi
 	cmpq $0,24(%rdx)
-	setz %cl
-	movzbl %cl,%ecx
+	setz %al
+	movzbl %al,%ecx
 	addq $16,%rdx
 	call _cast_con
 	testl %eax,%eax
@@ -1217,8 +1217,8 @@ L718:
 L739:
 	movq 8(%rbx),%rax
 	testq $7168,(%rax)
-	setz %dl
-	movzbl %dl,%edx
+	setz %al
+	movzbl %al,%edx
 	movq 16(%rbx),%rcx
 	movq 8(%rcx),%rdi
 	testq $7168,(%rdi)
@@ -1741,7 +1741,6 @@ _simplify:
 L1012:
 	pushq %rbx
 	pushq %r12
-	pushq %r13
 L1013:
 	movq %rdi,%rbx
 	movl (%rbx),%eax
@@ -1752,18 +1751,18 @@ L1018:
 	movq 16(%rbx),%rdi
 	call _simplify
 	movq %rax,16(%rbx)
-	xorl %r13d,%r13d
+	xorl %r12d,%r12d
 L1021:
-	cmpl 4(%rbx),%r13d
+	cmpl 4(%rbx),%r12d
 	jge L1020
 L1022:
 	movq 24(%rbx),%rax
-	movslq %r13d,%r12
+	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rdi
 	call _simplify
 	movq 24(%rbx),%rcx
 	movq %rax,(%rcx,%r12,8)
-	incl %r13d
+	incl %r12d
 	jmp L1021
 L1019:
 	testl $2147483648,%eax
@@ -1798,7 +1797,6 @@ L1020:
 	movq %rax,%rdi
 	call _relcast0
 L1014:
-	popq %r13
 	popq %r12
 	popq %rbx
 	ret 
@@ -1820,7 +1818,6 @@ _fold:
 L1037:
 	pushq %rbx
 	pushq %r12
-	pushq %r13
 L1038:
 	movq %rdi,%rbx
 	movl (%rbx),%eax
@@ -1831,18 +1828,18 @@ L1043:
 	movq 16(%rbx),%rdi
 	call _fold
 	movq %rax,16(%rbx)
-	xorl %r13d,%r13d
+	xorl %r12d,%r12d
 L1046:
-	cmpl 4(%rbx),%r13d
+	cmpl 4(%rbx),%r12d
 	jge L1045
 L1047:
 	movq 24(%rbx),%rax
-	movslq %r13d,%r12
+	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rdi
 	call _fold
 	movq 24(%rbx),%rcx
 	movq %rax,(%rcx,%r12,8)
-	incl %r13d
+	incl %r12d
 	jmp L1046
 L1044:
 	testl $2147483648,%eax
@@ -1863,7 +1860,6 @@ L1045:
 	movq %rax,%rdi
 	call _fold0
 L1039:
-	popq %r13
 	popq %r12
 	popq %rbx
 	ret 
@@ -1873,7 +1869,6 @@ _rewrite_volatiles:
 L1058:
 	pushq %rbx
 	pushq %r12
-	pushq %r13
 L1059:
 	movq %rdi,%rbx
 	movl (%rbx),%eax
@@ -1909,18 +1904,18 @@ L1075:
 	movq 16(%rbx),%rdi
 	call _rewrite_volatiles
 	movq %rax,16(%rbx)
-	xorl %r13d,%r13d
+	xorl %r12d,%r12d
 L1078:
-	cmpl 4(%rbx),%r13d
+	cmpl 4(%rbx),%r12d
 	jge L1090
 L1079:
 	movq 24(%rbx),%rax
-	movslq %r13d,%r12
+	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rdi
 	call _rewrite_volatiles
 	movq 24(%rbx),%rcx
 	movq %rax,(%rcx,%r12,8)
-	incl %r13d
+	incl %r12d
 	jmp L1078
 L1076:
 	testl $2147483648,%eax
@@ -1938,7 +1933,6 @@ L1086:
 L1090:
 	movq %rbx,%rax
 L1060:
-	popq %r13
 	popq %r12
 	popq %rbx
 	ret 

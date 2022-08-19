@@ -811,16 +811,16 @@ L315:
 	call _symbol_to_reg
 	movl %eax,%r14d
 	movl -32(%rbp),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,-32(%rbp)
 	movl %r14d,-24(%rbp)
 	movl -64(%rbp),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $3,%eax
 	movl $-2147303424,-56(%rbp)
 	movl $0,-52(%rbp)
-	andl $-25,%eax
+	andl $4294967271,%eax
 	movl %eax,-64(%rbp)
 	movq %rbx,%rdi
 	call _symbol_offset

@@ -189,7 +189,7 @@ L70:
 	jz L74
 L73:
 	movl 4(%r14),%eax
-	andl $-17,%eax
+	andl $4294967279,%eax
 	orl $16,%eax
 	jmp L89
 L74:
@@ -207,11 +207,11 @@ L77:
 	testl %r15d,%r15d
 	jz L81
 L80:
-	andl $-9,%eax
+	andl $4294967287,%eax
 	orl $8,%eax
 	jmp L89
 L81:
-	andl $-5,%eax
+	andl $4294967291,%eax
 	orl $4,%eax
 L89:
 	movl %eax,4(%r14)

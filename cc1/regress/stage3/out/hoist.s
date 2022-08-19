@@ -410,7 +410,7 @@ L168:
 	movsb 
 	movl %r13d,48(%rax)
 	movl 4(%rax),%ecx
-	andl $-3,%ecx
+	andl $4294967293,%ecx
 	orl $2,%ecx
 	movl %ecx,4(%rax)
 	movq 576(%rbx),%rcx

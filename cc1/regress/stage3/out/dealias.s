@@ -266,7 +266,7 @@ L124:
 	movsd L202(%rip),%xmm0
 	movsd %xmm0,-8(%rbp)
 	movl 72(%rax),%ecx
-	andl $-8,%ecx
+	andl $4294967288,%ecx
 	orl $2,%ecx
 	movl %ecx,72(%rax)
 	movq -8(%rbp),%rcx
@@ -281,7 +281,7 @@ L142:
 	andl $131071,%edx
 	shll $5,%edx
 	movl 72(%rax),%ecx
-	andl $-4194273,%ecx
+	andl $4290773023,%ecx
 	orl %edx,%ecx
 	movl %ecx,72(%rax)
 L144:
@@ -324,7 +324,7 @@ L153:
 	movl $-1577058300,%edi
 	call _loadstore
 	movl 8(%r14,%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r14,%r12)
 	movq %rbx,%rdi
@@ -352,7 +352,7 @@ L168:
 	movl $-1610612727,%edi
 	call _new_insn
 	movl 8(%rax),%edx
-	andl $-8,%edx
+	andl $4294967288,%edx
 	orl $1,%edx
 	movl %edx,8(%rax)
 	movl %ebx,16(%rax)
@@ -363,12 +363,12 @@ L177:
 	movq _long_type(%rip),%rcx
 	andl $131071,%ecx
 	shll $5,%ecx
-	andl $-4194273,%edx
+	andl $4290773023,%edx
 	orl %ecx,%edx
 	movl %edx,8(%rax)
 L185:
 	movl 40(%rax),%ecx
-	andl $-8,%ecx
+	andl $4294967288,%ecx
 	orl $2,%ecx
 	movl %ecx,40(%rax)
 	movq 24(%r14,%r12),%rcx
@@ -382,7 +382,7 @@ L192:
 	andl $131071,%edx
 	shll $5,%edx
 	movl 40(%rax),%ecx
-	andl $-4194273,%ecx
+	andl $4290773023,%ecx
 	orl %edx,%ecx
 	movl %ecx,40(%rax)
 L200:
@@ -391,7 +391,7 @@ L200:
 	movq %rax,%rdi
 	call _insert_insn
 	movl 8(%r14,%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r14,%r12)
 	movl %ebx,16(%r14,%r12)

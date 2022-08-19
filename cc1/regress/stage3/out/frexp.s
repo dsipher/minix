@@ -36,7 +36,7 @@ L9:
 L20:
 	movl %eax,(%rdi)
 	movl -4(%rbp),%eax
-	andl $-2146435073,%eax
+	andl $2148532223,%eax
 	orl $1071644672,%eax
 	movl %eax,-4(%rbp)
 L5:

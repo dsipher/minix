@@ -15,7 +15,7 @@ L42:
 	jnz L3
 L25:
 	movl (%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,(%r12)
 	movq 24(%rbx),%rdi
@@ -27,7 +27,7 @@ L25:
 	jz L3
 L8:
 	movl (%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,(%r12)
 	movq 16(%rbx),%rax
@@ -42,7 +42,7 @@ L45:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl (%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,(%r12)
 L3:
@@ -72,7 +72,7 @@ L47:
 	call _new_insn
 	movq %rax,%r12
 	movl 8(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r12)
 	movq %r13,%rdi
@@ -86,14 +86,14 @@ L55:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%r12)
 L63:
 	movslq %ebx,%rbx
 	movq %rbx,-8(%rbp)
 	movl 40(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,40(%r12)
 	movq -8(%rbp),%rax
@@ -107,7 +107,7 @@ L73:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%r12)
 L81:
@@ -157,7 +157,7 @@ L89:
 	movq %rax,%rbx
 L92:
 	movl (%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,(%r12)
 	movq %r14,%rdi
@@ -171,7 +171,7 @@ L98:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl (%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,(%r12)
 L106:
@@ -179,7 +179,7 @@ L106:
 	jnz L107
 L125:
 	movl (%rbx),%ecx
-	andl $-8,%ecx
+	andl $4294967288,%ecx
 	orl $2,%ecx
 	movl %ecx,(%rbx)
 	movq $0,16(%rbx)
@@ -191,7 +191,7 @@ L131:
 	movq _ulong_type(%rip),%rax
 	andl $131071,%eax
 	shll $5,%eax
-	andl $-4194273,%ecx
+	andl $4290773023,%ecx
 	orl %eax,%ecx
 	movl %ecx,(%rbx)
 	jmp L109
@@ -208,7 +208,7 @@ L107:
 	call _frame_addr
 	movq %rax,%r12
 	movl (%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,(%rbx)
 	movq %r12,%rdi
@@ -222,7 +222,7 @@ L116:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl (%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,(%rbx)
 L124:
@@ -233,7 +233,7 @@ L109:
 	jz L136
 L134:
 	movl 4(%r13),%eax
-	andl $-2,%eax
+	andl $4294967294,%eax
 	orl $1,%eax
 	movl %eax,4(%r13)
 L136:
@@ -275,7 +275,7 @@ L139:
 	call _leaf_operand
 	movq $0,-8(%rbp)
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,40(%rbx)
 	movq -8(%rbp),%rax
@@ -289,7 +289,7 @@ L150:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L158:
@@ -336,7 +336,7 @@ L160:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r12,%rdi
@@ -350,7 +350,7 @@ L168:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L176:
@@ -391,7 +391,7 @@ L179:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r12,%rdi
@@ -405,7 +405,7 @@ L187:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L195:
@@ -469,7 +469,7 @@ L204:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r12,%rdi
@@ -483,14 +483,14 @@ L213:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L221:
 	movsd L609(%rip),%xmm0
 	movsd %xmm0,-8(%rbp)
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,40(%rbx)
 	movq -8(%rbp),%rax
@@ -504,7 +504,7 @@ L231:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L239:
@@ -519,7 +519,7 @@ L239:
 	leaq 8(%rbx),%rdi
 	call _leaf_operand
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%rbx)
 	movq %r12,%rdi
@@ -533,7 +533,7 @@ L246:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L254:
@@ -554,14 +554,14 @@ L254:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%rbx)
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $8192,%eax
 	movl %eax,8(%rbx)
 	movq 16(%r15),%rsi
@@ -581,7 +581,7 @@ L254:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r12,%rdi
@@ -595,7 +595,7 @@ L276:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L284:
@@ -603,7 +603,7 @@ L284:
 	leaq 40(%rbx),%rdi
 	call _leaf_operand
 	movl 72(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,72(%rbx)
 	movq %r12,%rdi
@@ -617,7 +617,7 @@ L291:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,72(%rbx)
 L299:
@@ -629,18 +629,18 @@ L299:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%rbx)
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $8192,%eax
 	movl %eax,8(%rbx)
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%rbx)
 	movq %r12,%rdi
@@ -654,7 +654,7 @@ L321:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L329:
@@ -666,38 +666,38 @@ L329:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%rbx)
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,8(%rbx)
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%rbx)
 	movq %r14,%rdi
 	call _symbol_to_reg
 	movl %eax,48(%rbx)
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,40(%rbx)
 	movq $-9223372036854775808,%rax
 	movq %rax,-16(%rbp)
 	movl 72(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,72(%rbx)
 	movq -16(%rbp),%rax
 	movq %rax,88(%rbx)
 	movq $0,96(%rbx)
 	movl 72(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,72(%rbx)
 	movq _current_block(%rip),%rsi
@@ -732,19 +732,19 @@ L382:
 	leaq 8(%rbx),%rdi
 	call _leaf_operand
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $8192,%eax
 	movl %eax,8(%rbx)
 	movq $0,-24(%rbp)
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,40(%rbx)
 	movq -24(%rbp),%rax
 	movq %rax,56(%rbx)
 	movq $0,64(%rbx)
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $8192,%eax
 	movl %eax,40(%rbx)
 	movq _current_block(%rip),%rsi
@@ -764,7 +764,7 @@ L382:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
@@ -778,7 +778,7 @@ L409:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L417:
@@ -786,7 +786,7 @@ L417:
 	leaq 40(%rbx),%rdi
 	call _leaf_operand
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $8192,%eax
 	movl %eax,40(%rbx)
 	movq _current_block(%rip),%rsi
@@ -810,14 +810,14 @@ L417:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r13,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%rbx)
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,8(%rbx)
 	movq 16(%r15),%rsi
@@ -831,14 +831,14 @@ L417:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r13,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%rbx)
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,8(%rbx)
 	movl $32,%ecx
@@ -848,14 +848,14 @@ L417:
 	movsb 
 	movq $1,-32(%rbp)
 	movl 72(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,72(%rbx)
 	movq -32(%rbp),%rax
 	movq %rax,88(%rbx)
 	movq $0,96(%rbx)
 	movl 72(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $64,%eax
 	movl %eax,72(%rbx)
 	xorl %esi,%esi
@@ -863,14 +863,14 @@ L417:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r12,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%rbx)
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,8(%rbx)
 	movq 16(%r15),%rsi
@@ -884,14 +884,14 @@ L417:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r12,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%rbx)
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,8(%rbx)
 	movl $32,%ecx
@@ -901,14 +901,14 @@ L417:
 	movsb 
 	movq $1,-40(%rbp)
 	movl 72(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,72(%rbx)
 	movq -40(%rbp),%rax
 	movq %rax,88(%rbx)
 	movq $0,96(%rbx)
 	movl 72(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,72(%rbx)
 	movq _current_block(%rip),%rsi
@@ -919,14 +919,14 @@ L417:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r13,%rdi
 	call _symbol_to_reg
 	movl %eax,16(%rbx)
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,8(%rbx)
 	movl $32,%ecx
@@ -935,14 +935,14 @@ L417:
 	rep 
 	movsb 
 	movl 72(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,72(%rbx)
 	movq %r12,%rdi
 	call _symbol_to_reg
 	movl %eax,80(%rbx)
 	movl 72(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $16384,%eax
 	movl %eax,72(%rbx)
 	movq _current_block(%rip),%rsi
@@ -953,7 +953,7 @@ L417:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
@@ -967,19 +967,19 @@ L550:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L558:
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%rbx)
 	movq %r13,%rdi
 	call _symbol_to_reg
 	movl %eax,48(%rbx)
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $8192,%eax
 	movl %eax,40(%rbx)
 	movq _current_block(%rip),%rsi
@@ -990,7 +990,7 @@ L558:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
@@ -1004,7 +1004,7 @@ L580:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L588:
@@ -1041,7 +1041,7 @@ L590:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
@@ -1055,7 +1055,7 @@ L599:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L607:
@@ -1152,7 +1152,7 @@ L625:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq -32(%rbp),%rdi
@@ -1167,12 +1167,12 @@ L634:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L642:
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%rbx)
 	movq %r15,%rdi
@@ -1186,7 +1186,7 @@ L649:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L657:
@@ -1196,7 +1196,7 @@ L657:
 	notq %rax
 	movq %rax,-8(%rbp)
 	movl 72(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,72(%rbx)
 	movq -8(%rbp),%rax
@@ -1210,7 +1210,7 @@ L667:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,72(%rbx)
 L675:
@@ -1227,7 +1227,7 @@ L626:
 	call _new_insn
 	movq %rax,%r13
 	movl 8(%r13),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r13)
 	movq -32(%rbp),%rdi
@@ -1242,12 +1242,12 @@ L682:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%r13)
 L690:
 	movl 40(%r13),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%r13)
 	movq %r15,%rdi
@@ -1261,14 +1261,14 @@ L697:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r13),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%r13)
 L705:
 	movslq %r12d,%r12
 	movq %r12,-16(%rbp)
 	movl 72(%r13),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,72(%r13)
 	movq -16(%rbp),%rax
@@ -1282,7 +1282,7 @@ L715:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r13),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,72(%r13)
 L723:
@@ -1294,7 +1294,7 @@ L723:
 	call _new_insn
 	movq %rax,%r12
 	movl 8(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r12)
 	movq -32(%rbp),%rdi
@@ -1308,12 +1308,12 @@ L730:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%r12)
 L738:
 	movl 40(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%r12)
 	movq -32(%rbp),%rdi
@@ -1327,14 +1327,14 @@ L745:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%r12)
 L753:
 	movslq %ebx,%rbx
 	movq %rbx,-24(%rbp)
 	movl 72(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,72(%r12)
 	movq -24(%rbp),%rax
@@ -1348,7 +1348,7 @@ L763:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,72(%r12)
 L771:
@@ -1405,7 +1405,7 @@ L775:
 	call _new_insn
 	movq %rax,%r12
 	movl 8(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r12)
 	movq %r13,%rdi
@@ -1419,7 +1419,7 @@ L783:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%r12)
 L791:
@@ -1432,7 +1432,7 @@ L791:
 	notq %rbx
 	movq %rbx,-8(%rbp)
 	movl 72(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,72(%r12)
 	movq -8(%rbp),%rax
@@ -1446,7 +1446,7 @@ L801:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,72(%r12)
 L809:
@@ -1458,7 +1458,7 @@ L809:
 	call _new_insn
 	movq %rax,%r12
 	movl 8(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r12)
 	movq %r13,%rdi
@@ -1472,12 +1472,12 @@ L816:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%r12)
 L824:
 	movl 40(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%r12)
 	movq %r13,%rdi
@@ -1491,14 +1491,14 @@ L831:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%r12)
 L839:
 	movslq %r14d,%rax
 	movq %rax,-16(%rbp)
 	movl 72(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,72(%r12)
 	movq -16(%rbp),%rax
@@ -1512,7 +1512,7 @@ L849:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,72(%r12)
 L857:
@@ -1524,7 +1524,7 @@ L857:
 	call _new_insn
 	movq %rax,%r12
 	movl 8(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r12)
 	movq -40(%rbp),%rdi
@@ -1539,12 +1539,12 @@ L864:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%r12)
 L872:
 	movl 40(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%r12)
 	movq -32(%rbp),%rdi
@@ -1559,7 +1559,7 @@ L879:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%r12)
 L887:
@@ -1568,7 +1568,7 @@ L887:
 	notq %rbx
 	movq %rbx,-24(%rbp)
 	movl 72(%r12),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,72(%r12)
 	movq -24(%rbp),%rax
@@ -1583,7 +1583,7 @@ L897:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r12),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,72(%r12)
 L905:
@@ -1595,7 +1595,7 @@ L905:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq -40(%rbp),%rdi
@@ -1610,12 +1610,12 @@ L912:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L920:
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%rbx)
 	movq -40(%rbp),%rdi
@@ -1630,12 +1630,12 @@ L927:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L935:
 	movl 72(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,72(%rbx)
 	movq %r13,%rdi
@@ -1649,7 +1649,7 @@ L942:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,72(%rbx)
 L950:
@@ -1694,7 +1694,7 @@ L957:
 	leaq 40(%rbx),%rdi
 	call _leaf_operand
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r12,%rdi
@@ -1708,7 +1708,7 @@ L965:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L973:
@@ -1722,7 +1722,7 @@ L977:
 	jz L976
 L978:
 	movl 4(%rbx),%eax
-	andl $-2,%eax
+	andl $4294967294,%eax
 	orl $1,%eax
 	movl %eax,4(%rbx)
 L976:
@@ -1794,7 +1794,7 @@ L999:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq -8(%rbp),%rdi
@@ -1809,7 +1809,7 @@ L1008:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 	jmp L1055
@@ -1837,7 +1837,7 @@ L1020:
 	jz L1019
 L1021:
 	movl 4(%rbx),%eax
-	andl $-2,%eax
+	andl $4294967294,%eax
 	orl $1,%eax
 	movl %eax,4(%rbx)
 L1019:
@@ -1883,7 +1883,7 @@ L1037:
 	call _insert_field
 	movq %rax,-8(%rbp)
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%rbx)
 	movq -8(%rbp),%rdi
@@ -1898,7 +1898,7 @@ L1044:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L1052:
@@ -1970,7 +1970,7 @@ L1062:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
@@ -1984,12 +1984,12 @@ L1071:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L1079:
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%rbx)
 	movq %r12,%rdi
@@ -2003,7 +2003,7 @@ L1086:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L1094:
@@ -2062,7 +2062,7 @@ L1099:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r13,%rdi
@@ -2076,7 +2076,7 @@ L1108:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L1116:
@@ -2089,7 +2089,7 @@ L1100:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r13,%rdi
@@ -2103,12 +2103,12 @@ L1123:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L1131:
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,40(%rbx)
 	movq %r12,%rdi
@@ -2122,7 +2122,7 @@ L1138:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L1146:
@@ -2241,7 +2241,7 @@ L1157:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r12,%rdi
@@ -2255,7 +2255,7 @@ L1189:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L1197:
@@ -2299,7 +2299,7 @@ L1209:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
@@ -2313,13 +2313,13 @@ L1217:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L1225:
 	movq $0,-8(%rbp)
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,40(%rbx)
 	movq -8(%rbp),%rax
@@ -2333,7 +2333,7 @@ L1235:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L1243:
@@ -2349,7 +2349,7 @@ L1243:
 	call _new_insn
 	movq %rax,%rbx
 	movl 8(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%rbx)
 	movq %r14,%rdi
@@ -2363,13 +2363,13 @@ L1250:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%rbx)
 L1258:
 	movq $1,-16(%rbp)
 	movl 40(%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,40(%rbx)
 	movq -16(%rbp),%rax
@@ -2383,7 +2383,7 @@ L1268:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,40(%rbx)
 L1276:
@@ -2479,7 +2479,7 @@ L1291:
 	call _new_insn
 	movq %rax,%r13
 	movl 8(%r13),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r13)
 	movq %rbx,%rdi
@@ -2493,7 +2493,7 @@ L1300:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%r13)
 L1308:
@@ -2523,7 +2523,7 @@ L1312:
 	call _new_insn
 	movq %rax,%r13
 	movl 8(%r13),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r13)
 	movq %rbx,%rdi
@@ -2537,7 +2537,7 @@ L1321:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%r13)
 L1329:
@@ -2677,7 +2677,7 @@ L1350:
 	jz L1353
 L1351:
 	movl 8(%r14,%r13),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl $262144,%eax
 	movl %eax,8(%r14,%r13)
 	xorl %esi,%esi
@@ -2685,7 +2685,7 @@ L1351:
 	call _size_of
 	andl $268435455,%eax
 	movl 12(%r14,%r13),%ecx
-	andl $-268435456,%ecx
+	andl $4026531840,%ecx
 	orl %eax,%ecx
 	movl %ecx,12(%r14,%r13)
 	movq %rbx,%rdi
@@ -2693,7 +2693,7 @@ L1351:
 	andl $15,%eax
 	shll $28,%eax
 	movl 12(%r14,%r13),%ecx
-	andl $-4026531841,%ecx
+	andl $268435455,%ecx
 	orl %eax,%ecx
 	movl %ecx,12(%r14,%r13)
 L1353:
@@ -2720,7 +2720,7 @@ L1365:
 	jz L1356
 L1366:
 	movl 4(%r14),%eax
-	andl $-2049,%eax
+	andl $4294965247,%eax
 	orl $2048,%eax
 	movl %eax,4(%r14)
 L1356:
@@ -2728,7 +2728,7 @@ L1356:
 	jz L1371
 L1372:
 	movl 8(%r14),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,8(%r14)
 	movq -8(%rbp),%rdi
@@ -2743,7 +2743,7 @@ L1378:
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r14),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %ecx,%eax
 	movl %eax,8(%r14)
 L1371:

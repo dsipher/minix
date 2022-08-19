@@ -509,7 +509,7 @@ L304:
 	andl $63,%esi
 	shll $5,%esi
 	movl 4(%r8),%eax
-	andl $-2017,%eax
+	andl $4294965279,%eax
 	orl %esi,%eax
 	movl %eax,4(%r8)
 L295:
@@ -533,7 +533,7 @@ L296:
 	andl $131071,%esi
 	shll $5,%esi
 	movl 8(%r8,%rcx),%eax
-	andl $-4194273,%eax
+	andl $4290773023,%eax
 	orl %esi,%eax
 	movl %eax,8(%r8,%rcx)
 	jmp L295
@@ -698,7 +698,7 @@ L397:
 	jnz L355
 L359:
 	movl $0,12(%rdi)
-	andl $-25,%eax
+	andl $4294967271,%eax
 	movl %eax,(%rdi)
 	movq $0,16(%rdi)
 	movq $0,24(%rdi)
@@ -706,7 +706,7 @@ L359:
 L357:
 	movl $0,8(%rdi)
 	movl $0,12(%rdi)
-	andl $-25,%eax
+	andl $4294967271,%eax
 	movl %eax,(%rdi)
 L355:
 	movl 12(%rdi),%eax
@@ -728,7 +728,7 @@ L362:
 	cmpl $3,%ecx
 	jz L350
 L371:
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $4,%eax
 	movl %eax,(%rdi)
 	movl 8(%rdi),%ecx
@@ -738,7 +738,7 @@ L377:
 	cmpl $0,12(%rdi)
 	jnz L376
 L378:
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,(%rdi)
 L376:
@@ -755,7 +755,7 @@ L389:
 	jnz L350
 L385:
 	movl (%rdi),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,(%rdi)
 L350:
@@ -2023,7 +2023,7 @@ L997:
 	leaq 16(%rbp),%rsi
 	call _normalize_con
 	movl 8(%r15,%rbx),%eax
-	andl $-8,%eax
+	andl $4294967288,%eax
 	orl $2,%eax
 	movl %eax,8(%r15,%rbx)
 	movq 16(%rbp),%rax

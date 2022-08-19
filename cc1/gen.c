@@ -424,6 +424,7 @@ static struct symbol *insert_field(struct tree *value, struct symbol *host,
     REG_OPERAND(&insn->operand[0], tmp->type, 0, symbol_to_reg(tmp));
     REG_OPERAND(&insn->operand[1], host->type, 0, symbol_to_reg(host));
     I_OPERAND(&insn->operand[2], host->type, 0, ~(BIT_MASK(width) << lsb));
+    normalize_con(TYPE_BASE(host->type), &insn->operand[2].con);
     EMIT_INSN(insn);
 
     insn = new_insn(I_LIR_OR, 0);

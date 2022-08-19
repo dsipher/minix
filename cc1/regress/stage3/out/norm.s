@@ -10,7 +10,7 @@ L2:
 	movl $-1275068396,(%rax)
 	movq $1,-8(%rbp)
 	movl 72(%rax),%ecx
-	andl $-8,%ecx
+	andl $4294967288,%ecx
 	orl $2,%ecx
 	movl %ecx,72(%rax)
 	movq -8(%rbp),%rcx
@@ -24,7 +24,7 @@ L13:
 	andl $131071,%edx
 	shll $5,%edx
 	movl 72(%rax),%ecx
-	andl $-4194273,%ecx
+	andl $4290773023,%ecx
 	orl %edx,%ecx
 	movl %ecx,72(%rax)
 L3:
@@ -58,7 +58,7 @@ L28:
 	subq %rdx,%rcx
 	movq %rcx,-8(%rbp)
 	movl 72(%rax),%ecx
-	andl $-8,%ecx
+	andl $4294967288,%ecx
 	orl $2,%ecx
 	movl %ecx,72(%rax)
 	movq -8(%rbp),%rcx
@@ -72,7 +72,7 @@ L39:
 	andl $131071,%edx
 	shll $5,%edx
 	movl 72(%rax),%ecx
-	andl $-4194273,%ecx
+	andl $4290773023,%ecx
 	orl %edx,%ecx
 	movl %ecx,72(%rax)
 L29:
@@ -116,7 +116,7 @@ L104:
 L78:
 	movq $1,-16(%rbp)
 	movl 40(%rax),%ecx
-	andl $-8,%ecx
+	andl $4294967288,%ecx
 	orl $2,%ecx
 	movl %ecx,40(%rax)
 	movq -16(%rbp),%rcx
@@ -124,7 +124,7 @@ L78:
 L58:
 	movq $0,-8(%rbp)
 	movl 40(%rax),%ecx
-	andl $-8,%ecx
+	andl $4294967288,%ecx
 	orl $2,%ecx
 	movl %ecx,40(%rax)
 	movq -8(%rbp),%rcx

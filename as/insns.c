@@ -355,4 +355,81 @@ struct insn i_addq[] =
     { 0 }
 };
 
+struct insn i_andb[] =
+{
+    { 0,         1, { 0x24       }, { { O_ACC_8                  },
+                                      { O_IMM_8                  } } },
+
+    { 0,         2, { 0x80, 0x20 }, { { O_GPR_8 | O_MEM, F_MODRM },
+                                      { O_IMM_8                  } } },
+
+    { 0,         2, { 0x20, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM },
+                                      { O_GPR_8,         F_MID   } } },
+
+    { 0,         2, { 0x22, 0x00 }, { { O_GPR_8, F_MID           },
+                                      { O_GPR_8 | O_MEM, F_MODRM } } },
+
+    { 0 }
+};
+
+struct insn i_andw[] =
+{
+    { I_DATA_16, 2, { 0x83, 0x20 }, { { O_GPR_16 | O_MEM, F_MODRM   },
+                                      { O_HI16 | O_IMM_S8 | O_PURE  } } },
+
+    { I_DATA_16, 1, { 0x25       }, { { O_ACC_16                    },
+                                      { O_IMM_16                    } } },
+
+    { I_DATA_16, 2, { 0x81, 0x20 }, { { O_GPR_16 | O_MEM, F_MODRM   },
+                                      { O_IMM_16                    } } },
+
+    { I_DATA_16, 2, { 0x21, 0x00 }, { { O_GPR_16 | O_MEM, F_MODRM   },
+                                      { O_GPR_16, F_MID             } } },
+
+    { I_DATA_16, 2, { 0x23, 0x00 }, { { O_GPR_16, F_MID             },
+                                      { O_GPR_16 | O_MEM, F_MODRM   } } },
+
+    { 0 }
+};
+
+struct insn i_andl[] =
+{
+    { I_DATA_32, 2, { 0x83, 0x20 }, { { O_GPR_32 | O_MEM, F_MODRM   },
+                                      { O_HI32 | O_IMM_S8 | O_PURE  } } },
+
+    { I_DATA_32, 1, { 0x25       }, { { O_ACC_32                    },
+                                      { O_IMM_32                    } } },
+
+    { I_DATA_32, 2, { 0x81, 0x20 }, { { O_GPR_32 | O_MEM, F_MODRM   },
+                                      { O_IMM_32                    } } },
+
+    { I_DATA_32, 2, { 0x21, 0x00 }, { { O_GPR_32 | O_MEM, F_MODRM   },
+                                      { O_GPR_32, F_MID             } } },
+
+    { I_DATA_32, 2, { 0x23, 0x00 }, { { O_GPR_32, F_MID             },
+                                      { O_GPR_32 | O_MEM, F_MODRM   } } },
+
+    { 0 }
+};
+
+struct insn i_andq[] =
+{
+    { I_DATA_64, 2, { 0x83, 0x20 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_IMM_S8 | O_PURE         } } },
+
+    { I_DATA_64, 1, { 0x25       }, { { O_ACC_64                  },
+                                      { O_IMM_S32                 } } },
+
+    { I_DATA_64, 2, { 0x81, 0x20 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_IMM_S32                 } } },
+
+    { I_DATA_64, 2, { 0x21, 0x00 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_GPR_64, F_MID           } } },
+
+    { I_DATA_64, 2, { 0x23, 0x00 }, { { O_GPR_64, F_MID           },
+                                      { O_GPR_64 | O_MEM, F_MODRM } } },
+
+    { 0 }
+};
+
 /* vi: set ts=4 expandtab: */

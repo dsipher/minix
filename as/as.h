@@ -290,6 +290,7 @@ struct insn
 #define I_DATA_16       0x00000040      /* insn has 16-bit data size */
 #define I_DATA_32       0x00000080      /* ........ 32-bit ......... */
 #define I_DATA_64       0x00000100      /* ........ 64-bit ......... */
+#define I_NO_REX        0x00000200      /* no REX prefix for data size */
 
 #define F_END           0x00000001      /* encode reg in REX.B/bits[2:0] */
 #define F_MID           0x00000002      /* encode reg in REX.R/bits[5:3] */

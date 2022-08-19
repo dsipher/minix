@@ -1,0 +1,33 @@
+
+
+jmps.s
+
+   1  000000                    .code16
+   2  000000                    
+   3  000000  e80e00            		call routine16
+   4  000003  e82300            		call routine32
+   5  000006  ff160000          		call *routine16
+   6  00000a  ffd0              		call %ax
+   7  00000c  ffd0              		call *%ax
+   8  00000e  66ffd3            		call *%ebx
+   9  000011                    routine16:
+  10  000011                    
+  11  000011                    .code32
+  12  000011                    
+  13  000011  e8fbffffff        		call routine16
+  14  000016  e80e000000        		call routine32
+  15  00001b  ff1500000000      		call *routine32
+  16  000021  66ffd0            		call %ax
+  17  000024  66ffd0            		call *%ax
+  18  000027  ffd3              		call *%ebx
+  19  000029                    routine32:
+  20  000029                    
+  21  000029                    .code64
+  22  000029  e8e3ffffff        		call routine16
+  23  00002e  e8f6ffffff        		call routine32
+  24  000033  ff142500000000    		call *routine64
+  25  00003a  66ffd0            		call %ax
+  26  00003d  66ffd0            		call *%ax
+  27  000040  ffd3              		call *%rbx
+  28  000042                    routine64:
+  29  000042                    

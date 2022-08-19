@@ -56,7 +56,7 @@ do
 	cmp $TEST.bin $TEST.gas
 done
 
-OTHERS="	seg							"
+OTHERS="	seg	jmps						"
 
 for OTHER in $OTHERS
 do

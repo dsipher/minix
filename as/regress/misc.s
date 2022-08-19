@@ -27,3 +27,8 @@
         bsrq 88(%rax),%rdx
         bsrl %eax,%ecx
         bsfl %eax,%eax
+
+        call *%r12
+        call *%r13
+        call *%rax
+

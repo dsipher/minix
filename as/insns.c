@@ -115,6 +115,34 @@ struct insn i_seg[] =
 struct insn i_iret[]  = { { 0,         1, { 0xCF } }, { 0 } };
 struct insn i_iretq[] = { { I_DATA_64, 1, { 0xCF } }, { 0 } };
 
+struct insn i_call[] =
+{
+    { I_NO_CODE32 | I_NO_CODE64, 1, { 0xE8 }, { { O_REL_16 } } },
+    { I_NO_CODE16,               1, { 0xE8 }, { { O_REL_32 } } },
+
+    { I_DATA_16,     2, { 0xFF, 0x10 }, { { O_GPR_16, F_MODRM } } },
+
+    { I_DATA_32   |
+      I_NO_CODE64,   2, { 0xFF, 0x10 }, { { O_GPR_32, F_MODRM } } },
+
+    /* assume code addresses in memory match the code size.
+       we do not provide separate call insns (via suffixes)
+       for other possibilities, even when they're legal. */
+
+    { I_DATA_16   |
+      I_NO_CODE32 |
+      I_NO_CODE64,   2, { 0xFF, 0x10 }, { { O_MEM, F_MODRM } } },
+
+    { I_DATA_32   |
+      I_NO_CODE16 |
+      I_NO_CODE64,   2, { 0xFF, 0x10 }, { { O_MEM, F_MODRM } } },
+
+    { I_DATA_64 |
+      I_NO_REX,      2, { 0xFF, 0x10 }, { { O_GPR_64 | O_MEM, F_MODRM } } },
+
+    { 0 }
+};
+
 struct insn i_jo[] =
 {
     { 0,                            1, { 0x70       }, { { O_REL_8  } } },

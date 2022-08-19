@@ -32,3 +32,8 @@ misc.s
   28  000040  0fbdc8                    bsrl %eax,%ecx
   29  000043  0fbcc0                    bsfl %eax,%eax
   30  000046                    
+  31  000046  41ffd4                    call *%r12
+  32  000049  41ffd5                    call *%r13
+  33  00004c  ffd0                      call *%rax
+  34  00004e                    
+  35  00004e                    

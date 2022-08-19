@@ -877,7 +877,7 @@ void encode(struct insn *insns, struct operand *operand0,
 
     byte = 0;
 
-    if (insn->i_flags & I_DATA_64)
+    if ((insn->i_flags & (I_DATA_64 | I_NO_REX)) == I_DATA_64)
         byte = REX | REX_W; /* (a) */
 
     for (i = 0; operands[i]; ++i)

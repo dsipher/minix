@@ -65,6 +65,7 @@ struct { const char *text; const char *template; } insns[] =
     {   "bsrw",         0               },
     {   "bsrl",         0               },
     {   "bsrq",         0               },
+    {   "call",         0               },
     {   "clc",          0               },
     {   "cld",          0               },
     {   "cli",          0               },

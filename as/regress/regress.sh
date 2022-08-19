@@ -35,7 +35,7 @@ AS=/usr/bin/as
 # make sure no one (read: me) has goofed the encoding tables,
 # because typing them makes anyone (read: me) go cross-eyed.
 
-TESTS="		add							"
+TESTS="		add	misc						"
 
 for TEST in $TESTS
 do

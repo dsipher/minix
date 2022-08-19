@@ -43,6 +43,10 @@ struct name *table[NR_BUCKETS];
 
 struct { const char *text; const char *template; } insns[] =
 {
+    {   "aaa",          0               },
+    {   "aad",          0               },
+    {   "aam",          0               },
+    {   "aas",          0               },
     {   "addb",         0               },
     {   "addw",         0               },
     {   "addl",         0               },

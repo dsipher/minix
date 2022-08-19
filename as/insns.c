@@ -33,6 +33,23 @@
 
 #include "as.h"
 
+struct insn i_aaa[]     =   { { I_NO_CODE64, 1, { 0x37 } }, { 0 } };
+struct insn i_aas[]     =   { { I_NO_CODE64, 1, { 0x3F } }, { 0 } };
+
+struct insn i_aad[] =
+{
+    { I_NO_CODE64, 1, { 0xD5       }, { { O_IMM_8 } } },
+    { I_NO_CODE64, 2, { 0xD5, 0x0A }                  },
+    { 0 }
+};
+
+struct insn i_aam[] =
+{
+    { I_NO_CODE64, 1, { 0xD4       }, { { O_IMM_8 } } },
+    { I_NO_CODE64, 2, { 0xD4, 0x0A }                  },
+    { 0 }
+};
+
 struct insn i_clc[]     =   { { 0, 1, { 0xF8 } }, { 0 } };
 struct insn i_cld[]     =   { { 0, 1, { 0xFC } }, { 0 } };
 struct insn i_cli[]     =   { { 0, 1, { 0xFA } }, { 0 } };

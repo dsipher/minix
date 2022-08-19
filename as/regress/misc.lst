@@ -2,12 +2,33 @@
 
 misc.s
 
-   1  000000                    .code32
-   2  000000                    
-   3  000000  37                	aaa
-   4  000001  d50a              	aad
-   5  000003  d512              	aad $0x12
-   6  000005  d40a              	aam
-   7  000007  d41f              	aam $0x1F
-   8  000009  3f                	aas
-   9  00000a                    
+   1  000000                    .code16
+   2  000000  660fbdc0                  bsrl %eax,%eax
+   3  000004  660fbcc0                  bsfl %eax,%eax
+   4  000008  660fbdc8                  bsrl %eax,%ecx
+   5  00000c                    
+   6  00000c                    .code32
+   7  00000c                    
+   8  00000c  37                	aaa
+   9  00000d  d50a              	aad
+  10  00000f  d512              	aad $0x12
+  11  000011  d40a              	aam
+  12  000013  d41f              	aam $0x1F
+  13  000015  3f                	aas
+  14  000016  0fbdc0                    bsrl %eax,%eax
+  15  000019  0fbcc0                    bsfl %eax,%eax
+  16  00001c  0fbdc8                    bsrl %eax,%ecx
+  17  00001f                    
+  18  00001f                    .code64
+  19  00001f                    
+  20  00001f  66410fbdf7                bsrw %r15w, %si
+  21  000024  66440fbde2                bsrw %dx, %r12w
+  22  000029  480fbdc0                  bsrq %rax,%rax
+  23  00002d  0fbdc0                    bsrl %eax,%eax
+  24  000030  480fbcc0                  bsfq %rax,%rax
+  25  000034  0fbcc0                    bsfl %eax,%eax
+  26  000037  0fbd45fc                  bsrl -4(%rbp),%eax
+  27  00003b  480fbd5058                bsrq 88(%rax),%rdx
+  28  000040  0fbdc8                    bsrl %eax,%ecx
+  29  000043  0fbcc0                    bsfl %eax,%eax
+  30  000046                    

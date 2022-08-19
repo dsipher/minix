@@ -63,6 +63,48 @@ struct insn i_std[]     =   { { 0, 1, { 0xFD } }, { 0 } };
 struct insn i_sti[]     =   { { 0, 1, { 0xFB } }, { 0 } };
 struct insn i_xlat[]    =   { { 0, 1, { 0xD7 } }, { 0 } };
 
+struct insn i_bsfw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0xBC, 0x00 }, { { O_GPR_16, F_MID           },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_bsfl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0xBC, 0x00 }, { { O_GPR_32, F_MID           },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_bsfq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0xBC, 0x00 }, { { O_GPR_64, F_MID           },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_bsrw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0xBD, 0x00 }, { { O_GPR_16, F_MID           },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_bsrl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0xBD, 0x00 }, { { O_GPR_32, F_MID           },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_bsrq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0xBD, 0x00 }, { { O_GPR_64, F_MID           },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_seg[] =
 {
     { 0, 1, { 0x26 }, { { O_SEG_2, F_MID } } },

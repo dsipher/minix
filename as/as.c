@@ -915,6 +915,8 @@ void encode(struct insn *insns, struct operand *operand0,
         emit(byte);
     }
 
+    if (byte && (code_size != O_MEM_64)) error("register(s) not available");
+
     /* 5. output the opcode bytes. output all but the last byte,
           as it is subject to modification in the next steps. */
 

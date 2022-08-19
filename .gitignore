@@ -5,6 +5,8 @@ as/mktable
 as/table.c
 as/y.tab.h
 as/y.tab.c
+as/regress/*.bin
+as/regress/*.gas
 cpp/cpp
 cc1/cc1
 cc1/regress/stage1

@@ -201,6 +201,83 @@ struct insn i_jnle[] =
     { 0 }
 };
 
+struct insn i_adcb[] =
+{
+    { 0,         1, { 0x14       }, { { O_ACC_8                  },
+                                      { O_IMM_8                  } } },
+
+    { 0,         2, { 0x80, 0x10 }, { { O_GPR_8 | O_MEM, F_MODRM },
+                                      { O_IMM_8                  } } },
+
+    { 0,         2, { 0x10, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM },
+                                      { O_GPR_8,         F_MID   } } },
+
+    { 0,         2, { 0x12, 0x00 }, { { O_GPR_8, F_MID           },
+                                      { O_GPR_8 | O_MEM, F_MODRM } } },
+
+    { 0 }
+};
+
+struct insn i_adcw[] =
+{
+    { I_DATA_16, 2, { 0x83, 0x10 }, { { O_GPR_16 | O_MEM, F_MODRM   },
+                                      { O_HI16 | O_IMM_S8 | O_PURE  } } },
+
+    { I_DATA_16, 1, { 0x15       }, { { O_ACC_16                    },
+                                      { O_IMM_16                    } } },
+
+    { I_DATA_16, 2, { 0x81, 0x10 }, { { O_GPR_16 | O_MEM, F_MODRM   },
+                                      { O_IMM_16                    } } },
+
+    { I_DATA_16, 2, { 0x11, 0x00 }, { { O_GPR_16 | O_MEM, F_MODRM   },
+                                      { O_GPR_16, F_MID             } } },
+
+    { I_DATA_16, 2, { 0x13, 0x00 }, { { O_GPR_16, F_MID             },
+                                      { O_GPR_16 | O_MEM, F_MODRM   } } },
+
+    { 0 }
+};
+
+struct insn i_adcl[] =
+{
+    { I_DATA_32, 2, { 0x83, 0x10 }, { { O_GPR_32 | O_MEM, F_MODRM   },
+                                      { O_HI32 | O_IMM_S8 | O_PURE  } } },
+
+    { I_DATA_32, 1, { 0x15       }, { { O_ACC_32                    },
+                                      { O_IMM_32                    } } },
+
+    { I_DATA_32, 2, { 0x81, 0x10 }, { { O_GPR_32 | O_MEM, F_MODRM   },
+                                      { O_IMM_32                    } } },
+
+    { I_DATA_32, 2, { 0x11, 0x00 }, { { O_GPR_32 | O_MEM, F_MODRM   },
+                                      { O_GPR_32, F_MID             } } },
+
+    { I_DATA_32, 2, { 0x13, 0x00 }, { { O_GPR_32, F_MID             },
+                                      { O_GPR_32 | O_MEM, F_MODRM   } } },
+
+    { 0 }
+};
+
+struct insn i_adcq[] =
+{
+    { I_DATA_64, 2, { 0x83, 0x10 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_IMM_S8 | O_PURE         } } },
+
+    { I_DATA_64, 1, { 0x15       }, { { O_ACC_64                  },
+                                      { O_IMM_S32                 } } },
+
+    { I_DATA_64, 2, { 0x81, 0x10 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_IMM_S32                 } } },
+
+    { I_DATA_64, 2, { 0x11, 0x00 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_GPR_64, F_MID           } } },
+
+    { I_DATA_64, 2, { 0x13, 0x00 }, { { O_GPR_64, F_MID           },
+                                      { O_GPR_64 | O_MEM, F_MODRM } } },
+
+    { 0 }
+};
+
 struct insn i_addb[] =
 {
     { 0,         1, { 0x04       }, { { O_ACC_8                  },

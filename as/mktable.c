@@ -114,7 +114,11 @@ struct { const char *text; const char *template; } insns[] =
     {   "stc",          0               },
     {   "std",          0               },
     {   "sti",          0               },
-    {   "xlat",         0               }
+    {   "xlat",         0               },
+    {   "xorb",         0               },
+    {   "xorw",         0               },
+    {   "xorl",         0               },
+    {   "xorq",         0               }
 };
 
 #define NR_INSNS (sizeof(insns) / sizeof(*insns))

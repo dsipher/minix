@@ -1,0 +1,56 @@
+
+
+xor.s
+
+   1  000000  341f              	xorb $31,%al
+   2  000002  4430f8            	xorb %r15b,%al
+   3  000005  83f001            	xorl $1,%eax
+   4  000008  83f301            	xorl $1,%ebx
+   5  00000b  83f201            	xorl $1,%edx
+   6  00000e  4183f501          	xorl $1,%r13d
+   7  000012  4183f601          	xorl $1,%r14d
+   8  000016  83f01f            	xorl $31,%eax
+   9  000019  83f11f            	xorl $31,%ecx
+  10  00001c  4183f7ff          	xorl $4294967295,%r15d
+  11  000020  83f23f            	xorl $63,%edx
+  12  000023  31c0              	xorl %eax,%eax
+  13  000025  31c1              	xorl %eax,%ecx
+  14  000027  31db              	xorl %ebx,%ebx
+  15  000029  31c9              	xorl %ecx,%ecx
+  16  00002b  31ff              	xorl %edi,%edi
+  17  00002d  31d2              	xorl %edx,%edx
+  18  00002f  31f6              	xorl %esi,%esi
+  19  000031  4531d2            	xorl %r10d,%r10d
+  20  000034  4531e4            	xorl %r12d,%r12d
+  21  000037  4531ed            	xorl %r13d,%r13d
+  22  00003a  4531f6            	xorl %r14d,%r14d
+  23  00003d  4531ff            	xorl %r15d,%r15d
+  24  000040  4531c0            	xorl %r8d,%r8d
+  25  000043  4531c9            	xorl %r9d,%r9d
+  26  000046  4883f0ff          	xorq $-1,%rax
+  27  00004a  4c31e0            	xorq %r12,%rax
+  28  00004d  4831c1            	xorq %rax,%rcx
+  29  000050  4831c6            	xorq %rax,%rsi
+  30  000053  4831d8            	xorq %rbx,%rax
+  31  000056  4831c8            	xorq %rcx,%rax
+  32  000059  4831d0            	xorq %rdx,%rax
+  33  00005c  4831d1            	xorq %rdx,%rcx
+  34  00005f  4831f0            	xorq %rsi,%rax
+  35  000062  48334108          	xorq 8(%rcx),%rax
+  36  000066  6683f01f          	xorw $31,%ax
+  37  00006a  66354b01          	xorw $331,%ax
+  38  00006e  6683f001          	xorw $1,%ax
+  39  000072  6683f301          	xorw $1,%bx
+  40  000076  6683f201          	xorw $1,%dx
+  41  00007a  6683f7ff          	xorw $65535,%di
+  42  00007e  6683f23f          	xorw $63,%dx
+  43  000082  6631c0            	xorw %ax,%ax
+  44  000085  6631c1            	xorw %ax,%cx
+  45  000088  6631db            	xorw %bx,%bx
+  46  00008b  6631c9            	xorw %cx,%cx
+  47  00008e  6631ff            	xorw %di,%di
+  48  000091  6631d2            	xorw %dx,%dx
+  49  000094  6631f6            	xorw %si,%si
+  50  000097  6683f0ff          	xorw $-1,%ax
+  51  00009b  66334108          	xorw 8(%rcx),%ax
+  52  00009f                    

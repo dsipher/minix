@@ -1,0 +1,18 @@
+
+
+not.s
+
+   1  000000  f7d0              	notl %eax
+   2  000002  f7d3              	notl %ebx
+   3  000004  f7d7              	notl %edi
+   4  000006  f7d6              	notl %esi
+   5  000008  48f7d0            	notq %rax
+   6  00000b  48f7d3            	notq %rbx
+   7  00000e  48f7d1            	notq %rcx
+   8  000011  48f7d2            	notq %rdx
+   9  000014  48f7d6            	notq %rsi
+  10  000017  48f75110          	notq 16(%rcx)
+  11  00001b  49f75708          	notq 8(%r15)
+  12  00001f  48f75008          	notq 8(%rax)
+  13  000023  66f7d1            	notw %cx
+  14  000026                    

@@ -1,0 +1,13 @@
+	notl %eax
+	notl %ebx
+	notl %edi
+	notl %esi
+	notq %rax
+	notq %rbx
+	notq %rcx
+	notq %rdx
+	notq %rsi
+	notq 16(%rcx)
+	notq 8(%r15)
+	notq 8(%rax)
+	notw %cx

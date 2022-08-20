@@ -36,7 +36,8 @@ AS=/usr/bin/as
 # because typing them makes anyone (read: me) go cross-eyed.
 
 TESTS="		adc	add	and 	cmp	\
-		misc	or	sub	xor	"
+		misc	not	or	sub	\
+		xor				"
 
 for TEST in $TESTS
 do

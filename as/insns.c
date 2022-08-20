@@ -595,6 +595,30 @@ struct insn i_js[] =
 
 struct insn i_lock[]    =   { { 0, 1, { 0xF0 } }, { 0 } };
 
+struct insn i_notb[] =
+{
+    { 0, 2, { 0xF6, 0x10 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_notw[] =
+{
+    { I_DATA_16, 2, { 0xF7, 0x10 }, { { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_notl[] =
+{
+    { I_DATA_32, 2, { 0xF7, 0x10 }, { { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_notq[] =
+{
+    { I_DATA_64, 2, { 0xF7, 0x10 }, { { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_orb[] =
 {
     { 0,         1, { 0x0C       }, { { O_ACC_8                  },

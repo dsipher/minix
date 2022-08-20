@@ -207,7 +207,12 @@ expr            :   NUMBER
 origin          :   ORG static_expr
                     {
                         if ($2->value < *segofs)
-                            error("origin goes backwards");
+                            /* give the benefit of the doubt on
+                               the first pass: code may shrink
+                               once some symbols are resolved */
+
+                            if (pass != FIRST_PASS)
+                                error("origin goes backwards");
 
                         while (*segofs < $2->value) emit(0);
                     }

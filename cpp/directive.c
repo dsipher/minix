@@ -273,7 +273,7 @@ void directive(struct list *list)
 
         switch (d)
         {
-        case D_INCLUDE: do_include(list); break;
+        case D_INCLUDE: if (COPYING) do_include(list); break;
 
         case D_IFDEF:
         case D_IFNDEF:  do_ifdef(d, list); break;

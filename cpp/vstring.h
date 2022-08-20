@@ -78,6 +78,7 @@ struct vstring
 #define VSTRING_CAP(vs) (((vs).u.in.flag) ? VSTRING_IN_CAP : ((vs).u.out.cap))
 
 extern void vstring_clear(struct vstring *);
+extern void vstring_chomp(struct vstring *);
 extern void vstring_rubout(struct vstring *);
 extern void vstring_put(struct vstring *, char *, size_t);
 extern void vstring_putc(struct vstring *, char);

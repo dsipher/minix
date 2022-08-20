@@ -191,6 +191,9 @@ static void do_line(struct list *list)
     INPUT_STACK->line_no = line_no->u.i - 1;
 
     if (path) {
+        vstring_chomp(&path->u.text);       /* remove leading and */
+        vstring_rubout(&path->u.text);      /* ... trailing quotes */
+
         vstring_clear(&INPUT_STACK->path);
         vstring_concat(&INPUT_STACK->path, &path->u.text);
         token_free(path);

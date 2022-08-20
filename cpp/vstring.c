@@ -71,6 +71,22 @@ void vstring_free(struct vstring *vs)
         free(vs->u.out.buf);
 }
 
+/* remove the first character from the
+   vstring or die if it's empty */
+
+void vstring_chomp(struct vstring *vs)
+{
+    if (VSTRING_LEN(*vs) == 0)
+        error("CPP INTERNAL: vstring underflow");
+
+    memmove(VSTRING_BUF(*vs), VSTRING_BUF(*vs) + 1, VSTRING_LEN(*vs));
+
+    if (vs->u.in.flag)
+        --(vs->u.in.len);
+    else
+        --(vs->u.out.len);
+}
+
 /* remove the last character from the vstring, or
    whoopsie if there is no character to remove. */
 

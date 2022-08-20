@@ -4,30 +4,124 @@ jmps.s
 
    1  000000                    .code16
    2  000000                    
-   3  000000  e80e00            		call routine16
-   4  000003  e82300            		call routine32
+   3  000000  e8ad00            		call routine16
+   4  000003  e8fe00            		call routine32
    5  000006  ff160000          		call *routine16
    6  00000a  ffd0              		call %ax
    7  00000c  ffd0              		call *%ax
    8  00000e  66ffd3            		call *%ebx
-   9  000011                    routine16:
-  10  000011                    
-  11  000011                    .code32
-  12  000011                    
-  13  000011  e8fbffffff        		call routine16
-  14  000016  e80e000000        		call routine32
-  15  00001b  ff1500000000      		call *routine32
-  16  000021  66ffd0            		call %ax
-  17  000024  66ffd0            		call *%ax
-  18  000027  ffd3              		call *%ebx
-  19  000029                    routine32:
-  20  000029                    
-  21  000029                    .code64
-  22  000029  e8e3ffffff        		call routine16
-  23  00002e  e8f6ffffff        		call routine32
-  24  000033  ff142500000000    		call *routine64
-  25  00003a  66ffd0            		call %ax
-  26  00003d  66ffd0            		call *%ax
-  27  000040  ffd3              		call *%rbx
-  28  000042                    routine64:
-  29  000042                    
+   9  000011  0f809b00          		jo routine16
+  10  000015  0f819700          		jno routine16
+  11  000019  0f829300          		jb routine16
+  12  00001d  0f828f00          		jc routine16
+  13  000021  0f828b00          		jnae routine16
+  14  000025  0f838700          		jnb routine16
+  15  000029  0f838300          		jnc routine16
+  16  00002d  0f837f00          		jae routine16
+  17  000031  747d              		jz routine16
+  18  000033  747b              		je routine16
+  19  000035  7579              		jnz routine16
+  20  000037  7577              		jne routine16
+  21  000039  7675              		jbe routine16
+  22  00003b  7673              		jna routine16
+  23  00003d  7771              		jnbe routine16
+  24  00003f  776f              		ja routine16
+  25  000041  786d              		js routine16
+  26  000043  796b              		jns routine16
+  27  000045  7a69              		jp routine16
+  28  000047  7a67              		jpe routine16
+  29  000049  7b65              		jnp routine16
+  30  00004b  7b63              		jpo routine16
+  31  00004d  7c61              		jl routine16
+  32  00004f  7c5f              		jnge routine16
+  33  000051  7d5d              		jnl routine16
+  34  000053  7d5b              		jge routine16
+  35  000055  7e59              		jle routine16
+  36  000057  7e57              		jng routine16
+  37  000059  7f55              		jnle routine16
+  38  00005b  7f53              		jg routine16
+  39  00005d                    
+  40  00005d  0000000000000000  		.org 0xB0
+              00000000000000..
+  41  0000b0                    
+  42  0000b0                    routine16:
+  43  0000b0                    
+  44  0000b0                    .code32
+  45  0000b0  70fe              		jo routine16
+  46  0000b2  71fc              		jno routine16
+  47  0000b4  72fa              		jb routine16
+  48  0000b6  72f8              		jc routine16
+  49  0000b8  72f6              		jnae routine16
+  50  0000ba  73f4              		jnb routine16
+  51  0000bc  73f2              		jnc routine16
+  52  0000be  73f0              		jae routine16
+  53  0000c0  74ee              		jz routine16
+  54  0000c2  74ec              		je routine16
+  55  0000c4  75ea              		jnz routine16
+  56  0000c6  75e8              		jne routine16
+  57  0000c8  76e6              		jbe routine16
+  58  0000ca  76e4              		jna routine16
+  59  0000cc  77e2              		jnbe routine16
+  60  0000ce  77e0              		ja routine16
+  61  0000d0  78de              		js routine16
+  62  0000d2  79dc              		jns routine16
+  63  0000d4  7ada              		jp routine16
+  64  0000d6  7ad8              		jpe routine16
+  65  0000d8  7bd6              		jnp routine16
+  66  0000da  7bd4              		jpo routine16
+  67  0000dc  7cd2              		jl routine16
+  68  0000de  7cd0              		jnge routine16
+  69  0000e0  7dce              		jnl routine16
+  70  0000e2  7dcc              		jge routine16
+  71  0000e4  7eca              		jle routine16
+  72  0000e6  7ec8              		jng routine16
+  73  0000e8  7fc6              		jnle routine16
+  74  0000ea  7fc4              		jg routine16
+  75  0000ec                    
+  76  0000ec  e8bfffffff        		call routine16
+  77  0000f1  e80e000000        		call routine32
+  78  0000f6  ff1500000000      		call *routine32
+  79  0000fc  66ffd0            		call %ax
+  80  0000ff  66ffd0            		call *%ax
+  81  000102  ffd3              		call *%ebx
+  82  000104                    routine32:
+  83  000104                    
+  84  000104                    .code64
+  85  000104  e8a7ffffff        		call routine16
+  86  000109  e8f6ffffff        		call routine32
+  87  00010e  ff142500000000    		call *routine64
+  88  000115  66ffd0            		call %ax
+  89  000118  66ffd0            		call *%ax
+  90  00011b  ffd3              		call *%rbx
+  91  00011d  7091              		jo routine16
+  92  00011f  718f              		jno routine16
+  93  000121  728d              		jb routine16
+  94  000123  728b              		jc routine16
+  95  000125  7289              		jnae routine16
+  96  000127  7387              		jnb routine16
+  97  000129  7385              		jnc routine16
+  98  00012b  7383              		jae routine16
+  99  00012d  7481              		jz routine16
+ 100  00012f  0f847bffffff      		je routine16
+ 101  000135  0f8575ffffff      		jnz routine16
+ 102  00013b  0f856fffffff      		jne routine16
+ 103  000141  0f8669ffffff      		jbe routine16
+ 104  000147  0f8663ffffff      		jna routine16
+ 105  00014d  0f875dffffff      		jnbe routine16
+ 106  000153  0f8757ffffff      		ja routine16
+ 107  000159  0f8851ffffff      		js routine16
+ 108  00015f  0f894bffffff      		jns routine16
+ 109  000165  0f8a45ffffff      		jp routine16
+ 110  00016b  0f8a3fffffff      		jpe routine16
+ 111  000171  0f8b39ffffff      		jnp routine16
+ 112  000177  0f8b33ffffff      		jpo routine16
+ 113  00017d  0f8c2dffffff      		jl routine16
+ 114  000183  0f8c27ffffff      		jnge routine16
+ 115  000189  0f8d21ffffff      		jnl routine16
+ 116  00018f  0f8d1bffffff      		jge routine16
+ 117  000195  0f8e15ffffff      		jle routine16
+ 118  00019b  0f8e0fffffff      		jng routine16
+ 119  0001a1  0f8f09ffffff      		jnle routine16
+ 120  0001a7  0f8f03ffffff      		jg routine16
+ 121  0001ad                    routine64:
+ 122  0001ad                    

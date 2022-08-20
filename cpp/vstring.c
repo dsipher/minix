@@ -79,6 +79,9 @@ void vstring_chomp(struct vstring *vs)
     if (VSTRING_LEN(*vs) == 0)
         error("CPP INTERNAL: vstring underflow");
 
+    /* VSTRING_LEN() is not off by 1; we
+       want to copy the NUL terminator */
+
     memmove(VSTRING_BUF(*vs), VSTRING_BUF(*vs) + 1, VSTRING_LEN(*vs));
 
     if (vs->u.in.flag)
@@ -96,9 +99,9 @@ void vstring_rubout(struct vstring *vs)
         error("CPP INTERNAL: vstring underflow");
 
     if (vs->u.in.flag)
-        --(vs->u.in.len);
+        vs->u.in.buf[--(vs->u.in.len)] = 0;
     else
-        --(vs->u.out.len);
+        vs->u.out.buf[--(vs->u.out.len)] = 0;
 }
 
 /* return the last character of the vstring,

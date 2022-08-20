@@ -35,7 +35,8 @@ AS=/usr/bin/as
 # make sure no one (read: me) has goofed the encoding tables,
 # because typing them makes anyone (read: me) go cross-eyed.
 
-TESTS="		adc	add	and 	cmp	misc	or	xor	"
+TESTS="		adc	add	and 	cmp	\
+		misc	or	sub	xor	"
 
 for TEST in $TESTS
 do

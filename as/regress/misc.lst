@@ -6,34 +6,51 @@ misc.s
    2  000000  660fbdc0                  bsrl %eax,%eax
    3  000004  660fbcc0                  bsfl %eax,%eax
    4  000008  660fbdc8                  bsrl %eax,%ecx
-   5  00000c                    
-   6  00000c                    .code32
-   7  00000c                    
-   8  00000c  37                	aaa
-   9  00000d  d50a              	aad
-  10  00000f  d512              	aad $0x12
-  11  000011  d40a              	aam
-  12  000013  d41f              	aam $0x1F
-  13  000015  3f                	aas
-  14  000016  0fbdc0                    bsrl %eax,%eax
-  15  000019  0fbcc0                    bsfl %eax,%eax
-  16  00001c  0fbdc8                    bsrl %eax,%ecx
-  17  00001f                    
-  18  00001f                    .code64
-  19  00001f                    
-  20  00001f  66410fbdf7                bsrw %r15w, %si
-  21  000024  66440fbde2                bsrw %dx, %r12w
-  22  000029  480fbdc0                  bsrq %rax,%rax
-  23  00002d  0fbdc0                    bsrl %eax,%eax
-  24  000030  480fbcc0                  bsfq %rax,%rax
-  25  000034  0fbcc0                    bsfl %eax,%eax
-  26  000037  0fbd45fc                  bsrl -4(%rbp),%eax
-  27  00003b  480fbd5058                bsrq 88(%rax),%rdx
-  28  000040  0fbdc8                    bsrl %eax,%ecx
-  29  000043  0fbcc0                    bsfl %eax,%eax
-  30  000046                    
-  31  000046  41ffd4                    call *%r12
-  32  000049  41ffd5                    call *%r13
-  33  00004c  ffd0                      call *%rax
-  34  00004e                    
-  35  00004e                    
+   5  00000c  ffd0                      call *%ax
+   6  00000e  ffe0                      jmp *%ax
+   7  000010  ffe1                      jmp *%cx
+   8  000012  ffe6                      jmp *%si
+   9  000014  66ffd0                    call *%eax
+  10  000017  66ffe0                    jmp *%eax
+  11  00001a  66ffe1                    jmp *%ecx
+  12  00001d  66ffe6                    jmp *%esi
+  13  000020                    
+  14  000020                    .code32
+  15  000020                    
+  16  000020  37                	aaa
+  17  000021  d50a              	aad
+  18  000023  d512              	aad $0x12
+  19  000025  d40a              	aam
+  20  000027  d41f              	aam $0x1F
+  21  000029  3f                	aas
+  22  00002a  0fbdc0                    bsrl %eax,%eax
+  23  00002d  0fbcc0                    bsfl %eax,%eax
+  24  000030  0fbdc8                    bsrl %eax,%ecx
+  25  000033  ffd0                      call *%eax
+  26  000035  ffe0                      jmp *%eax
+  27  000037  ffe1                      jmp *%ecx
+  28  000039  ffe6                      jmp *%esi
+  29  00003b                    
+  30  00003b                    .code64
+  31  00003b                    
+  32  00003b  66410fbdf7                bsrw %r15w, %si
+  33  000040  66440fbde2                bsrw %dx, %r12w
+  34  000045  480fbdc0                  bsrq %rax,%rax
+  35  000049  0fbdc0                    bsrl %eax,%eax
+  36  00004c  480fbcc0                  bsfq %rax,%rax
+  37  000050  0fbcc0                    bsfl %eax,%eax
+  38  000053  0fbd45fc                  bsrl -4(%rbp),%eax
+  39  000057  480fbd5058                bsrq 88(%rax),%rdx
+  40  00005c  0fbdc8                    bsrl %eax,%ecx
+  41  00005f  0fbcc0                    bsfl %eax,%eax
+  42  000062                    
+  43  000062  41ffd4                    call *%r12
+  44  000065  41ffd5                    call *%r13
+  45  000068  ffd0                      call *%rax
+  46  00006a  ffe0                      jmp *%rax
+  47  00006c  ffe1                      jmp *%rcx
+  48  00006e  41ffe5                    jmp *%r13
+  49  000071  ffe6                      jmp *%rsi
+  50  000073                    
+  51  000073                    
+  52  000073                    

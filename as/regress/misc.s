@@ -2,6 +2,14 @@
         bsrl %eax,%eax
         bsfl %eax,%eax
         bsrl %eax,%ecx
+        call *%ax
+        jmp *%ax
+        jmp *%cx
+        jmp *%si
+        call *%eax
+        jmp *%eax
+        jmp *%ecx
+        jmp *%esi
 
 .code32
 
@@ -14,6 +22,10 @@
         bsrl %eax,%eax
         bsfl %eax,%eax
         bsrl %eax,%ecx
+        call *%eax
+        jmp *%eax
+        jmp *%ecx
+        jmp *%esi
 
 .code64
 
@@ -31,4 +43,9 @@
         call *%r12
         call *%r13
         call *%rax
+        jmp *%rax
+        jmp *%rcx
+        jmp *%r13
+        jmp *%rsi
+
 

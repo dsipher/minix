@@ -36,6 +36,9 @@
 		jng routine16
 		jnle routine16
 		jg routine16
+		jmp routine16
+		jmp routine32
+		jmp routine64
 
 		.org 0xB0
 
@@ -72,6 +75,9 @@ routine16:
 		jng routine16
 		jnle routine16
 		jg routine16
+		jmp routine16
+		jmp routine32
+		jmp routine64
 
 		call routine16
 		call routine32
@@ -118,4 +124,7 @@ routine32:
 		jng routine16
 		jnle routine16
 		jg routine16
+		jmp routine16
+		jmp routine32
+		jmp routine64
 routine64:

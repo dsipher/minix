@@ -1,0 +1,22 @@
+
+
+neg.s
+
+   1  000000  f7d8              	negl %eax
+   2  000002  f7db              	negl %ebx
+   3  000004  f7d9              	negl %ecx
+   4  000006  f7df              	negl %edi
+   5  000008  f7de              	negl %esi
+   6  00000a  41f7dd            	negl %r13d
+   7  00000d  41f7de            	negl %r14d
+   8  000010  49f7de            	negq %r14
+   9  000013  48f7d8            	negq %rax
+  10  000016  48f7de            	negq %rsi
+  11  000019  48f75810          	negq 16(%rax)
+  12  00001d  48f75910          	negq 16(%rcx)
+  13  000021  49f75c2438        	negq 56(%r12)
+  14  000026  49f75f08          	negq 8(%r15)
+  15  00002a  48f75808          	negq 8(%rax)
+  16  00002e  49f75c2458        	negq 88(%r12)
+  17  000033  66f7da            	negw %dx
+  18  000036                    

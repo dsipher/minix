@@ -1,0 +1,17 @@
+	negl %eax
+	negl %ebx
+	negl %ecx
+	negl %edi
+	negl %esi
+	negl %r13d
+	negl %r14d
+	negq %r14
+	negq %rax
+	negq %rsi
+	negq 16(%rax)
+	negq 16(%rcx)
+	negq 56(%r12)
+	negq 8(%r15)
+	negq 8(%rax)
+	negq 88(%r12)
+	negw %dx

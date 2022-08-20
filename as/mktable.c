@@ -72,7 +72,6 @@ struct { const char *text; const char *template; } insns[] =
     {   "cmc",          0               },
     {   "hlt",          0               },
     {   "iret",         0               },
-    {   "iretq",        0               },
     {   "ja",           "jnbe"          },
     {   "jae",          "jnb"           },
     {   "jb",           0               },

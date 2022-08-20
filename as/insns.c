@@ -112,8 +112,12 @@ struct insn i_seg[] =
     { 0 }
 };
 
-struct insn i_iret[]  = { { 0,         1, { 0xCF } }, { 0 } };
-struct insn i_iretq[] = { { I_DATA_64, 1, { 0xCF } }, { 0 } };
+struct insn i_iret[]  =
+{
+    { I_NO_CODE64, 1, { 0xCF } },       /* no REX if not in long mode */
+    { I_DATA_64,   1, { 0xCF } },       /* but always a REX in long mode */
+    { 0 }
+};
 
 struct insn i_call[] =
 {

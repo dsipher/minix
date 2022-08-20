@@ -46,7 +46,6 @@
 #include <sys/types.h>
 #include "../include/crc32c.h"      /* FIXME */
 #include "../include/a.out.h"       /* FIXME */
-#include "y.tab.h"
 
 /* we are an n-pass assembler. on each pass, we assemble into
    memory, and compare the state of the symbol table with the

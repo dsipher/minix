@@ -1,5 +1,6 @@
 %{
 #include "as.h"
+#include "y.tab.h"
 %}
 
 D               [0-9]

@@ -32,6 +32,7 @@
 *****************************************************************************/
 
 #include "as.h"
+#include "y.tab.h"
 
 /* shockingly, the first pass will be FIRST_PASS. */
 

@@ -1,0 +1,94 @@
+
+
+push.s
+
+   1  000000                    .code16
+   2  000000                    
+   3  000000  50                	pushw %ax
+   4  000001  52                	pushw %dx
+   5  000002  51                	pushw %cx
+   6  000003  50                	pushw %ax
+   7  000004  680002            	pushw $0x200
+   8  000007  6aff              	pushw $0xffff
+   9  000009  0e                	pushw %cs
+  10  00000a  1e                	pushw %ds
+  11  00000b  16                	pushw %ss
+  12  00000c  06                	pushw %es
+  13  00000d  0fa8              	pushw %gs
+  14  00000f  0fa0              	pushw %fs
+  15  000011  6606              	pushl %es
+  16  000013                    
+  17  000013                    .code32
+  18  000013  50                	pushl %eax
+  19  000014  55                	pushl %ebp
+  20  000015  53                	pushl %ebx
+  21  000016  51                	pushl %ecx
+  22  000017  57                	pushl %edi
+  23  000018  52                	pushl %edx
+  24  000019  56                	pushl %esi
+  25  00001a  ff30              	pushl (%eax)
+  26  00001c  6aff              	pushl $-1
+  27  00001e  6afe              	pushl $0xfffffffe
+  28  000020  68ffffff7f        	pushl $0x7fffffff
+  29  000025  660e              	pushw %cs
+  30  000027  660fa0            	pushw %fs
+  31  00002a  661e              	pushw %ds
+  32  00002c  660fa8            	pushw %gs
+  33  00002f  6616              	pushw %ss
+  34  000031  6606              	pushw %es
+  35  000033  06                	pushl %es
+  36  000034                    
+  37  000034                    .code64
+  38  000034                    
+  39  000034  6a00              	pushq $0
+  40  000036  6a01              	pushq $1
+  41  000038  6a02              	pushq $2
+  42  00003a  6a1c              	pushq $28
+  43  00003c  6a03              	pushq $3
+  44  00003e  666a00            	pushw $0
+  45  000041  666a01            	pushw $1
+  46  000044  666a02            	pushw $2
+  47  000047  666a1c            	pushw $28
+  48  00004a  666a03            	pushw $3
+  49  00004d  682a006016        	pushq $375390250
+  50  000052  6a04              	pushq $4
+  51  000054  4154              	pushq %r12
+  52  000056  4155              	pushq %r13
+  53  000058  4156              	pushq %r14
+  54  00005a  4157              	pushq %r15
+  55  00005c  4150              	pushq %r8
+  56  00005e  50                	pushq %rax
+  57  00005f  55                	pushq %rbp
+  58  000060  53                	pushq %rbx
+  59  000061  51                	pushq %rcx
+  60  000062  57                	pushq %rdi
+  61  000063  52                	pushq %rdx
+  62  000064  56                	pushq %rsi
+  63  000065  41ff3424          	pushq (%r12)
+  64  000069  41ff7500          	pushq (%r13)
+  65  00006d  ff30              	pushq (%rax)
+  66  00006f  ff34c8            	pushq (%rax,%rcx,8)
+  67  000072  ff33              	pushq (%rbx)
+  68  000074  ff34c3            	pushq (%rbx,%rax,8)
+  69  000077  ff34c1            	pushq (%rcx,%rax,8)
+  70  00007a  ff34d1            	pushq (%rcx,%rdx,8)
+  71  00007d  ff37              	pushq (%rdi)
+  72  00007f  ff34ca            	pushq (%rdx,%rcx,8)
+  73  000082  ff75f0            	pushq -16(%rbp)
+  74  000085  ff75e8            	pushq -24(%rbp)
+  75  000088  ff75e0            	pushq -32(%rbp)
+  76  00008b  ff75d0            	pushq -48(%rbp)
+  77  00008e  ff75f8            	pushq -8(%rbp)
+  78  000091  ff73f8            	pushq -8(%rbx)
+  79  000094  41ff742410        	pushq 16(%r12)
+  80  000099  41ff7610          	pushq 16(%r14)
+  81  00009d  ff7510            	pushq 16(%rbp)
+  82  0000a0  ff7310            	pushq 16(%rbx)
+  83  0000a3  ff7110            	pushq 16(%rcx)
+  84  0000a6  ff7318            	pushq 24(%rbx)
+  85  0000a9  41ff742408        	pushq 8(%r12)
+  86  0000ae  ff7308            	pushq 8(%rbx)
+  87  0000b1  ff7108            	pushq 8(%rcx)
+  88  0000b4  0fa8              	pushq %gs
+  89  0000b6  0fa0              	pushq %fs
+  90  0000b8                    

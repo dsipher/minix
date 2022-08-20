@@ -412,12 +412,12 @@ reg64           :   RAX     {   $$ = REG(O_GPR_64 | O_ACC_64,   RAX);   }
                 |   R15     {   $$ = REG(O_GPR_64,              R15);   }
                 ;
 
-sreg            :   CS      {   $$ = REG(O_SEG_2 | O_SEG_3,     CS);    }
-                |   DS      {   $$ = REG(O_SEG_2 | O_SEG_3,     DS);    }
-                |   SS      {   $$ = REG(O_SEG_2 | O_SEG_3,     SS);    }
-                |   ES      {   $$ = REG(O_SEG_2 | O_SEG_3,     ES);    }
-                |   FS      {   $$ = REG(          O_SEG_3,     FS);    }
-                |   GS      {   $$ = REG(          O_SEG_3,     GS);    }
+sreg            :   CS      {   $$ = REG(O_SEG_2,               CS);    }
+                |   DS      {   $$ = REG(O_SEG_2,               DS);    }
+                |   SS      {   $$ = REG(O_SEG_2,               SS);    }
+                |   ES      {   $$ = REG(O_SEG_2,               ES);    }
+                |   FS      {   $$ = REG(O_SEG_3,               FS);    }
+                |   GS      {   $$ = REG(O_SEG_3,               GS);    }
                 ;
 
 %%

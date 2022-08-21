@@ -15,6 +15,13 @@
 	cwtd
 	cltd
 
+	clc
+	cld
+	cli
+	cmc
+	hlt
+	iret
+
 .code32
 
 	aaa
@@ -34,6 +41,7 @@
 	cbtw
 	cwtd
 	cltd
+	iret
 
 .code64
 
@@ -60,5 +68,4 @@
 	cwtd
 	cltd
 	cqto
-
 

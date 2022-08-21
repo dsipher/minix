@@ -37,7 +37,8 @@ AS=/usr/bin/as
 
 TESTS="		adc	add	and 	cmov	\
 		cmp	misc	neg	not	\
-		or	push    sub	xor	"
+		or	pop	push    sub	\
+		xor	"
 
 for TEST in $TESTS
 do

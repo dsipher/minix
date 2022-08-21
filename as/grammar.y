@@ -413,9 +413,9 @@ reg64           :   RAX     {   $$ = REG(O_GPR_64 | O_ACC_64,   RAX);   }
                 ;
 
 sreg            :   CS      {   $$ = REG(O_SEG_2,               CS);    }
-                |   DS      {   $$ = REG(O_SEG_2,               DS);    }
-                |   SS      {   $$ = REG(O_SEG_2,               SS);    }
-                |   ES      {   $$ = REG(O_SEG_2,               ES);    }
+                |   DS      {   $$ = REG(O_SEG_2 | O_NOT_CS,    DS);    }
+                |   SS      {   $$ = REG(O_SEG_2 | O_NOT_CS,    SS);    }
+                |   ES      {   $$ = REG(O_SEG_2 | O_NOT_CS,    ES);    }
                 |   FS      {   $$ = REG(O_SEG_3,               FS);    }
                 |   GS      {   $$ = REG(O_SEG_3,               GS);    }
                 ;

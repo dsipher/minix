@@ -1,0 +1,75 @@
+
+
+pop.s
+
+   1  000000                    .code16
+   2  000000                    
+   3  000000  58                	popw %ax
+   4  000001  5a                	popw %dx
+   5  000002  59                	popw %cx
+   6  000003  58                	popw %ax
+   7  000004  1f                	popw %ds
+   8  000005  17                	popw %ss
+   9  000006  07                	popw %es
+  10  000007  0fa9              	popw %gs
+  11  000009  0fa1              	popw %fs
+  12  00000b  6607              	popl %es
+  13  00000d                    
+  14  00000d                    .code32
+  15  00000d  58                	popl %eax
+  16  00000e  5d                	popl %ebp
+  17  00000f  5b                	popl %ebx
+  18  000010  59                	popl %ecx
+  19  000011  5f                	popl %edi
+  20  000012  5a                	popl %edx
+  21  000013  5e                	popl %esi
+  22  000014  8f00              	popl (%eax)
+  23  000016  660fa1            	popw %fs
+  24  000019  661f              	popw %ds
+  25  00001b  660fa9            	popw %gs
+  26  00001e  6617              	popw %ss
+  27  000020  6607              	popw %es
+  28  000022  07                	popl %es
+  29  000023                    
+  30  000023                    .code64
+  31  000023                    
+  32  000023  415c              	popq %r12
+  33  000025  415d              	popq %r13
+  34  000027  415e              	popq %r14
+  35  000029  415f              	popq %r15
+  36  00002b  4158              	popq %r8
+  37  00002d  58                	popq %rax
+  38  00002e  5d                	popq %rbp
+  39  00002f  5b                	popq %rbx
+  40  000030  59                	popq %rcx
+  41  000031  5f                	popq %rdi
+  42  000032  5a                	popq %rdx
+  43  000033  5e                	popq %rsi
+  44  000034  418f0424          	popq (%r12)
+  45  000038  418f4500          	popq (%r13)
+  46  00003c  8f00              	popq (%rax)
+  47  00003e  8f04c8            	popq (%rax,%rcx,8)
+  48  000041  8f03              	popq (%rbx)
+  49  000043  8f04c3            	popq (%rbx,%rax,8)
+  50  000046  8f04c1            	popq (%rcx,%rax,8)
+  51  000049  8f04d1            	popq (%rcx,%rdx,8)
+  52  00004c  8f07              	popq (%rdi)
+  53  00004e  8f04ca            	popq (%rdx,%rcx,8)
+  54  000051  8f45f0            	popq -16(%rbp)
+  55  000054  8f45e8            	popq -24(%rbp)
+  56  000057  8f45e0            	popq -32(%rbp)
+  57  00005a  8f45d0            	popq -48(%rbp)
+  58  00005d  8f45f8            	popq -8(%rbp)
+  59  000060  8f43f8            	popq -8(%rbx)
+  60  000063  418f442410        	popq 16(%r12)
+  61  000068  418f4610          	popq 16(%r14)
+  62  00006c  8f4510            	popq 16(%rbp)
+  63  00006f  8f4310            	popq 16(%rbx)
+  64  000072  8f4110            	popq 16(%rcx)
+  65  000075  8f4318            	popq 24(%rbx)
+  66  000078  418f442408        	popq 8(%r12)
+  67  00007d  8f4308            	popq 8(%rbx)
+  68  000080  8f4108            	popq 8(%rcx)
+  69  000083  0fa9              	popq %gs
+  70  000085  0fa1              	popq %fs
+  71  000087                    

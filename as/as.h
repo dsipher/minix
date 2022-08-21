@@ -226,7 +226,7 @@ extern struct name *table[NR_BUCKETS];
 #define O_REL           (O_REL_8 | O_REL_16 | O_REL_32)
 
 #define O_CLASSES       0x07FFFFFFFL    /* `match any' bits (above) */
-#define O_CONSTRAINTS   0x080000000L    /* `match all' bits (below) */
+#define O_CONSTRAINTS   0x180000000L    /* `match all' bits (below) */
 
     /* O_PURE is set on operands with no relocatable symbol.
        templates use this to avoid abbreviated encodings based
@@ -236,6 +236,7 @@ extern struct name *table[NR_BUCKETS];
             but     pushq $bob+8    almost certainly should not be */
 
 #define O_PURE          0x080000000L    /* operand w/o symbol */
+#define O_NOT_CS        0x100000000L    /* not %cs (for O_SEG_2) */
 
 struct operand
 {

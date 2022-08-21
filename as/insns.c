@@ -348,9 +348,14 @@ struct insn i_call[] =
     { 0 }
 };
 
+struct insn i_cbtw[] = { { I_DATA_16, 1, { 0x98 } }, { 0 } };
+
 struct insn i_clc[]     =   { { 0, 1, { 0xF8 } }, { 0 } };
 struct insn i_cld[]     =   { { 0, 1, { 0xFC } }, { 0 } };
 struct insn i_cli[]     =   { { 0, 1, { 0xFA } }, { 0 } };
+
+struct insn i_cltd[] = { { I_DATA_32, 1, { 0x99 } }, { 0 } };
+
 struct insn i_cmc[]     =   { { 0, 1, { 0xF5 } }, { 0 } };
 
 struct insn i_cmpb[] =
@@ -429,6 +434,9 @@ struct insn i_cmpq[] =
 
     { 0 }
 };
+
+struct insn i_cqto[] = { { I_DATA_64, 1, { 0x99 } }, { 0 } };
+struct insn i_cwtd[] = { { I_DATA_16, 1, { 0x99 } }, { 0 } };
 
 struct insn i_hlt[]     =   { { 0, 1, { 0xF4 } }, { 0 } };
 

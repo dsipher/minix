@@ -11,6 +11,10 @@
         jmp *%ecx
         jmp *%esi
 
+	cbtw
+	cwtd
+	cltd
+
 .code32
 
 	aaa
@@ -26,6 +30,10 @@
         jmp *%eax
         jmp *%ecx
         jmp *%esi
+
+	cbtw
+	cwtd
+	cltd
 
 .code64
 
@@ -47,5 +55,10 @@
         jmp *%rcx
         jmp *%r13
         jmp *%rsi
+
+	cbtw
+	cwtd
+	cltd
+	cqto
 
 

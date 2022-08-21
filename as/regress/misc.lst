@@ -15,42 +15,55 @@ misc.s
   11  00001a  66ffe1                    jmp *%ecx
   12  00001d  66ffe6                    jmp *%esi
   13  000020                    
-  14  000020                    .code32
-  15  000020                    
-  16  000020  37                	aaa
-  17  000021  d50a              	aad
-  18  000023  d512              	aad $0x12
-  19  000025  d40a              	aam
-  20  000027  d41f              	aam $0x1F
-  21  000029  3f                	aas
-  22  00002a  0fbdc0                    bsrl %eax,%eax
-  23  00002d  0fbcc0                    bsfl %eax,%eax
-  24  000030  0fbdc8                    bsrl %eax,%ecx
-  25  000033  ffd0                      call *%eax
-  26  000035  ffe0                      jmp *%eax
-  27  000037  ffe1                      jmp *%ecx
-  28  000039  ffe6                      jmp *%esi
-  29  00003b                    
-  30  00003b                    .code64
-  31  00003b                    
-  32  00003b  66410fbdf7                bsrw %r15w, %si
-  33  000040  66440fbde2                bsrw %dx, %r12w
-  34  000045  480fbdc0                  bsrq %rax,%rax
-  35  000049  0fbdc0                    bsrl %eax,%eax
-  36  00004c  480fbcc0                  bsfq %rax,%rax
-  37  000050  0fbcc0                    bsfl %eax,%eax
-  38  000053  0fbd45fc                  bsrl -4(%rbp),%eax
-  39  000057  480fbd5058                bsrq 88(%rax),%rdx
-  40  00005c  0fbdc8                    bsrl %eax,%ecx
-  41  00005f  0fbcc0                    bsfl %eax,%eax
-  42  000062                    
-  43  000062  41ffd4                    call *%r12
-  44  000065  41ffd5                    call *%r13
-  45  000068  ffd0                      call *%rax
-  46  00006a  ffe0                      jmp *%rax
-  47  00006c  ffe1                      jmp *%rcx
-  48  00006e  41ffe5                    jmp *%r13
-  49  000071  ffe6                      jmp *%rsi
-  50  000073                    
-  51  000073                    
-  52  000073                    
+  14  000020  98                	cbtw
+  15  000021  99                	cwtd
+  16  000022  6699              	cltd
+  17  000024                    
+  18  000024                    .code32
+  19  000024                    
+  20  000024  37                	aaa
+  21  000025  d50a              	aad
+  22  000027  d512              	aad $0x12
+  23  000029  d40a              	aam
+  24  00002b  d41f              	aam $0x1F
+  25  00002d  3f                	aas
+  26  00002e  0fbdc0                    bsrl %eax,%eax
+  27  000031  0fbcc0                    bsfl %eax,%eax
+  28  000034  0fbdc8                    bsrl %eax,%ecx
+  29  000037  ffd0                      call *%eax
+  30  000039  ffe0                      jmp *%eax
+  31  00003b  ffe1                      jmp *%ecx
+  32  00003d  ffe6                      jmp *%esi
+  33  00003f                    
+  34  00003f  6698              	cbtw
+  35  000041  6699              	cwtd
+  36  000043  99                	cltd
+  37  000044                    
+  38  000044                    .code64
+  39  000044                    
+  40  000044  66410fbdf7                bsrw %r15w, %si
+  41  000049  66440fbde2                bsrw %dx, %r12w
+  42  00004e  480fbdc0                  bsrq %rax,%rax
+  43  000052  0fbdc0                    bsrl %eax,%eax
+  44  000055  480fbcc0                  bsfq %rax,%rax
+  45  000059  0fbcc0                    bsfl %eax,%eax
+  46  00005c  0fbd45fc                  bsrl -4(%rbp),%eax
+  47  000060  480fbd5058                bsrq 88(%rax),%rdx
+  48  000065  0fbdc8                    bsrl %eax,%ecx
+  49  000068  0fbcc0                    bsfl %eax,%eax
+  50  00006b                    
+  51  00006b  41ffd4                    call *%r12
+  52  00006e  41ffd5                    call *%r13
+  53  000071  ffd0                      call *%rax
+  54  000073  ffe0                      jmp *%rax
+  55  000075  ffe1                      jmp *%rcx
+  56  000077  41ffe5                    jmp *%r13
+  57  00007a  ffe6                      jmp *%rsi
+  58  00007c                    
+  59  00007c  6698              	cbtw
+  60  00007e  6699              	cwtd
+  61  000080  99                	cltd
+  62  000081  4899              	cqto
+  63  000083                    
+  64  000083                    
+  65  000083                    

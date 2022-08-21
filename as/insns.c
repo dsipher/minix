@@ -358,6 +358,342 @@ struct insn i_cltd[] = { { I_DATA_32, 1, { 0x99 } }, { 0 } };
 
 struct insn i_cmc[]     =   { { 0, 1, { 0xF5 } }, { 0 } };
 
+struct insn i_cmovbw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x42, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovbl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x42, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovbq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x42, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovbew[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x46, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovbel[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x46, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovbeq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x46, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovlw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x4C, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovll[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x4C, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovlq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x4C, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovlew[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x4E, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovlel[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x4E, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovleq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x4E, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnbw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x43, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnbl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x43, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnbq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x43, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnbew[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x47, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnbel[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x47, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnbeq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x47, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnlw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x4D, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnll[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x4D, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnlq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x4D, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnlew[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x4F, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnlel[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x4F, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnleq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x4F, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnow[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x41, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnol[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x41, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnoq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x41, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnpw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x4B, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnpl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x4B, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnpq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x4B, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnsw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x49, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnsl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x49, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnsq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x49, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnzw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x45, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnzl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x45, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovnzq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x45, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovow[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x40, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovol[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x40, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovoq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x40, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovpw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x4A, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovpl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x4A, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovpq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x4A, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovsw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x48, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovsl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x48, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovsq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x48, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovzw[] =
+{
+    { I_DATA_16, 3, { 0x0F, 0x44, 0x00 }, { { O_GPR_16,         F_MID   },
+                                            { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovzl[] =
+{
+    { I_DATA_32, 3, { 0x0F, 0x44, 0x00 }, { { O_GPR_32,         F_MID   },
+                                            { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cmovzq[] =
+{
+    { I_DATA_64, 3, { 0x0F, 0x44, 0x00 }, { { O_GPR_64,         F_MID   },
+                                            { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_cmpb[] =
 {
     { 0,         1, { 0x3C       }, { { O_ACC_8                  },

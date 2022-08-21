@@ -1,0 +1,65 @@
+
+
+cmov.s
+
+   1  000000  0f43c8            	cmovael %eax,%ecx
+   2  000003  440f4df0          	cmovgel %eax,%r14d
+   3  000007  0f4dcb            	cmovgel %ebx,%ecx
+   4  00000a  0f4dc1            	cmovgel %ecx,%eax
+   5  00000d  410f4dcd          	cmovgel %r13d,%ecx
+   6  000011  4c0f4de8          	cmovgeq %rax,%r13
+   7  000015  0f4fd8            	cmovgl %eax,%ebx
+   8  000018  0f4fc1            	cmovgl %ecx,%eax
+   9  00001b  0f4ff9            	cmovgl %ecx,%edi
+  10  00001e  0f4fd6            	cmovgl %esi,%edx
+  11  000021  0f4ef8            	cmovlel %eax,%edi
+  12  000024  0f4ef0            	cmovlel %eax,%esi
+  13  000027  480f4ed8          	cmovleq %rax,%rbx
+  14  00002b  480f4ed9          	cmovleq %rcx,%rbx
+  15  00002f  480f4ede          	cmovleq %rsi,%rbx
+  16  000033  0f4cf0            	cmovll %eax,%esi
+  17  000036  440f4ce0          	cmovll %eax,%r12d
+  18  00003a  0f4cc1            	cmovll %ecx,%eax
+  19  00003d  0f4cf1            	cmovll %ecx,%esi
+  20  000040  480f4cf0          	cmovlq %rax,%rsi
+  21  000044  0f45d8            	cmovnzl %eax,%ebx
+  22  000047  0f45c8            	cmovnzl %eax,%ecx
+  23  00004a  0f45f8            	cmovnzl %eax,%edi
+  24  00004d  440f45e0          	cmovnzl %eax,%r12d
+  25  000051  440f45e8          	cmovnzl %eax,%r13d
+  26  000055  440f45f8          	cmovnzl %eax,%r15d
+  27  000059  0f45c1            	cmovnzl %ecx,%eax
+  28  00005c  0f45f9            	cmovnzl %ecx,%edi
+  29  00005f  0f45d1            	cmovnzl %ecx,%edx
+  30  000062  0f45c7            	cmovnzl %edi,%eax
+  31  000065  410f45dc          	cmovnzl %r12d,%ebx
+  32  000069  410f45cc          	cmovnzl %r12d,%ecx
+  33  00006d  450f45ee          	cmovnzl %r14d,%r13d
+  34  000071  4c0f45d0          	cmovnzq %rax,%r10
+  35  000075  4c0f45f0          	cmovnzq %rax,%r14
+  36  000079  480f45c8          	cmovnzq %rax,%rcx
+  37  00007d  480f45f8          	cmovnzq %rax,%rdi
+  38  000081  480f45d0          	cmovnzq %rax,%rdx
+  39  000085  480f45f0          	cmovnzq %rax,%rsi
+  40  000089  0f48d8            	cmovsl %eax,%ebx
+  41  00008c  440f48e0          	cmovsl %eax,%r12d
+  42  000090  0f44d8            	cmovzl %eax,%ebx
+  43  000093  0f44c8            	cmovzl %eax,%ecx
+  44  000096  0f44f8            	cmovzl %eax,%edi
+  45  000099  0f44d0            	cmovzl %eax,%edx
+  46  00009c  0f44f0            	cmovzl %eax,%esi
+  47  00009f  440f44e0          	cmovzl %eax,%r12d
+  48  0000a3  440f44e8          	cmovzl %eax,%r13d
+  49  0000a7  440f44f0          	cmovzl %eax,%r14d
+  50  0000ab  440f44f8          	cmovzl %eax,%r15d
+  51  0000af  0f44c1            	cmovzl %ecx,%eax
+  52  0000b2  0f44d9            	cmovzl %ecx,%ebx
+  53  0000b5  4c0f44e0          	cmovzq %rax,%r12
+  54  0000b9  480f44d8          	cmovzq %rax,%rbx
+  55  0000bd  480f44c8          	cmovzq %rax,%rcx
+  56  0000c1  480f44f8          	cmovzq %rax,%rdi
+  57  0000c5  480f44d0          	cmovzq %rax,%rdx
+  58  0000c9  480f44f9          	cmovzq %rcx,%rdi
+  59  0000cd  480f44c7          	cmovzq %rdi,%rax
+  60  0000d1  480f44d7          	cmovzq %rdi,%rdx
+  61  0000d5                    

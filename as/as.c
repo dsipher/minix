@@ -826,17 +826,7 @@ void encode(struct insn *insns, struct operand *operand0,
     int enc;
     int i;
 
-    /* 1. operand size override prefix. if we issue an insn
-          with a specified data size which doesn't match the
-          current default, we need to issue this prefix. */
-
-    if (  ((insn->i_flags & I_DATA_16) && (code_size != O_MEM_16))
-       || ((insn->i_flags & I_DATA_32) && (code_size == O_MEM_16)) )
-    {
-        emit(0x66);         /* data-size override */
-    }
-
-    /* 2. address-size override prefix. the insn template doesn't know
+    /* 1. address-size override prefix. the insn template doesn't know
           about address sizes; we must locate an O_MEM_* and examine it. */
 
     for (i = 0; operands[i]; ++i)
@@ -858,6 +848,16 @@ void encode(struct insn *insns, struct operand *operand0,
         }
 
         break;  /* found the O_MEM_*; there's at most one, so stop looking */
+    }
+
+    /* 2. operand size override prefix. if we issue an insn
+          with a specified data size which doesn't match the
+          current default, we need to issue this prefix. */
+
+    if (  ((insn->i_flags & I_DATA_16) && (code_size != O_MEM_16))
+       || ((insn->i_flags & I_DATA_32) && (code_size == O_MEM_16)) )
+    {
+        emit(0x66);         /* data-size override */
     }
 
     /* 3. other prefixes. the difference between a `hard-coded' prefix and

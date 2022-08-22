@@ -462,9 +462,9 @@ void undef(struct nlist *sym)
 
 /* return the O_IMM_* classes in which `value' can be represented. */
 
-int immclass(long value)
+long immclass(long value)
 {
-    int classes = O_IMM_64;     /* of course, everything fits in 64 bits */
+    long classes = O_IMM_64;    /* of course, everything fits in 64 bits */
 
     if (value >= CHAR_MIN  &&  value <= CHAR_MAX)   classes |= O_IMM_S8;
     if (value >= 0         &&  value <= UCHAR_MAX)  classes |= O_IMM_U8;
@@ -475,6 +475,8 @@ int immclass(long value)
 
     if (value >= (USHRT_MAX - 127) && value <= USHRT_MAX) classes |= O_HI16;
     if (value >=  (UINT_MAX - 127) &&  value <= UINT_MAX) classes |= O_HI32;
+
+    if (value == 1) classes |= O_IMM_1;
 
     return classes;
 }

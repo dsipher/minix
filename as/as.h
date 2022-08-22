@@ -225,8 +225,11 @@ extern struct name *table[NR_BUCKETS];
 
 #define O_REL           (O_REL_8 | O_REL_16 | O_REL_32)
 
-#define O_CLASSES       0x07FFFFFFFL    /* `match any' bits (above) */
-#define O_CONSTRAINTS   0x180000000L    /* `match all' bits (below) */
+#define O_REG_CL        0x080000000L    /* %cl (for matching shifts) */
+#define O_IMM_1         0x100000000L    /* $1 (also for matching shifts) */
+
+#define O_CLASSES       0x1FFFFFFFFL    /* `match any' bits (above) */
+#define O_CONSTRAINTS   0x600000000L    /* `match all' bits (below) */
 
     /* O_PURE is set on operands with no relocatable symbol.
        templates use this to avoid abbreviated encodings based
@@ -235,8 +238,8 @@ extern struct name *table[NR_BUCKETS];
                     pushq $8        is encoded with an 8-bit immediate
             but     pushq $bob+8    almost certainly should not be */
 
-#define O_PURE          0x080000000L    /* operand w/o symbol */
-#define O_NOT_CS        0x100000000L    /* not %cs (O_SEG_2/3) */
+#define O_PURE          0x200000000L    /* operand w/o symbol */
+#define O_NOT_CS        0x400000000L    /* not %cs (O_SEG_2/3) */
 
 struct operand
 {
@@ -302,7 +305,7 @@ extern void error(const char *fmt, ...);
 extern void end_of_line(void);
 extern void emit(int byte);
 extern void emit_value(struct operand *o);
-extern int immclass(long value);
+extern long immclass(long value);
 extern int size2(long value, const char *kind);
 extern struct name *lookup(const char *text, int len);
 extern void define(struct nlist *sym, int type, long value, long align);

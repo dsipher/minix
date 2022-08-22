@@ -22,6 +22,26 @@
 	hlt
 	iret
 
+	stosb
+	stosw
+	stosl
+
+	movsb
+	movsw
+	movsl
+
+	scasb
+	scasw
+	scasl
+
+	lodsb
+	lodsw
+	lodsl
+
+	cmpsb
+	cmpsw
+	cmpsl
+
 .code32
 
 	aaa
@@ -42,6 +62,26 @@
 	cwtd
 	cltd
 	iret
+
+	stosb
+	stosw
+	stosl
+
+	movsb
+	movsw
+	movsl
+
+	scasb
+	scasw
+	scasl
+
+	lodsb
+	lodsw
+	lodsl
+
+	cmpsb
+	cmpsw
+	cmpsl
 
 .code64
 
@@ -68,4 +108,29 @@
 	cwtd
 	cltd
 	cqto
+
+	stosb
+	stosw
+	stosl
+	stosq
+
+	movsb
+	movsw
+	movsl
+	movsq
+
+	scasb
+	scasw
+	scasl
+	scasq
+
+	lodsb
+	lodsw
+	lodsl
+	lodsq
+
+	cmpsb
+	cmpsw
+	cmpsl
+	cmpsq
 

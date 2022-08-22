@@ -771,6 +771,11 @@ struct insn i_cmpq[] =
     { 0 }
 };
 
+struct insn i_cmpsb[] = { { 0,         1, { 0xA6 } }, { 0 } };
+struct insn i_cmpsw[] = { { I_DATA_16, 1, { 0xA7 } }, { 0 } };
+struct insn i_cmpsl[] = { { I_DATA_32, 1, { 0xA7 } }, { 0 } };
+struct insn i_cmpsq[] = { { I_DATA_64, 1, { 0xA7 } }, { 0 } };
+
 struct insn i_cqto[] = { { I_DATA_64, 1, { 0x99 } }, { 0 } };
 struct insn i_cwtd[] = { { I_DATA_16, 1, { 0x99 } }, { 0 } };
 
@@ -1023,6 +1028,16 @@ struct insn i_leaq[] =
 };
 
 struct insn i_lock[]    =   { { 0, 1, { 0xF0 } }, { 0 } };
+
+struct insn i_lodsb[] = { { 0,         1, { 0xAC } }, { 0 } };
+struct insn i_lodsw[] = { { I_DATA_16, 1, { 0xAD } }, { 0 } };
+struct insn i_lodsl[] = { { I_DATA_32, 1, { 0xAD } }, { 0 } };
+struct insn i_lodsq[] = { { I_DATA_64, 1, { 0xAD } }, { 0 } };
+
+struct insn i_movsb[] = { { 0,         1, { 0xA4 } }, { 0 } };
+struct insn i_movsw[] = { { I_DATA_16, 1, { 0xA5 } }, { 0 } };
+struct insn i_movsl[] = { { I_DATA_32, 1, { 0xA5 } }, { 0 } };
+struct insn i_movsq[] = { { I_DATA_64, 1, { 0xA5 } }, { 0 } };
 
 struct insn i_movb[] =
 {
@@ -1452,6 +1467,11 @@ struct insn i_sbbq[] =
     { 0 }
 };
 
+struct insn i_scasb[] = { { 0,         1, { 0xAE } }, { 0 } };
+struct insn i_scasw[] = { { I_DATA_16, 1, { 0xAF } }, { 0 } };
+struct insn i_scasl[] = { { I_DATA_32, 1, { 0xAF } }, { 0 } };
+struct insn i_scasq[] = { { I_DATA_64, 1, { 0xAF } }, { 0 } };
+
 struct insn i_seg[] =
 {
     { 0, 1, { 0x26 }, { { O_SEG_2, F_MID } } },
@@ -1558,6 +1578,11 @@ struct insn i_setz[] =
 struct insn i_stc[]     =   { { 0, 1, { 0xF9 } }, { 0 } };
 struct insn i_std[]     =   { { 0, 1, { 0xFD } }, { 0 } };
 struct insn i_sti[]     =   { { 0, 1, { 0xFB } }, { 0 } };
+
+struct insn i_stosb[] = { { 0,         1, { 0xAA } }, { 0 } };
+struct insn i_stosw[] = { { I_DATA_16, 1, { 0xAB } }, { 0 } };
+struct insn i_stosl[] = { { I_DATA_32, 1, { 0xAB } }, { 0 } };
+struct insn i_stosq[] = { { I_DATA_64, 1, { 0xAB } }, { 0 } };
 
 struct insn i_subb[] =
 {

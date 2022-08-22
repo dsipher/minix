@@ -1024,6 +1024,57 @@ struct insn i_leaq[] =
 
 struct insn i_lock[]    =   { { 0, 1, { 0xF0 } }, { 0 } };
 
+struct insn i_movb[] =
+{
+    { 0, 2, { 0x88, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM },
+                              { O_GPR_8,         F_MID   } } },
+
+    { 0, 2, { 0x8A, 0x00 }, { { O_GPR_8,         F_MID   },
+                              { O_GPR_8 | O_MEM, F_MODRM } } },
+
+    { 0, 1, { 0xB0       }, { { O_GPR_8,         F_END   },
+                              { O_IMM_8                  } } },
+
+    { 0, 2, { 0xC6, 0x00 }, { { O_MEM,           F_MODRM },
+                              { O_IMM_8                  } } },
+
+    { 0 }
+};
+
+struct insn i_movl[] =
+{
+    { I_DATA_32, 2, { 0x89, 0x00 }, { { O_GPR_32 | O_MEM, F_MODRM },
+                                      { O_GPR_32,         F_MID   } } },
+
+    { I_DATA_32, 2, { 0x8B, 0x00 }, { { O_GPR_32,         F_MID   },
+                                      { O_GPR_32 | O_MEM, F_MODRM } } },
+
+    { I_DATA_32, 1, { 0xB8       }, { { O_GPR_32,         F_END   },
+                                      { O_IMM_32                  } } },
+
+    { I_DATA_32, 2, { 0xC7, 0x00 }, { { O_MEM,            F_MODRM },
+                                      { O_IMM_32                  } } },
+
+    { 0 }
+};
+
+struct insn i_movq[] =
+{
+    { I_DATA_64, 2, { 0x89, 0x00 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_GPR_64,         F_MID   } } },
+
+    { I_DATA_64, 2, { 0x8B, 0x00 }, { { O_GPR_64,         F_MID   },
+                                      { O_GPR_64 | O_MEM, F_MODRM } } },
+
+    { I_DATA_64, 2, { 0xC7, 0x00 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_IMM_S32                 } } },
+
+    { I_DATA_64, 1, { 0xB8       }, { { O_GPR_64,         F_END   },
+                                      { O_IMM_64                  } } },
+
+    { 0 }
+};
+
 struct insn i_movsbw[] =
 {
     { I_DATA_16, 3, { 0x0F, 0xBE, 0x00 }, { { O_GPR_16,        F_MID   },
@@ -1063,6 +1114,23 @@ struct insn i_movswq[] =
 {
     { I_DATA_64, 3, { 0x0F, 0xBF, 0x00 }, { { O_GPR_64,         F_MID   },
                                             { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_movw[] =
+{
+    { I_DATA_16, 2, { 0x89, 0x00 }, { { O_GPR_16 | O_MEM, F_MODRM },
+                                      { O_GPR_16,         F_MID   } } },
+
+    { I_DATA_16, 2, { 0x8B, 0x00 }, { { O_GPR_16,         F_MID   },
+                                      { O_GPR_16 | O_MEM, F_MODRM } } },
+
+    { I_DATA_16, 1, { 0xB8       }, { { O_GPR_16,         F_END   },
+                                      { O_IMM_16                  } } },
+
+    { I_DATA_16, 2, { 0xC7, 0x00 }, { { O_MEM,            F_MODRM },
+                                      { O_IMM_16                  } } },
+
     { 0 }
 };
 

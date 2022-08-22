@@ -38,8 +38,8 @@ AS=/usr/bin/as
 TESTS="		adc	add	and 	cmov	\
 		cmp	dec	inc 	lea	\
 		misc	neg	not	or	\
-		pop	push    sub	test	\
-		xor				"
+		pop	push    sbb	sub	\
+		test	xor			"
 
 for TEST in $TESTS
 do

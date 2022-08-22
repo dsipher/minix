@@ -1,3 +1,9 @@
+	mulb %sil
+	mulw (,%rbx,2)
+	mull (%rsi,%r15,8)
+	mulq %rdx
+	mulq %r15
+
 	imulb %cl
 	imulw $100, %ax, %cx
 	imulw $200, %ax, %cx

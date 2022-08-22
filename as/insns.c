@@ -811,7 +811,55 @@ struct insn i_decq[] =
     { 0 }
 };
 
+struct insn i_divb[] =
+{
+    { 0, 2, { 0xF6, 0x30 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_divw[] =
+{
+    { I_DATA_16, 2, { 0xF7, 0x30 }, { { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_divl[] =
+{
+    { I_DATA_32, 2, { 0xF7, 0x30 }, { { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_divq[] =
+{
+    { I_DATA_64, 2, { 0xF7, 0x30 }, { { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_hlt[]     =   { { 0, 1, { 0xF4 } }, { 0 } };
+
+struct insn i_idivb[] =
+{
+    { 0, 2, { 0xF6, 0x38 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_idivw[] =
+{
+    { I_DATA_16, 2, { 0xF7, 0x38 }, { { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_idivl[] =
+{
+    { I_DATA_32, 2, { 0xF7, 0x38 }, { { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_idivq[] =
+{
+    { I_DATA_64, 2, { 0xF7, 0x38 }, { { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
 
 struct insn i_imulb[] =
 {
@@ -1253,6 +1301,30 @@ struct insn i_movzwq[] =
 {
     { I_DATA_64, 3, { 0x0F, 0xB7, 0x00 }, { { O_GPR_64,         F_MID   },
                                             { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_mulb[] =
+{
+    { 0, 2, { 0xF6, 0x20 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_mulw[] =
+{
+    { I_DATA_16, 2, { 0xF7, 0x20 }, { { O_GPR_16 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_mull[] =
+{
+    { I_DATA_32, 2, { 0xF7, 0x20 }, { { O_GPR_32 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_mulq[] =
+{
+    { I_DATA_64, 2, { 0xF7, 0x20 }, { { O_GPR_64 | O_MEM, F_MODRM } } },
     { 0 }
 };
 

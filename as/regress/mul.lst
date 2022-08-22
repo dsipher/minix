@@ -2,52 +2,58 @@
 
 mul.s
 
-   1  000000  f6e9              	imulb %cl
-   2  000002  666bc864          	imulw $100, %ax, %cx
-   3  000006  6669c8c800        	imulw $200, %ax, %cx
-   4  00000b  6b85ccfdffff0a    	imull $10,-564(%rbp),%eax
-   5  000012  6b431803          	imull $3,24(%rbx),%eax
-   6  000016  6bc01f            	imull $31,%eax,%eax
-   7  000019  6bc03c            	imull $60,%eax,%eax
-   8  00001c  0faff8            	imull %eax,%edi
-   9  00001f  0fafd0            	imull %eax,%edx
-  10  000022  0faff0            	imull %eax,%esi
-  11  000025  440fafe0          	imull %eax,%r12d
-  12  000029  0fafc3            	imull %ebx,%eax
-  13  00002c  0fafcb            	imull %ebx,%ecx
-  14  00002f  0faffb            	imull %ebx,%edi
-  15  000032  0fafc1            	imull %ecx,%eax
-  16  000035  0fafd1            	imull %ecx,%edx
-  17  000038  0fafc6            	imull %esi,%eax
-  18  00003b  440fafc6          	imull %esi,%r8d
-  19  00003f  6bc864            	imull $100, %eax, %ecx
-  20  000042  4569f8c8000000    	imull $200, %r8d, %r15d
-  21  000049  410fafc4          	imull %r12d,%eax
-  22  00004d  410fafcd          	imull %r13d,%ecx
-  23  000051  410faffd          	imull %r13d,%edi
-  24  000055  410fafd5          	imull %r13d,%edx
-  25  000059  450fafe5          	imull %r13d,%r12d
-  26  00005d  410fafc6          	imull %r14d,%eax
-  27  000061  410fafde          	imull %r14d,%ebx
-  28  000065  410fafce          	imull %r14d,%ecx
-  29  000069  410fafd6          	imull %r14d,%edx
-  30  00006d  410faff6          	imull %r14d,%esi
-  31  000071  410fafd0          	imull %r8d,%edx
-  32  000075  0faf4dfc          	imull -4(%rbp),%ecx
-  33  000079  440faf65f8        	imull -8(%rbp),%r12d
-  34  00007e  410faf5c2404      	imull 4(%r12),%ebx
-  35  000084  486bc03c          	imulq $60,%rax,%rax
-  36  000088  4869c058020000    	imulq $600,%rax,%rax
-  37  00008f  490fafc4          	imulq %r12,%rax
-  38  000093  4d0fafe5          	imulq %r13,%r12
-  39  000097  490faff6          	imulq %r14,%rsi
-  40  00009b  490fafc7          	imulq %r15,%rax
-  41  00009f  4c0fafe8          	imulq %rax,%r13
-  42  0000a3  480fafc1          	imulq %rcx,%rax
-  43  0000a7  480fafc7          	imulq %rdi,%rax
-  44  0000ab  480fafcf          	imulq %rdi,%rcx
-  45  0000af  480fafca          	imulq %rdx,%rcx
-  46  0000b3  480faff2          	imulq %rdx,%rsi
-  47  0000b7  4c0fafde          	imulq %rsi,%r11
-  48  0000bb  480faf4e10        	imulq 16(%rsi),%rcx
-  49  0000c0                    
+   1  000000  40f6e6            	mulb %sil
+   2  000003  66f7245d00000000  	mulw (,%rbx,2)
+   3  00000b  42f724fe          	mull (%rsi,%r15,8)
+   4  00000f  48f7e2            	mulq %rdx
+   5  000012  49f7e7            	mulq %r15
+   6  000015                    
+   7  000015  f6e9              	imulb %cl
+   8  000017  666bc864          	imulw $100, %ax, %cx
+   9  00001b  6669c8c800        	imulw $200, %ax, %cx
+  10  000020  6b85ccfdffff0a    	imull $10,-564(%rbp),%eax
+  11  000027  6b431803          	imull $3,24(%rbx),%eax
+  12  00002b  6bc01f            	imull $31,%eax,%eax
+  13  00002e  6bc03c            	imull $60,%eax,%eax
+  14  000031  0faff8            	imull %eax,%edi
+  15  000034  0fafd0            	imull %eax,%edx
+  16  000037  0faff0            	imull %eax,%esi
+  17  00003a  440fafe0          	imull %eax,%r12d
+  18  00003e  0fafc3            	imull %ebx,%eax
+  19  000041  0fafcb            	imull %ebx,%ecx
+  20  000044  0faffb            	imull %ebx,%edi
+  21  000047  0fafc1            	imull %ecx,%eax
+  22  00004a  0fafd1            	imull %ecx,%edx
+  23  00004d  0fafc6            	imull %esi,%eax
+  24  000050  440fafc6          	imull %esi,%r8d
+  25  000054  6bc864            	imull $100, %eax, %ecx
+  26  000057  4569f8c8000000    	imull $200, %r8d, %r15d
+  27  00005e  410fafc4          	imull %r12d,%eax
+  28  000062  410fafcd          	imull %r13d,%ecx
+  29  000066  410faffd          	imull %r13d,%edi
+  30  00006a  410fafd5          	imull %r13d,%edx
+  31  00006e  450fafe5          	imull %r13d,%r12d
+  32  000072  410fafc6          	imull %r14d,%eax
+  33  000076  410fafde          	imull %r14d,%ebx
+  34  00007a  410fafce          	imull %r14d,%ecx
+  35  00007e  410fafd6          	imull %r14d,%edx
+  36  000082  410faff6          	imull %r14d,%esi
+  37  000086  410fafd0          	imull %r8d,%edx
+  38  00008a  0faf4dfc          	imull -4(%rbp),%ecx
+  39  00008e  440faf65f8        	imull -8(%rbp),%r12d
+  40  000093  410faf5c2404      	imull 4(%r12),%ebx
+  41  000099  486bc03c          	imulq $60,%rax,%rax
+  42  00009d  4869c058020000    	imulq $600,%rax,%rax
+  43  0000a4  490fafc4          	imulq %r12,%rax
+  44  0000a8  4d0fafe5          	imulq %r13,%r12
+  45  0000ac  490faff6          	imulq %r14,%rsi
+  46  0000b0  490fafc7          	imulq %r15,%rax
+  47  0000b4  4c0fafe8          	imulq %rax,%r13
+  48  0000b8  480fafc1          	imulq %rcx,%rax
+  49  0000bc  480fafc7          	imulq %rdi,%rax
+  50  0000c0  480fafcf          	imulq %rdi,%rcx
+  51  0000c4  480fafca          	imulq %rdx,%rcx
+  52  0000c8  480faff2          	imulq %rdx,%rsi
+  53  0000cc  4c0fafde          	imulq %rsi,%r11
+  54  0000d0  480faf4e10        	imulq 16(%rsi),%rcx
+  55  0000d5                    

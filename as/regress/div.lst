@@ -1,0 +1,39 @@
+
+
+div.s
+
+   1  000000  40f6f6            	divb %sil
+   2  000003  66f7345d00000000  	divw (,%rbx,2)
+   3  00000b  42f734fe          	divl (%rsi,%r15,8)
+   4  00000f  48f7f2            	divq %rdx
+   5  000012  49f7f7            	divq %r15
+   6  000015                    
+   7  000015  40f6fe            	idivb %sil
+   8  000018  66f73c5d00000000  	idivw (,%rbx,2)
+   9  000020  42f73cfe          	idivl (%rsi,%r15,8)
+  10  000024  48f7fa            	idivq %rdx
+  11  000027  49f7ff            	idivq %r15
+  12  00002a                    
+  13  00002a  f7f1                      divl %ecx
+  14  00002c  49f7f4                    divq %r12
+  15  00002f  49f7f0                    divq %r8
+  16  000032  48f7f1                    divq %rcx
+  17  000035  48f7f6                    divq %rsi
+  18  000038  48f77110                  divq 16(%rcx)
+  19  00003c  49f77608                  divq 8(%r14)
+  20  000040  48f77108                  divq 8(%rcx)
+  21  000044  f7f9                      idivl %ecx
+  22  000046  f7ff                      idivl %edi
+  23  000048  f7fe                      idivl %esi
+  24  00004a  41f7f8                    idivl %r8d
+  25  00004d  49f7fc                    idivq %r12
+  26  000050  49f7fd                    idivq %r13
+  27  000053  48f7f9                    idivq %rcx
+  28  000056  48f7ff                    idivq %rdi
+  29  000059  48f7fe                    idivq %rsi
+  30  00005c  48f77910                  idivq 16(%rcx)
+  31  000060  49f77e08                  idivq 8(%r14)
+  32  000064  48f77908                  idivq 8(%rcx)
+  33  000068                    
+  34  000068                    
+  35  000068                    

@@ -5,15 +5,16 @@
 # for each of the TESTS, we build with `as', then with $AS.
 # extract the binary text portion of each and compare. they
 # must be identical. we specifically encode insns in the way
-# `gas' does (when there is a choice) to make this test work
-# (obviously once we're self-hosted we'll have to rewrite this
-# to compare results with the installed assembler /usr/bin/as.)
+# `gas' does (when there is a choice) to make this test work.
+# obviously once we're self-hosted we'll have to rewrite this
+# to compare results with the installed assembler /usr/bin/as.
 #
 # as a secondary regression test, we save the listings of all
 # the files assembled above in the repo to catch any changes.
 # to TESTS we add OTHER, which are assembly files which can't
-# be assembled with `gas' (different syntax/mnemonics) or which
-# would have different results if we did (relocatable symbols).
+# be assembled with `gas' (because of different mnemonics or
+# syntax) or which would produce different results if they
+# can (because, e.g., they contain relocatable symbols).
 #
 # `as' must already be built in the parent directory.
 
@@ -36,11 +37,12 @@ AS=/usr/bin/as
 # because typing them makes anyone (read: me) go cross-eyed.
 
 TESTS="		adc	add	and 	cmov	\
-		cmp	dec	inc 	lea	\
-		misc	mov	movsx	movzx	\
-		mul	neg	not	or	\
-		pop	push    sbb	set	\
-		shift 	sub	test	xor	"
+		cmp	dec	div	inc 	\
+		lea	misc	mov	movsx	\
+		movzx	mul	neg	not	\
+		or	pop	push    sbb	\
+		set	shift 	sub	test	\
+		xor				"
 
 for TEST in $TESTS
 do

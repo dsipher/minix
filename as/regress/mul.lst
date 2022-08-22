@@ -1,0 +1,53 @@
+
+
+mul.s
+
+   1  000000  f6e9              	imulb %cl
+   2  000002  666bc864          	imulw $100, %ax, %cx
+   3  000006  6669c8c800        	imulw $200, %ax, %cx
+   4  00000b  6b85ccfdffff0a    	imull $10,-564(%rbp),%eax
+   5  000012  6b431803          	imull $3,24(%rbx),%eax
+   6  000016  6bc01f            	imull $31,%eax,%eax
+   7  000019  6bc03c            	imull $60,%eax,%eax
+   8  00001c  0faff8            	imull %eax,%edi
+   9  00001f  0fafd0            	imull %eax,%edx
+  10  000022  0faff0            	imull %eax,%esi
+  11  000025  440fafe0          	imull %eax,%r12d
+  12  000029  0fafc3            	imull %ebx,%eax
+  13  00002c  0fafcb            	imull %ebx,%ecx
+  14  00002f  0faffb            	imull %ebx,%edi
+  15  000032  0fafc1            	imull %ecx,%eax
+  16  000035  0fafd1            	imull %ecx,%edx
+  17  000038  0fafc6            	imull %esi,%eax
+  18  00003b  440fafc6          	imull %esi,%r8d
+  19  00003f  6bc864            	imull $100, %eax, %ecx
+  20  000042  4569f8c8000000    	imull $200, %r8d, %r15d
+  21  000049  410fafc4          	imull %r12d,%eax
+  22  00004d  410fafcd          	imull %r13d,%ecx
+  23  000051  410faffd          	imull %r13d,%edi
+  24  000055  410fafd5          	imull %r13d,%edx
+  25  000059  450fafe5          	imull %r13d,%r12d
+  26  00005d  410fafc6          	imull %r14d,%eax
+  27  000061  410fafde          	imull %r14d,%ebx
+  28  000065  410fafce          	imull %r14d,%ecx
+  29  000069  410fafd6          	imull %r14d,%edx
+  30  00006d  410faff6          	imull %r14d,%esi
+  31  000071  410fafd0          	imull %r8d,%edx
+  32  000075  0faf4dfc          	imull -4(%rbp),%ecx
+  33  000079  440faf65f8        	imull -8(%rbp),%r12d
+  34  00007e  410faf5c2404      	imull 4(%r12),%ebx
+  35  000084  486bc03c          	imulq $60,%rax,%rax
+  36  000088  4869c058020000    	imulq $600,%rax,%rax
+  37  00008f  490fafc4          	imulq %r12,%rax
+  38  000093  4d0fafe5          	imulq %r13,%r12
+  39  000097  490faff6          	imulq %r14,%rsi
+  40  00009b  490fafc7          	imulq %r15,%rax
+  41  00009f  4c0fafe8          	imulq %rax,%r13
+  42  0000a3  480fafc1          	imulq %rcx,%rax
+  43  0000a7  480fafc7          	imulq %rdi,%rax
+  44  0000ab  480fafcf          	imulq %rdi,%rcx
+  45  0000af  480fafca          	imulq %rdx,%rcx
+  46  0000b3  480faff2          	imulq %rdx,%rsi
+  47  0000b7  4c0fafde          	imulq %rsi,%r11
+  48  0000bb  480faf4e10        	imulq 16(%rsi),%rcx
+  49  0000c0                    

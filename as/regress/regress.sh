@@ -39,8 +39,8 @@ TESTS="		adc	add	and 	cmov	\
 		cmp	dec	inc 	lea	\
 		misc	mov	movsx	movzx	\
 		neg	not	or	pop	\
-		push    sbb	set	sub	\
-		test	xor			"
+		push    sbb	set	shift 	\
+		sub	test	xor		"
 
 for TEST in $TESTS
 do

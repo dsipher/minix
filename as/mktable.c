@@ -55,6 +55,8 @@ struct { const char *text; const char *template; } insns[] =
     {   "addw",         0               },
     {   "addl",         0               },
     {   "addq",         0               },
+    {   "addss",        0               },
+    {   "addsd",        0               },
     {   "andb",         0               },
     {   "andw",         0               },
     {   "andl",         0               },

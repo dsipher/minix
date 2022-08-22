@@ -54,8 +54,9 @@
 %type<i>        data_op data_def
 %type<o>        expr static_expr
 %type<o>        operand imm indirect
-%type<o>        reg reg8 reg16 reg32 reg64 sreg
+%type<o>        reg reg8 reg16 reg32 reg64
 %type<o>        mem disp base index scale
+%type<o>        sreg xreg
 
 %left           '+' '-'
 
@@ -229,6 +230,7 @@ operand         :   reg
                 |   imm
                 |   mem
                 |   sreg
+                |   xreg
                 |   indirect { $1->classes &= ~(O_REL | O_ABS); $$ = $1; }
                 ;
 
@@ -418,6 +420,24 @@ sreg            :   CS      {   $$ = REG(O_SEG_2,               CS);    }
                 |   ES      {   $$ = REG(O_SEG_2 | O_NOT_CS,    ES);    }
                 |   FS      {   $$ = REG(O_SEG_3 | O_NOT_CS,    FS);    }
                 |   GS      {   $$ = REG(O_SEG_3 | O_NOT_CS,    GS);    }
+                ;
+
+xreg            :   XMM0    {   $$ = REG(O_XMM,                 XMM0);  }
+                |   XMM1    {   $$ = REG(O_XMM,                 XMM1);  }
+                |   XMM2    {   $$ = REG(O_XMM,                 XMM2);  }
+                |   XMM3    {   $$ = REG(O_XMM,                 XMM3);  }
+                |   XMM4    {   $$ = REG(O_XMM,                 XMM4);  }
+                |   XMM5    {   $$ = REG(O_XMM,                 XMM5);  }
+                |   XMM6    {   $$ = REG(O_XMM,                 XMM6);  }
+                |   XMM7    {   $$ = REG(O_XMM,                 XMM7);  }
+                |   XMM8    {   $$ = REG(O_XMM,                 XMM8);  }
+                |   XMM9    {   $$ = REG(O_XMM,                 XMM9);  }
+                |   XMM10   {   $$ = REG(O_XMM,                 XMM10); }
+                |   XMM11   {   $$ = REG(O_XMM,                 XMM11); }
+                |   XMM12   {   $$ = REG(O_XMM,                 XMM12); }
+                |   XMM13   {   $$ = REG(O_XMM,                 XMM13); }
+                |   XMM14   {   $$ = REG(O_XMM,                 XMM14); }
+                |   XMM15   {   $$ = REG(O_XMM,                 XMM15); }
                 ;
 
 %%

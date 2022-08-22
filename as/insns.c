@@ -205,6 +205,20 @@ struct insn i_addq[] =
     { 0 }
 };
 
+struct insn i_addss[] =
+{
+    { I_PREFIX_F3, 3, { 0x0F, 0x58, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_addsd[] =
+{
+    { I_PREFIX_F2, 3, { 0x0F, 0x58, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_andb[] =
 {
     { 0,         1, { 0x24       }, { { O_ACC_8                  },

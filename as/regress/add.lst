@@ -258,3 +258,8 @@ add.s
  254  0003bb  49037f08          	addq 8(%r15),%rdi
  255  0003bf  48034a08          	addq 8(%rdx),%rcx
  256  0003c3                    
+ 257  0003c3  f3440f58c1        	addss %xmm1, %xmm8
+ 258  0003c8  f30f58e8          	addss %xmm0, %xmm5
+ 259  0003cc  f2440f58f9        	addsd %xmm1, %xmm15
+ 260  0003d1  f20f58540d10      	addsd 16(%rbp, %rcx), %xmm2
+ 261  0003d7                    

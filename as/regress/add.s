@@ -253,3 +253,8 @@
 	addq 8(%r14),%rax
 	addq 8(%r15),%rdi
 	addq 8(%rdx),%rcx
+
+	addss %xmm1, %xmm8
+	addss %xmm0, %xmm5
+	addsd %xmm1, %xmm15
+	addsd 16(%rbp, %rcx), %xmm2

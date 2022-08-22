@@ -937,6 +937,27 @@ struct insn i_js[] =
     { 0 }
 };
 
+struct insn i_leaw[] =
+{
+    { I_DATA_16,    2, { 0x8D, 0x00 }, { { O_GPR_16, F_MID   },
+                                         { O_MEM,    F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_leal[] =
+{
+    { I_DATA_32,    2, { 0x8D, 0x00 }, { { O_GPR_32, F_MID   },
+                                         { O_MEM,    F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_leaq[] =
+{
+    { I_DATA_64,    2, { 0x8D, 0x00 }, { { O_GPR_64, F_MID   },
+                                         { O_MEM,    F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_lock[]    =   { { 0, 1, { 0xF0 } }, { 0 } };
 
 struct insn i_negb[] =

@@ -36,9 +36,9 @@ AS=/usr/bin/as
 # because typing them makes anyone (read: me) go cross-eyed.
 
 TESTS="		adc	add	and 	cmov	\
-		cmp	misc	neg	not	\
-		or	pop	push    sub	\
-		xor	"
+		cmp	lea	misc	neg	\
+		not	or	pop	push    \
+		sub	xor			"
 
 for TEST in $TESTS
 do
@@ -59,7 +59,7 @@ do
 	cmp $TEST.bin $TEST.gas
 done
 
-OTHERS="	seg	jmps						"
+OTHERS="	seg	jmps			"
 
 for OTHER in $OTHERS
 do

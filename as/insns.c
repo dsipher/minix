@@ -1242,6 +1242,58 @@ struct insn i_subq[] =
     { 0 }
 };
 
+struct insn i_testb[] =
+{
+    { 0,         1, { 0xA8       }, { { O_ACC_8                  },
+                                      { O_IMM_8                  } } },
+
+    { 0,         2, { 0xF6, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM },
+                                      { O_IMM_8                  } } },
+
+    { 0,         2, { 0x84, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM },
+                                      { O_GPR_8,         F_MID   } } },
+    { 0 }
+};
+
+struct insn i_testw[] =
+{
+    { I_DATA_16, 1, { 0xA9       }, { { O_ACC_16                    },
+                                      { O_IMM_16                    } } },
+
+    { I_DATA_16, 2, { 0xF7, 0x00 }, { { O_GPR_16 | O_MEM, F_MODRM   },
+                                      { O_IMM_16                    } } },
+
+    { I_DATA_16, 2, { 0x85, 0x00 }, { { O_GPR_16 | O_MEM, F_MODRM   },
+                                      { O_GPR_16, F_MID             } } },
+    { 0 }
+};
+
+struct insn i_testl[] =
+{
+    { I_DATA_32, 1, { 0xA9       }, { { O_ACC_32                    },
+                                      { O_IMM_32                    } } },
+
+    { I_DATA_32, 2, { 0xF7, 0x00 }, { { O_GPR_32 | O_MEM, F_MODRM   },
+                                      { O_IMM_32                    } } },
+
+    { I_DATA_32, 2, { 0x85, 0x00 }, { { O_GPR_32 | O_MEM, F_MODRM   },
+                                      { O_GPR_32, F_MID             } } },
+    { 0 }
+};
+
+struct insn i_testq[] =
+{
+    { I_DATA_64, 1, { 0xA9       }, { { O_ACC_64                  },
+                                      { O_IMM_S32                 } } },
+
+    { I_DATA_64, 2, { 0xF7, 0x00 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_IMM_S32                 } } },
+
+    { I_DATA_64, 2, { 0x85, 0x00 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                      { O_GPR_64, F_MID           } } },
+    { 0 }
+};
+
 struct insn i_xlat[]    =   { { 0, 1, { 0xD7 } }, { 0 } };
 
 struct insn i_xorb[] =

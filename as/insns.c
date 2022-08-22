@@ -1302,6 +1302,102 @@ struct insn i_seg[] =
     { 0 }
 };
 
+struct insn i_setb[] =
+{
+    { 0, 3, { 0x0F, 0x92, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setbe[] =
+{
+    { 0, 3, { 0x0F, 0x96, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setl[] =
+{
+    { 0, 3, { 0x0F, 0x9C, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setle[] =
+{
+    { 0, 3, { 0x0F, 0x9E, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setnb[] =
+{
+    { 0, 3, { 0x0F, 0x93, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setnbe[] =
+{
+    { 0, 3, { 0x0F, 0x97, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setnl[] =
+{
+    { 0, 3, { 0x0F, 0x9D, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setnle[] =
+{
+    { 0, 3, { 0x0F, 0x9F, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setno[] =
+{
+    { 0, 3, { 0x0F, 0x91, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setnp[] =
+{
+    { 0, 3, { 0x0F, 0x9B, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setns[] =
+{
+    { 0, 3, { 0x0F, 0x99, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setnz[] =
+{
+    { 0, 3, { 0x0F, 0x95, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_seto[] =
+{
+    { 0, 3, { 0x0F, 0x90, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setp[] =
+{
+    { 0, 3, { 0x0F, 0x9A, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_sets[] =
+{
+    { 0, 3, { 0x0F, 0x98, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_setz[] =
+{
+    { 0, 3, { 0x0F, 0x94, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_stc[]     =   { { 0, 1, { 0xF9 } }, { 0 } };
 struct insn i_std[]     =   { { 0, 1, { 0xFD } }, { 0 } };
 struct insn i_sti[]     =   { { 0, 1, { 0xFB } }, { 0 } };

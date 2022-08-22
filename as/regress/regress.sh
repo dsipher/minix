@@ -36,9 +36,10 @@ AS=/usr/bin/as
 # because typing them makes anyone (read: me) go cross-eyed.
 
 TESTS="		adc	add	and 	cmov	\
-		cmp	lea	misc	neg	\
-		not	or	pop	push    \
-		sub	test	xor		"
+		cmp	dec	inc 	lea	\
+		misc	neg	not	or	\
+		pop	push    sub	test	\
+		xor				"
 
 for TEST in $TESTS
 do

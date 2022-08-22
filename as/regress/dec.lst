@@ -1,0 +1,76 @@
+
+
+dec.s
+
+   1  000000  fec8              	decb %al
+   2  000002  ffc8              	decl %eax
+   3  000004  ffcb              	decl %ebx
+   4  000006  ffc9              	decl %ecx
+   5  000008  ffcf              	decl %edi
+   6  00000a  ffca              	decl %edx
+   7  00000c  ffce              	decl %esi
+   8  00000e  41ffcc            	decl %r12d
+   9  000011  41ffcd            	decl %r13d
+  10  000014  41ffce            	decl %r14d
+  11  000017  41ffc8            	decl %r8d
+  12  00001a  41ff0c24          	decl (%r12)
+  13  00001e  41ff4d00          	decl (%r13)
+  14  000022  41ff0e            	decl (%r14)
+  15  000025  41ff0f            	decl (%r15)
+  16  000028  ff08              	decl (%rax)
+  17  00002a  ff0b              	decl (%rbx)
+  18  00002c  ff09              	decl (%rcx)
+  19  00002e  ff0f              	decl (%rdi)
+  20  000030  ff0e              	decl (%rsi)
+  21  000032  ff4de8            	decl -24(%rbp)
+  22  000035  ff4de4            	decl -28(%rbp)
+  23  000038  ff4930            	decl 48(%rcx)
+  24  00003b  49ffcc            	decq %r12
+  25  00003e  49ffcd            	decq %r13
+  26  000041  49ffcf            	decq %r15
+  27  000044  48ffc8            	decq %rax
+  28  000047  48ffcb            	decq %rbx
+  29  00004a  48ffc9            	decq %rcx
+  30  00004d  48ffcf            	decq %rdi
+  31  000050  48ffca            	decq %rdx
+  32  000053  48ffce            	decq %rsi
+  33  000056  48ff4b08          	decq 8(%rbx)
+  34  00005a  48ff4f58          	decq 88(%rdi)
+  35  00005e                    
+  36  00005e                    .code16
+  37  00005e                    
+  38  00005e  fec8                      decb %al
+  39  000060  6648                      decl %eax
+  40  000062  664b                      decl %ebx
+  41  000064  6649                      decl %ecx
+  42  000066  664f                      decl %edi
+  43  000068  664a                      decl %edx
+  44  00006a  664e                      decl %esi
+  45  00006c  66ff0f                    decl (%bx)
+  46  00006f  66ff0c                    decl (%si)
+  47  000072  ff08                      decw (%bx,%si)
+  48  000074  66ff0a                    decl (%bp,%si)
+  49  000077  66ff490a                  decl 10(%bx,%di)
+  50  00007b  ff4ee8                    decw -24(%bp)
+  51  00007e  66ff4ee4                  decl -28(%bp)
+  52  000082  66ff4d30                  decl 48(%di)
+  53  000086                    
+  54  000086                    .code32
+  55  000086                    
+  56  000086  fec8                      decb %al
+  57  000088  48                        decl %eax
+  58  000089  4b                        decl %ebx
+  59  00008a  49                        decl %ecx
+  60  00008b  4f                        decl %edi
+  61  00008c  4a                        decl %edx
+  62  00008d  4e                        decl %esi
+  63  00008e  ff08                      decl (%eax)
+  64  000090  66ff0b                    decw (%ebx)
+  65  000093  ff09                      decl (%ecx)
+  66  000095  66ff0f                    decw (%edi)
+  67  000098  ff0e                      decl (%esi)
+  68  00009a  ff4de8                    decl -24(%ebp)
+  69  00009d  ff4de4                    decl -28(%ebp)
+  70  0000a0  ff4930                    decl 48(%ecx)
+  71  0000a3                    
+  72  0000a3                    

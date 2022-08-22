@@ -1,0 +1,102 @@
+
+
+inc.s
+
+   1  000000  fec0              	incb %al
+   2  000002  ffc0              	incl %eax
+   3  000004  ffc3              	incl %ebx
+   4  000006  ffc1              	incl %ecx
+   5  000008  ffc7              	incl %edi
+   6  00000a  ffc2              	incl %edx
+   7  00000c  ffc6              	incl %esi
+   8  00000e  41ffc2            	incl %r10d
+   9  000011  41ffc3            	incl %r11d
+  10  000014  41ffc4            	incl %r12d
+  11  000017  41ffc5            	incl %r13d
+  12  00001a  41ffc6            	incl %r14d
+  13  00001d  41ffc7            	incl %r15d
+  14  000020  41ffc0            	incl %r8d
+  15  000023  41ffc1            	incl %r9d
+  16  000026  ff06              	incl (%rsi)
+  17  000028  ff45f4            	incl -12(%rbp)
+  18  00002b  ff856cffffff      	incl -148(%rbp)
+  19  000031  ff45ec            	incl -20(%rbp)
+  20  000034  ff8520ffffff      	incl -224(%rbp)
+  21  00003a  ff851cffffff      	incl -228(%rbp)
+  22  000040  ff45e4            	incl -28(%rbp)
+  23  000043  ff45e0            	incl -32(%rbp)
+  24  000046  ff45fc            	incl -4(%rbp)
+  25  000049  ff45d4            	incl -44(%rbp)
+  26  00004c  ff85f0fdffff      	incl -528(%rbp)
+  27  000052  ff85ecfdffff      	incl -532(%rbp)
+  28  000058  ff85e8fdffff      	incl -536(%rbp)
+  29  00005e  ff85e0fdffff      	incl -544(%rbp)
+  30  000064  ff85dcfdffff      	incl -548(%rbp)
+  31  00006a  ff45a0            	incl -96(%rbp)
+  32  00006d  41ff470c          	incl 12(%r15)
+  33  000071  ff4120            	incl 32(%rcx)
+  34  000074  41ff442404        	incl 4(%r12)
+  35  000079  ff4130            	incl 48(%rcx)
+  36  00007c  49ffc4            	incq %r12
+  37  00007f  49ffc5            	incq %r13
+  38  000082  49ffc6            	incq %r14
+  39  000085  49ffc7            	incq %r15
+  40  000088  49ffc0            	incq %r8
+  41  00008b  49ffc1            	incq %r9
+  42  00008e  48ffc0            	incq %rax
+  43  000091  48ffc3            	incq %rbx
+  44  000094  48ffc1            	incq %rcx
+  45  000097  48ffc7            	incq %rdi
+  46  00009a  48ffc2            	incq %rdx
+  47  00009d  48ffc6            	incq %rsi
+  48  0000a0  48ff8540ffffff    	incq -192(%rbp)
+  49  0000a7  48ff45f8          	incq -8(%rbp)
+  50  0000ab  48ff4510          	incq 16(%rbp)
+  51  0000af  48ff4520          	incq 32(%rbp)
+  52  0000b3  66ffc1            	incw %cx
+  53  0000b6  66ffc7            	incw %di
+  54  0000b9  66ffc6            	incw %si
+  55  0000bc  6641ff0446        	incw (%r14,%rax,2)
+  56  0000c1  66ff044b          	incw (%rbx,%rcx,2)
+  57  0000c5  6642ff0471        	incw (%rcx,%r14,2)
+  58  0000ca  66ff044e          	incw (%rsi,%rcx,2)
+  59  0000ce                    
+  60  0000ce                    .code16
+  61  0000ce                    
+  62  0000ce  fec0                      incb %al
+  63  0000d0  6640                      incl %eax
+  64  0000d2  6643                      incl %ebx
+  65  0000d4  6641                      incl %ecx
+  66  0000d6  6647                      incl %edi
+  67  0000d8  6642                      incl %edx
+  68  0000da  6646                      incl %esi
+  69  0000dc  41                        incw %cx
+  70  0000dd  47                        incw %di
+  71  0000de  46                        incw %si
+  72  0000df                    
+  73  0000df                    .code32
+  74  0000df  ff06                      incl (%esi)
+  75  0000e1  ff45f4                    incl -12(%ebp)
+  76  0000e4  ff856cffffff              incl -148(%ebp)
+  77  0000ea  ff45ec                    incl -20(%ebp)
+  78  0000ed  ff8520ffffff              incl -224(%ebp)
+  79  0000f3  ff851cffffff              incl -228(%ebp)
+  80  0000f9  ff45e4                    incl -28(%ebp)
+  81  0000fc  ff45e0                    incl -32(%ebp)
+  82  0000ff  ff45fc                    incl -4(%ebp)
+  83  000102  ff45d4                    incl -44(%ebp)
+  84  000105  ff85f0fdffff              incl -528(%ebp)
+  85  00010b  ff85ecfdffff              incl -532(%ebp)
+  86  000111  ff85e8fdffff              incl -536(%ebp)
+  87  000117  ff85e0fdffff              incl -544(%ebp)
+  88  00011d  ff85dcfdffff              incl -548(%ebp)
+  89  000123  ff45a0                    incl -96(%ebp)
+  90  000126  ff4120                    incl 32(%ecx)
+  91  000129  ff4130                    incl 48(%ecx)
+  92  00012c  6641                      incw %cx
+  93  00012e  6647                      incw %di
+  94  000130  6646                      incw %si
+  95  000132  66ff044b                  incw (%ebx,%ecx,2)
+  96  000136  66ff044e                  incw (%esi,%ecx,2)
+  97  00013a                    
+  98  00013a                    

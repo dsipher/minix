@@ -3568,6 +3568,16 @@ mov.s
 3404  003e50  488b4b58          	movq 88(%rbx),%rcx
 3405  003e54  488b4360          	movq 96(%rbx),%rax
 3406  003e58                    
-3407  003e58  48c7c000000000    	movq $_bob, %rax
-3408  003e5f                    .globl _bob
-3409  003e5f                    
+3407  003e58  66418ccf                  movw %cs, %r15w
+3408  003e5c  668cd0                    movw %ss, %ax
+3409  003e5f  8cd8                      movl %ds, %eax
+3410  003e61  488cc0                    movq %es, %rax
+3411  003e64  8eda                      movw %dx, %ds
+3412  003e66  418ee8                    movw %r8w, %gs
+3413  003e69                    
+3414  003e69                    .code16
+3415  003e69  8eda              	movw %dx, %ds
+3416  003e6b                    
+3417  003e6b                    .code32
+3418  003e6b  8ec0              	movw %ax, %es
+3419  003e6d                    

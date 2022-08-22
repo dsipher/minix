@@ -3403,3 +3403,16 @@
 	movq 88(%rbx),%rax
 	movq 88(%rbx),%rcx
 	movq 96(%rbx),%rax
+
+        movw %cs, %r15w
+        movw %ss, %ax
+        movl %ds, %eax
+        movq %es, %rax
+        movw %dx, %ds
+        movw %r8w, %gs
+
+.code16
+	movw %dx, %ds
+
+.code32
+	movw %ax, %es

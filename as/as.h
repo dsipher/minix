@@ -236,7 +236,7 @@ extern struct name *table[NR_BUCKETS];
             but     pushq $bob+8    almost certainly should not be */
 
 #define O_PURE          0x080000000L    /* operand w/o symbol */
-#define O_NOT_CS        0x100000000L    /* not %cs (for O_SEG_2) */
+#define O_NOT_CS        0x100000000L    /* not %cs (O_SEG_2/3) */
 
 struct operand
 {

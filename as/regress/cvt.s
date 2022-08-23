@@ -40,3 +40,14 @@
 	cvtsi2sdq 8(%rbx,%r10),%xmm15
 	cvtsi2sdl 8(%rbx,%r8),%xmm0
 	cvtsi2sdl 8(%rdi,%rsi),%xmm2
+
+        cvttss2sil -16(%rbp),%r12d
+        cvttss2sil %xmm1,%ecx
+        cvttss2siq %xmm10,%rax
+        cvttss2siq %xmm1,%rcx
+
+        cvttsd2sil -16(%rbp),%r12d
+        cvttsd2sil %xmm15,%ecx
+        cvttsd2siq %xmm1,%rax
+        cvttsd2siq %xmm1,%rcx
+

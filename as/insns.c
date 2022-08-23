@@ -836,6 +836,36 @@ struct insn i_cvtsi2sdq[] =
     { 0 }
 };
 
+struct insn i_cvttss2sil[] =
+{
+    { I_PREFIX_F3, 3, { 0x0F, 0x2C, 0x00 }, { { O_GPR_32,      F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cvttss2siq[] =
+{
+    { I_PREFIX_F3 |
+      I_DATA_64,  3, { 0x0F, 0x2C, 0x00 }, { { O_GPR_64,      F_MID   },
+                                             { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cvttsd2sil[] =
+{
+    { I_PREFIX_F2, 3, { 0x0F, 0x2C, 0x00 }, { { O_GPR_32,      F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cvttsd2siq[] =
+{
+    { I_PREFIX_F2 |
+      I_DATA_64,  3, { 0x0F, 0x2C, 0x00 }, { { O_GPR_64,      F_MID   },
+                                             { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_cwtd[] = { { I_DATA_16, 1, { 0x99 } }, { 0 } };
 
 struct insn i_decb[] =

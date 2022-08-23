@@ -45,3 +45,14 @@ cvt.s
   41  0000c4  f2420f2a440308    	cvtsi2sdl 8(%rbx,%r8),%xmm0
   42  0000cb  f20f2a543708      	cvtsi2sdl 8(%rdi,%rsi),%xmm2
   43  0000d1                    
+  44  0000d1  f3440f2c65f0              cvttss2sil -16(%rbp),%r12d
+  45  0000d7  f30f2cc9                  cvttss2sil %xmm1,%ecx
+  46  0000db  f3490f2cc2                cvttss2siq %xmm10,%rax
+  47  0000e0  f3480f2cc9                cvttss2siq %xmm1,%rcx
+  48  0000e5                    
+  49  0000e5  f2440f2c65f0              cvttsd2sil -16(%rbp),%r12d
+  50  0000eb  f2410f2ccf                cvttsd2sil %xmm15,%ecx
+  51  0000f0  f2480f2cc1                cvttsd2siq %xmm1,%rax
+  52  0000f5  f2480f2cc9                cvttsd2siq %xmm1,%rcx
+  53  0000fa                    
+  54  0000fa                    

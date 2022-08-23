@@ -12,3 +12,4 @@ rm -rf cc1/regress/stage3/include
 
 (cd cpp; make clean)
 (cd libc; make clean)
+(cd yacc; make clean)

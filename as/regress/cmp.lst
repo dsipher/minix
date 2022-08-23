@@ -1554,3 +1554,11 @@ cmp.s
 1542  0019bb  663b0c42          	cmpw (%rdx,%rax,2),%cx
 1543  0019bf  663b4324          	cmpw 36(%rbx),%ax
 1544  0019c3                    
+1545  0019c3  0f2ec8            	ucomiss %xmm0,%xmm1
+1546  0019c6  450f2e0424        	ucomiss (%r12),%xmm8
+1547  0019cb  440f2e5710        	ucomiss 16(%rdi),%xmm10
+1548  0019d0                    
+1549  0019d0  660f2ec8          	ucomisd %xmm0,%xmm1
+1550  0019d4  66450f2e0424      	ucomisd (%r12),%xmm8
+1551  0019da  660f2e4710        	ucomisd 16(%rdi),%xmm0
+1552  0019df                    

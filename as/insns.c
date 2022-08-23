@@ -2091,6 +2091,20 @@ struct insn i_testq[] =
     { 0 }
 };
 
+struct insn i_ucomiss[] =
+{
+    { 0, 3, { 0x0F, 0x2E, 0x00 }, { { O_XMM,         F_MID   },
+                                    { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_ucomisd[] =
+{
+    { I_PREFIX_66, 3, { 0x0F, 0x2E, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_xlat[]    =   { { 0, 1, { 0xD7 } }, { 0 } };
 
 struct insn i_xorb[] =

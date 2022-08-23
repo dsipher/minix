@@ -356,6 +356,8 @@ struct { const char *text; const char *template; } insns[] =
     {   "testw",        0               },
     {   "testl",        0               },
     {   "testq",        0               },
+    {   "ucomiss",      0               },
+    {   "ucomisd",      0               },
     {   "xlat",         0               },
     {   "xorb",         0               },
     {   "xorw",         0               },

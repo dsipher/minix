@@ -1541,3 +1541,11 @@
 	cmpw (%rax,%rbx,2),%cx
 	cmpw (%rdx,%rax,2),%cx
 	cmpw 36(%rbx),%ax
+
+	ucomiss %xmm0,%xmm1
+	ucomiss (%r12),%xmm8
+	ucomiss 16(%rdi),%xmm10
+
+	ucomisd %xmm0,%xmm1
+	ucomisd (%r12),%xmm8
+	ucomisd 16(%rdi),%xmm0

@@ -791,6 +791,21 @@ struct insn i_cmpsl[] = { { I_DATA_32, 1, { 0xA7 } }, { 0 } };
 struct insn i_cmpsq[] = { { I_DATA_64, 1, { 0xA7 } }, { 0 } };
 
 struct insn i_cqto[] = { { I_DATA_64, 1, { 0x99 } }, { 0 } };
+
+struct insn i_cvtss2sd[] =
+{
+    { I_PREFIX_F3, 3, { 0x0F, 0x5A, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_cvtsd2ss[] =
+{
+    { I_PREFIX_F2, 3, { 0x0F, 0x5A, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_cwtd[] = { { I_DATA_16, 1, { 0x99 } }, { 0 } };
 
 struct insn i_decb[] =

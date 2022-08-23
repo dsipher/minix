@@ -173,6 +173,8 @@ struct { const char *text; const char *template; } insns[] =
     {   "cmpsl",        0               },
     {   "cmpsq",        0               },
     {   "cqto",         0               },
+    {   "cvtsd2ss",     0               },
+    {   "cvtss2sd",     0               },
     {   "cwtd",         0               },
     {   "decb",         0               },
     {   "decw",         0               },

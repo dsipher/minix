@@ -37,12 +37,12 @@ AS=/usr/bin/as
 # because typing them makes anyone (read: me) go cross-eyed.
 
 TESTS="		adc	add	and 	cmov	\
-		cmp	dec	div	inc 	\
-		lea	misc	mov	movsx	\
-		movzx	mul	neg	not	\
-		or	pop	push    sbb	\
-		set	shift 	sub	test	\
-		xor				"
+		cmp	cvt	dec	div	\
+		inc 	lea	misc	mov	\
+		movsx	movzx	mul	neg	\
+		not	or	pop	push    \
+		sbb	set	shift 	sub	\
+		test	xor			"
 
 for TEST in $TESTS
 do

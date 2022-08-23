@@ -250,6 +250,8 @@ struct { const char *text; const char *template; } insns[] =
     {   "movsl",        0               },
     {   "movslq",       0               },
     {   "movsq",        0               },
+    {   "movss",        0               },
+    {   "movsd",        0               },
     {   "movw",         0               },
     {   "movzbw",       0               },
     {   "movzbl",       0               },

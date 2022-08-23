@@ -1175,6 +1175,28 @@ struct insn i_movsw[] = { { I_DATA_16, 1, { 0xA5 } }, { 0 } };
 struct insn i_movsl[] = { { I_DATA_32, 1, { 0xA5 } }, { 0 } };
 struct insn i_movsq[] = { { I_DATA_64, 1, { 0xA5 } }, { 0 } };
 
+struct insn i_movss[] =
+{
+    { I_PREFIX_F3, 3, { 0x0F, 0x10, 0x00 }, { { O_XMM,         F_MID },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+
+    { I_PREFIX_F3, 3, { 0x0F, 0x11, 0x00 }, { { O_XMM | O_MEM, F_MODRM },
+                                              { O_XMM,         F_MID   } } },
+
+    { 0 }
+};
+
+struct insn i_movsd[] =
+{
+    { I_PREFIX_F2, 3, { 0x0F, 0x10, 0x00 }, { { O_XMM,         F_MID },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+
+    { I_PREFIX_F2, 3, { 0x0F, 0x11, 0x00 }, { { O_XMM | O_MEM, F_MODRM },
+                                              { O_XMM,         F_MID   } } },
+
+    { 0 }
+};
+
 struct insn i_movb[] =
 {
     { 0, 2, { 0x88, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM },

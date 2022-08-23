@@ -167,3 +167,9 @@ sub.s
  163  00026f  6629fe            	subw %di,%si
  164  000272  662b08            	subw (%rax),%cx
  165  000275                    
+ 166  000275  f3440f5cc1                subss %xmm1, %xmm8
+ 167  00027a  f30f5ce8                  subss %xmm0, %xmm5
+ 168  00027e  f2440f5cf9                subsd %xmm1, %xmm15
+ 169  000283  f20f5c540d10              subsd 16(%rbp, %rcx), %xmm2
+ 170  000289                    
+ 171  000289                    

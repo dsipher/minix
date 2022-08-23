@@ -162,3 +162,9 @@
 	subw $2,%cx
 	subw %di,%si
 	subw (%rax),%cx
+
+        subss %xmm1, %xmm8
+        subss %xmm0, %xmm5
+        subsd %xmm1, %xmm15
+        subsd 16(%rbp, %rcx), %xmm2
+

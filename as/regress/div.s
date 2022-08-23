@@ -31,4 +31,7 @@
         idivq 8(%r14)
         idivq 8(%rcx)
 
-
+        divss %xmm1, %xmm8
+        divss %xmm0, %xmm5
+        divsd %xmm1, %xmm15
+        divsd 16(%rbp, %rcx), %xmm2

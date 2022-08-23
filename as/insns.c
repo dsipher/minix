@@ -849,6 +849,20 @@ struct insn i_divq[] =
     { 0 }
 };
 
+struct insn i_divss[] =
+{
+    { I_PREFIX_F3, 3, { 0x0F, 0x5E, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_divsd[] =
+{
+    { I_PREFIX_F2, 3, { 0x0F, 0x5E, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_hlt[]     =   { { 0, 1, { 0xF4 } }, { 0 } };
 
 struct insn i_idivb[] =
@@ -1339,6 +1353,20 @@ struct insn i_mull[] =
 struct insn i_mulq[] =
 {
     { I_DATA_64, 2, { 0xF7, 0x20 }, { { O_GPR_64 | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_mulss[] =
+{
+    { I_PREFIX_F3, 3, { 0x0F, 0x59, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_mulsd[] =
+{
+    { I_PREFIX_F2, 3, { 0x0F, 0x59, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
     { 0 }
 };
 
@@ -1972,6 +2000,20 @@ struct insn i_subq[] =
     { I_DATA_64, 2, { 0x2B, 0x00 }, { { O_GPR_64, F_MID           },
                                       { O_GPR_64 | O_MEM, F_MODRM } } },
 
+    { 0 }
+};
+
+struct insn i_subss[] =
+{
+    { I_PREFIX_F3, 3, { 0x0F, 0x5C, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_subsd[] =
+{
+    { I_PREFIX_F2, 3, { 0x0F, 0x5C, 0x00 }, { { O_XMM,         F_MID   },
+                                              { O_XMM | O_MEM, F_MODRM } } },
     { 0 }
 };
 

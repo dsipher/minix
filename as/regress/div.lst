@@ -35,5 +35,8 @@ div.s
   31  000060  49f77e08                  idivq 8(%r14)
   32  000064  48f77908                  idivq 8(%rcx)
   33  000068                    
-  34  000068                    
-  35  000068                    
+  34  000068  f3440f5ec1                divss %xmm1, %xmm8
+  35  00006d  f30f5ee8                  divss %xmm0, %xmm5
+  36  000071  f2440f5ef9                divsd %xmm1, %xmm15
+  37  000076  f20f5e540d10              divsd 16(%rbp, %rcx), %xmm2
+  38  00007c                    

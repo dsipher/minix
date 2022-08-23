@@ -57,3 +57,8 @@ mul.s
   53  0000cc  4c0fafde          	imulq %rsi,%r11
   54  0000d0  480faf4e10        	imulq 16(%rsi),%rcx
   55  0000d5                    
+  56  0000d5  f3410f59c8                mulss %xmm8, %xmm1
+  57  0000da  f30f59e8                  mulss %xmm0, %xmm5
+  58  0000de  f2440f59f9                mulsd %xmm1, %xmm15
+  59  0000e3  f20f59540d10              mulsd 16(%rbp, %rcx), %xmm2
+  60  0000e9                    

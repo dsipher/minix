@@ -52,3 +52,8 @@
 	imulq %rdx,%rsi
 	imulq %rsi,%r11
 	imulq 16(%rsi),%rcx
+
+        mulss %xmm8, %xmm1
+        mulss %xmm0, %xmm5
+        mulsd %xmm1, %xmm15
+        mulsd 16(%rbp, %rcx), %xmm2

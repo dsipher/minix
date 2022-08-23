@@ -13,4 +13,35 @@ cvt.s
    9  000029  f20f5a4510        	cvtsd2ss 16(%rbp),%xmm0
   10  00002e  f2440f5a7d10      	cvtsd2ss 16(%rbp),%xmm15
   11  000034                    
-  12  000034                    
+  12  000034  f30f2ac0                  cvtsi2ssl %eax,%xmm0
+  13  000038  f30f2ac3                  cvtsi2ssl %ebx,%xmm0
+  14  00003c  f30f2ac1                  cvtsi2ssl %ecx,%xmm0
+  15  000040  f34d0f2ac5                cvtsi2ssq %r13,%xmm8
+  16  000045  f3490f2ac6                cvtsi2ssq %r14,%xmm0
+  17  00004a  f3480f2ac0                cvtsi2ssq %rax,%xmm0
+  18  00004f  f3480f2ac8                cvtsi2ssq %rax,%xmm1
+  19  000054  f34c0f2ac0                cvtsi2ssq %rax,%xmm8
+  20  000059  f3480f2ac1                cvtsi2ssq %rcx,%xmm0
+  21  00005e  f3480f2a02                cvtsi2ssq (%rdx),%xmm0
+  22  000063  f30f2a4720                cvtsi2ssl 32(%rdi),%xmm0
+  23  000068  f34c0f2a5038              cvtsi2ssq 56(%rax),%xmm10
+  24  00006e  f3420f2a541308            cvtsi2ssl 8(%rbx,%r10),%xmm2
+  25  000075  f34a0f2a440308            cvtsi2ssq 8(%rbx,%r8),%xmm0
+  26  00007c  f3480f2a543708            cvtsi2ssq 8(%rdi,%rsi),%xmm2
+  27  000083                    
+  28  000083  f20f2ac0          	cvtsi2sdl %eax,%xmm0
+  29  000087  f20f2ac3          	cvtsi2sdl %ebx,%xmm0
+  30  00008b  f20f2ac1          	cvtsi2sdl %ecx,%xmm0
+  31  00008f  f24d0f2ac5        	cvtsi2sdq %r13,%xmm8
+  32  000094  f2490f2ac6        	cvtsi2sdq %r14,%xmm0
+  33  000099  f24c0f2ad0        	cvtsi2sdq %rax,%xmm10
+  34  00009e  f2480f2ac8        	cvtsi2sdq %rax,%xmm1
+  35  0000a3  f24c0f2ac0        	cvtsi2sdq %rax,%xmm8
+  36  0000a8  f2480f2ac1        	cvtsi2sdq %rcx,%xmm0
+  37  0000ad  f2480f2a02        	cvtsi2sdq (%rdx),%xmm0
+  38  0000b2  f2480f2a4720      	cvtsi2sdq 32(%rdi),%xmm0
+  39  0000b8  f20f2a4038        	cvtsi2sdl 56(%rax),%xmm0
+  40  0000bd  f24e0f2a7c1308    	cvtsi2sdq 8(%rbx,%r10),%xmm15
+  41  0000c4  f2420f2a440308    	cvtsi2sdl 8(%rbx,%r8),%xmm0
+  42  0000cb  f20f2a543708      	cvtsi2sdl 8(%rdi,%rsi),%xmm2
+  43  0000d1                    

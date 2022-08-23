@@ -36,7 +36,7 @@
 struct name *table[NR_BUCKETS];
 
 /* these need not be in any particular order, but we keep them
-   alphabetical so we don't get lost.  for each mnemonic there
+   alphabeticalish to ease maintenance. for each mnemonic there
    must be a matching set of templates named i_<template>[] in
    insns.c. if `template' is 0, it's the same as `text' (which
    is the usual case, but some insns have multiple mnemonics). */
@@ -174,6 +174,10 @@ struct { const char *text; const char *template; } insns[] =
     {   "cmpsq",        0               },
     {   "cqto",         0               },
     {   "cvtsd2ss",     0               },
+    {   "cvtsi2sdl",    0               },
+    {   "cvtsi2sdq",    0               },
+    {   "cvtsi2ssl",    0               },
+    {   "cvtsi2ssq",    0               },
     {   "cvtss2sd",     0               },
     {   "cwtd",         0               },
     {   "decb",         0               },

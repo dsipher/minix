@@ -83,14 +83,15 @@ static void update0(struct block *b, int i)
 static void meet0(struct block *b)
 {
     int n;
-
-    b->zlq = 0;
+    int new_zlq = 0;
 
     for (n = 0; n < NR_PREDS(b); ++n)
         if (n == 0)
-            b->zlq = PRED(b, n)->zlq;
+            new_zlq = PRED(b, n)->zlq;
         else
-            b->zlq &= PRED(b, n)->zlq;
+            new_zlq &= PRED(b, n)->zlq;
+
+    b->zlq = new_zlq;
 }
 
 /* iterative analysis. compute output state from input
@@ -143,6 +144,9 @@ static int zlq1(struct block *b)
    when it is written to as a 32-bit operand. here we perform data-flow
    analysis to determine at which points the last write(s) to a register
    zeroed the upper bits, and use this to eliminate unnecessary MOVZLQs.
+
+   we are not doing proper data-flow analysis here, so the result is too
+   conservative. we need a real lattice to carry data around loops. fix!
 
    by itself, this optimization yields only a modest benefit (we eliminate
    117 insns, ~0.2%, in the regression suite). ultimately, synergy between

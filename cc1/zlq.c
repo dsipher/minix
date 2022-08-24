@@ -73,7 +73,7 @@ static void update0(struct block *b, int i)
     insn_defs(insn, &regs, 0);
 
     FOR_EACH_REG(regs, j, reg)
-        if (reg != dst)
+        if ((reg != dst) && REG_GP(reg))
             CLR(b->zlq, reg);
 }
 

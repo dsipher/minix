@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   ar.c                            tahoe/64 archive and library maintainer
+   ar.c                                                  tahoe/64 archiver
 
 ******************************************************************************
 
@@ -244,7 +244,7 @@ sigdone(int sig)
 int
 getaf(int must)
 {
-    long mbuf;
+    armag_t mbuf;
 
     af = open(arnam, 0);
 
@@ -269,7 +269,7 @@ getaf(int must)
 void
 init(void)
 {
-    static long mbuf = ARMAG;
+    static armag_t mbuf = ARMAG;
 
     tfnam = mktemp(tmpnam);
     close(creat(tfnam, 0600));
@@ -699,7 +699,7 @@ tcmd(void)
 void
 getqf(void)
 {
-    long mbuf;
+    armag_t mbuf;
 
     if ((qf = open(arnam, 2)) < 0) {
         if(!flg['c'-'a'])

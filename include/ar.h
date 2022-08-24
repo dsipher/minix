@@ -46,6 +46,8 @@
     (2) members are aligned to quadword boundaries (not words)
     (3) `ld' does not require (or understand) a __.SYMDEF member */
 
+typedef long armag_t;
+
 #define ARMAG     '<tahar!>'                /* magic quadword */
 #define ARPAD     8                         /* pad alignment */
 

@@ -35,14 +35,11 @@
 
 .text
 
-# void _exit(int status);
+# ssize_t read(int fd, void *buf, size_t count);
 
-.global __exit
+.global _read
 
-__exit:         movl $60, %eax
-
-                # fall though to syscall, which doesn't return. this
-                # is an unnecessary trick to save a couple of bytes...
+_read:          xorl %eax, %eax
 
 # common syscall code. invoke the syscall, then extract
 # errno and set the return value to -1 if an error occurred.
@@ -56,13 +53,6 @@ do_syscall:     syscall
                 movq $-1, %rax
 
 no_error:       ret
-
-# ssize_t read(int fd, void *buf, size_t count);
-
-.global _read
-
-_read:          xorl %eax, %eax
-                jmp do_syscall
 
 # ssize_t write(int fd, const void *buf, size_t count);
 
@@ -179,6 +169,13 @@ _fork:          movl $57, %eax
 .global _execve
 
 _execve:        movl $59, %eax
+                jmp do_syscall
+
+# void _exit(int status);
+
+.global __exit
+
+__exit:         movl $60, %eax
                 jmp do_syscall
 
 # pid_t waitpid(pid_t pid, int *wstatus, int options);

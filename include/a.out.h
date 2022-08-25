@@ -101,13 +101,13 @@ struct exec
 
 /* selectively page-align the offset given, if header `x' has a ZMAGIC. */
 
-#define N_MAYBE_ALIGN(x, a)     ({                                          \
-                                    unsigned _a = (a);                      \
+#define N_MAYBE_ALIGN(x, c)     ({                                          \
+                                    unsigned _c = (c);                      \
                                                                             \
                                     if ((x).a_magic == ZMAGIC)              \
-                                        _a = N_ROUNDUP(_a, A_PAGE_SIZE);    \
+                                        _c = N_ROUNDUP(_c, A_PAGE_SIZE);    \
                                                                             \
-                                    (_a);                                   \
+                                    (_c);                                   \
                                 })
 
 /* compute the file offset to the beginning of the text segment.

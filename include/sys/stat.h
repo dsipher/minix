@@ -131,10 +131,10 @@ struct stat
     blksize_t       st_blksize;
     blkcnt_t        st_blocks;
 
-    time_t          st_atime;           /* these are really */
-    long            st_atimensec;       /* `struct timespec' */
-    time_t          st_mtime;           /* but POSIX says we */
-    long            st_mtimensec;       /* can't import <time.h> */
+    time_t          st_atime;           /* the nsec fields */
+    long            st_atimensec;       /* are non-standard */
+    time_t          st_mtime;           /* but in agreement */
+    long            st_mtimensec;       /* wth the Linux ABI */
     time_t          st_ctime;
     long            st_ctimensec;
 

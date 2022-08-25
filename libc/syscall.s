@@ -39,7 +39,7 @@
 
 .global _read
 
-_read:          xorl %eax, %eax
+_read:          xorl %eax, %eax             # READ
 
 # common syscall code. invoke the syscall, then extract
 # errno and set the return value to -1 if an error occurred.
@@ -58,7 +58,7 @@ no_error:       ret
 
 .global _write
 
-_write:         movl $1, %eax
+_write:         movl $1, %eax               # WRITE
                 jmp do_syscall
 
 # int open(const char *path, int flags);
@@ -69,24 +69,24 @@ _write:         movl $1, %eax
 
 .global _open
 
-_open:          movq 8(%rsp), %rdi          # path
+_open:          movl $2, %eax               # OPEN
+                movq 8(%rsp), %rdi          # path
                 movq 16(%rsp), %rsi         # flags
                 movq 24(%rsp), %rdx         # mode
-                movl $2, %eax               # SYS_OPEN
                 jmp do_syscall
 
 # int close(int fd);
 
 .global _close
 
-_close:         movl $3, %eax               # SYS_CLOSE
+_close:         movl $3, %eax               # CLOSE
                 jmp do_syscall
 
 # int fstat(int fd, struct stat *statbuf);
 
 .global _fstat
 
-_fstat:         movl $5, %eax               # SYS_FSTAT
+_fstat:         movl $5, %eax               # FSTAT
                 jmp do_syscall
 
 # off_t lseek(int fd, off_t offset, int whence);
@@ -101,7 +101,7 @@ _lseek:         movl $8, %eax
 
 .global _mmap
 
-_mmap:          movl $9, %eax               # SYS_MMAP
+_mmap:          movl $9, %eax               # MMAP
                 movq %rcx, %r10
                 jmp do_syscall
 
@@ -109,7 +109,7 @@ _mmap:          movl $9, %eax               # SYS_MMAP
 
 .global ___brk
 
-___brk:         movl $12, %eax
+___brk:         movl $12, %eax              # BRK
                 jmp do_syscall
 
 # int __sigaction(int sig, const struct sigaction *act,
@@ -121,7 +121,7 @@ ___brk:         movl $12, %eax
 
 .global ___sigaction
 
-___sigaction:   movl $13, %eax
+___sigaction:   movl $13, %eax              # RT_SIGACTION
                 movl $8, %r10d
                 jmp do_syscall
 
@@ -129,7 +129,7 @@ ___sigaction:   movl $13, %eax
 
 .global ___sigreturn
 
-___sigreturn:   movl $15, %eax
+___sigreturn:   movl $15, %eax              # RT_SIGRETURN
                 jmp do_syscall
 
 # int ioctl(int fd, int request, const void *argp);
@@ -139,7 +139,7 @@ ___sigreturn:   movl $15, %eax
 
 .global _ioctl
 
-_ioctl:         movl $16, %eax
+_ioctl:         movl $16, %eax              # IOCTL
                 movl %esi, %esi
                 jmp do_syscall
 
@@ -147,35 +147,35 @@ _ioctl:         movl $16, %eax
 
 .global _access
 
-_access:        movl $21, %eax
+_access:        movl $21, %eax              # ACCESS
                 jmp do_syscall
 
 # int getpid(void);
 
 .global _getpid
 
-_getpid:        movl $39, %eax
+_getpid:        movl $39, %eax              # GETPID
                 jmp do_syscall
 
 # pid_t fork(void);
 
 .global _fork
 
-_fork:          movl $57, %eax
+_fork:          movl $57, %eax              # FORK
                 jmp do_syscall
 
 # int execve(const char *pathname, char * const *argv, char * const *envp);
 
 .global _execve
 
-_execve:        movl $59, %eax
+_execve:        movl $59, %eax              # EXECVE
                 jmp do_syscall
 
 # void _exit(int status);
 
 .global __exit
 
-__exit:         movl $60, %eax
+__exit:         movl $60, %eax              # EXIT
                 jmp do_syscall
 
 # pid_t waitpid(pid_t pid, int *wstatus, int options);
@@ -185,7 +185,7 @@ __exit:         movl $60, %eax
 
 .global _waitpid
 
-_waitpid:       movl $61, %eax
+_waitpid:       movl $61, %eax              # WAIT4
                 xorl %r10d, %r10d
                 jmp do_syscall
 
@@ -193,35 +193,35 @@ _waitpid:       movl $61, %eax
 
 .global _kill
 
-_kill:          movl $62, %eax
+_kill:          movl $62, %eax              # KILL
                 jmp do_syscall
 
 # int rename(const char *old, const char *new);
 
 .global _rename
 
-_rename:        movl $82, %eax
+_rename:        movl $82, %eax              # RENAME
                 jmp do_syscall
 
 # int creat(const char *pathname, mode_t mode);
 
 .global _creat
 
-_creat:         movl $85, %eax
+_creat:         movl $85, %eax              # CREAT
                 jmp do_syscall
 
 # int unlink(const char *path);
 
 .global _unlink
 
-_unlink:        movl $87, %eax
+_unlink:        movl $87, %eax              # UNLINK
                 jmp do_syscall
 
 # time_t time(time_t *timer);
 
 .global _time
 
-_time:          movl $201, %eax
+_time:          movl $201, %eax             # TIME
                 jmp do_syscall
 
 # vi: set ts=4 expandtab:

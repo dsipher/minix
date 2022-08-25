@@ -33,8 +33,9 @@
 
 .text
 
-.global cstart
-.global _exit
+.globl cstart
+.globl _main
+.globl _exit
 
 cstart:         popq %rdi                   # argc
                 movq %rsp, %rsi             # argv

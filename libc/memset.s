@@ -13,7 +13,7 @@
 
 # void *memset(void *s, int c, size_t n);
 
-.global _memset
+.globl _memset
 
 _memset:        movq %rsi, %rax         # c
                 andq $0xff, %rax

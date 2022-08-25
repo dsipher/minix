@@ -13,7 +13,7 @@
 
 # void *memcpy(void *s1, const void *s2, size_t n)
 
-.global _memcpy
+.globl _memcpy
 
 _memcpy:        movq %rdx, %rcx             # n
                 movq %rdi, %rax             # must return s1

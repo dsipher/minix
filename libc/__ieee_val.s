@@ -33,8 +33,8 @@
 
 .text
 
-.global ___huge_val
-.global ___frexp_adj
+.globl ___huge_val
+.globl ___frexp_adj
 
 .align 8
 

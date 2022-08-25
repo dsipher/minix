@@ -13,7 +13,7 @@
 
 # void *memmove(void *s1, const void *s2, size_t n)
 
-.global _memmove
+.globl _memmove
 
 _memmove:       movq %rdx, %rcx             # n
                 movq %rdi, %rax             # must return s1

@@ -62,6 +62,8 @@
 	cwtd
 	cltd
 	iret
+	syscall
+	sysret
 
 	stosb
 	stosw
@@ -133,4 +135,3 @@
 	cmpsw
 	cmpsl
 	cmpsq
-

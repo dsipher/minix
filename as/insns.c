@@ -1056,12 +1056,9 @@ struct insn i_incq[] =
     { 0 }
 };
 
-struct insn i_iret[]  =
-{
-    { I_NO_CODE64, 1, { 0xCF } },       /* no REX if not in long mode */
-    { I_DATA_64,   1, { 0xCF } },       /* but always a REX in long mode */
-    { 0 }
-};
+struct insn i_iret[]  = { { I_NO_CODE64, 1, { 0xCF } },
+                          { I_DATA_64,   1, { 0xCF } },
+                          { 0 } };
 
 struct insn i_jb[] =
 {
@@ -2113,6 +2110,12 @@ struct insn i_subsd[] =
                                               { O_XMM | O_MEM, F_MODRM } } },
     { 0 }
 };
+
+struct insn i_syscall[] = { 0, 2, { 0x0F, 0x05 } };
+
+struct insn i_sysret[]  = { { I_NO_CODE64, 2, { 0x0F, 0x07 } },
+                            { I_DATA_64,   2, { 0x0F, 0x07 } },
+                            { 0 } };
 
 struct insn i_testb[] =
 {

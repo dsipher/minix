@@ -66,76 +66,77 @@ misc.s
   62  00005b  6699              	cwtd
   63  00005d  99                	cltd
   64  00005e  cf                	iret
-  65  00005f                    
-  66  00005f  aa                	stosb
-  67  000060  66ab              	stosw
-  68  000062  ab                	stosl
-  69  000063                    
-  70  000063  a4                	movsb
-  71  000064  66a5              	movsw
-  72  000066  a5                	movsl
-  73  000067                    
-  74  000067  ae                	scasb
-  75  000068  66af              	scasw
-  76  00006a  af                	scasl
-  77  00006b                    
-  78  00006b  ac                	lodsb
-  79  00006c  66ad              	lodsw
-  80  00006e  ad                	lodsl
-  81  00006f                    
-  82  00006f  a6                	cmpsb
-  83  000070  66a7              	cmpsw
-  84  000072  a7                	cmpsl
-  85  000073                    
-  86  000073                    .code64
-  87  000073                    
-  88  000073  66410fbdf7                bsrw %r15w, %si
-  89  000078  66440fbde2                bsrw %dx, %r12w
-  90  00007d  480fbdc0                  bsrq %rax,%rax
-  91  000081  0fbdc0                    bsrl %eax,%eax
-  92  000084  480fbcc0                  bsfq %rax,%rax
-  93  000088  0fbcc0                    bsfl %eax,%eax
-  94  00008b  0fbd45fc                  bsrl -4(%rbp),%eax
-  95  00008f  480fbd5058                bsrq 88(%rax),%rdx
-  96  000094  0fbdc8                    bsrl %eax,%ecx
-  97  000097  0fbcc0                    bsfl %eax,%eax
-  98  00009a                    
-  99  00009a  41ffd4                    call *%r12
- 100  00009d  41ffd5                    call *%r13
- 101  0000a0  ffd0                      call *%rax
- 102  0000a2  ffe0                      jmp *%rax
- 103  0000a4  ffe1                      jmp *%rcx
- 104  0000a6  41ffe5                    jmp *%r13
- 105  0000a9  ffe6                      jmp *%rsi
- 106  0000ab                    
- 107  0000ab  6698              	cbtw
- 108  0000ad  6699              	cwtd
- 109  0000af  99                	cltd
- 110  0000b0  4899              	cqto
- 111  0000b2                    
- 112  0000b2  aa                	stosb
- 113  0000b3  66ab              	stosw
- 114  0000b5  ab                	stosl
- 115  0000b6  48ab              	stosq
- 116  0000b8                    
- 117  0000b8  a4                	movsb
- 118  0000b9  66a5              	movsw
- 119  0000bb  a5                	movsl
- 120  0000bc  48a5              	movsq
- 121  0000be                    
- 122  0000be  ae                	scasb
- 123  0000bf  66af              	scasw
- 124  0000c1  af                	scasl
- 125  0000c2  48af              	scasq
- 126  0000c4                    
- 127  0000c4  ac                	lodsb
- 128  0000c5  66ad              	lodsw
- 129  0000c7  ad                	lodsl
- 130  0000c8  48ad              	lodsq
- 131  0000ca                    
- 132  0000ca  a6                	cmpsb
- 133  0000cb  66a7              	cmpsw
- 134  0000cd  a7                	cmpsl
- 135  0000ce  48a7              	cmpsq
- 136  0000d0                    
- 137  0000d0                    
+  65  00005f  0f05              	syscall
+  66  000061  0f07              	sysret
+  67  000063                    
+  68  000063  aa                	stosb
+  69  000064  66ab              	stosw
+  70  000066  ab                	stosl
+  71  000067                    
+  72  000067  a4                	movsb
+  73  000068  66a5              	movsw
+  74  00006a  a5                	movsl
+  75  00006b                    
+  76  00006b  ae                	scasb
+  77  00006c  66af              	scasw
+  78  00006e  af                	scasl
+  79  00006f                    
+  80  00006f  ac                	lodsb
+  81  000070  66ad              	lodsw
+  82  000072  ad                	lodsl
+  83  000073                    
+  84  000073  a6                	cmpsb
+  85  000074  66a7              	cmpsw
+  86  000076  a7                	cmpsl
+  87  000077                    
+  88  000077                    .code64
+  89  000077                    
+  90  000077  66410fbdf7                bsrw %r15w, %si
+  91  00007c  66440fbde2                bsrw %dx, %r12w
+  92  000081  480fbdc0                  bsrq %rax,%rax
+  93  000085  0fbdc0                    bsrl %eax,%eax
+  94  000088  480fbcc0                  bsfq %rax,%rax
+  95  00008c  0fbcc0                    bsfl %eax,%eax
+  96  00008f  0fbd45fc                  bsrl -4(%rbp),%eax
+  97  000093  480fbd5058                bsrq 88(%rax),%rdx
+  98  000098  0fbdc8                    bsrl %eax,%ecx
+  99  00009b  0fbcc0                    bsfl %eax,%eax
+ 100  00009e                    
+ 101  00009e  41ffd4                    call *%r12
+ 102  0000a1  41ffd5                    call *%r13
+ 103  0000a4  ffd0                      call *%rax
+ 104  0000a6  ffe0                      jmp *%rax
+ 105  0000a8  ffe1                      jmp *%rcx
+ 106  0000aa  41ffe5                    jmp *%r13
+ 107  0000ad  ffe6                      jmp *%rsi
+ 108  0000af                    
+ 109  0000af  6698              	cbtw
+ 110  0000b1  6699              	cwtd
+ 111  0000b3  99                	cltd
+ 112  0000b4  4899              	cqto
+ 113  0000b6                    
+ 114  0000b6  aa                	stosb
+ 115  0000b7  66ab              	stosw
+ 116  0000b9  ab                	stosl
+ 117  0000ba  48ab              	stosq
+ 118  0000bc                    
+ 119  0000bc  a4                	movsb
+ 120  0000bd  66a5              	movsw
+ 121  0000bf  a5                	movsl
+ 122  0000c0  48a5              	movsq
+ 123  0000c2                    
+ 124  0000c2  ae                	scasb
+ 125  0000c3  66af              	scasw
+ 126  0000c5  af                	scasl
+ 127  0000c6  48af              	scasq
+ 128  0000c8                    
+ 129  0000c8  ac                	lodsb
+ 130  0000c9  66ad              	lodsw
+ 131  0000cb  ad                	lodsl
+ 132  0000cc  48ad              	lodsq
+ 133  0000ce                    
+ 134  0000ce  a6                	cmpsb
+ 135  0000cf  66a7              	cmpsw
+ 136  0000d1  a7                	cmpsl
+ 137  0000d2  48a7              	cmpsq
+ 138  0000d4                    

@@ -362,6 +362,8 @@ struct { const char *text; const char *template; } insns[] =
     {   "subq",         0               },
     {   "subss",        0               },
     {   "subsd",        0               },
+    {   "syscall",      0               },
+    {   "sysret",       0               },
     {   "testb",        0               },
     {   "testw",        0               },
     {   "testl",        0               },

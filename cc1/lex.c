@@ -36,7 +36,6 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <sys/mman.h>
 #include <sys/stat.h>
 #include <string.h>
 #include <limits.h>

@@ -96,15 +96,6 @@ _fstat:         movl $5, %eax               # FSTAT
 _lseek:         movl $8, %eax
                 jmp do_syscall
 
-# void *mmap(void *addr, size_t length, int prot,
-#            int flags, int fd, off_t offset);
-
-.global _mmap
-
-_mmap:          movl $9, %eax               # MMAP
-                movq %rcx, %r10
-                jmp do_syscall
-
 # void *__brk(void *new);
 
 .global ___brk

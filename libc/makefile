@@ -27,8 +27,8 @@ HDRS=		../include/assert.h  	../include/ctype.h 	\
 		../include/string.h 	../include/termios.h 	\
 		../include/time.h 	../include/unistd.h 	\
 		../include/sys/dir.h	../include/sys/ioctl.h	\
-		../include/sys/mman.h	../include/sys/tahoe.h	\
-		../include/sys/types.h 	../include/sys/wait.h
+		../include/sys/tahoe.h	../include/sys/types.h 	\
+		../include/sys/wait.h
 
 OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 	\
 		__flushbuf.o __ieee_val.o __pow10.o abort.o 	\

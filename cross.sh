@@ -1,21 +1,53 @@
-CC=cc
 ROOT=~/xcc
+HOST=$ROOT/host
+TARGET=$ROOT/target
 
 set -e
-
 rm -rf $ROOT
 mkdir $ROOT
 
-mkdir $ROOT/bin
+# 1. build a version of the toolchain which uses
+# gnu binutils and generates binaries for linux.
 
-$CC -DAS=\"/usr/bin/as\" -DLD=\"/usr/bin/ld\" -DROOT=\"$ROOT\" \
-	-o ~/xcc/bin/cc cc.c
+mkdir $HOST
+mkdir $HOST/bin
+mkdir $HOST/lib
+mkdir $HOST/include
 
-(cd cpp; make clean; make; mv cpp $ROOT/bin)
-(cd cc1; make clean; make; mv cc1 $ROOT/bin)
+cp -rv include/* $HOST/include
 
-mkdir $ROOT/include
-cp -rv include/* $ROOT/include
+cc -DAS=\"/usr/bin/as\" -DLD=\"/usr/bin/ld\" -DROOT=\"$HOST\" \
+	-o $HOST/bin/cc cc.c
 
-mkdir $ROOT/lib
-(cd libc; make clean; make; mv crt0.o libc.a $ROOT/lib)
+(cd cpp; make clean; make; mv cpp $HOST/lib)
+(cd cc1; make clean; make; mv cc1 $HOST/lib)
+
+(cd libc; make clean; make CC=$HOST/bin/cc AR=/usr/bin/ar; \
+	mv crt0.o libc.a $HOST/lib)
+
+# 2. using the host toolchain built in the previous step,
+# build the toolchain which generates binaries for tahoe.
+
+mkdir $TARGET
+mkdir $TARGET/bin
+mkdir $TARGET/lib
+mkdir $TARGET/include
+
+cp -rv include/* $TARGET/include
+
+$HOST/bin/cc -o $TARGET/bin/ar ar.c
+$HOST/bin/cc -o $TARGET/bin/ld ld.c libc/crc32c.c
+$HOST/bin/cc -o $TARGET/bin/nm nm.c
+$HOST/bin/cc -o $TARGET/bin/cc -DROOT=\"$TARGET\" cc.c
+
+	# n.b. for the moment we're still using gcc
+	# to build the assembler, since it depends on
+	# lex and yacc which haven't quite been ported
+
+(cd as; make clean; make; mv as $TARGET/bin)
+
+(cd cpp; make clean; make CC=$HOST/bin/cc; mv cpp $TARGET/lib)
+(cd cc1; make clean; make CC=$HOST/bin/cc; mv cc1 $TARGET/lib)
+
+(cd libc; make clean; make CC=$TARGET/bin/cc AR=$TARGET/bin/ar; \
+	mv crt0.o libc.a $TARGET/lib)

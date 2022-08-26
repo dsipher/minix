@@ -45,15 +45,15 @@
    by defining ROOT, or override the paths individually. */
 
 #ifndef ROOT
-#define ROOT "/usr"
+#define ROOT
 #endif
 
 #ifndef CPP
-#define CPP ROOT "/bin/cpp"
+#define CPP ROOT "/lib/cpp"
 #endif
 
 #ifndef CC1
-#define CC1 ROOT "/bin/cc1"
+#define CC1 ROOT "/lib/cc1"
 #endif
 
 #ifndef AS

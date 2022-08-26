@@ -78,12 +78,12 @@ do_stage()	# ( $compiler, $cflags, $stage )
 	(	cd ../../cpp; 						\
 		make clean;						\
 		make CC=$1 CFLAGS=$2;					\
-		mv cpp $ROOT/$3/bin/cpp					)
+		mv cpp $ROOT/$3/lib/cpp					)
 
 	(	cd ..; 							\
 		make clean;						\
 		make CC=$1 CFLAGS=$2;					\
-		mv cc1 $ROOT/$3/bin/cc1					)
+		mv cc1 $ROOT/$3/lib/cc1					)
 
 	cp -r ../../include/* $ROOT/$3/include
 	ln -s /usr/bin/as $ROOT/$3/bin
@@ -100,7 +100,7 @@ do_stage()	# ( $compiler, $cflags, $stage )
 	for i in $TESTS
 	do
 		echo $i
-		$ROOT/$3/bin/cc1 $ROOT/tests/$i.i $ROOT/$3/out/$i.s
+		$ROOT/$3/lib/cc1 $ROOT/tests/$i.i $ROOT/$3/out/$i.s
 	done
 }
 

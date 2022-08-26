@@ -594,7 +594,7 @@ pass9(void)
 {
     struct object *o;
 
-    outfd = open(aout, O_CREAT | O_TRUNC | O_WRONLY, 0666);
+    outfd = open(aout, O_CREAT | O_TRUNC | O_WRONLY, 0777);
     if (outfd == -1) error("`%s': can't create (%E)", aout);
 
     out(0, &exec, sizeof(exec));
@@ -619,7 +619,7 @@ main(int argc, char **argv)
 {
     int opt;
 
-    while ((opt = getopt(argc, argv, "b:o:s")) != -1)
+    while ((opt = getopt(argc, argv, "b:e:o:s")) != -1)
     {
         switch (opt)
         {
@@ -630,6 +630,7 @@ main(int argc, char **argv)
                         break;
                     }
 
+        case 'e':   /* FIXME ignored */ ; break;
         case 'o':   aout = optarg; break;
         case 's':   ++s_flag; break;
 

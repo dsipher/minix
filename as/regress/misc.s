@@ -42,6 +42,8 @@
 	cmpsw
 	cmpsl
 
+	int $0x10
+
 .code32
 
 	aaa
@@ -84,6 +86,8 @@
 	cmpsb
 	cmpsw
 	cmpsl
+
+	int $0x10
 
 .code64
 
@@ -135,3 +139,5 @@
 	cmpsw
 	cmpsl
 	cmpsq
+
+	int $0x10

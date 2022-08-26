@@ -1056,6 +1056,8 @@ struct insn i_incq[] =
     { 0 }
 };
 
+struct insn i_int[] = { { 0, 1, { 0xCD }, { { O_IMM_8 } } }, { 0 } };
+
 struct insn i_iret[]  = { { I_NO_CODE64, 1, { 0xCF } },
                           { I_DATA_64,   1, { 0xCF } },
                           { 0 } };

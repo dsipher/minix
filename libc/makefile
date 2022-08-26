@@ -7,8 +7,6 @@
 #
 ##############################################################################
 
-CC=~/xcc/bin/cc
-CFLAGS=-n -I../include
 AS=$(CC) -c
 
 all:	crt0.o libc.a
@@ -55,7 +53,7 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 	\
 
 libc.a:		$(OBJS)
 	rm -f libc.a
-	ar rc libc.a $(OBJS)
+	$(AR) rc libc.a $(OBJS)
 
 memcpy.o:		memcpy.s
 memmove.o:		memmove.s

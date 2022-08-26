@@ -48,6 +48,7 @@ cstart:         popq %rdi                   # argc
                 movl %eax, %edi             # pass along main's
                 call _exit                  # return value to exit()
 
+.globl _environ
 .comm _environ, 8, 8
 
 # vi: set ts=4 expandtab:

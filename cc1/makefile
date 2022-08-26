@@ -8,7 +8,11 @@ all:	cc1
 
 clean:
 	rm -f cc1 *.o
-	rm -f tests/*.c tests/*.err
+	rm -rf regress/stage1
+	rm -rf regress/stage2
+	rm -rf regress/stage3/bin
+	rm -rf regress/stage3/lib
+	rm -rf regress/stage3/include
 
 HDRS=	cc1.h block.h builtin.h cmov.h cmp.h dealias.h 			\
 	decl.h delay.h dep.h dom.h dvn.h expr.h fold.h 			\

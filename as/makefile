@@ -8,6 +8,9 @@ all:	as
 
 clean:
 	rm -f as *.o y.tab.* lex.yy.c mktable table.c
+	rm -rf regress/a.out
+	rm -rf regress/*.bin
+	rm -rf regress/*.gas
 
 HDRS=	as.h y.tab.h ../include/crc32c.h ../include/a.out.h
 OBJS=	as.o insns.o lex.yy.o y.tab.o crc32c.o table.o

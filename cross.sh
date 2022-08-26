@@ -35,9 +35,6 @@ mkdir $TARGET/include
 
 cp -rv include/* $TARGET/include
 
-$HOST/bin/cc -o $TARGET/bin/ar ar.c
-$HOST/bin/cc -o $TARGET/bin/ld ld.c libc/crc32c.c
-$HOST/bin/cc -o $TARGET/bin/nm nm.c
 $HOST/bin/cc -o $TARGET/bin/cc -DROOT=\"$TARGET\" cc.c
 
 	# n.b. for the moment we're still using gcc
@@ -48,6 +45,10 @@ $HOST/bin/cc -o $TARGET/bin/cc -DROOT=\"$TARGET\" cc.c
 
 (cd cpp; make clean; make CC=$HOST/bin/cc; mv cpp $TARGET/lib)
 (cd cc1; make clean; make CC=$HOST/bin/cc; mv cc1 $TARGET/lib)
+
+make CC=$HOST/bin/cc ar; mv ar $TARGET/bin
+make CC=$HOST/bin/cc ld; mv ld $TARGET/bin
+make CC=$HOST/bin/cc nm; mv nm $TARGET/bin
 
 (cd libc; make clean; make CC=$TARGET/bin/cc AR=$TARGET/bin/ar; \
 	mv crt0.o libc.a $TARGET/lib)

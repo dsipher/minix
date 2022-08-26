@@ -160,7 +160,7 @@ alloc(size_t sz, int zero)
     char *p, *p2;
 
     p = malloc(sz);
-    if (p == 0) error("allocation failed (%E)");
+    if (sz != 0 && p == 0) error("allocation failed (%E)");
 
     if (zero)                       /* we are never asked to zero large */
         for (p2 = p; sz--; ++p2)    /* regions, only smallish buffers, */

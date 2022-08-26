@@ -24,6 +24,19 @@ clean::
 ar:	ar.c
 	$(CC) -o ar ar.c
 
+######################################################################### boot
+
+all::   boot
+
+clean::
+	rm -f boot
+
+boot: boot.o
+	$(LD) -b 0x1000 -o boot boot.o
+
+boot.o: boot.s
+	$(AS) -l boot.lst -o boot.o boot.s
+
 ########################################################################### cc
 
 all::	cc

@@ -10,6 +10,7 @@ as/y.tab.c
 as/regress/*.bin
 as/regress/*.gas
 as/regress/a.out
+boot
 cpp/cpp
 cc
 cc1/cc1

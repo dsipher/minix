@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "cpp.h"
 #include "input.h"
 #include "directive.h"
@@ -113,7 +114,7 @@ static void erase_comments(char *s)
             }
         }
 
-        if (*s == ' ') {
+        if (isspace(*s)) {
             if (space == 0)
                 space = s;
         } else

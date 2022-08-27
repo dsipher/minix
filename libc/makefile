@@ -29,8 +29,8 @@ HDRS=		../include/assert.h  	../include/ctype.h 	\
 		../include/sys/wait.h
 
 OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 	\
-		__flushbuf.o __ieee_val.o __pow10.o abort.o 	\
-		atoi.o atol.o brk.o bsearch.o calloc.o		\
+		__flushbuf.o __ieee_val.o __pow10.o abort.o	\
+		abs.o atoi.o atol.o brk.o bsearch.o calloc.o	\
 		clearerr.o ctime.o exit.o execvp.o execvpe.o 	\
 		fclose.o  fflush.o fgetpos.o fgets.o fileno.o 	\
 		fopen.o fprintf.o fputc.o fputs.o fread.o 	\
@@ -38,7 +38,7 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 	\
 		ftell.o fwrite.o getenv.o getopt.o gets.o 	\
 		isalnum.o isalpha.o iscntrl.o isdigit.o 	\
 		isgraph.o islower.o isprint.o ispunct.o 	\
-		isspace.o isupper.o isxdigit.o isatty.o 	\
+		isspace.o isupper.o isxdigit.o isatty.o labs.o	\
 		malloc.o memchr.o memcmp.o memcpy.o memmove.o 	\
 		memset.o modf.o mktemp.o perror.o printf.o 	\
 		puts.o qsort.o raise.o rand.o remove.o rewind.o \
@@ -67,6 +67,7 @@ __flushbuf.o:		__flushbuf.c $(HDRS)
 __ieee_val.o:		__ieee_val.s
 __pow10.o:		__pow10.c $(HDRS)
 abort.o:		abort.c $(HDRS)
+abs.o:			abs.c $(HDRS)
 atoi.o:			atoi.c $(HDRS)
 atol.o:			atol.c $(HDRS)
 brk.o:			brk.c $(HDRS)
@@ -109,6 +110,7 @@ isspace.o:		isspace.c $(HDRS)
 isupper.o:		isupper.c $(HDRS)
 isxdigit.o:		isxdigit.c $(HDRS)
 isatty.o:		isatty.c $(HDRS)
+labs.o:			labs.c $(HDRS)
 malloc.o:		malloc.c $(HDRS)
 memchr.o:		memchr.c $(HDRS)
 memcmp.o:		memcmp.c $(HDRS)

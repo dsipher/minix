@@ -37,11 +37,13 @@ cp -rv include/* $TARGET/include
 
 $HOST/bin/cc -o $TARGET/bin/cc -DROOT=\"$TARGET\" cc.c
 
-	# n.b. for the moment we're still using gcc
-	# to build the assembler, since it depends on
-	# lex and yacc which haven't quite been ported
+(cd yacc; make clean; make CC=$HOST/bin/cc; mv yacc $TARGET/bin)
 
-(cd as; make clean; make; mv as $TARGET/bin)
+	# n.b. for the moment we're still using the host flex
+	# to build the assembler, since flex isn't ported yet
+
+(cd as; make clean; make CC=$HOST/bin/cc YACC=$TARGET/bin/yacc; \
+	mv as $TARGET/bin)
 
 (cd cpp; make clean; make CC=$HOST/bin/cc; mv cpp $TARGET/lib)
 (cd cc1; make clean; make CC=$HOST/bin/cc; mv cc1 $TARGET/lib)

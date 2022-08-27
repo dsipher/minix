@@ -57,7 +57,7 @@ static const char * const errors[] =
     /* 19 */    0,
     /* 20 */    0,
     /* 21 */    0,
-    /* 22 */    0,
+    /* 22 */    "invalid argument",                         /* EINVAL */
     /* 23 */    0,
     /* 24 */    0,
     /* 25 */    "not a typewriter",                         /* ENOTTY */

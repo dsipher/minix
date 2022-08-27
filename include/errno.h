@@ -39,6 +39,7 @@ extern int errno;
 #define ENOENT       2      /* no such file or directory */
 #define EINTR        4      /* interrupted system call */
 #define ENOMEM      12      /* out of memory */
+#define EINVAL      22      /* invalid argument */
 #define ENOTTY      25      /* not a typewriter */
 #define EDOM        33      /* math argument out of domain of func */
 #define ERANGE      34      /* math result not representable */

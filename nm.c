@@ -71,8 +71,9 @@ int             errors;         /* count of errors encountered */
 
 void error(int system, char *msg)
 {
-    fprintf(stderr, "nm: `%s': %s\n", path, msg);
+    fprintf(stderr, "nm: `%s': %s", path, msg);
     if (system) fprintf(stderr, " (%s)", strerror(errno));
+    fputc('\n', stderr);
     ++errors;
 }
 

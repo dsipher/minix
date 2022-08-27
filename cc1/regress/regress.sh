@@ -81,7 +81,7 @@ do_stage()	# ( $compiler, $cflags, $stage )
 		mv cpp $ROOT/$3/lib/cpp					)
 
 	(	cd ..; 							\
-		make clean;						\
+		rm -f *.o cc1;						\
 		make CC=$1 CFLAGS=$2;					\
 		mv cc1 $ROOT/$3/lib/cc1					)
 

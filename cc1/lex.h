@@ -305,6 +305,22 @@ void expect(int k);
 
 #define MATCH(_k)    do { expect(_k); lex(); } while (0)
 
+/* parsing helper for non-standard constructions.
+
+   if the next token is a comma
+        1. consume it, and then
+        2. return true iff the next token is not '}'
+
+   otherwise return false.
+
+   this is used by parsing routines to distinguish
+   between separating commas vs trailing commas in
+   enum definitions, initializers, etc. C89 rather
+   pedantically prohibits them where K&R did not.
+   C99 once again relaxed the syntax, so we do too */
+
+int comma(void);
+
 /* true if the token t looks like the start of a declaration- that
    is, a declaration-specifier or an identifier that names a type.
    (use of this macro requires that the caller include symbol.h) */

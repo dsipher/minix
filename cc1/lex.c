@@ -729,4 +729,14 @@ void expect(int k)
         error(ERROR, 0, "expected %k before %K", k, &token);
 }
 
+int comma(void)
+{
+    if (token.k == K_COMMA) {
+        lex();
+        return (token.k != K_RBRACE);
+    }
+
+    return 0;
+}
+
 /* vi: set ts=4 expandtab: */

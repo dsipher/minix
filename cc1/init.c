@@ -305,8 +305,7 @@ static int init_array(struct tnode *type, int offset, int flags)
     int elem_size = size_of(elem_type, 0);
     int nelem = 0;
 
-    for (;;)
-    {
+    do {
         if (!UNBOUNDED_ARRAY_TYPE(type) && (nelem == type->nelem))
             error(ERROR, 0, "too many initializers for array");
 
@@ -315,12 +314,7 @@ static int init_array(struct tnode *type, int offset, int flags)
 
         if (!(flags & INIT_BRACED) && (nelem == type->nelem))
             break;
-
-        if (token.k == K_COMMA)
-            lex();
-        else
-            break;
-    }
+    } while (comma());
 
     if (!UNBOUNDED_ARRAY_TYPE(type))
         init_pad((type->nelem - nelem) * elem_size * BITS_PER_BYTE);
@@ -351,8 +345,7 @@ static void init_strun(struct tnode *type, int offset, int flags)
     if (!DEFINED_SYMBOL(tag))
         error(ERROR, 0, "can't initialize incomplete %T", tag);
 
-    for (;;)
-    {
+    do {
         if (member == 0)
             error(ERROR, 0, "too many initializers for %T", tag);
 
@@ -373,12 +366,7 @@ static void init_strun(struct tnode *type, int offset, int flags)
 
         if (!(flags & INIT_BRACED) && (member == 0))
             break;
-
-        if (token.k == K_COMMA)
-            lex();
-        else
-            break;
-    }
+    } while (comma());
 
     init_pad(size_of(type, 0) * BITS_PER_BYTE - offset_bits);
 }

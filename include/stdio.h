@@ -145,6 +145,11 @@ extern int vsprintf(char *, const char *, __va_list);
                          (int) (*(p)->_ptr++ = (c)) :                       \
                          __flushbuf((c),(p)))
 
+#define L_tmpnam        12      /* "/tmp/XXXXXX" + terminator = 12 chars */
+#define TMP_MAX         62      /* (keep in sync with BASE in mktemp.c) */
+
+extern char *tmpnam(char *);
+
 #endif /* _STDIO_H */
 
 /* vi: set ts=4 expandtab: */

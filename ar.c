@@ -71,11 +71,11 @@ char **namv;    int namc;
 #define TMPDIR  "/tmp/"         /* default directory for temp files */
 #define TMPNAM  "arXXXXXX"      /* and mktemp() template for them */
 
-char tmpnam[]   = TMPDIR TMPNAM,        /* we default to using /tmp */
-     tmp1nam[]  = TMPDIR TMPNAM,        /* for all temporaries, unless */
-     tmp2nam[]  = TMPDIR TMPNAM;        /* the `l' option is specified */
+char tmp0nam[] = TMPDIR TMPNAM,         /* we default to using /tmp */
+     tmp1nam[] = TMPDIR TMPNAM,         /* for all temporaries, unless */
+     tmp2nam[] = TMPDIR TMPNAM;         /* the `l' option is specified */
 
-char *tfnam;    int tf;
+char *tf0nam;   int tf0;
 char *tf1nam;   int tf1;
 char *tf2nam;   int tf2;
 
@@ -102,8 +102,8 @@ getdir(void)
 
     if(i != sizeof arbuf) {
         if (tf1nam) {
-            i = tf;         /* undo the swap done by */
-            tf = tf1;       /* positioning logic, see */
+            i = tf0;        /* undo the swap done by */
+            tf0 = tf1;      /* positioning logic, see */
             tf1 = i;        /* comments for bamatch() */
         }
 
@@ -198,7 +198,7 @@ mesg(int c)
 void
 done(int status)
 {
-    if(tfnam) unlink(tfnam);
+    if(tf0nam) unlink(tf0nam);
     if(tf1nam) unlink(tf1nam);
     if(tf2nam) unlink(tf2nam);
     exit(status);
@@ -263,24 +263,24 @@ getaf(int must)
     return(0);
 }
 
-/* open a temporary `tf' where we'll build the resulting archive. seed
-   it with ARMAGIC. use `tmpnam' as the template for its path `tfnam'. */
+/* open a temporary `tf0' where we'll build the resulting archive. seed
+   it with ARMAGIC. use `tmp0nam' as the template for its path `tf0nam'. */
 
 void
 init(void)
 {
     static armag_t mbuf = ARMAG;
 
-    tfnam = mktemp(tmpnam);
-    close(creat(tfnam, 0600));
-    tf = open(tfnam, 2);
+    tf0nam = mktemp(tmp0nam);
+    close(creat(tf0nam, 0600));
+    tf0 = open(tf0nam, 2);
 
-    if(tf < 0) {
+    if(tf0 < 0) {
         fprintf(stderr, "ar: cannot create temp file\n");
         done(1);
     }
 
-    if (write(tf, &mbuf, sizeof(mbuf)) != sizeof(mbuf))
+    if (write(tf0, &mbuf, sizeof(mbuf)) != sizeof(mbuf))
         wrerr();
 }
 
@@ -328,8 +328,8 @@ bamatch(void)
             return;
         }
 
-        tf1 = tf;
-        tf = f;
+        tf1 = tf0;
+        tf0 = f;
     }
 }
 
@@ -382,7 +382,7 @@ copyfil(int fi, int fo, int flag)
 
 /* in the final step of write operations (except `q'), we
    create/overwrite the archive by piecing together up to
-   three temp files (tf, tf2, tf1 ... in that order). */
+   three temp files (tf0, tf2, tf1 ... in that order). */
 
 void
 install0(char *nam, int tf)
@@ -419,7 +419,7 @@ install(void)
         done(1);
     }
 
-    install0(tfnam, tf);
+    install0(tf0nam, tf0);
     install0(tf2nam, tf2);
     install0(tf1nam, tf1);
 }
@@ -445,7 +445,7 @@ movefil(int f)
     arbuf.ar_uid = stbuf.st_uid;
     arbuf.ar_gid = stbuf.st_gid;
     arbuf.ar_mode = stbuf.st_mode;
-    copyfil(f, tf, OODD+HEAD);
+    copyfil(f, tf0, OODD+HEAD);
     close(f);
 }
 
@@ -510,7 +510,7 @@ rcmd(void)
 
 cp:
         mesg('c');
-        copyfil(af, tf, IODD+OODD+HEAD);
+        copyfil(af, tf0, IODD+OODD+HEAD);
     }
 
     for (i = 0; i < namc; i++) {
@@ -546,7 +546,7 @@ dcmd(void)
             copyfil(af, -1, IODD+SKIP);
         } else {
             mesg('c');
-            copyfil(af, tf, IODD+OODD+HEAD);
+            copyfil(af, tf0, IODD+OODD+HEAD);
         }
     }
 
@@ -625,7 +625,7 @@ mcmd(void)
             continue;
         }
         mesg('c');
-        copyfil(af, tf, IODD+OODD+HEAD);
+        copyfil(af, tf0, IODD+OODD+HEAD);
     }
     install();
 }
@@ -749,9 +749,9 @@ qcmd(void)
         if (f < 0)
             fprintf(stderr, "ar: %s cannot open\n", file);
         else {
-            tf = qf;
+            tf0 = qf;
             movefil(f);
-            qf = tf;
+            qf = tf0;
         }
     }
 }
@@ -828,7 +828,7 @@ main(int argc, char **argv)
         }
 
     if (flg['l'-'a']) {
-        strcpy(tmpnam, TMPNAM);
+        strcpy(tmp0nam, TMPNAM);
         strcpy(tmp1nam, TMPNAM);
         strcpy(tmp2nam, TMPNAM);
     }

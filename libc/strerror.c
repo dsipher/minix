@@ -35,11 +35,11 @@
 
 static const char * const errors[] =
 {
-    /*  0 */    "no error",
+    /*  0 */    "success",
     /*  1 */    0,
     /*  2 */    "no such file or directory",                /* ENOENT */
     /*  3 */    0,
-    /*  4 */    0,
+    /*  4 */    "interrupted system call",                  /* EINTR */
     /*  5 */    0,
     /*  6 */    0,
     /*  7 */    0,
@@ -47,7 +47,7 @@ static const char * const errors[] =
     /*  9 */    0,
     /* 10 */    0,
     /* 11 */    0,
-    /* 12 */    "out of memory",                            /* ENOMEM */
+    /* 12 */    "not enough space",                         /* ENOMEM */
     /* 13 */    0,
     /* 14 */    0,
     /* 15 */    0,
@@ -60,7 +60,7 @@ static const char * const errors[] =
     /* 22 */    "invalid argument",                         /* EINVAL */
     /* 23 */    0,
     /* 24 */    0,
-    /* 25 */    "not a typewriter",                         /* ENOTTY */
+    /* 25 */    "inappropriate ioctl",                      /* ENOTTY */
     /* 26 */    0,
     /* 27 */    0,
     /* 28 */    0,
@@ -68,8 +68,8 @@ static const char * const errors[] =
     /* 30 */    0,
     /* 31 */    0,
     /* 32 */    0,
-    /* 33 */    "math argument out of domain of func",      /* EDOM */
-    /* 34 */    "math result not representable"             /* ERANGE */
+    /* 33 */    "argument not in domain",                   /* EDOM */
+    /* 34 */    "result out of range"                       /* ERANGE */
 };
 
 #define NR_ERRORS (sizeof(errors) / sizeof(*errors))

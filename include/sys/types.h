@@ -51,6 +51,11 @@ typedef __off_t off_t;
 typedef __ssize_t ssize_t;
 #endif /* __SSIZE_T */
 
+#ifndef __TIME_T
+#define __TIME_T
+typedef __time_t time_t;
+#endif /* __TIME_T */
+
 #endif /* _SYS_TYPES_H */
 
 /* vi: set ts=4 expandtab: */

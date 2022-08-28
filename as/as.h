@@ -320,7 +320,6 @@ extern void encode(struct insn *insns, struct operand *operand0,
 /* tokens.l (lex.yy.c) */
 
 extern int yylex(void);
-extern int yywrap(void);
 extern void yyrestart(FILE *yyin);
 
 /* grammar.y (y.tab.c) */

@@ -30,7 +30,7 @@
 
 #include <ctype.h>
 #include "flexdef.h"
-#include "parse.h"
+#include "y.tab.h"
 
 
 /* ANSI C does not guarantee that isascii() is defined */

@@ -212,10 +212,4 @@ S               [ \t\v\f]
 
 %%
 
-/* we don't link with the lex library, so we provide this ourselves.
-   while we effectively concatenate the input files into one source,
-   we don't achieve this by wrapping in the lexer- see do_pass(). */
-
-int yywrap(void) { return -1; }
-
 /* vi: set ts=4 expandtab: */

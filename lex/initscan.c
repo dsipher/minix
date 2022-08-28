@@ -150,7 +150,7 @@ int read();
 /* default declaration of generated scanner - a define so the user can
  * easily add parameters
  */
-#define YY_DECL int yylex YY_PROTO(( void )) 
+#define YY_DECL int yylex YY_PROTO(( void ))
 
 /* code executed at the end of each rule */
 #define YY_BREAK break;
@@ -174,7 +174,7 @@ typedef struct yy_buffer_state *YY_BUFFER_STATE;
  *
  * This code is derived from software contributed to Berkeley by
  * Vern Paxson.
- * 
+ *
  * The United States Government has rights in this work pursuant
  * to contract no. DE-AC03-76SF00098 between the United States
  * Department of Energy and the University of California.
@@ -202,7 +202,7 @@ static char rcsid[] =
 #undef yywrap
 
 #include "flexdef.h"
-#include "parse.h"
+#include "y.tab.h"
 
 #define ACTION_ECHO fprintf( temp_action_file, "%s", yytext )
 #define MARK_END_OF_PROLOG fprintf( temp_action_file, "%%%% end of prolog\n" );
@@ -289,7 +289,7 @@ struct yy_buffer_state
     YY_CHAR *yy_buf_pos;	/* current position in input buffer */
 
     /* size of input buffer in bytes, not including room for EOB characters*/
-    int yy_buf_size;	
+    int yy_buf_size;
 
     /* number of characters read into yy_ch_buf, not including EOB characters */
     int yy_n_chars;
@@ -1586,7 +1586,7 @@ case 96:
 			    {
 			    if ( ! doing_codeblock )
 				fputs( "\tYY_BREAK\n", temp_action_file );
-			    
+
 			    doing_codeblock = false;
 			    BEGIN(SECT2);
 			    }
@@ -1848,9 +1848,9 @@ case YY_STATE_EOF(XLATION):
  *
  * synopsis
  *     int yy_get_next_buffer();
- *     
+ *
  * returns a code representing an action
- *     EOB_ACT_LAST_MATCH - 
+ *     EOB_ACT_LAST_MATCH -
  *     EOB_ACT_CONTINUE_SCAN - continue scanning from current position
  *     EOB_ACT_END_OF_FILE - end of file
  */

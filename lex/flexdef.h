@@ -32,6 +32,8 @@
 #include <stdio.h>
 #endif
 
+#define SYS_V
+
 /* always be prepared to generate an 8-bit scanner */
 #define FLEX_8_BIT_CHARS
 
@@ -128,9 +130,12 @@ char *malloc(), *realloc();
 #define true 1
 #define false 0
 
+#ifndef ROOT
+#define ROOT
+#endif
 
 #ifndef DEFAULT_SKELETON_FILE
-#define DEFAULT_SKELETON_FILE "flex.skel"
+#define DEFAULT_SKELETON_FILE ROOT "/lib/flex.skel"
 #endif
 
 /* special chk[] values marking the slots taking by end-of-buffer and action

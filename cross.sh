@@ -39,11 +39,14 @@ $HOST/bin/cc -o $TARGET/bin/cc -DROOT=\"$TARGET\" cc.c
 
 (cd yacc; make clean; make CC=$HOST/bin/cc; mv yacc $TARGET/bin)
 
-	# n.b. for the moment we're still using the host flex
-	# to build the assembler, since flex isn't ported yet
+(cd lex; make clean; make CC=$HOST/bin/cc \
+			YACC=$TARGET/bin/yacc \
+			ROOT=$TARGET; \
+	mv lex $TARGET/bin; cp flex.skel $TARGET/lib)
 
-(cd as; make clean; make CC=$HOST/bin/cc YACC=$TARGET/bin/yacc; \
-	mv as $TARGET/bin)
+(cd as; make clean; make CC=$HOST/bin/cc \
+			 YACC=$TARGET/bin/yacc \
+			 LEX=$TARGET/bin/lex; mv as $TARGET/bin)
 
 (cd cpp; make clean; make CC=$HOST/bin/cc; mv cpp $TARGET/lib)
 (cd cc1; make clean; make CC=$HOST/bin/cc; mv cc1 $TARGET/lib)

@@ -36,10 +36,35 @@
 
 #include <sys/tahoe.h>
 
+#ifndef __DADDR_T
+#define __DADDR_T
+typedef __daddr_t daddr_t;
+#endif /* __DADDR_T */
+
+#ifndef __DEV_T
+#define __DEV_T
+typedef __dev_t dev_t;
+#endif /* __DEV_T */
+
+#ifndef __GID_T
+#define __GID_T
+typedef __gid_t gid_t;
+#endif /* __GID_T */
+
+#ifndef __INO_T
+#define __INO_T
+typedef __ino_t ino_t;
+#endif /* __INO_T */
+
 #ifndef __MODE_T
 #define __MODE_T
 typedef __mode_t mode_t;
 #endif /* __MODE_T */
+
+#ifndef __NLINK_T
+#define __NLINK_T
+typedef __nlink_t nlink_t;
+#endif /* __NLINK_T */
 
 #ifndef __OFF_T
 #define __OFF_T
@@ -55,6 +80,11 @@ typedef __ssize_t ssize_t;
 #define __TIME_T
 typedef __time_t time_t;
 #endif /* __TIME_T */
+
+#ifndef __UID_T
+#define __UID_T
+typedef __uid_t uid_t;
+#endif /* __UID_T */
 
 #endif /* _SYS_TYPES_H */
 

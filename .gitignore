@@ -20,5 +20,8 @@ cc1/regress/stage3/bin
 cc1/regress/stage3/lib
 cc1/regress/stage3/include
 ld
+lex/scan.c
+lex/y.tab.c
+lex/y.tab.h
 nm
 yacc/yacc

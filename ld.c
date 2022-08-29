@@ -42,7 +42,7 @@
 #include <a.out.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "include/crc32c.h"         /* FIXME */
+#include <crc32c.h>
 
 #define LOG2_NR_BUCKETS     9 /* 512 name buckets */
 #define NR_BUCKETS          (1 << LOG2_NR_BUCKETS)

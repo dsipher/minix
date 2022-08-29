@@ -35,8 +35,9 @@
 #ifndef _AR_H
 #define _AR_H
 
-#include <sys/tahoe.h>
-#include <sys/dir.h>
+#include <limits.h>             /* POSIX.1-1990 does not specify the */
+#include <sys/types.h>          /* presence of <ar.h>, so we need not */
+#include <sys/fs.h>             /* worry about namespace leaks here. */
 
 /* we use a traditional V7-style binary format, rather than the
    POSIX `portable' plaintext format. we differ from V7 in that:
@@ -53,12 +54,12 @@ typedef long armag_t;
 
 struct ar_hdr
 {
-    char        ar_name[DIRSIZ];
-    __uid_t     ar_uid;
-    __gid_t     ar_gid;
-    __mode_t    ar_mode;
-    __time_t    ar_date;
-    __off_t     ar_size;
+    char        ar_name[NAME_MAX];
+    uid_t       ar_uid;
+    gid_t       ar_gid;
+    mode_t      ar_mode;
+    time_t      ar_date;
+    off_t       ar_size;
 };
 
 #endif /* _AR_H */

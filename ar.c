@@ -95,7 +95,7 @@ struct ar_hdr arbuf;
 int
 getdir(void)
 {
-    static char name[DIRSIZ+1];
+    static char name[NAME_MAX+1];
     int i;
 
     i = read(af, &arbuf, sizeof arbuf);
@@ -110,7 +110,7 @@ getdir(void)
         return(1);
     }
 
-    for(i = 0; i < DIRSIZ; i++)
+    for(i = 0; i < NAME_MAX; i++)
         name[i] = arbuf.ar_name[i];
 
     file = name;
@@ -436,7 +436,7 @@ movefil(int f)
 
     cp = trim(file);
 
-    for (i = 0; i < DIRSIZ; i++)
+    for (i = 0; i < NAME_MAX; i++)
         if(arbuf.ar_name[i] = *cp)
             cp++;
 
@@ -683,7 +683,7 @@ tcmd(void)
 
     while(!getdir()) {
         if(namc == 0 || match()) {
-            printf("%-*s", DIRSIZ + 2, trim(file));
+            printf("%-*s", NAME_MAX + 2, trim(file));
 
             if(flg['v'-'a'])
                 longt();

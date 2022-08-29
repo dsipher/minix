@@ -242,8 +242,8 @@ pass1(char **paths)
             while (sb.st_size)
             {
                 ar = (struct ar_hdr *) buf;
-                member = alloc(DIRSIZ + 1, 1);
-                strncpy(member, ar->ar_name, DIRSIZ);
+                member = alloc(NAME_MAX + 1, 1);
+                strncpy(member, ar->ar_name, NAME_MAX);
 
                 buf += sizeof(struct ar_hdr);           /* skip header */
                 sb.st_size -= sizeof(struct ar_hdr);

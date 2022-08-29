@@ -104,31 +104,38 @@ typedef __time_t time_t;
 typedef __uid_t uid_t;
 #endif /* __UID_T */
 
+/* the seemingly excessive padding here is used to match the
+   Linux ABI as best we can; some tahoe types have different
+   sizes, and we don't support some of the fields. */
 
 struct stat
 {
     dev_t           st_dev;
+    int             __pad0;
     ino_t           st_ino;
+    int             __pad1;
     nlink_t         st_nlink;
+    int             __pad2;
 
     mode_t          st_mode;
     uid_t           st_uid;
     gid_t           st_gid;
-    int             __pad0;
+    int             __pad3;
 
     dev_t           st_rdev;
+    int             __pad4;
     off_t           st_size;
-    long            __pad1;             /* Linux ABI: st_blksize */
-    long            __pad2;             /* Linux ABI: st_blocks */
-
-    time_t          st_atime;           /* Linux ABI: the pad fields */
-    long            __pad3;             /* here are nanosecond res. */
-    time_t          st_mtime;
-    long            __pad4;
-    time_t          st_ctime;
     long            __pad5;
+    long            __pad6;
 
-    unsigned long   __reserved[3];
+    time_t          st_atime;
+    long            __pad7;
+    time_t          st_mtime;
+    long            __pad8;
+    time_t          st_ctime;
+    long            __pad9;
+
+    unsigned long   __pad[3];
 };
 
 extern int fstat(int fd, struct stat *statbuf);

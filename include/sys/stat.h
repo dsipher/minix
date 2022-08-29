@@ -36,16 +36,6 @@
 
 #include <sys/tahoe.h>
 
-#ifndef __BLKCNT_T
-#define __BLKCNT_T
-typedef __blkcnt_t blkcnt_t;
-#endif /* __BLKCNT_T */
-
-#ifndef __BLKSIZE_T
-#define __BLKSIZE_T
-typedef __blksize_t blksize_t;
-#endif /* __BLKSIZE_T */
-
 #ifndef __DEV_T
 #define __DEV_T
 typedef __dev_t dev_t;
@@ -128,15 +118,15 @@ struct stat
 
     dev_t           st_rdev;
     off_t           st_size;
-    blksize_t       st_blksize;
-    blkcnt_t        st_blocks;
+    long            __pad1;             /* Linux ABI: st_blksize */
+    long            __pad2;             /* Linux ABI: st_blocks */
 
-    time_t          st_atime;           /* the nsec fields */
-    long            st_atimensec;       /* are non-standard */
-    time_t          st_mtime;           /* but in agreement */
-    long            st_mtimensec;       /* wth the Linux ABI */
+    time_t          st_atime;           /* Linux ABI: the pad fields */
+    long            __pad3;             /* here are nanosecond res. */
+    time_t          st_mtime;
+    long            __pad4;
     time_t          st_ctime;
-    long            st_ctimensec;
+    long            __pad5;
 
     unsigned long   __reserved[3];
 };

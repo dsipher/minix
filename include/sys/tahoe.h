@@ -36,8 +36,6 @@
 
 #define __NULL      ((void *) 0)
 
-typedef long            __blkcnt_t;
-typedef long            __blksize_t;
 typedef unsigned long   __dev_t;
 typedef unsigned        __gid_t;
 typedef unsigned long   __ino_t;

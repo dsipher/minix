@@ -93,8 +93,8 @@ struct filsys
 /* compute the starting blocks for various regions of disk */
 
 #define FS_BMAP_START(fs)   (1)
-#define FS_IMAP_START(fs)   (FS_BMAP_START(fs) + ((fs).s_bmap_blocks)
-#define FS_INODE_START(fs)  (FS_IMAP_START(fs) + ((fs).s_imap_blocks)
+#define FS_IMAP_START(fs)   (FS_BMAP_START(fs) + ((fs).s_bmap_blocks))
+#define FS_INODE_START(fs)  (FS_IMAP_START(fs) + ((fs).s_imap_blocks))
 #define FS_DATA_START(fs)   (FS_INODE_START(fs) + ((fs).s_inode_blocks))
 
 /* on-disk inodes are also conventional: 128 bytes.
@@ -163,8 +163,8 @@ struct dinode
 /* the block number/offset in that block where inode `i' is located.
    the names of these macros are historical (like filsys and dinode) */
 
-#define FS_ITOD(fs, i)      (((i) / INODES_PER_BLOCK) + FS_INODE_START(fs))
-#define FS_ITOO(fs, i)      (((i) % INODES_PER_BLOCK) * sizeof(struct dinode))
+#define FS_ITOD(fs, i)  (((i) / FS_INODES_PER_BLOCK) + FS_INODE_START(fs))
+#define FS_ITOO(fs, i)  (((i) % FS_INODES_PER_BLOCK) * sizeof(struct dinode))
 
 /* format of directory files. NAME_MAX == 28 (see limits.h), which makes each
    entry a nice round 32 bytes. this is also more than should ever reasonably

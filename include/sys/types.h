@@ -46,6 +46,8 @@ typedef __daddr_t daddr_t;
 typedef __dev_t dev_t;
 #endif /* __DEV_T */
 
+#define MAKEDEV(major, minor)   ((dev_t) ((major) << 16) | (minor))
+
 #ifndef __GID_T
 #define __GID_T
 typedef __gid_t gid_t;

@@ -1,0 +1,42 @@
+bin 				0040755 0 0 				$
+
+dev 				0040755 0 0 				$
+
+etc 				0040755 0 0 				$
+
+include				0040755 0 0
+	a.out.h			0100644 0 0 include/a.out.h
+	ar.h			0100644 0 0 include/ar.h
+	assert.h		0100644 0 0 include/assert.h
+	crc32c.h		0100644 0 0 include/crc32c.h
+	ctype.h  		0100644 0 0 include/ctype.h
+	errno.h			0100644 0 0 include/errno.h
+	fcntl.h			0100644 0 0 include/fcntl.h
+	float.h			0100644 0 0 include/float.h
+	limits.h		0100644 0 0 include/limits.h
+	math.h			0100644 0 0 include/math.h
+	signal.h		0100644 0 0 include/signal.h
+	stdarg.h		0100644 0 0 include/stdarg.h
+	stddef.h		0100644 0 0 include/stddef.h
+	stdint.h		0100644 0 0 include/stdint.h
+	stdio.h			0100644 0 0 include/stdio.h
+	stdlib.h		0100644 0 0 include/stdlib.h
+	string.h		0100644 0 0 include/string.h
+	termios.h		0100644 0 0 include/termios.h
+	time.h			0100644 0 0 include/time.h
+	unistd.h		0100644 0 0 include/unistd.h
+
+	sys			0040755 0 0
+		fs.h		0100644 0 0 include/sys/fs.h
+		ioctl.h		0100644 0 0 include/sys/ioctl.h
+		list.h  	0100644 0 0 include/sys/list.h
+		queue.h		0100644 0 0 include/sys/queue.h
+		slist.h		0100644 0 0 include/sys/slist.h
+		stailq.h	0100644 0 0 include/sys/stailq.h
+		stat.h		0100644 0 0 include/sys/stat.h
+		tahoe.h		0100644 0 0 include/sys/tahoe.h
+		tailq.h		0100644 0 0 include/sys/tailq.h
+		types.h		0100644 0 0 include/sys/types.h
+		wait.h		0100644 0 0 include/sys/wait.h  	$ $
+
+lib				0040755 0 0 				$ $

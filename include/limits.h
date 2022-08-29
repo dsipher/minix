@@ -54,7 +54,24 @@
 #define LONG_MIN    (-LONG_MAX - 1L)
 #define ULONG_MAX   18446744073709551615UL
 
-#define PATH_MAX    256
+/* values required by POSIX.1-1990, see table 2-3 */
+
+#define _POSIX_ARG_MAX          4096
+#define _POSIX_CHILD_MAX        6
+#define _POSIX_LINK_MAX         8
+#define _POSIX_MAX_CANON        255
+#define _POSIX_MAX_INPUT        255
+#define _POSIX_NAME_MAX         14
+#define _POSIX_NGROUPS_MAX      0
+#define _POSIX_OPEN_MAX         16
+#define _POSIX_PATH_MAX         255
+#define _POSIX_PIPE_BUF         512
+#define _POSIX_SSIZE_MAX        LONG_MAX
+#define _POSIX_STREAM_MAX       8
+#define _POSIX_TZNAME_MAX       3
+
+#define NAME_MAX    28                  /* dictated by fs; see <sys/fs.h> */
+#define PATH_MAX    _POSIX_PATH_MAX
 
 #endif /* _LIMITS_H */
 

@@ -143,6 +143,23 @@ struct dinode
 #define FS_MAX_FILE_SIZE        (   FS_TRIPLE_BYTES + FS_DOUBLE_BYTES       \
                                 +   FS_INDIRECT_BYTES + FS_DIRECT_BYTES     )
 
+/* we need at least two inodes, but we always round up to
+   a multiple of FS_INODES_PER_BLOCK (otherwise the extra
+   space is wasted). the minimum filesystem size is:
+
+        1 super block + 1 bmap block + 1 imap block
+        + 1 inode block + 1 data block = 5 blocks
+
+   such a filesystem could consist only of a root directory
+   with device files in it, but it is technically allowed.
+
+   the maxima are constrained by the types of ino_t/daddr_t */
+
+#define FS_MIN_INODES           FS_INODES_PER_BLOCK
+#define FS_MIN_BLOCKS           5
+#define FS_MAX_INODES           UINT_MAX
+#define FS_MAX_BLOCKS           UINT_MAX
+
 /* the block number/offset in that block where inode `i' is located.
    the names of these macros are historical (like filsys and dinode) */
 

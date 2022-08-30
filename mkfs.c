@@ -470,15 +470,15 @@ main(int argc, char **argv)
     ialloc(&root);
     root.di_mode = S_IFDIR | 0555;
     root.di_nlink = 2;
-    entry(&root, ".", 1);
-    entry(&root, "..", 1);
+    entry(&root, ".", FS_ROOT_INO);
+    entry(&root, "..", FS_ROOT_INO);
 
     /* if there's a prototype, populate the filesystem */
 
     if (proto) {
         ++line;
         NEXT();
-        do_proto(&root, 1);
+        do_proto(&root, FS_ROOT_INO);
         skip(1);
         fclose(proto);
         line = 0;
@@ -486,7 +486,7 @@ main(int argc, char **argv)
 
     /* write out root inode, bitmaps, and superblock */
 
-    iput(&root, 1);
+    iput(&root, FS_ROOT_INO);
 
     bitmap(FS_BMAP_START(fs), fs.s_bmap_blocks, nr_blocks);
     bitmap(FS_IMAP_START(fs), fs.s_imap_blocks, nr_inodes);

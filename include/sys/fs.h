@@ -54,10 +54,12 @@
    since inode 0 and block 0 have special fixed purposes, they can
    never be allocated, so the value 0 is often used as a sentinel
    meaning "no inode" or "no block" in on-disk structures, or as a
-   return value from a function. */
+   return value from a function. the root inode is always inode 1. */
 
 #define FS_BLOCK_SIZE       4096
 #define FS_BLOCK_SHIFT      12
+
+#define FS_ROOT_INO         1
 
 /* the superblock data starts at offset FS_SUPER_OFFSET in block 0.
    (the rest of the block is reserved for use by the boot code.) */

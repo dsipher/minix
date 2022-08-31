@@ -1,6 +1,11 @@
+# cross.sh - make cross-building environment
+#
+# the end result is a set of tools in $ROOT/tahoe/bin which
+# can then be used by build.sh to cross-build a tahoe image.
+
 ROOT=~/xcc
-HOST=$ROOT/host
-TARGET=$ROOT/target
+LINUX=$ROOT/linux
+TAHOE=$ROOT/tahoe
 
 set -e
 rm -rf $ROOT
@@ -9,51 +14,55 @@ mkdir $ROOT
 # 1. build a version of the toolchain which uses
 # gnu binutils and generates binaries for linux.
 
-mkdir $HOST
-mkdir $HOST/bin
-mkdir $HOST/lib
-mkdir $HOST/include
+make clean
 
-cp -rv include/* $HOST/include
+mkdir $LINUX
+mkdir $LINUX/bin
+mkdir $LINUX/lib
+mkdir $LINUX/include
 
-cc -DAS=\"/usr/bin/as\" -DLD=\"/usr/bin/ld\" -DROOT=\"$HOST\" \
-	-o $HOST/bin/cc cc.c
+cp -rv include/* $LINUX/include
 
-(cd cpp; make clean; make; mv cpp $HOST/lib)
-(cd cc1; make clean; make; mv cc1 $HOST/lib)
+cc -DAS=\"/usr/bin/as\" -DLD=\"/usr/bin/ld\" -DROOT=\"$LINUX\" \
+	-o $LINUX/bin/cc cc.c
 
-(cd libc; make clean; make CC=$HOST/bin/cc AR=/usr/bin/ar; \
-	mv crt0.o libc.a $HOST/lib)
+(cd cpp; make clean; make; mv cpp $LINUX/lib)
+(cd cc1; make clean; make; mv cc1 $LINUX/lib)
+
+(cd libc; make clean; make CC=$LINUX/bin/cc AR=/usr/bin/ar; \
+	mv crt0.o libc.a $LINUX/lib)
 
 # 2. using the host toolchain built in the previous step,
 # build the toolchain which generates binaries for tahoe.
 
-mkdir $TARGET
-mkdir $TARGET/bin
-mkdir $TARGET/lib
-mkdir $TARGET/include
+make clean
 
-cp -rv include/* $TARGET/include
+mkdir $TAHOE
+mkdir $TAHOE/bin
+mkdir $TAHOE/lib
+mkdir $TAHOE/include
 
-$HOST/bin/cc -o $TARGET/bin/cc -DROOT=\"$TARGET\" cc.c
+cp -rv include/* $TAHOE/include
 
-(cd yacc; make clean; make CC=$HOST/bin/cc; mv yacc $TARGET/bin)
+$LINUX/bin/cc -o $TAHOE/bin/cc -DROOT=\"$TAHOE\" cc.c
 
-(cd lex; make clean; make CC=$HOST/bin/cc \
-			YACC=$TARGET/bin/yacc \
-			ROOT=$TARGET; \
-	mv lex $TARGET/bin; cp flex.skel $TARGET/lib)
+(cd yacc; make clean; make CC=$LINUX/bin/cc; mv yacc $TAHOE/bin)
 
-(cd as; make clean; make CC=$HOST/bin/cc \
-			 YACC=$TARGET/bin/yacc \
-			 LEX=$TARGET/bin/lex; mv as $TARGET/bin)
+(cd lex; make clean; make CC=$LINUX/bin/cc \
+			YACC=$TAHOE/bin/yacc \
+			ROOT=$TAHOE; \
+	mv lex $TAHOE/bin; cp flex.skel $TAHOE/lib)
 
-(cd cpp; make clean; make CC=$HOST/bin/cc; mv cpp $TARGET/lib)
-(cd cc1; make clean; make CC=$HOST/bin/cc; mv cc1 $TARGET/lib)
+(cd as; make clean; make CC=$LINUX/bin/cc \
+			 YACC=$TAHOE/bin/yacc \
+			 LEX=$TAHOE/bin/lex; mv as $TAHOE/bin)
 
-make CC=$HOST/bin/cc ar; mv ar $TARGET/bin
-make CC=$HOST/bin/cc ld; mv ld $TARGET/bin
-make CC=$HOST/bin/cc nm; mv nm $TARGET/bin
+(cd cpp; make clean; make CC=$LINUX/bin/cc; mv cpp $TAHOE/lib)
+(cd cc1; make clean; make CC=$LINUX/bin/cc; mv cc1 $TAHOE/lib)
 
-(cd libc; make clean; make CC=$TARGET/bin/cc AR=$TARGET/bin/ar; \
-	mv crt0.o libc.a $TARGET/lib)
+make CC=$LINUX/bin/cc ar; mv ar $TAHOE/bin
+make CC=$LINUX/bin/cc ld; mv ld $TAHOE/bin
+make CC=$LINUX/bin/cc nm; mv nm $TAHOE/bin
+
+(cd libc; make clean; make CC=$TAHOE/bin/cc AR=$TAHOE/bin/ar; \
+	mv crt0.o libc.a $TAHOE/lib)

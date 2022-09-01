@@ -58,6 +58,16 @@ clean::
 ld:	ld.c libc/crc32c.c
 	$(CC) -o ld ld.c libc/crc32c.c
 
+####################################################################### mkboot
+
+all::	mkboot
+
+clean::
+	rm -f mkboot
+
+mkboot:	mkboot.c
+	$(CC) -o mkboot mkboot.c
+
 ######################################################################### mkfs
 
 all::	mkfs

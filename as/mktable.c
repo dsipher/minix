@@ -243,6 +243,7 @@ struct { const char *text; const char *template; } insns[] =
     {   "leaw",         0               },
     {   "leal",         0               },
     {   "leaq",         0               },
+    {   "ljmp",         0               },
     {   "lock",         0               },
     {   "lodsb",        0               },
     {   "lodsw",        0               },

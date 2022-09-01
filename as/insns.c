@@ -1237,6 +1237,15 @@ struct insn i_leaq[] =
     { 0 }
 };
 
+struct insn i_ljmp[] =
+{
+    { I_NO_CODE32 | I_NO_CODE64, 1, { 0xEA }, { { O_ABS_16 },
+                                                { O_ABS_16 } } },
+    { I_NO_CODE16,               1, { 0xEA }, { { O_ABS_16 },
+                                                { O_ABS_32 } } },
+    { 0 }
+};
+
 struct insn i_lock[]    =   { { 0, 1, { 0xF0 } }, { 0 } };
 
 struct insn i_lodsb[] = { { 0,         1, { 0xAC } }, { 0 } };

@@ -449,7 +449,6 @@ main(int argc, char **argv)
 
     fs.s_magic = FS_SUPER_MAGIC;
     fs.s_magic2 = FS_SUPER_MAGIC2;
-    fs.s_bios_magic = FS_BIOS_MAGIC;
     fs.s_mtime = fs.s_ctime = time(0);
     fs.s_blocks = nr_blocks;
     fs.s_inodes = nr_inodes;

@@ -642,7 +642,9 @@ main(int argc, char **argv)
 
     exec.a_magic = ZMAGIC;              /* output is executable */
     address = base;                     /* start of text segment */
-    address += sizeof(struct exec);     /* header is part of text */
+
+    exec.a_text = sizeof(struct exec);  /* the a.out header ... */
+    address += sizeof(struct exec);     /* ... is part of the text */
 
     pass1(&argv[optind]);               /* load objects */
     pass2();                            /* build globls[] */

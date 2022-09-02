@@ -610,7 +610,8 @@ static struct tree *access(struct tree *tree)
     quals = TYPE_QUALS(DEREF(tree->type));
 
     if (!DEFINED_SYMBOL(tag))
-        error(ERROR, 0, "%k cannot be applied to incomplete %T", tag);
+        error(ERROR, 0, "%k cannot be applied to incomplete %T", token.k,
+                                                                 tag);
 
     lex();
     expect(K_IDENT);

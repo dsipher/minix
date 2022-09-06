@@ -70,6 +70,9 @@
 	lldt (%bx)
 	lmsw %ax
 
+	rdmsr
+	wrmsr
+
 .code32
 
 	aaa
@@ -140,6 +143,9 @@
 	lldt 0x1000
 	lldt (%ebp)
 	lmsw %ax
+
+	rdmsr
+	wrmsr
 
 .code64
 
@@ -219,3 +225,6 @@
 	lldt 0x1000(%rip)
 	lldt (%r15)
 	lmsw %ax
+
+	rdmsr
+	wrmsr

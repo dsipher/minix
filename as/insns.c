@@ -1744,6 +1744,8 @@ struct insn i_pushq[] =
     { 0 }
 };
 
+struct insn i_rdmsr[]   =   { { 0, 2, { 0x0F, 0x32 } } };
+
 struct insn i_rep[]     =   { { 0, 1, { 0xF3 } }, { 0 } };
 struct insn i_ret[]     =   { { 0, 1, { 0xC3 } }, { 0 } };
 
@@ -2271,6 +2273,8 @@ struct insn i_ucomisd[] =
                                               { O_XMM | O_MEM, F_MODRM } } },
     { 0 }
 };
+
+struct insn i_wrmsr[]   =   { { 0, 2, { 0x0F, 0x30 } } };
 
 struct insn i_xlat[]    =   { { 0, 1, { 0xD7 } }, { 0 } };
 

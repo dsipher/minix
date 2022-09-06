@@ -44,6 +44,24 @@
 
 	int $0x10
 
+	outb %al, $0x20
+	outb %al, %dx
+
+	outw %ax, $0x20
+	outw %ax, %dx
+
+	outl %eax, $0x20
+	outl %eax, %dx
+
+	inb $0x20, %al
+	inb %dx, %al
+
+	inw $0x20, %ax
+	inw %dx, %ax
+
+	inl $0x20, %eax
+	inl %dx, %eax
+
 .code32
 
 	aaa
@@ -88,6 +106,24 @@
 	cmpsl
 
 	int $0x10
+
+	outb %al, $0x20
+	outb %al, %dx
+
+	outw %ax, $0x20
+	outw %ax, %dx
+
+	outl %eax, $0x20
+	outl %eax, %dx
+
+	inb $0x20, %al
+	inb %dx, %al
+
+	inw $0x20, %ax
+	inw %dx, %ax
+
+	inl $0x20, %eax
+	inl %dx, %eax
 
 .code64
 
@@ -141,3 +177,21 @@
 	cmpsq
 
 	int $0x10
+
+	outb %al, $0x20
+	outb %al, %dx
+
+	outw %ax, $0x20
+	outw %ax, %dx
+
+	outl %eax, $0x20
+	outl %eax, %dx
+
+	inb $0x20, %al
+	inb %dx, %al
+
+	inw $0x20, %ax
+	inw %dx, %ax
+
+	inl $0x20, %eax
+	inl %dx, %eax

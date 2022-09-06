@@ -1024,6 +1024,27 @@ struct insn i_imulq[] =
     { 0 }
 };
 
+struct insn i_inb[] =
+{
+    { 0, 1, { 0xE4 }, { { O_ACC_8 }, { O_IMM_8  } } },
+    { 0, 1, { 0xEC }, { { O_ACC_8 }, { O_REG_DX } } },
+    { 0 }
+};
+
+struct insn i_inw[] =
+{
+    { I_DATA_16, 1, { 0xE5 }, { { O_ACC_16 }, { O_IMM_8  } } },
+    { I_DATA_16, 1, { 0xED }, { { O_ACC_16 }, { O_REG_DX } } },
+    { 0 }
+};
+
+struct insn i_inl[] =
+{
+    { I_DATA_32, 1, { 0xE5 }, { { O_ACC_32 }, { O_IMM_8  } } },
+    { I_DATA_32, 1, { 0xED }, { { O_ACC_32 }, { O_REG_DX } } },
+    { 0 }
+};
+
 struct insn i_incb[] =
 {
     { 0, 2, { 0xFE, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM } } },
@@ -1601,6 +1622,27 @@ struct insn i_orq[] =
     { I_DATA_64, 2, { 0x0B, 0x00 }, { { O_GPR_64, F_MID           },
                                       { O_GPR_64 | O_MEM, F_MODRM } } },
 
+    { 0 }
+};
+
+struct insn i_outb[] =
+{
+    { 0, 1, { 0xE6 }, { { O_IMM_8  }, { O_ACC_8  } } },
+    { 0, 1, { 0xEE }, { { O_REG_DX }, { O_ACC_8  } } },
+    { 0 }
+};
+
+struct insn i_outw[] =
+{
+    { I_DATA_16, 1, { 0xE7 }, { { O_IMM_8 },  { O_ACC_16 } } },
+    { I_DATA_16, 1, { 0xEF }, { { O_REG_DX }, { O_ACC_16 } } },
+    { 0 }
+};
+
+struct insn i_outl[] =
+{
+    { I_DATA_32, 1, { 0xE7 }, { { O_IMM_8 },  { O_ACC_32 } } },
+    { I_DATA_32, 1, { 0xEF }, { { O_REG_DX }, { O_ACC_32 } } },
     { 0 }
 };
 

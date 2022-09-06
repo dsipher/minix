@@ -1258,12 +1258,36 @@ struct insn i_leaq[] =
     { 0 }
 };
 
+struct insn i_lgdt[] =
+{
+    { 0, 3, { 0x0F, 0x01, 0x10 }, { { O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_lidt[] =
+{
+    { 0, 3, { 0x0F, 0x01, 0x18 }, { { O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_ljmp[] =
 {
     { I_NO_CODE32 | I_NO_CODE64, 1, { 0xEA }, { { O_ABS_16 },
                                                 { O_ABS_16 } } },
     { I_NO_CODE16,               1, { 0xEA }, { { O_ABS_16 },
                                                 { O_ABS_32 } } },
+    { 0 }
+};
+
+struct insn i_lldt[] =
+{
+    { 0, 3, { 0x0F, 0x00, 0x10 }, { { O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_lmsw[] =
+{
+    { 0, 3, { 0x0F, 0x01, 0x30 }, { { O_MEM | O_GPR_16, F_MODRM } } },
     { 0 }
 };
 

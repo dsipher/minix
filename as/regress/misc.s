@@ -62,6 +62,14 @@
 	inl $0x20, %eax
 	inl %dx, %eax
 
+	lidt 0x1000
+	lidt (%bx)
+	lgdt 0x1000
+	lgdt (%bx)
+	lldt 0x1000
+	lldt (%bx)
+	lmsw %ax
+
 .code32
 
 	aaa
@@ -124,6 +132,14 @@
 
 	inl $0x20, %eax
 	inl %dx, %eax
+
+	lidt 0x1000
+	lidt (%ebx)
+	lgdt 0x1000
+	lgdt (%esi)
+	lldt 0x1000
+	lldt (%ebp)
+	lmsw %ax
 
 .code64
 
@@ -195,3 +211,11 @@
 
 	inl $0x20, %eax
 	inl %dx, %eax
+
+	lidt 0x1000
+	lidt (%ebx)
+	lgdt 0x1000
+	lgdt (%rbx)
+	lldt 0x1000(%rip)
+	lldt (%r15)
+	lmsw %ax

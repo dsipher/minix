@@ -66,137 +66,161 @@ misc.s
   62  000051  66e520            	inl $0x20, %eax
   63  000054  66ed              	inl %dx, %eax
   64  000056                    
-  65  000056                    .code32
-  66  000056                    
-  67  000056  37                	aaa
-  68  000057  d50a              	aad
-  69  000059  d512              	aad $0x12
-  70  00005b  d40a              	aam
-  71  00005d  d41f              	aam $0x1F
-  72  00005f  3f                	aas
-  73  000060  0fbdc0                    bsrl %eax,%eax
-  74  000063  0fbcc0                    bsfl %eax,%eax
-  75  000066  0fbdc8                    bsrl %eax,%ecx
-  76  000069  ffd0                      call *%eax
-  77  00006b  ffe0                      jmp *%eax
-  78  00006d  ffe1                      jmp *%ecx
-  79  00006f  ffe6                      jmp *%esi
-  80  000071                    
-  81  000071  6698              	cbtw
-  82  000073  6699              	cwtd
-  83  000075  99                	cltd
-  84  000076  cf                	iret
-  85  000077  0f05              	syscall
-  86  000079  0f07              	sysret
-  87  00007b                    
-  88  00007b  aa                	stosb
-  89  00007c  66ab              	stosw
-  90  00007e  ab                	stosl
-  91  00007f                    
-  92  00007f  a4                	movsb
-  93  000080  66a5              	movsw
-  94  000082  a5                	movsl
-  95  000083                    
-  96  000083  ae                	scasb
-  97  000084  66af              	scasw
-  98  000086  af                	scasl
-  99  000087                    
- 100  000087  ac                	lodsb
- 101  000088  66ad              	lodsw
- 102  00008a  ad                	lodsl
- 103  00008b                    
- 104  00008b  a6                	cmpsb
- 105  00008c  66a7              	cmpsw
- 106  00008e  a7                	cmpsl
- 107  00008f                    
- 108  00008f  cd10              	int $0x10
- 109  000091                    
- 110  000091  e620              	outb %al, $0x20
- 111  000093  ee                	outb %al, %dx
- 112  000094                    
- 113  000094  66e720            	outw %ax, $0x20
- 114  000097  66ef              	outw %ax, %dx
- 115  000099                    
- 116  000099  e720              	outl %eax, $0x20
- 117  00009b  ef                	outl %eax, %dx
- 118  00009c                    
- 119  00009c  e420              	inb $0x20, %al
- 120  00009e  ec                	inb %dx, %al
- 121  00009f                    
- 122  00009f  66e520            	inw $0x20, %ax
- 123  0000a2  66ed              	inw %dx, %ax
- 124  0000a4                    
- 125  0000a4  e520              	inl $0x20, %eax
- 126  0000a6  ed                	inl %dx, %eax
- 127  0000a7                    
- 128  0000a7                    .code64
- 129  0000a7                    
- 130  0000a7  66410fbdf7                bsrw %r15w, %si
- 131  0000ac  66440fbde2                bsrw %dx, %r12w
- 132  0000b1  480fbdc0                  bsrq %rax,%rax
- 133  0000b5  0fbdc0                    bsrl %eax,%eax
- 134  0000b8  480fbcc0                  bsfq %rax,%rax
- 135  0000bc  0fbcc0                    bsfl %eax,%eax
- 136  0000bf  0fbd45fc                  bsrl -4(%rbp),%eax
- 137  0000c3  480fbd5058                bsrq 88(%rax),%rdx
- 138  0000c8  0fbdc8                    bsrl %eax,%ecx
- 139  0000cb  0fbcc0                    bsfl %eax,%eax
- 140  0000ce                    
- 141  0000ce  41ffd4                    call *%r12
- 142  0000d1  41ffd5                    call *%r13
- 143  0000d4  ffd0                      call *%rax
- 144  0000d6  ffe0                      jmp *%rax
- 145  0000d8  ffe1                      jmp *%rcx
- 146  0000da  41ffe5                    jmp *%r13
- 147  0000dd  ffe6                      jmp *%rsi
- 148  0000df                    
- 149  0000df  6698              	cbtw
- 150  0000e1  6699              	cwtd
- 151  0000e3  99                	cltd
- 152  0000e4  4899              	cqto
- 153  0000e6                    
- 154  0000e6  aa                	stosb
- 155  0000e7  66ab              	stosw
- 156  0000e9  ab                	stosl
- 157  0000ea  48ab              	stosq
- 158  0000ec                    
- 159  0000ec  a4                	movsb
- 160  0000ed  66a5              	movsw
- 161  0000ef  a5                	movsl
- 162  0000f0  48a5              	movsq
- 163  0000f2                    
- 164  0000f2  ae                	scasb
- 165  0000f3  66af              	scasw
- 166  0000f5  af                	scasl
- 167  0000f6  48af              	scasq
- 168  0000f8                    
- 169  0000f8  ac                	lodsb
- 170  0000f9  66ad              	lodsw
- 171  0000fb  ad                	lodsl
- 172  0000fc  48ad              	lodsq
- 173  0000fe                    
- 174  0000fe  a6                	cmpsb
- 175  0000ff  66a7              	cmpsw
- 176  000101  a7                	cmpsl
- 177  000102  48a7              	cmpsq
- 178  000104                    
- 179  000104  cd10              	int $0x10
- 180  000106                    
- 181  000106  e620              	outb %al, $0x20
- 182  000108  ee                	outb %al, %dx
- 183  000109                    
- 184  000109  66e720            	outw %ax, $0x20
- 185  00010c  66ef              	outw %ax, %dx
- 186  00010e                    
- 187  00010e  e720              	outl %eax, $0x20
- 188  000110  ef                	outl %eax, %dx
- 189  000111                    
- 190  000111  e420              	inb $0x20, %al
- 191  000113  ec                	inb %dx, %al
- 192  000114                    
- 193  000114  66e520            	inw $0x20, %ax
- 194  000117  66ed              	inw %dx, %ax
- 195  000119                    
- 196  000119  e520              	inl $0x20, %eax
- 197  00011b  ed                	inl %dx, %eax
- 198  00011c                    
+  65  000056  0f011e0010        	lidt 0x1000
+  66  00005b  0f011f            	lidt (%bx)
+  67  00005e  0f01160010        	lgdt 0x1000
+  68  000063  0f0117            	lgdt (%bx)
+  69  000066  0f00160010        	lldt 0x1000
+  70  00006b  0f0017            	lldt (%bx)
+  71  00006e  0f01f0            	lmsw %ax
+  72  000071                    
+  73  000071                    .code32
+  74  000071                    
+  75  000071  37                	aaa
+  76  000072  d50a              	aad
+  77  000074  d512              	aad $0x12
+  78  000076  d40a              	aam
+  79  000078  d41f              	aam $0x1F
+  80  00007a  3f                	aas
+  81  00007b  0fbdc0                    bsrl %eax,%eax
+  82  00007e  0fbcc0                    bsfl %eax,%eax
+  83  000081  0fbdc8                    bsrl %eax,%ecx
+  84  000084  ffd0                      call *%eax
+  85  000086  ffe0                      jmp *%eax
+  86  000088  ffe1                      jmp *%ecx
+  87  00008a  ffe6                      jmp *%esi
+  88  00008c                    
+  89  00008c  6698              	cbtw
+  90  00008e  6699              	cwtd
+  91  000090  99                	cltd
+  92  000091  cf                	iret
+  93  000092  0f05              	syscall
+  94  000094  0f07              	sysret
+  95  000096                    
+  96  000096  aa                	stosb
+  97  000097  66ab              	stosw
+  98  000099  ab                	stosl
+  99  00009a                    
+ 100  00009a  a4                	movsb
+ 101  00009b  66a5              	movsw
+ 102  00009d  a5                	movsl
+ 103  00009e                    
+ 104  00009e  ae                	scasb
+ 105  00009f  66af              	scasw
+ 106  0000a1  af                	scasl
+ 107  0000a2                    
+ 108  0000a2  ac                	lodsb
+ 109  0000a3  66ad              	lodsw
+ 110  0000a5  ad                	lodsl
+ 111  0000a6                    
+ 112  0000a6  a6                	cmpsb
+ 113  0000a7  66a7              	cmpsw
+ 114  0000a9  a7                	cmpsl
+ 115  0000aa                    
+ 116  0000aa  cd10              	int $0x10
+ 117  0000ac                    
+ 118  0000ac  e620              	outb %al, $0x20
+ 119  0000ae  ee                	outb %al, %dx
+ 120  0000af                    
+ 121  0000af  66e720            	outw %ax, $0x20
+ 122  0000b2  66ef              	outw %ax, %dx
+ 123  0000b4                    
+ 124  0000b4  e720              	outl %eax, $0x20
+ 125  0000b6  ef                	outl %eax, %dx
+ 126  0000b7                    
+ 127  0000b7  e420              	inb $0x20, %al
+ 128  0000b9  ec                	inb %dx, %al
+ 129  0000ba                    
+ 130  0000ba  66e520            	inw $0x20, %ax
+ 131  0000bd  66ed              	inw %dx, %ax
+ 132  0000bf                    
+ 133  0000bf  e520              	inl $0x20, %eax
+ 134  0000c1  ed                	inl %dx, %eax
+ 135  0000c2                    
+ 136  0000c2  0f011d00100000    	lidt 0x1000
+ 137  0000c9  0f011b            	lidt (%ebx)
+ 138  0000cc  0f011500100000    	lgdt 0x1000
+ 139  0000d3  0f0116            	lgdt (%esi)
+ 140  0000d6  0f001500100000    	lldt 0x1000
+ 141  0000dd  0f005500          	lldt (%ebp)
+ 142  0000e1  0f01f0            	lmsw %ax
+ 143  0000e4                    
+ 144  0000e4                    .code64
+ 145  0000e4                    
+ 146  0000e4  66410fbdf7                bsrw %r15w, %si
+ 147  0000e9  66440fbde2                bsrw %dx, %r12w
+ 148  0000ee  480fbdc0                  bsrq %rax,%rax
+ 149  0000f2  0fbdc0                    bsrl %eax,%eax
+ 150  0000f5  480fbcc0                  bsfq %rax,%rax
+ 151  0000f9  0fbcc0                    bsfl %eax,%eax
+ 152  0000fc  0fbd45fc                  bsrl -4(%rbp),%eax
+ 153  000100  480fbd5058                bsrq 88(%rax),%rdx
+ 154  000105  0fbdc8                    bsrl %eax,%ecx
+ 155  000108  0fbcc0                    bsfl %eax,%eax
+ 156  00010b                    
+ 157  00010b  41ffd4                    call *%r12
+ 158  00010e  41ffd5                    call *%r13
+ 159  000111  ffd0                      call *%rax
+ 160  000113  ffe0                      jmp *%rax
+ 161  000115  ffe1                      jmp *%rcx
+ 162  000117  41ffe5                    jmp *%r13
+ 163  00011a  ffe6                      jmp *%rsi
+ 164  00011c                    
+ 165  00011c  6698              	cbtw
+ 166  00011e  6699              	cwtd
+ 167  000120  99                	cltd
+ 168  000121  4899              	cqto
+ 169  000123                    
+ 170  000123  aa                	stosb
+ 171  000124  66ab              	stosw
+ 172  000126  ab                	stosl
+ 173  000127  48ab              	stosq
+ 174  000129                    
+ 175  000129  a4                	movsb
+ 176  00012a  66a5              	movsw
+ 177  00012c  a5                	movsl
+ 178  00012d  48a5              	movsq
+ 179  00012f                    
+ 180  00012f  ae                	scasb
+ 181  000130  66af              	scasw
+ 182  000132  af                	scasl
+ 183  000133  48af              	scasq
+ 184  000135                    
+ 185  000135  ac                	lodsb
+ 186  000136  66ad              	lodsw
+ 187  000138  ad                	lodsl
+ 188  000139  48ad              	lodsq
+ 189  00013b                    
+ 190  00013b  a6                	cmpsb
+ 191  00013c  66a7              	cmpsw
+ 192  00013e  a7                	cmpsl
+ 193  00013f  48a7              	cmpsq
+ 194  000141                    
+ 195  000141  cd10              	int $0x10
+ 196  000143                    
+ 197  000143  e620              	outb %al, $0x20
+ 198  000145  ee                	outb %al, %dx
+ 199  000146                    
+ 200  000146  66e720            	outw %ax, $0x20
+ 201  000149  66ef              	outw %ax, %dx
+ 202  00014b                    
+ 203  00014b  e720              	outl %eax, $0x20
+ 204  00014d  ef                	outl %eax, %dx
+ 205  00014e                    
+ 206  00014e  e420              	inb $0x20, %al
+ 207  000150  ec                	inb %dx, %al
+ 208  000151                    
+ 209  000151  66e520            	inw $0x20, %ax
+ 210  000154  66ed              	inw %dx, %ax
+ 211  000156                    
+ 212  000156  e520              	inl $0x20, %eax
+ 213  000158  ed                	inl %dx, %eax
+ 214  000159                    
+ 215  000159  0f011c2500100000  	lidt 0x1000
+ 216  000161  670f011b          	lidt (%ebx)
+ 217  000165  0f01142500100000  	lgdt 0x1000
+ 218  00016d  0f0113            	lgdt (%rbx)
+ 219  000170  0f001500100000    	lldt 0x1000(%rip)
+ 220  000177  410f0017          	lldt (%r15)
+ 221  00017b  0f01f0            	lmsw %ax
+ 222  00017e                    

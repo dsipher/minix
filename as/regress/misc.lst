@@ -151,85 +151,93 @@ misc.s
  147  0000e8  0f32              	rdmsr
  148  0000ea  0f30              	wrmsr
  149  0000ec                    
- 150  0000ec                    .code64
- 151  0000ec                    
- 152  0000ec  66410fbdf7                bsrw %r15w, %si
- 153  0000f1  66440fbde2                bsrw %dx, %r12w
- 154  0000f6  480fbdc0                  bsrq %rax,%rax
- 155  0000fa  0fbdc0                    bsrl %eax,%eax
- 156  0000fd  480fbcc0                  bsfq %rax,%rax
- 157  000101  0fbcc0                    bsfl %eax,%eax
- 158  000104  0fbd45fc                  bsrl -4(%rbp),%eax
- 159  000108  480fbd5058                bsrq 88(%rax),%rdx
- 160  00010d  0fbdc8                    bsrl %eax,%ecx
- 161  000110  0fbcc0                    bsfl %eax,%eax
- 162  000113                    
- 163  000113  41ffd4                    call *%r12
- 164  000116  41ffd5                    call *%r13
- 165  000119  ffd0                      call *%rax
- 166  00011b  ffe0                      jmp *%rax
- 167  00011d  ffe1                      jmp *%rcx
- 168  00011f  41ffe5                    jmp *%r13
- 169  000122  ffe6                      jmp *%rsi
- 170  000124                    
- 171  000124  6698              	cbtw
- 172  000126  6699              	cwtd
- 173  000128  99                	cltd
- 174  000129  4899              	cqto
- 175  00012b                    
- 176  00012b  aa                	stosb
- 177  00012c  66ab              	stosw
- 178  00012e  ab                	stosl
- 179  00012f  48ab              	stosq
- 180  000131                    
- 181  000131  a4                	movsb
- 182  000132  66a5              	movsw
- 183  000134  a5                	movsl
- 184  000135  48a5              	movsq
- 185  000137                    
- 186  000137  ae                	scasb
- 187  000138  66af              	scasw
- 188  00013a  af                	scasl
- 189  00013b  48af              	scasq
- 190  00013d                    
- 191  00013d  ac                	lodsb
- 192  00013e  66ad              	lodsw
- 193  000140  ad                	lodsl
- 194  000141  48ad              	lodsq
- 195  000143                    
- 196  000143  a6                	cmpsb
- 197  000144  66a7              	cmpsw
- 198  000146  a7                	cmpsl
- 199  000147  48a7              	cmpsq
- 200  000149                    
- 201  000149  cd10              	int $0x10
- 202  00014b                    
- 203  00014b  e620              	outb %al, $0x20
- 204  00014d  ee                	outb %al, %dx
- 205  00014e                    
- 206  00014e  66e720            	outw %ax, $0x20
- 207  000151  66ef              	outw %ax, %dx
- 208  000153                    
- 209  000153  e720              	outl %eax, $0x20
- 210  000155  ef                	outl %eax, %dx
- 211  000156                    
- 212  000156  e420              	inb $0x20, %al
- 213  000158  ec                	inb %dx, %al
- 214  000159                    
- 215  000159  66e520            	inw $0x20, %ax
- 216  00015c  66ed              	inw %dx, %ax
- 217  00015e                    
- 218  00015e  e520              	inl $0x20, %eax
- 219  000160  ed                	inl %dx, %eax
- 220  000161                    
- 221  000161  0f011c2500100000  	lidt 0x1000
- 222  000169  670f011b          	lidt (%ebx)
- 223  00016d  0f01142500100000  	lgdt 0x1000
- 224  000175  0f0113            	lgdt (%rbx)
- 225  000178  0f001500100000    	lldt 0x1000(%rip)
- 226  00017f  410f0017          	lldt (%r15)
- 227  000183  0f01f0            	lmsw %ax
- 228  000186                    
- 229  000186  0f32              	rdmsr
- 230  000188  0f30              	wrmsr
- 231  00018a                    
+ 150  0000ec  0f22d8            	movl %eax, %cr3
+ 151  0000ef  0f20fb            	movl %cr7, %ebx
+ 152  0000f2                    
+ 153  0000f2                    .code64
+ 154  0000f2                    
+ 155  0000f2  66410fbdf7                bsrw %r15w, %si
+ 156  0000f7  66440fbde2                bsrw %dx, %r12w
+ 157  0000fc  480fbdc0                  bsrq %rax,%rax
+ 158  000100  0fbdc0                    bsrl %eax,%eax
+ 159  000103  480fbcc0                  bsfq %rax,%rax
+ 160  000107  0fbcc0                    bsfl %eax,%eax
+ 161  00010a  0fbd45fc                  bsrl -4(%rbp),%eax
+ 162  00010e  480fbd5058                bsrq 88(%rax),%rdx
+ 163  000113  0fbdc8                    bsrl %eax,%ecx
+ 164  000116  0fbcc0                    bsfl %eax,%eax
+ 165  000119                    
+ 166  000119  41ffd4                    call *%r12
+ 167  00011c  41ffd5                    call *%r13
+ 168  00011f  ffd0                      call *%rax
+ 169  000121  ffe0                      jmp *%rax
+ 170  000123  ffe1                      jmp *%rcx
+ 171  000125  41ffe5                    jmp *%r13
+ 172  000128  ffe6                      jmp *%rsi
+ 173  00012a                    
+ 174  00012a  6698              	cbtw
+ 175  00012c  6699              	cwtd
+ 176  00012e  99                	cltd
+ 177  00012f  4899              	cqto
+ 178  000131                    
+ 179  000131  aa                	stosb
+ 180  000132  66ab              	stosw
+ 181  000134  ab                	stosl
+ 182  000135  48ab              	stosq
+ 183  000137                    
+ 184  000137  a4                	movsb
+ 185  000138  66a5              	movsw
+ 186  00013a  a5                	movsl
+ 187  00013b  48a5              	movsq
+ 188  00013d                    
+ 189  00013d  ae                	scasb
+ 190  00013e  66af              	scasw
+ 191  000140  af                	scasl
+ 192  000141  48af              	scasq
+ 193  000143                    
+ 194  000143  ac                	lodsb
+ 195  000144  66ad              	lodsw
+ 196  000146  ad                	lodsl
+ 197  000147  48ad              	lodsq
+ 198  000149                    
+ 199  000149  a6                	cmpsb
+ 200  00014a  66a7              	cmpsw
+ 201  00014c  a7                	cmpsl
+ 202  00014d  48a7              	cmpsq
+ 203  00014f                    
+ 204  00014f  cd10              	int $0x10
+ 205  000151                    
+ 206  000151  e620              	outb %al, $0x20
+ 207  000153  ee                	outb %al, %dx
+ 208  000154                    
+ 209  000154  66e720            	outw %ax, $0x20
+ 210  000157  66ef              	outw %ax, %dx
+ 211  000159                    
+ 212  000159  e720              	outl %eax, $0x20
+ 213  00015b  ef                	outl %eax, %dx
+ 214  00015c                    
+ 215  00015c  e420              	inb $0x20, %al
+ 216  00015e  ec                	inb %dx, %al
+ 217  00015f                    
+ 218  00015f  66e520            	inw $0x20, %ax
+ 219  000162  66ed              	inw %dx, %ax
+ 220  000164                    
+ 221  000164  e520              	inl $0x20, %eax
+ 222  000166  ed                	inl %dx, %eax
+ 223  000167                    
+ 224  000167  0f011c2500100000  	lidt 0x1000
+ 225  00016f  670f011b          	lidt (%ebx)
+ 226  000173  0f01142500100000  	lgdt 0x1000
+ 227  00017b  0f0113            	lgdt (%rbx)
+ 228  00017e  0f001500100000    	lldt 0x1000(%rip)
+ 229  000185  410f0017          	lldt (%r15)
+ 230  000189  0f01f0            	lmsw %ax
+ 231  00018c                    
+ 232  00018c  0f32              	rdmsr
+ 233  00018e  0f30              	wrmsr
+ 234  000190                    
+ 235  000190  0f22d8            	movq %rax, %cr3
+ 236  000193  0f20fb            	movq %cr7, %rbx
+ 237  000196  440f20c0          	movq %cr8, %rax
+ 238  00019a  450f22c7          	movq %r15, %cr8
+ 239  00019e                    

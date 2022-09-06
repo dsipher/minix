@@ -147,6 +147,9 @@
 	rdmsr
 	wrmsr
 
+	movl %eax, %cr3
+	movl %cr7, %ebx
+
 .code64
 
         bsrw %r15w, %si
@@ -228,3 +231,8 @@
 
 	rdmsr
 	wrmsr
+
+	movq %rax, %cr3
+	movq %cr7, %rbx
+	movq %cr8, %rax
+	movq %r15, %cr8

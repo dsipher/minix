@@ -1363,6 +1363,14 @@ struct insn i_movl[] =
     { I_DATA_32, 2, { 0x8C, 0x00 }, { { O_GPR_32 | O_MEM,  F_MODRM },
                                       { O_SEG_2 | O_SEG_3, F_MID   } } },
 
+    { I_NO_CODE16 |
+      I_NO_CODE64,   3, { 0x0F, 0x20, 0x00 }, { { O_GPR_32, F_MODRM },
+                                                { O_CR,     F_MID   } } },
+
+    { I_NO_CODE16 |
+      I_NO_CODE64,   3, { 0x0F, 0x22, 0x00 }, { { O_CR,     F_MID   },
+                                                { O_GPR_32, F_MODRM } } },
+
     { 0 }
 };
 
@@ -1382,6 +1390,14 @@ struct insn i_movq[] =
 
     { I_DATA_64, 2, { 0x8C, 0x00 }, { { O_GPR_64 | O_MEM,  F_MODRM },
                                       { O_SEG_2 | O_SEG_3, F_MID   } } },
+
+    { I_NO_CODE16 |
+      I_NO_CODE32,   3, { 0x0F, 0x20, 0x00 }, { { O_GPR_64, F_MODRM },
+                                                { O_CR,     F_MID   } } },
+
+    { I_NO_CODE16 |
+      I_NO_CODE32,   3, { 0x0F, 0x22, 0x00 }, { { O_CR,     F_MID   },
+                                                { O_GPR_64, F_MODRM } } },
 
     { 0 }
 };

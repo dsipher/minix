@@ -56,7 +56,7 @@
 %type<o>        operand imm indirect
 %type<o>        reg reg8 reg16 reg32 reg64
 %type<o>        mem disp base index scale
-%type<o>        sreg xreg
+%type<o>        sreg xreg creg
 
 %left           '+' '-'
 
@@ -231,6 +231,7 @@ operand         :   reg
                 |   mem
                 |   sreg
                 |   xreg
+                |   creg
                 |   indirect { $1->classes &= ~(O_REL | O_ABS); $$ = $1; }
                 ;
 
@@ -438,6 +439,24 @@ xreg            :   XMM0    {   $$ = REG(O_XMM,                 XMM0);  }
                 |   XMM13   {   $$ = REG(O_XMM,                 XMM13); }
                 |   XMM14   {   $$ = REG(O_XMM,                 XMM14); }
                 |   XMM15   {   $$ = REG(O_XMM,                 XMM15); }
+                ;
+
+creg            :   CR0     {   $$ = REG(O_CR,                  CR0);   }
+                |   CR1     {   $$ = REG(O_CR,                  CR1);   }
+                |   CR2     {   $$ = REG(O_CR,                  CR2);   }
+                |   CR3     {   $$ = REG(O_CR,                  CR3);   }
+                |   CR4     {   $$ = REG(O_CR,                  CR4);   }
+                |   CR5     {   $$ = REG(O_CR,                  CR5);   }
+                |   CR6     {   $$ = REG(O_CR,                  CR6);   }
+                |   CR7     {   $$ = REG(O_CR,                  CR7);   }
+                |   CR8     {   $$ = REG(O_CR,                  CR8);   }
+                |   CR9     {   $$ = REG(O_CR,                  CR9);   }
+                |   CR10    {   $$ = REG(O_CR,                  CR10);  }
+                |   CR11    {   $$ = REG(O_CR,                  CR11);  }
+                |   CR12    {   $$ = REG(O_CR,                  CR12);  }
+                |   CR13    {   $$ = REG(O_CR,                  CR13);  }
+                |   CR14    {   $$ = REG(O_CR,                  CR14);  }
+                |   CR15    {   $$ = REG(O_CR,                  CR15);  }
                 ;
 
 %%

@@ -70,6 +70,8 @@ DIRECT_NAME         =   0x0784      / direct.d_name
 
 SIZEOF_DIRECT       =   32          / size of struct direct
 
+A20_ALIAS           =   0x07D0      / see test_a20
+
 DAP                 =   0x07F0      / disk address packet
 DAP_SIZE            =   0           / (byte) size of packet
 DAP_ZERO            =   1           / (byte) must-be-zero
@@ -402,9 +404,30 @@ second:             pushfl                      / copy EFLAGS
                     movl $0x80000001, %eax      / get feature bits
                     cpuid
                     testl $0x20000000, %edx     / supports 64-bit mode?
-                    jnz check_fs
+                    jnz open_a20
 
 cpu_error:          movw $cpu_error_msg, %si
+                    jmp error
+
+/ open the A20 gate if needed. try a couple
+/ of techniques, least-intrusive first.
+
+open_a20:           call test_a20               / might be open already
+                    jnz check_fs
+
+                    movw $0x2401, %ax           / try BIOS function
+                    int $0x15
+                    call test_a20
+                    jnz check_fs
+
+                    inb $0x92, %al              / try `fast A20' gate
+                    orb $2, %al
+                    andb $0xfe, %al
+                    outb %al, $0x92
+                    call test_a20
+                    jnz check_fs
+
+                    movw $stuck_a20_msg, %si
                     jmp error
 
 / make sure the disk looks like a filesystem.
@@ -756,6 +779,33 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
 
 //////////////////////////////////////////////////////////////////////////////
 /
+/ test to ensure A20 line is not gated
+/
+/  out: %ax destroyed
+/       Z=0 if A20 enabled
+
+test_a20:           pushw %es
+
+                    movw $0xFFFF, %ax
+                    movw %ax, %es
+
+                    / the basic idea is to see if A20_ALIAS can be
+                    / accessed by wrapping around the 1MB boundary.
+
+                    movw $0x1234, A20_ALIAS
+                    seg %es
+                    cmpw $0x1234, A20_ALIAS+0x10
+                    jne test_a20_done
+
+                    movw $0x4321, A20_ALIAS
+                    seg %es
+                    cmpw $0x4321, A20_ALIAS+0x10
+
+test_a20_done:      popw %es
+                    ret
+
+//////////////////////////////////////////////////////////////////////////////
+/
 / print unsigned number in decimal
 /
 /   in: %eax = number
@@ -957,6 +1007,9 @@ too_big_msg:        .ascii "too big."
                     .byte 0
 
 cpu_error_msg:      .ascii "unsupported CPU"
+                    .byte 0
+
+stuck_a20_msg:      .ascii "A20 gate stuck"
                     .byte 0
 
 / the global descriptor table: like the page tables, this is

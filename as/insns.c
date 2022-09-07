@@ -1281,7 +1281,7 @@ struct insn i_ljmp[] =
 
 struct insn i_lldt[] =
 {
-    { 0, 3, { 0x0F, 0x00, 0x10 }, { { O_MEM, F_MODRM } } },
+    { 0, 3, { 0x0F, 0x00, 0x10 }, { { O_MEM | O_GPR_16, F_MODRM } } },
     { 0 }
 };
 
@@ -1301,6 +1301,12 @@ struct insn i_lodsq[] = { { I_DATA_64, 1, { 0xAD } }, { 0 } };
 struct insn i_loop[]   = { { 0, 1, { 0xE2 }, { { O_REL_8 } } }, { 0 } };
 struct insn i_loope[]  = { { 0, 1, { 0xE1 }, { { O_REL_8 } } }, { 0 } };
 struct insn i_loopne[] = { { 0, 1, { 0xE0 }, { { O_REL_8 } } }, { 0 } };
+
+struct insn i_ltr[] =
+{
+    { 0, 3, { 0x0F, 0x00, 0x18 }, { { O_MEM | O_GPR_16, F_MODRM } } },
+    { 0 }
+};
 
 struct insn i_movsb[] = { { 0,         1, { 0xA4 } }, { 0 } };
 struct insn i_movsw[] = { { I_DATA_16, 1, { 0xA5 } }, { 0 } };

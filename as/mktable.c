@@ -261,6 +261,7 @@ struct { const char *text; const char *template; } insns[] =
     {   "loopne",       0               },
     {   "loopnz",       "loopne"        },
     {   "loopz",        "loope"         },
+    {   "ltr",          0               },
     {   "movb",         0               },
     {   "movl",         0               },
     {   "movq",         0               },

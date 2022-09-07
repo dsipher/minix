@@ -359,7 +359,8 @@ get_name(char *name, int len)
     *name = 0;
 }
 
-/* XXX */
+/* read the prototype file to populate the directory
+   corresponding to the dinode/inode number pair */
 
 void
 do_proto(struct dinode *dir_di, ino_t dir_ino)

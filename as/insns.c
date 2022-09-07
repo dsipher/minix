@@ -790,6 +790,8 @@ struct insn i_cmpsw[] = { { I_DATA_16, 1, { 0xA7 } }, { 0 } };
 struct insn i_cmpsl[] = { { I_DATA_32, 1, { 0xA7 } }, { 0 } };
 struct insn i_cmpsq[] = { { I_DATA_64, 1, { 0xA7 } }, { 0 } };
 
+struct insn i_cpuid[] = { { 0, 2, { 0x0F, 0xA2 } }, { 0 } };
+
 struct insn i_cqto[] = { { I_DATA_64, 1, { 0x99 } }, { 0 } };
 
 struct insn i_cvtss2sd[] =
@@ -1692,6 +1694,10 @@ struct insn i_outl[] =
     { 0 }
 };
 
+struct insn i_popfw[] = { { I_DATA_16,                 1, { 0x9D } }, { 0 } };
+struct insn i_popfl[] = { { I_DATA_32   | I_NO_CODE64, 1, { 0x9D } }, { 0 } };
+struct insn i_popfq[] = { { I_NO_CODE16 | I_NO_CODE32, 1, { 0x9D } }, { 0 } };
+
 struct insn i_popw[] =
 {
     { I_DATA_16,   1, { 0x58       }, { { O_GPR_16, F_END    } } },
@@ -1720,6 +1726,16 @@ struct insn i_popq[] =
     { I_DATA_64 | I_NO_REX, 1, { 0x58       }, { { O_GPR_64, F_END   } } },
     { I_DATA_64 | I_NO_REX, 2, { 0x8F, 0x00 }, { { O_MEM,    F_MODRM } } },
     { I_DATA_64 | I_NO_REX, 2, { 0x0F, 0x81 }, { { O_SEG_3,  F_MID   } } },
+    { 0 }
+};
+
+struct insn i_pushfw[] = { { I_DATA_16, 1, { 0x9C } }, { 0 } };
+
+struct insn i_pushfl[] = { { I_DATA_32 | I_NO_CODE64, 1, { 0x9C } }, { 0 } };
+
+struct insn i_pushfq[] =
+{
+    { I_NO_CODE16 | I_NO_CODE32, 1, { 0x9C } },
     { 0 }
 };
 

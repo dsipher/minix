@@ -73,6 +73,13 @@
 	rdmsr
 	wrmsr
 
+	cpuid
+
+	pushfw
+	pushfl
+	popfw
+	popfl
+
 .code32
 
 	aaa
@@ -149,6 +156,12 @@
 
 	movl %eax, %cr3
 	movl %cr7, %ebx
+
+	cpuid
+	pushfw
+	pushfl
+	popfw
+	popfl
 
 .code64
 
@@ -236,3 +249,9 @@
 	movq %cr7, %rbx
 	movq %cr8, %rax
 	movq %r15, %cr8
+
+	cpuid
+	pushfw
+	pushfq
+	popfw
+	popfq

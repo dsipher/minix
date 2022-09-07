@@ -1274,8 +1274,8 @@ struct insn i_ljmp[] =
 {
     { I_NO_CODE32 | I_NO_CODE64, 1, { 0xEA }, { { O_ABS_16 },
                                                 { O_ABS_16 } } },
-    { I_NO_CODE16,               1, { 0xEA }, { { O_ABS_16 },
-                                                { O_ABS_32 } } },
+    { I_NO_CODE16,               1, { 0xEA }, { { O_ABS_32 },
+                                                { O_ABS_16 } } },
     { 0 }
 };
 

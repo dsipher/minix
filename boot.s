@@ -173,8 +173,8 @@ boot:               cli
                     cmpw $BOOT_SEG, %ax
                     jz ap_boot
 
-/ the BSP has to do most of the hard work. the BIOS has loaded us
-/ [well, our first sector] to BIOS_ADDR; let's copy ourselves down
+/ first-stage boot: complete loading boot itself. the BIOS has loaded
+/ only our first sector, and that to BIOS_ADDR; let's copy ourselves
 / to where we should be, and restart. this might seem like a waste,
 / since we will shortly overwrite ourselves with a fresh copy from
 / disk, but this is the easiest way to avoid tripping over ourselves.
@@ -212,7 +212,7 @@ read_boot:          xorl %eax, %eax
                     movw $BOOT_ADDR, %di
                     call read_block
 
-                    jmp second      / off to the `second stage'
+                    jmp second      / off to the second stage
 
 //////////////////////////////////////////////////////////////////////////////
 /
@@ -378,10 +378,38 @@ s_bios_magic:       .short      0
 // END OF FIRST SECTOR - nothing below is present before read_boot completes
 //////////////////////////////////////////////////////////////////////////////
 
-/ beginning of the `second stage' of the boot, which loads the kernel
-/ from the filesystem. first, make sure the disk looks like a filesystem.
+/ begin second stage of boot, where we load the kernel.
+/ first be a good citizen and make sure the CPU we're on
+/ can run tahoe (otherwise we'll just crash gracelessly).
 
-second:             cmpl $SUPER_MAGIC, s_magic
+second:             pushfl                      / copy EFLAGS
+                    popl %eax                   / into %eax.
+                    movl %eax, %ebx             / save original in %ebx
+                    xorl $0x200000, %eax        / toggle bit 21.
+
+                    pushl %eax                  / filter the result
+                    popfl                       / through EFLAGS.
+                    pushfl
+                    popl %eax
+
+                    cmpl %eax, %ebx             / if they are the same,
+                    jz cpu_error                / then we have a problem.
+
+                    movl $0x80000000, %eax      / can get feature bits?
+                    cpuid
+                    cmpl $0x80000001, %eax
+                    jb cpu_error
+                    movl $0x80000001, %eax      / get feature bits
+                    cpuid
+                    testl $0x20000000, %edx     / supports 64-bit mode?
+                    jnz check_fs
+
+cpu_error:          movw $cpu_error_msg, %si
+                    jmp error
+
+/ make sure the disk looks like a filesystem.
+
+check_fs:           cmpl $SUPER_MAGIC, s_magic
                     jne bad_fs
                     cmpw $SUPER_MAGIC2, s_magic2
                     je good_fs
@@ -565,9 +593,9 @@ load_20:            cmpl $ZMAGIC, KERNEL_ADDR
 / stage: perform the last tasks which require BIOS assistance, then build an
 / embryonic protected mode environment, enter long mode, and start the kernel.
 
-                    xorw %ax, %ax               / zero the data areas
-                    movw $PML3, %di             / we'll be initializing
-                    movw $BUFFER - PML3, %cx
+                    xorw %ax, %ax               / zero all data areas
+                    movw $PML3, %di
+                    movw $KERNEL_ADDR - PML3, %cx
                     rep
                     stosb
 
@@ -926,6 +954,9 @@ absurd_msg:         .ascii "absurdly large."
                     .byte 0
 
 too_big_msg:        .ascii "too big."
+                    .byte 0
+
+cpu_error_msg:      .ascii "unsupported CPU"
                     .byte 0
 
 / the global descriptor table: like the page tables, this is

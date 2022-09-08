@@ -66,3 +66,6 @@ make CC=$LINUX/bin/cc nm; mv nm $JEWEL/bin
 
 (cd libc; make clean; make CC=$JEWEL/bin/cc AR=$JEWEL/bin/ar; \
 	mv crt0.o libc.a $JEWEL/lib)
+
+make CC=$LINUX/bin/cc mkboot; mv mkboot $JEWEL/bin
+make CC=$LINUX/bin/cc mkfs;   mv mkfs   $JEWEL/bin

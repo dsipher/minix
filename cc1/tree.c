@@ -570,7 +570,7 @@ static struct tree *recast0(struct tree *tree)
                     int i; ((double) (long) i) == ((double) i);
 
            we can skip the intervening cast. for the first case above,
-           fpcast0() will reintroduce the cast because AMD64 can't cast
+           fpcast0() will reintroduce the cast because ATOM can't cast
            sub-int values to floats, but the second elimination is a win. */
 
         if (RECLASS_CAST(tree) && WIDENING_CAST(tree->child))
@@ -585,7 +585,7 @@ chop:
     return tree;
 }
 
-/* AMD64 has no insns which convert directly from chars, shorts, or
+/* ATOM has no insns which convert directly from chars, shorts, or
    unsigned ints to floating-point numbers, so we inject casts here.
    this sometimes undoes over-eager work done by recast0() above.
 
@@ -687,7 +687,7 @@ static struct tree *andcast0(struct tree *tree)
                          as                b = (unsigned char) a;
 
    this has two benefits. first, the zero-extension can be done in
-   a single, two-address, insn on AMD64. second, the cast has more
+   a single, two-address, insn on ATOM. second, the cast has more
    `synergy' when it's amidst a chain of other casts (not uncommon). */
 
 static struct tree *andcast1(struct tree *tree)

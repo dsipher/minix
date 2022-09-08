@@ -187,7 +187,7 @@ static void list_spaces(int n) { while (n--) putc(' ', list_outf); }
    bytes of the instruction or pseudo-op on this line, at most 15 bytes.
    the second line is only displayed if more than 8 bytes are present. if
    more than 15 bytes are encoded, they are truncated and the trailing '..'
-   is displayed (only for pseudo-ops; no AMD64 insns exceed this limit).
+   is displayed (only for pseudo-ops; no ATOM insns exceed this limit).
 
    the listing is not meant to be pretty. it is primarily for debugging. */
 

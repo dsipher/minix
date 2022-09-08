@@ -682,7 +682,7 @@ static struct choice cmp_choices[] =
    tough casts (between certain ints and floating-point types)
    have already been dealt with in gen.c.
 
-   the only gotcha is that some of these on AMD64 do not permit
+   the only gotcha is that some of these on ATOM do not permit
    immediate source operands, so we need to move them to temps.
    this should only occur if OPT_FOLD is off, or the user tries
    something silly like converting a global address to a float. */
@@ -906,7 +906,7 @@ static struct choice com_choices[] =
                                         OP      tmp, dst    (3)
 
    ideally, lhs and dst refer to the same register, since this maps
-   directly to the two-address form of AMD64 insns. for this reason
+   directly to the two-address form of ATOM insns. for this reason
    we attempt to rearrange commutative operations, and omit (2) since
    it would be a useless copy operation.
 
@@ -1235,7 +1235,7 @@ static struct choice mul_choices[] =
     { 0 }
 };
 
-/* I_LIR_DIV and I_LIR_MOD are both handled by division insns on AMD64,
+/* I_LIR_DIV and I_LIR_MOD are both handled by division insns on ATOM,
    which are single-operand only. this is not difficult, just tedious.
 
    n.b.: since we have no use for the flags argument in choices, it is
@@ -2144,7 +2144,7 @@ static struct sel sel[] =
 /* convert the CFG from LIR insns to MCH insns.
 
    we are called after deconst(), so we are guaranteed that all LIR
-   operands are valid AMD64 operands, either O_REGs, or O_IMMs with
+   operands are valid ATOM operands, either O_REGs, or O_IMMs with
    discrete, non-huge values.
 
    we proceed in two phases. first, we perform iterative analysis to

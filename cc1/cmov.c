@@ -108,7 +108,7 @@ static void docmov0(struct block *b, int op, int dst, int src)
 
    if the value conditionally moved into %dst is an immediate,
    it must be loaded into a temp reg first. this is simply a
-   limitation of the AMD64 CMOVcc insns. such a temp is marked
+   limitation of the ATOM CMOVcc insns. such a temp is marked
    not spillable [see regify0()] since spilling it is unwise,
    not to mention pointless.
 
@@ -249,14 +249,14 @@ static int twoleg0(struct block *b)
    conditional moves in LIR adds baggage to the front end with little (if
    any) benefit.
 
-   there are size violations here. AMD64 doesn't have CMOVcc in all sizes
+   there are size violations here. ATOM doesn't have CMOVcc in all sizes
    (byte is missing). this is of little consequence, since we deliberately
    avoid fusing, our temporaries are marked not spillable, and we always
    oversize (rather than under, which is where we get into serious trouble
    with the spill code). we use 32-bit CMOVcc for all sub-int types, and
    64-bit for the others; 16-bit CMOVcc exists but has no value w/o fusing.
 
-   we do not permit fusing of CMOVcc operations, because AMD64 may read
+   we do not permit fusing of CMOVcc operations, because ATOM may read
    the source operand whether the condition is true or not; we obviously
    should not make a conditional memory read suddenly unconditional. */
 

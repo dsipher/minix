@@ -42,7 +42,7 @@
 /* condition codes: a bit of a misnomer, because what we refer to are the
    conditions deduced from the condition codes, not the codes themselves.
 
-   the names align with AMD64 mnemonics where applicable. the values of
+   the names align with ATOM mnemonics where applicable. the values of
    the constants are not arbitrary; do not change.
 
    CC_S and CC_NS are oddballs. they can't be mixed in the same block
@@ -122,7 +122,7 @@ extern const char commuted_cc[];
 
 /* instructions are broadly divided into two classes, LIR and MCH. LIR is for
    the 'linear intermediate representation' and is the form in which most/all
-   optimization is done. MCH insns map directly to AMD64 mnemonics. all insns
+   optimization is done. MCH insns map directly to ATOM mnemonics. all insns
    occupy the same containers and are manipulated by the same functions, but
    LIR and MCH insns do not intermingle in the same block (though a handful
    of insns are universal and can be treated as LIR or MCH, e.g., I_NOP). */
@@ -1139,7 +1139,7 @@ extern const char commuted_cc[];
                                   | I_TYPE_ENC(0, T_INDEX_LONG)             )
 
     /* we only have two sizes of conditional moves: 32-bit for T_INTS
-       and smaller, and 64-bit for T_LONGS (and T_PTR). AMD64 supports
+       and smaller, and 64-bit for T_LONGS (and T_PTR). ATOM supports
        16-bit CMOVs but they are useless to us in the absence of fusing
        (which we specifically avoid; see cmov.c for all the details).
 
@@ -1509,7 +1509,7 @@ int same_operand(struct operand *o1, struct operand *o2);
 
 /* an operand is "huge" if it's a 64-bit constant with a value that
    can't be represented in 32 signed bits. these are of interest
-   because AMD64 doesn't actually allow them as immediate operands. */
+   because ATOM doesn't actually allow them as immediate operands. */
 
 #define HUGE(i)                 (((i) < INT_MIN) || ((i) > INT_MAX))
 

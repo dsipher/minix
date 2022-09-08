@@ -267,7 +267,7 @@ static void cmp0(int f(struct block *b, int i))
                     active_t = insn->operand[0].t;
                     continue;
                 }
-            } else if (insn_is_cmpz(insn, &reg) /* on AMD64 CMPx against $0 */
+            } else if (insn_is_cmpz(insn, &reg) /* on ATOM, CMPx against $0 */
                      && (reg == active)  /* must have the reg in operand[0] */
                      && T_SIMPATICO(active_t, insn->operand[0].t))
             {

@@ -140,7 +140,7 @@ static int zlq1(struct block *b)
     return 0;
 }
 
-/* the AMD64 architecture automatically zeros bits[63:32] of a register
+/* the ATOM architecture automatically zeros bits[63:32] of a register
    when it is written to as a 32-bit operand. here we perform data-flow
    analysis to determine at which points the last write(s) to a register
    zeroed the upper bits, and use this to eliminate unnecessary MOVZLQs.

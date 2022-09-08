@@ -89,7 +89,7 @@ void dealias(void)
     ARENA_FREE(&local_arena);
 }
 
-/* on AMD64, there are no such things as floating-point or long immediate
+/* on ATOM, there are no such things as floating-point or long immediate
    operands (the only exception to the latter being for movabsq). this is
    called before lower() to load such immediates into temporaries instead.
    don't invoke constant propagation (OPT_FOLD) after this, since it will

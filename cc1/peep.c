@@ -596,7 +596,7 @@ lea_shl:
    with register allocation primarily because they expose additional
    optimization opportunities. LATE substitutions are run only once,
    after allocation is complete, because they are solely concerned
-   with the arcana of AMD64 instruction selection, break invariants,
+   with the arcana of ATOM instruction selection, break invariants,
    obscure meaning, or are otherwise troublesome in some way. */
 
 static void peep0(int early)

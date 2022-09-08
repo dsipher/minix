@@ -122,7 +122,7 @@ extern unsigned *segofs;
 /* this is not configurable unless end_of_line() is rewritten to
    change the output format. this is the maximum number of bytes
    we will print, per assembly input line, in the listing output.
-   we choose 15 because that's the longest AMD64 insn encoding. */
+   we choose 15 because that's the longest ATOM insn encoding. */
 
 #define MAX_LIST_BYTES      15
 

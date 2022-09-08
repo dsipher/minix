@@ -16,39 +16,27 @@ clean:
 
 crt0.o:	crt0.s
 
-HDRS=		../include/assert.h  	../include/ctype.h 	\
-		../include/fcntl.h 	../include/float.h 	\
-		../include/limits.h 	../include/math.h 	\
-		../include/signal.h 	../include/stdarg.h 	\
-		../include/stddef.h 	../include/stdint.h 	\
-		../include/stdio.h 	../include/stdlib.h 	\
-		../include/string.h 	../include/termios.h 	\
-		../include/time.h 	../include/unistd.h 	\
-		../include/sys/fs.h  	../include/sys/ioctl.h	\
-		../include/sys/jewel.h	../include/sys/types.h 	\
-		../include/sys/wait.h
-
-OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 	\
-		__flushbuf.o __ieee_val.o __pow10.o abort.o	\
-		abs.o atoi.o atol.o brk.o bsearch.o calloc.o	\
-		clearerr.o ctime.o exit.o execvp.o execvpe.o 	\
-		fclose.o  fflush.o fgetpos.o fgets.o fileno.o 	\
-		fopen.o fprintf.o fputc.o fputs.o fread.o 	\
-		freopen.o frexp.o fscanf.o fseek.o fsetpos.o 	\
-		ftell.o fwrite.o getenv.o getopt.o gets.o 	\
-		isalnum.o isalpha.o iscntrl.o isdigit.o 	\
-		isgraph.o islower.o isprint.o ispunct.o 	\
-		isspace.o isupper.o isxdigit.o isatty.o labs.o	\
-		malloc.o memchr.o memcmp.o memcpy.o memmove.o 	\
-		memset.o modf.o mktemp.o perror.o printf.o 	\
-		puts.o qsort.o raise.o rand.o remove.o rewind.o \
-		scanf.o setbuf.o setvbuf.o sigaction.o 		\
-		sigemptyset.o signal.o sprintf.o sscanf.o 	\
-		stdio.o strcat.o strchr.o strcmp.o strcpy.o 	\
-		strerror.o strftime.o strlen.o strncat.o 	\
-		strncmp.o strncpy.o strrchr.o strtof.o strtod.o \
-		strtol.o syscall.o tcgetattr.o tmpnam.o 	\
-		tolower.o toupper.o ungetc.o vfprintf.o 	\
+OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
+		__flushbuf.o __ieee_val.o __pow10.o abort.o		\
+		abs.o atoi.o atol.o brk.o bsearch.o calloc.o		\
+		clearerr.o ctime.o exit.o execvp.o execvpe.o 		\
+		fclose.o  fflush.o fgetpos.o fgets.o fileno.o 		\
+		fopen.o fprintf.o fputc.o fputs.o fread.o 		\
+		freopen.o frexp.o fscanf.o fseek.o fsetpos.o 		\
+		ftell.o fwrite.o getenv.o getopt.o gets.o 		\
+		isalnum.o isalpha.o iscntrl.o isdigit.o 		\
+		isgraph.o islower.o isprint.o ispunct.o 		\
+		isspace.o isupper.o isxdigit.o isatty.o labs.o		\
+		malloc.o memchr.o memcmp.o memcpy.o memmove.o 		\
+		memset.o modf.o mktemp.o perror.o printf.o 		\
+		puts.o qsort.o raise.o rand.o remove.o rewind.o 	\
+		scanf.o setbuf.o setvbuf.o sigaction.o 			\
+		sigemptyset.o signal.o sprintf.o sscanf.o 		\
+		stdio.o strcat.o strchr.o strcmp.o strcpy.o 		\
+		strerror.o strftime.o strlen.o strncat.o 		\
+		strncmp.o strncpy.o strrchr.o strtof.o strtod.o 	\
+		strtol.o syscall.o tcgetattr.o tmpnam.o 		\
+		tolower.o toupper.o ungetc.o vfprintf.o 		\
 		vfscanf.o vsprintf.o wait.o
 
 libc.a:		$(OBJS)
@@ -60,99 +48,99 @@ memmove.o:		memmove.s
 memset.o:		memset.s
 syscall.o:		syscall.s
 
-__assert.o:		__assert.c $(HDRS)
-__ctype.o:		__ctype.c $(HDRS)
-__fillbuf.o:		__fillbuf.c $(HDRS)
-__flushbuf.o:		__flushbuf.c $(HDRS)
+__assert.o:		__assert.c
+__ctype.o:		__ctype.c
+__fillbuf.o:		__fillbuf.c
+__flushbuf.o:		__flushbuf.c
 __ieee_val.o:		__ieee_val.s
-__pow10.o:		__pow10.c $(HDRS)
-abort.o:		abort.c $(HDRS)
-abs.o:			abs.c $(HDRS)
-atoi.o:			atoi.c $(HDRS)
-atol.o:			atol.c $(HDRS)
-brk.o:			brk.c $(HDRS)
-bsearch.o: 		bsearch.c $(HDRS)
-calloc.o:		calloc.c $(HDRS)
-clearerr.o:		clearerr.c $(HDRS)
-ctime.o:		ctime.c $(HDRS)
-exit.o:			exit.c $(HDRS)
-execvp.o:		execvp.c $(HDRS)
-execvpe.o:		execvpe.c $(HDRS)
-fclose.o:		fclose.c $(HDRS)
-fflush.o:		fflush.c $(HDRS)
-fgetpos.o:		fgetpos.c $(HDRS)
-fgets.o:		fgets.c $(HDRS)
-fileno.o:		fileno.c $(HDRS)
-fopen.o:		fopen.c $(HDRS)
-fprintf.o:		fprintf.c $(HDRS)
-fputc.o:		fputc.c $(HDRS)
-fputs.o:		fputs.c $(HDRS)
-fread.o:		fread.c $(HDRS)
-freopen.o:		freopen.c $(HDRS)
-frexp.o:		frexp.c $(HDRS)
-fscanf.o:		fscanf.c $(HDRS)
-fseek.o:		fseek.c $(HDRS)
-fsetpos.o:		fsetpos.c $(HDRS)
-ftell.o:		ftell.c $(HDRS)
-fwrite.o:		fwrite.c $(HDRS)
-getenv.o:		getenv.c $(HDRS)
-getopt.o:		getopt.c $(HDRS)
-gets.o:			gets.c $(HDRS)
-isalnum.o:		isalnum.c $(HDRS)
-isalpha.o:		isalpha.c $(HDRS)
-iscntrl.o:		iscntrl.c $(HDRS)
-isdigit.o:		isdigit.c $(HDRS)
-isgraph.o:		isgraph.c $(HDRS)
-islower.o:		islower.c $(HDRS)
-isprint.o:		isprint.c $(HDRS)
-ispunct.o:		ispunct.c $(HDRS)
-isspace.o:		isspace.c $(HDRS)
-isupper.o:		isupper.c $(HDRS)
-isxdigit.o:		isxdigit.c $(HDRS)
-isatty.o:		isatty.c $(HDRS)
-labs.o:			labs.c $(HDRS)
-malloc.o:		malloc.c $(HDRS)
-memchr.o:		memchr.c $(HDRS)
-memcmp.o:		memcmp.c $(HDRS)
-modf.o:			modf.c $(HDRS)
-mktemp.o:		mktemp.c $(HDRS)
-perror.o:		perror.c $(HDRS)
-printf.o:		printf.c $(HDRS)
-puts.o:			puts.c $(HDRS)
-qsort.o:		qsort.c $(HDRS)
-raise.o:		raise.c $(HDRS)
-rand.o:			rand.c $(HDRS)
-remove.o:		remove.c $(HDRS)
-rewind.o:		rewind.c $(HDRS)
-scanf.o:		scanf.c $(HDRS)
-setbuf.o:		setbuf.c $(HDRS)
-setvbuf.o:		setvbuf.c $(HDRS)
-sigaction.o:		sigaction.c $(HDRS)
-sigemptyset.o:		sigemptyset.c $(HDRS)
-signal.o:		signal.c $(HDRS)
-sprintf.o:		sprintf.c $(HDRS)
-sscanf.o:		sscanf.c $(HDRS)
-stdio.o:		stdio.c $(HDRS)
-strcat.o:		strcat.c $(HDRS)
-strchr.o:		strchr.c $(HDRS)
-strcmp.o:		strcmp.c $(HDRS)
-strcpy.o:		strcpy.c $(HDRS)
-strerror.o:		strerror.c $(HDRS)
-strftime.o:		strftime.c $(HDRS)
-strlen.o:		strlen.c $(HDRS)
-strncat.o:		strncat.c $(HDRS)
-strncmp.o:		strncmp.c $(HDRS)
-strncpy.o:		strncpy.c $(HDRS)
-strrchr.o:		strrchr.c $(HDRS)
-strtod.o:		strtod.c $(HDRS)
-strtof.o:		strtof.c $(HDRS)
-strtol.o:		strtol.c $(HDRS)
-tcgetattr.o:		tcgetattr.c $(HDRS)
-tmpnam.o:		tmpnam.c $(HDRS)
-tolower.o:		tolower.c $(HDRS)
-toupper.o:		toupper.c $(HDRS)
-ungetc.o:		ungetc.c $(HDRS)
-vfprintf.o:		vfprintf.c $(HDRS)
-vfscanf.o:		vfscanf.c $(HDRS)
-vsprintf.o:		vsprintf.c $(HDRS)
-wait.o:			wait.c $(HDRS)
+__pow10.o:		__pow10.c
+abort.o:		abort.c
+abs.o:			abs.c
+atoi.o:			atoi.c
+atol.o:			atol.c
+brk.o:			brk.c
+bsearch.o: 		bsearch.c
+calloc.o:		calloc.c
+clearerr.o:		clearerr.c
+ctime.o:		ctime.c
+exit.o:			exit.c
+execvp.o:		execvp.c
+execvpe.o:		execvpe.c
+fclose.o:		fclose.c
+fflush.o:		fflush.c
+fgetpos.o:		fgetpos.c
+fgets.o:		fgets.c
+fileno.o:		fileno.c
+fopen.o:		fopen.c
+fprintf.o:		fprintf.c
+fputc.o:		fputc.c
+fputs.o:		fputs.c
+fread.o:		fread.c
+freopen.o:		freopen.c
+frexp.o:		frexp.c
+fscanf.o:		fscanf.c
+fseek.o:		fseek.c
+fsetpos.o:		fsetpos.c
+ftell.o:		ftell.c
+fwrite.o:		fwrite.c
+getenv.o:		getenv.c
+getopt.o:		getopt.c
+gets.o:			gets.c
+isalnum.o:		isalnum.c
+isalpha.o:		isalpha.c
+iscntrl.o:		iscntrl.c
+isdigit.o:		isdigit.c
+isgraph.o:		isgraph.c
+islower.o:		islower.c
+isprint.o:		isprint.c
+ispunct.o:		ispunct.c
+isspace.o:		isspace.c
+isupper.o:		isupper.c
+isxdigit.o:		isxdigit.c
+isatty.o:		isatty.c
+labs.o:			labs.c
+malloc.o:		malloc.c
+memchr.o:		memchr.c
+memcmp.o:		memcmp.c
+modf.o:			modf.c
+mktemp.o:		mktemp.c
+perror.o:		perror.c
+printf.o:		printf.c
+puts.o:			puts.c
+qsort.o:		qsort.c
+raise.o:		raise.c
+rand.o:			rand.c
+remove.o:		remove.c
+rewind.o:		rewind.c
+scanf.o:		scanf.c
+setbuf.o:		setbuf.c
+setvbuf.o:		setvbuf.c
+sigaction.o:		sigaction.c
+sigemptyset.o:		sigemptyset.c
+signal.o:		signal.c
+sprintf.o:		sprintf.c
+sscanf.o:		sscanf.c
+stdio.o:		stdio.c
+strcat.o:		strcat.c
+strchr.o:		strchr.c
+strcmp.o:		strcmp.c
+strcpy.o:		strcpy.c
+strerror.o:		strerror.c
+strftime.o:		strftime.c
+strlen.o:		strlen.c
+strncat.o:		strncat.c
+strncmp.o:		strncmp.c
+strncpy.o:		strncpy.c
+strrchr.o:		strrchr.c
+strtod.o:		strtod.c
+strtof.o:		strtof.c
+strtol.o:		strtol.c
+tcgetattr.o:		tcgetattr.c
+tmpnam.o:		tmpnam.c
+tolower.o:		tolower.c
+toupper.o:		toupper.c
+ungetc.o:		ungetc.c
+vfprintf.o:		vfprintf.c
+vfscanf.o:		vfscanf.c
+vsprintf.o:		vsprintf.c
+wait.o:			wait.c

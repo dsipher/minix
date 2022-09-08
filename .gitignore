@@ -19,6 +19,7 @@ cc1/regress/stage2
 cc1/regress/stage3/bin
 cc1/regress/stage3/lib
 cc1/regress/stage3/include
+kernel/kernel
 ld
 lex/scan.c
 lex/y.tab.c

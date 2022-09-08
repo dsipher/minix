@@ -1,3 +1,5 @@
+kernel				0100644 0 0 kernel/kernel
+
 bin 				0040755 0 0 				$
 
 dev 				0040755 0 0 				$

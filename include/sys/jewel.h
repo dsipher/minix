@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/tahoe.h                                   tahoe/64 standard library
+   sys/jewel.h                                   jewel/os standard library
 
 ******************************************************************************
 
@@ -31,8 +31,8 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_TAHOE_H
-#define _SYS_TAHOE_H
+#ifndef _SYS_JEWEL_H
+#define _SYS_JEWEL_H
 
 #define __NULL      ((void *) 0)
 
@@ -61,6 +61,6 @@ typedef char            *__va_list;
 #define __WSTOPSIG(status)      __WEXITSTATUS(status)
 #define __WTERMSIG(status)      ((status) & 0x7f)
 
-#endif /* _SYS_TAHOE_H */
+#endif /* _SYS_JEWEL_H */
 
 /* vi: set ts=4 expandtab: */

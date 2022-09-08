@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   ccl.c (routines for character classes)                     tahoe/64 lex
+   ccl.c (routines for character classes)                     jewel/os lex
 
 ******************************************************************************
 

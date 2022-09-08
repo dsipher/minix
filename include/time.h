@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   time.h                                        tahoe/64 standard library
+   time.h                                        jewel/os standard library
 
 ******************************************************************************
 
@@ -34,7 +34,7 @@
 #ifndef _TIME_H
 #define _TIME_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #ifndef __TIME_T
 #define __TIME_T

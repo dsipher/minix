@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   tblcmp.c (table compression routines)                      tahoe/64 lex
+   tblcmp.c (table compression routines)                      jewel/os lex
 
 ******************************************************************************
 

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# memcpy.s                                          tahoe/64 standard library
+# memcpy.s                                          jewel/os standard library
 #
 #                                  derived from NetBSD's bcopy.S for AMD64 by
 #                     Wolfgang Solfrank (ws@tools.de), dsl@netbsd.org, et al.

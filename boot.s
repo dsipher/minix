@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 /
-/  boot.s                                              tahoe/64 boot block
+/  boot.s                                              jewel/os boot block
 /
 //////////////////////////////////////////////////////////////////////////////
 /
@@ -321,7 +321,7 @@ bad_fs_msg:         .ascii "invalid filesystem"
                     .byte 0
 
 banner_msg:         .byte 13, 10, 10
-                    .ascii "tahoe/64 boot block"
+                    .ascii "jewel/os boot block"
                     .byte 13, 10, 10
                     .ascii "auto-boot will begin in 10 seconds."
                     .byte 13, 10
@@ -382,7 +382,7 @@ s_bios_magic:       .short      0
 
 / begin second stage of boot, where we load the kernel.
 / first be a good citizen and make sure the CPU we're on
-/ can run tahoe (otherwise we'll just crash gracelessly).
+/ can run jewel (otherwise we'll just crash gracelessly).
 
 second:             pushfl                      / copy EFLAGS
                     popl %eax                   / into %eax.

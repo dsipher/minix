@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   main.c (tool to generate lexical analyzers)                tahoe/64 lex
+   main.c (tool to generate lexical analyzers)                jewel/os lex
 
 ******************************************************************************
 

@@ -31,12 +31,12 @@ include				0040755 0 0
 	sys			0040755 0 0
 		fs.h		0100644 0 0 include/sys/fs.h
 		ioctl.h		0100644 0 0 include/sys/ioctl.h
+		jewel.h		0100644 0 0 include/sys/jewel.h
 		list.h  	0100644 0 0 include/sys/list.h
 		queue.h		0100644 0 0 include/sys/queue.h
 		slist.h		0100644 0 0 include/sys/slist.h
 		stailq.h	0100644 0 0 include/sys/stailq.h
 		stat.h		0100644 0 0 include/sys/stat.h
-		tahoe.h		0100644 0 0 include/sys/tahoe.h
 		tailq.h		0100644 0 0 include/sys/tailq.h
 		types.h		0100644 0 0 include/sys/types.h
 		wait.h		0100644 0 0 include/sys/wait.h  	$ $

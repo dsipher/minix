@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#                                                   tahoe/64 standard library
+#                                                   jewel/os standard library
 #
 #                                   Copyright (c) 2021, 2022 Charles E. Youse
 #                                          See LICENSE file for more details.
@@ -25,7 +25,7 @@ HDRS=		../include/assert.h  	../include/ctype.h 	\
 		../include/string.h 	../include/termios.h 	\
 		../include/time.h 	../include/unistd.h 	\
 		../include/sys/fs.h  	../include/sys/ioctl.h	\
-		../include/sys/tahoe.h	../include/sys/types.h 	\
+		../include/sys/jewel.h	../include/sys/types.h 	\
 		../include/sys/wait.h
 
 OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 	\

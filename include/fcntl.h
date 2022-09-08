@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   fcntl.h                                       tahoe/64 standard library
+   fcntl.h                                       jewel/os standard library
 
 ******************************************************************************
 
@@ -34,7 +34,7 @@
 #ifndef _FCNTL_H
 #define _FCNTL_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #ifndef __MODE_T
 #define __MODE_T

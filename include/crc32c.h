@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   crc32c.h                                      tahoe/64 standard library
+   crc32c.h                                      jewel/os standard library
 
 ******************************************************************************
 
@@ -36,7 +36,7 @@
 
 /* we need size_t. until this object is properly integrated into
    the standard library, we use stddef.h from the host and `leak'
-   global names. we should use sys/tahoe.h and __size_t below. */
+   global names. we should use sys/jewel.h and __size_t below. */
 
 #include <stddef.h>
 

@@ -1,11 +1,11 @@
 # cross.sh - make cross-building environment
 #
-# the end result is a set of tools in $ROOT/tahoe/bin which
-# can then be used by build.sh to cross-build a tahoe image.
+# the end result is a set of tools in $ROOT/jewel/bin which
+# can then be used by build.sh to cross-build a jewel image.
 
 ROOT=~/xcc
 LINUX=$ROOT/linux
-TAHOE=$ROOT/tahoe
+JEWEL=$ROOT/jewel
 
 set -e
 rm -rf $ROOT
@@ -33,36 +33,36 @@ cc -DAS=\"/usr/bin/as\" -DLD=\"/usr/bin/ld\" -DROOT=\"$LINUX\" \
 	mv crt0.o libc.a $LINUX/lib)
 
 # 2. using the host toolchain built in the previous step,
-# build the toolchain which generates binaries for tahoe.
+# build the toolchain which generates binaries for jewel.
 
 make clean
 
-mkdir $TAHOE
-mkdir $TAHOE/bin
-mkdir $TAHOE/lib
-mkdir $TAHOE/include
+mkdir $JEWEL
+mkdir $JEWEL/bin
+mkdir $JEWEL/lib
+mkdir $JEWEL/include
 
-cp -rv include/* $TAHOE/include
+cp -rv include/* $JEWEL/include
 
-$LINUX/bin/cc -o $TAHOE/bin/cc -DROOT=\"$TAHOE\" cc.c
+$LINUX/bin/cc -o $JEWEL/bin/cc -DROOT=\"$JEWEL\" cc.c
 
-(cd yacc; make clean; make CC=$LINUX/bin/cc; mv yacc $TAHOE/bin)
+(cd yacc; make clean; make CC=$LINUX/bin/cc; mv yacc $JEWEL/bin)
 
 (cd lex; make clean; make CC=$LINUX/bin/cc \
-			YACC=$TAHOE/bin/yacc \
-			ROOT=$TAHOE; \
-	mv lex $TAHOE/bin; cp flex.skel $TAHOE/lib)
+			YACC=$JEWEL/bin/yacc \
+			ROOT=$JEWEL; \
+	mv lex $JEWEL/bin; cp flex.skel $JEWEL/lib)
 
 (cd as; make clean; make CC=$LINUX/bin/cc \
-			 YACC=$TAHOE/bin/yacc \
-			 LEX=$TAHOE/bin/lex; mv as $TAHOE/bin)
+			 YACC=$JEWEL/bin/yacc \
+			 LEX=$JEWEL/bin/lex; mv as $JEWEL/bin)
 
-(cd cpp; make clean; make CC=$LINUX/bin/cc; mv cpp $TAHOE/lib)
-(cd cc1; make clean; make CC=$LINUX/bin/cc; mv cc1 $TAHOE/lib)
+(cd cpp; make clean; make CC=$LINUX/bin/cc; mv cpp $JEWEL/lib)
+(cd cc1; make clean; make CC=$LINUX/bin/cc; mv cc1 $JEWEL/lib)
 
-make CC=$LINUX/bin/cc ar; mv ar $TAHOE/bin
-make CC=$LINUX/bin/cc ld; mv ld $TAHOE/bin
-make CC=$LINUX/bin/cc nm; mv nm $TAHOE/bin
+make CC=$LINUX/bin/cc ar; mv ar $JEWEL/bin
+make CC=$LINUX/bin/cc ld; mv ld $JEWEL/bin
+make CC=$LINUX/bin/cc nm; mv nm $JEWEL/bin
 
-(cd libc; make clean; make CC=$TAHOE/bin/cc AR=$TAHOE/bin/ar; \
-	mv crt0.o libc.a $TAHOE/lib)
+(cd libc; make clean; make CC=$JEWEL/bin/cc AR=$JEWEL/bin/ar; \
+	mv crt0.o libc.a $JEWEL/lib)

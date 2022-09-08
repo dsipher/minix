@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   stdlib.h                                      tahoe/64 standard library
+   stdlib.h                                      jewel/os standard library
 
 ******************************************************************************
 
@@ -34,7 +34,7 @@
 #ifndef _STDLIB_H
 #define _STDLIB_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #define NULL        __NULL
 

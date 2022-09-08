@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   stdarg.h                                      tahoe/64 standard library
+   stdarg.h                                      jewel/os standard library
 
 ******************************************************************************
 
@@ -34,7 +34,7 @@
 #ifndef _STDARG_H
 #define _STDARG_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #define __VA_ALIGNMENT  8
 

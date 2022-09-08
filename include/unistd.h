@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   unistd.h                                      tahoe/64 standard library
+   unistd.h                                      jewel/os standard library
 
 ******************************************************************************
 
@@ -34,7 +34,7 @@
 #ifndef _UNISTD_H
 #define _UNISTD_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #define NULL __NULL
 

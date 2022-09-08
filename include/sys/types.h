@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/types.h                                   tahoe/64 standard library
+   sys/types.h                                   jewel/os standard library
 
 ******************************************************************************
 
@@ -34,7 +34,7 @@
 #ifndef _SYS_TYPES_H
 #define _SYS_TYPES_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #ifndef __DADDR_T
 #define __DADDR_T

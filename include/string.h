@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   string.h                                      tahoe/64 standard library
+   string.h                                      jewel/os standard library
 
 ******************************************************************************
 
@@ -34,7 +34,7 @@
 #ifndef _STRING_H
 #define _STRING_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #ifndef __SIZE_T
 #define __SIZE_T

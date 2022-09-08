@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   error.c (routines for printing error messages)            tahoe/64 yacc
+   error.c (routines for printing error messages)            jewel/os yacc
 
 ******************************************************************************
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   signal.h                                      tahoe/64 standard library
+   signal.h                                      jewel/os standard library
 
 ******************************************************************************
 
@@ -34,7 +34,7 @@
 #ifndef _SIGNAL_H
 #define _SIGNAL_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #ifndef __PID_T
 #define __PID_T

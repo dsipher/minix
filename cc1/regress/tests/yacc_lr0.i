@@ -26,7 +26,7 @@ extern int isupper(int);
 extern int isxdigit(int);
 extern int tolower(int);
 extern int toupper(int);
-# 39 "/home/charles/xcc/include/sys/tahoe.h"
+# 39 "/home/charles/xcc/include/sys/jewel.h"
 typedef long            __blkcnt_t;
 typedef long            __blksize_t;
 typedef unsigned long   __dev_t;

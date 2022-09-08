@@ -1,12 +1,12 @@
 ##############################################################################
 #
-#                                                          tahoe/64 kernel
+#                                                          jewel/os kernel
 #
 ##############################################################################
 
-CC=~/xcc/tahoe/bin/cc
-AS=~/xcc/tahoe/bin/as
-LD=~/xcc/tahoe/bin/ld
+CC=~/xcc/jewel/bin/cc
+AS=~/xcc/jewel/bin/as
+LD=~/xcc/jewel/bin/ld
 
 all:	kernel
 

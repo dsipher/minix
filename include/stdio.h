@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   stdio.h                                       tahoe/64 standard library
+   stdio.h                                       jewel/os standard library
 
 ******************************************************************************
 
@@ -41,7 +41,7 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #define NULL __NULL
 

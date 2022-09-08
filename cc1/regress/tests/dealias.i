@@ -1,6 +1,6 @@
 # 1 "dealias.c"
 
-# 15 "/home/charles/xcc/include/sys/tahoe.h"
+# 15 "/home/charles/xcc/include/sys/jewel.h"
 typedef long            __blkcnt_t;
 typedef long            __blksize_t;
 typedef unsigned long   __dev_t;

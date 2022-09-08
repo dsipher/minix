@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   init.c                                              tahoe/64 c compiler
+   init.c                                              jewel/os c compiler
 
 ******************************************************************************
 
@@ -451,7 +451,7 @@ void init_bss(struct symbol *sym)
        symbol; .lcomm does not, but can't be aligned.
        we must use .local followed by .comm.
 
-       tahoe as does not automatically export .bss, so
+       jewel as does not automatically export .bss, so
        .globl is required. as a favor to us for now, it
        ignores .local and accepts .comm as a synonym for
        .bss; once we ditch gas we can simplify all this. */

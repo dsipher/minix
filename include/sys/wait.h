@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/wait.h                                    tahoe/64 standard library
+   sys/wait.h                                    jewel/os standard library
 
 ******************************************************************************
 
@@ -34,7 +34,7 @@
 #ifndef _SYS_WAIT_H
 #define _SYS_WAIT_H
 
-#include <sys/tahoe.h>
+#include <sys/jewel.h>
 
 #ifndef __PID_T
 #define __PID_T

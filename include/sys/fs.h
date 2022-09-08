@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/fs.h                                      tahoe/64 standard library
+   sys/fs.h                                      jewel/os standard library
 
 ******************************************************************************
 
@@ -40,7 +40,7 @@
 #define FS_BLOCK_SIZE       4096
 #define FS_BLOCK_SHIFT      12
 
-/* the tahoe/64 filesystem is fairly conventional, with 4k blocks. we
+/* the jewel/os filesystem is fairly conventional, with 4k blocks. we
    choose this value to match our page size, which simplifies the vm
    system. as a bonus, it is the native sector size of modern disks.
 

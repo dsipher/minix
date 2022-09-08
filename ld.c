@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   ld.c                                                    tahoe/64 linker
+   ld.c                                                    jewel/os linker
 
 ******************************************************************************
 
@@ -61,7 +61,7 @@ unsigned        address;                /* current virtual address */
 char            s_flag;                 /* produce stripped output */
 
 /* since we have virtual memories these days (especially relative to the
-   size of a typical tahoe/64 binary), do everything in memory, which is
+   size of a typical jewel/os binary), do everything in memory, which is
    not only much simpler but also more efficient. a struct object is the
    in-memory representation of a relocatable object. */
 

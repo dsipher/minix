@@ -41,4 +41,5 @@ include				0040755 0 0
 		types.h		0100644 0 0 include/sys/types.h
 		wait.h		0100644 0 0 include/sys/wait.h  	$ $
 
-lib				0040755 0 0 				$ $
+lib				0040755 0 0
+	boot			0100644 0 0 boot			$ $

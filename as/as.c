@@ -703,20 +703,29 @@ static void modrm(struct operand **operands, int i, int modrm)
 
     if (o->reg == RIP) {                                /* %rip-relative */
         SET_MODRM_RM(modrm, 5);
-        range = O_IMM_S32;
-        o->classes = O_REL_32;
 
-        /* this is ugly. with %rip-relative addresses came the
-           possibility that a relative address would be output
-           at a position OTHER than the last in an encoding.
-           we need to account for bytes that might follow. */
+        if (o->sym == 0)
+            /* if the operand is just a naked value
+               (with no symbol) then take the user at
+               his word and leave the offset alone */
 
-        while (operands[++i])
-        {
-           if (operands[i]->classes & O_IMM_8)  o->value -= 1;
-           if (operands[i]->classes & O_IMM_16) o->value -= 2;
-           if (operands[i]->classes & O_IMM_32) o->value -= 4;
-           if (operands[i]->classes & O_IMM_64) o->value -= 8;
+            range = o->classes = O_IMM_32;
+        else {
+            range = O_IMM_S32;
+            o->classes = O_REL_32;
+
+            /* this is ugly. with %rip-relative addresses came the
+               possibility that a relative address would be output
+               at a position OTHER than the last in an encoding.
+               we need to account for bytes that might follow. */
+
+            while (operands[++i])
+            {
+                if (operands[i]->classes & O_IMM_8)  o->value -= 1;
+                if (operands[i]->classes & O_IMM_16) o->value -= 2;
+                if (operands[i]->classes & O_IMM_32) o->value -= 4;
+                if (operands[i]->classes & O_IMM_64) o->value -= 8;
+            }
         }
     } else if (o->classes & O_MEM_16) {                 /* 16-bit */
         if (!o->reg && !o->index) {

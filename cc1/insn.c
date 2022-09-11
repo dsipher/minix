@@ -519,7 +519,9 @@ void out_operand(struct operand *o, int rel)
                         if (o->index) out(",%r", o->index);
                         if (o->scale) out(",%d", 1 << o->scale);
                         OUTC(')');
-                    } else
+                    } else if (o->sym)
+                        /* use %rip-relative unless
+                           the address is absolute. */
                         OUTS("(%rip)");
 
                     break;

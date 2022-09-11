@@ -55,24 +55,24 @@ MAX_KERNEL          =   491520
 
 BOOT_STACK          =   0x1000      / extends downwards into the zero page
 
-DINODE              =   0x0700      / the `open' dinode (0x700-0x77F)
-DINODE_MODE         =   0x0700      / dinode.di_mode
-DINODE_SIZE         =   0x0710      / dinode.di_size
-DINODE_ADDR         =   0x0734      / dinode.di_addr[]
-DINODE_INDIRECT     =   0x0774      / dinode.di_addr[INDIRECT_BLOCK]
+DINODE              =   0x0600      / the `open' dinode (0x700-0x77F)
+DINODE_MODE         =   0x0600      / dinode.di_mode
+DINODE_SIZE         =   0x0610      / dinode.di_size
+DINODE_ADDR         =   0x0634      / dinode.di_addr[]
+DINODE_INDIRECT     =   0x0674      / dinode.di_addr[INDIRECT_BLOCK]
 
 SIZEOF_DINODE       =   128         / size of struct dinode
 LOG2_SIZEOF_DINODE  =   7           / .. which is 2^7
 
-DIRECT              =   0x0780      / directory entry for `lookup'
-DIRECT_INO          =   0x0780      / direct.d_ino
-DIRECT_NAME         =   0x0784      / direct.d_name
+DIRECT              =   0x0680      / directory entry for `lookup'
+DIRECT_INO          =   0x0680      / direct.d_ino
+DIRECT_NAME         =   0x0684      / direct.d_name
 
 SIZEOF_DIRECT       =   32          / size of struct direct
 
-A20_ALIAS           =   0x07D0      / see test_a20
+A20_ALIAS           =   0x06D0      / see test_a20
 
-DAP                 =   0x07F0      / disk address packet
+DAP                 =   0x06F0      / disk address packet
 DAP_SIZE            =   0           / (byte) size of packet
 DAP_ZERO            =   1           / (byte) must-be-zero
 DAP_COUNT           =   2           / (word) sector count
@@ -97,27 +97,20 @@ PML0                =   0x5000      / what they are, `nth-level page table'
 E820_N              =   0x6000      / count of BIOS E820 map entries
 E820_MAP            =   0x6008      / the map itself (0x6008 - 0x6BFF)
 SIZEOF_MAPENT       =   24          / each map entry occupies 24 bytes
-MAX_E820            =   127         / 127 entries * 24/per = 3048 bytes
+MAX_E820            =   170         / 170 entries * 24/per = 4080 bytes
 
-/ the per-CPU structures for each CPU/HT. each entry is
-/ referenced permanently by the CPU's task register and
-/ its kernel GS register. there are MAX_CPU (4) of these.
-/ they are indexed by APIC ID: all IDs must be in [0, 3].
-/ the BSP is assumed to have APIC ID 0: see config vector.
-
-PER_CPU             =   0x6C00      / 256 bytes/CPU = 1k (0x6C00 - 0x6FFF)
-
-/ transient block buffer used by open_file, read_file, lookup, etc. the
+/ transient buffer page used by open_file, read_file, lookup, etc. the
 / kernel may recover this page by unmapping it (along with the zero page)
 
 BUFFER              =   0x7000
 
-/ the BUFFER page is reused as the BSP's idle task descriptor.
-/ task descriptors are exactly one page. a task's kernel stack
-/ occupies the top of that page, so we know BSP_IDLE_STACK too.
+/ after loading is complete, BUFFER is reused by the
+/ kernel per_cpu[] array. each element is referenced
+/ permanently by one CPU's task register and kernel
+/ GS; boot has no knowledge of the internal structure,
+/ except that it assumes that the BSP uses per_cpu[0].
 
-BSP_IDLE_TASK       =   0x7000
-BSP_IDLE_STACK      =   0x8000
+PER_CPU             =   0x7000
 
 / constants related to the filesystem.
 
@@ -332,10 +325,9 @@ banner_msg:         .byte 13, 10, 10
 //////////////////////////////////////////////////////////////////////////////
 
 / the CPU configuration vector. go_64 uses these to configure
-/ the basic 64-bit environment of a CPU (task register, kernel
-/ GS base, idle task stack) and enter the kernel at the right
-/ place. these are prepopulated with values for the BSP, but
-/ the kernel must set them up for each AP before startup IPI.
+/ the task register and kernel GS base for a CPU and enter the
+/ kernel at the right place. these are prepopulated with values
+/ for the BSP, but the kernel set them for each AP in turn.
 
 / per_cpu is a .quad for convenience, but the PER_CPU structs
 / are in the first 64k of memory. we rely on this when setting
@@ -344,7 +336,6 @@ banner_msg:         .byte 13, 10, 10
                     .org 0x1180 - ORIGIN
 
 entry:              .quad   KERNEL_ADDR
-idle_stack:         .quad   BSP_IDLE_STACK
 per_cpu:            .quad   PER_CPU
 
 //////////////////////////////////////////////////////////////////////////////
@@ -713,7 +704,7 @@ bsp_prot_32:        movw $KERNEL_DS_32, %ax
 
                     movl $PML0, %ebx
                     movl $0x03, %eax            / 0x03 = (system) R/W, P
-                    movl $512, %ecx             / 512 entries in PML1
+                    movl $512, %ecx             / 512 PTEs/page = 2MB
 pml0_loop:          movl %eax, (%ebx)
                     addl $8, %ebx               / next entry
                     addl $0x1000, %eax          / next page address
@@ -761,7 +752,7 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
                     movw %ax, %ss               / [almost] entirely ignored.
                     movw %ax, %gs
                     movw %ax, %fs
-                    movq idle_stack, %rsp
+                    movq $BOOT_STACK, %rsp
 
                     xorl %edx, %edx
                     movl per_cpu, %eax

@@ -41,11 +41,14 @@
 typedef __size_t size_t;
 #endif /* __SIZE_T */
 
+extern void *memmove(void *, const void *, size_t);
+extern void *memset(void *, int, size_t);
+
+#ifndef _KERNEL
+
 extern void *memchr(const void *, int, size_t);
 extern int memcmp(const void *, const void *, size_t);
 extern void *memcpy(void *, const void *, size_t);
-extern void *memmove(void *, const void *, size_t);
-extern void *memset(void *, int, size_t);
 extern char *strcat(char *, const char *);
 extern char *strchr(const char *, int);
 extern int strcmp(const char *, const char *);
@@ -56,6 +59,8 @@ extern char *strncat(char *, const char *, size_t);
 extern int strncmp(const char *, const char *, size_t);
 extern char *strncpy(char *, const char *, size_t);
 extern char *strrchr(const char *, int);
+
+#endif /* _KERNEL */
 
 #endif /* _STRING_H */
 

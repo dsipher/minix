@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   main.c                                                  jewel/os kernel
+   log.c                                                   jewel/os kernel
 
 ******************************************************************************
 
@@ -31,22 +31,37 @@
 
 *****************************************************************************/
 
-#include <a.out.h>
-#include <sys/boot.h>
+#include <stdarg.h>
 #include <sys/cons.h>
-#include <sys/log.h>
 
-#define KERNEL_AOUT     ((struct exec *) KERNEL_ADDR)
-
-/* the BSP enters here after a brief bounce through
-   locore.s. we're on the boot stack, interrupts are
-   disabled, and the first 2MB is identity-mapped. */
+void (*putchar)(int) = cnputchar;
 
 void
-main(void)
+printf(char *fmt, ...)
 {
-    cninit();
-    for (;;) ;
+    va_list args;
+
+    va_start(args, fmt);
+
+    while (*fmt) {
+        if (*fmt != '%') {
+            /* since we don't filter through the tty
+               driver, do the caller a solid and add
+               carriage returns before linefeeds */
+
+            if (*fmt == '\n') putchar('\r');
+            putchar(*fmt);
+        } else {
+            switch (*++fmt)
+            {
+
+            }
+        }
+
+        ++fmt;
+    }
+
+    va_end(args);
 }
 
 /* vi: set ts=4 expandtab: */

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   main.c                                                  jewel/os kernel
+   sys/cons.h                                    jewel/os standard library
 
 ******************************************************************************
 
@@ -31,22 +31,47 @@
 
 *****************************************************************************/
 
-#include <a.out.h>
-#include <sys/boot.h>
-#include <sys/cons.h>
-#include <sys/log.h>
+#ifndef _SYS_CONS_H
+#define _SYS_CONS_H
 
-#define KERNEL_AOUT     ((struct exec *) KERNEL_ADDR)
+/* color values in VGA attribute byte */
 
-/* the BSP enters here after a brief bounce through
-   locore.s. we're on the boot stack, interrupts are
-   disabled, and the first 2MB is identity-mapped. */
+#define CONS_BLACK          0
+#define CONS_GREEN          1
+#define CONS_BLUE           2
+#define CONS_CYAN           3
+#define CONS_RED            4
+#define CONS_BROWN          5
+#define CONS_MAGENTA        6
+#define CONS_GRAY           7
 
-void
-main(void)
-{
-    cninit();
-    for (;;) ;
-}
+/* construct an attribute byte from
+   (foreground, background) colors */
+
+#define CONS_ATTR(fg, bg)       (((bg) << 4) | (fg))
+
+/* our default attribute is boring, but conventional */
+
+#define CONS_ATTR_DEFAULT       CONS_ATTR(CONS_GRAY, CONS_BLACK)
+
+/* mask for value bits in an attribute byte. we
+   specifically disallow use of the blink bit. */
+
+#define CONS_ATTR_MASK          0x7F
+
+/* flip the high-intensity bit on or
+   off in the given attribute byte */
+
+#define CONS_BOLD(a)            ((a) | 0x08)
+#define CONS_UNBOLD(a)          ((a) & ~0x08)
+
+#ifdef _KERNEL
+
+extern void cninit(void);           /* early console initialization */
+extern void cnputchar(int);         /* print character to console */
+
+#endif /* _KERNEL */
+
+#endif /* _SYS_CONS_H */
 
 /* vi: set ts=4 expandtab: */

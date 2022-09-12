@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   main.c                                                  jewel/os kernel
+   sys/log.h                                     jewel/os standard library
 
 ******************************************************************************
 
@@ -31,22 +31,25 @@
 
 *****************************************************************************/
 
-#include <a.out.h>
-#include <sys/boot.h>
-#include <sys/cons.h>
-#include <sys/log.h>
+#ifndef _SYS_LOG_H
+#define _SYS_LOG_H
 
-#define KERNEL_AOUT     ((struct exec *) KERNEL_ADDR)
+#ifdef _KERNEL
 
-/* the BSP enters here after a brief bounce through
-   locore.s. we're on the boot stack, interrupts are
-   disabled, and the first 2MB is identity-mapped. */
+/* hook for printf() output to capture kernel messages.
+   initially this points to cnputchar() in cons.c, but
+   [at some point] we should redirect to a ring buffer
+   for later retrieval with a log device or /dev/mem. */
 
-void
-main(void)
-{
-    cninit();
-    for (;;) ;
-}
+extern void (*putchar)(int);
+
+/* limited in-kernel printf(). see
+   kernel/log.c for format specifiers. */
+
+extern void printf(char *m, ...);
+
+#endif /* _KERNEL */
+
+#endif /* _SYS_LOG_H */
 
 /* vi: set ts=4 expandtab: */

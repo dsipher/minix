@@ -4,23 +4,24 @@
 #
 ##############################################################################
 
-CC=~/xcc/jewel/bin/cc
-AS=~/xcc/jewel/bin/as
-LD=~/xcc/jewel/bin/ld
+CFLAGS=-D_KERNEL
 
 all:	kernel
 
 clean:
 	rm -f *.o *.lst kernel
 
-HDRS=
-
-OBJS= 	locore.o main.o
+OBJS= 	locore.o cons.o log.o main.o ../libc/memmove.o ../libc/memset.o
 
 locore.o:	locore.s
 	$(AS) -l locore.lst -o locore.o locore.s
 
-main.o:		main.c $(HDRS)
+cons.o:		cons.c
+log.o:		log.c
+main.o:		main.c
+
+memmove.o:	../libc/memmove.s
+memset.o:	../libc/memset.s
 
 kernel: $(OBJS)
 	$(LD) -b 0x8000 -o kernel $(OBJS)

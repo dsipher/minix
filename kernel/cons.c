@@ -365,8 +365,7 @@ cnputc(struct vty *vty, int c)
     }
 }
 
-/* called VERY early to initialize the system console. at
-   this point the BSS has not been cleared, so be careful */
+/* called early to initialize the system console. */
 
 void
 cninit(void)

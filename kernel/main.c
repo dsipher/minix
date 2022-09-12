@@ -45,6 +45,9 @@
 void
 main(void)
 {
+    memset((void *) (N_BSSOFF(*KERNEL_AOUT) + KERNEL_ADDR),
+            0, KERNEL_AOUT->a_bss); /* clear the bss */
+
     cninit();
     for (;;) ;
 }

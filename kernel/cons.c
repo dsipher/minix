@@ -232,8 +232,8 @@ home(struct vty *vty)
 
 /* output `c' to `vty', handling scrolling, cursor movement, etc. the terminal
    emulation is similar to, but not the same as, a VT52. there's little reason
-   to get fancy, since we're not actually on a serial link. we'll use `vi' or
-   `elvis' as the litmus test: if it can take advantage of a special sequence
+   to get fancy, since we're not actually on a serial link. we'll use `vi' (or
+   `elvis') as the litmus test: if it can take advantage of a special sequence
    (say, clear-from-cursor-to-end-of-line) then we'll implement it. otherwise,
    it is almost certainly a waste of time. */
 

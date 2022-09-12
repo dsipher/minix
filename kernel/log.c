@@ -33,8 +33,35 @@
 
 #include <stdarg.h>
 #include <sys/cons.h>
+#include <sys/log.h>
 
 void (*putchar)(int) = cnputchar;
+
+static void
+printu(unsigned long n, int base)
+{
+    static char digits[] = "0123456789ABCDEF";
+    char buf[22]; /* 2^64 is 22 octal digits */
+    char *cp = buf;
+
+    do {
+        *cp++ = digits[n % base];
+        n /= base;
+    } while (n);
+
+    while (cp > buf) putchar(*--cp);
+}
+
+static void
+printn(long n)
+{
+    if (n < 0) {
+        putchar('-');
+        n = -n;
+    }
+
+    printu(n, 10);
+}
 
 void
 printf(char *fmt, ...)
@@ -54,7 +81,15 @@ printf(char *fmt, ...)
         } else {
             switch (*++fmt)
             {
+            case 'd':   printn(va_arg(args, int)); break;
+            case 'o':   printu(va_arg(args, unsigned), 8); break;
+            case 'x':   printu(va_arg(args, unsigned), 16); break;
 
+            case 'D':   printn(va_arg(args, long)); break;
+            case 'O':   printu(va_arg(args, long), 8); break;
+            case 'X':   printu(va_arg(args, long), 16); break;
+
+            default:    putchar(*fmt);      /* %, or goofed specifier */
             }
         }
 

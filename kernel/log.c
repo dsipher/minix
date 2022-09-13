@@ -81,6 +81,8 @@ printf(char *fmt, ...)
         } else {
             switch (*++fmt)
             {
+            case 'c':   putchar(va_arg(args, int)); break;
+
             case 'd':   printn(va_arg(args, int)); break;
             case 'o':   printu(va_arg(args, unsigned), 8); break;
             case 'x':   printu(va_arg(args, unsigned), 16); break;

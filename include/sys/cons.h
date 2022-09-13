@@ -37,12 +37,12 @@
 /* color values in VGA attribute byte */
 
 #define CONS_BLACK          0
-#define CONS_GREEN          1
-#define CONS_BLUE           2
+#define CONS_BLUE           1
+#define CONS_GREEN          2
 #define CONS_CYAN           3
 #define CONS_RED            4
-#define CONS_BROWN          5
-#define CONS_MAGENTA        6
+#define CONS_MAGENTA        5
+#define CONS_BROWN          6
 #define CONS_GRAY           7
 
 /* construct an attribute byte from

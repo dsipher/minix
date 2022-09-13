@@ -36,6 +36,11 @@
 
 #include <sys/jewel.h>
 
+#ifndef __CADDR_T
+#define __CADDR_T
+typedef __caddr_t caddr_t;
+#endif /* __CADDR_T */
+
 #ifndef __DADDR_T
 #define __DADDR_T
 typedef __daddr_t daddr_t;
@@ -72,6 +77,11 @@ typedef __nlink_t nlink_t;
 #define __OFF_T
 typedef __off_t off_t;
 #endif /* __OFF_T */
+
+#ifndef __SIZE_T
+#define __SIZE_T
+typedef __size_t size_t;
+#endif /* __SIZE_T */
 
 #ifndef __SSIZE_T
 #define __SSIZE_T

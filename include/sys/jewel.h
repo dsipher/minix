@@ -36,6 +36,7 @@
 
 #define __NULL      ((void *) 0)
 
+typedef unsigned long   __caddr_t;
 typedef unsigned        __daddr_t;
 typedef unsigned        __dev_t;
 typedef unsigned        __gid_t;

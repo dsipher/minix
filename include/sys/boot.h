@@ -34,6 +34,8 @@
 #ifndef _SYS_BOOT_H
 #define _SYS_BOOT_H
 
+#include <sys/types.h>
+
 /* definitions useful during bootstrapping. must agree with boot.s!
 
    boot is [ultimately] loaded at 0x1000. it's only a page long, but
@@ -44,6 +46,21 @@
 
 #define BOOT_ADDR       0x00001000          /* boot starts here ... */
 #define KERNEL_ADDR     0x00008000          /* ... and kernel here */
+
+/* boot retrieves the so-called E820 memory map from the BIOS */
+
+struct e820
+{
+    caddr_t     base;               /* base address of region */
+    size_t      length;             /* and its length in bytes */
+    int         type;               /* see E820_TYPE_* below */
+    int         unused0;
+};
+
+extern int e820_count;              /* these are exported as absolute */
+extern struct e820 e820_map[];      /* symbols from locore.s */
+
+#define E820_TYPE_FREE  1           /* the only type we care about */
 
 #endif /* _SYS_BOOT_H */
 

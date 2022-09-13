@@ -46,7 +46,8 @@ extern void (*putchar)(int);
 /* limited in-kernel printf(). see
    kernel/log.c for format specifiers. */
 
-extern void printf(char *m, ...);
+extern void printf(char *, ...);
+extern void panic(char *);
 
 #endif /* _KERNEL */
 

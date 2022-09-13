@@ -83,6 +83,12 @@ printf(char *fmt, ...)
             {
             case 'c':   putchar(va_arg(args, int)); break;
 
+            case 's':   {
+                            char *s = va_arg(args, char *);
+                            while (*s) putchar(*s++);
+                            break;
+                        }
+
             case 'd':   printn(va_arg(args, int)); break;
             case 'o':   printu(va_arg(args, unsigned), 8); break;
             case 'x':   printu(va_arg(args, unsigned), 16); break;
@@ -99,6 +105,16 @@ printf(char *fmt, ...)
     }
 
     va_end(args);
+}
+
+/* obviously a placeholder. at a minimum we need to (a) sychronize the
+   console output and (b) grab the scheduler lock to halt other CPUs */
+
+void
+panic(char *where)  /* XXX */
+{
+    printf("panic: %s\n", where);
+    for (;;) ;
 }
 
 /* vi: set ts=4 expandtab: */

@@ -33,7 +33,7 @@
 
 / the boot block occupies block 0, which is shared with the superblock data.
 / many of the addresses, both explicit an implicit, in this file are shared
-/ with the kernel. any changes must be cross-checked/synced with sys/boot.h.
+/ with the kernel (mostly in sys/boot.h) - it's important that they agree.
 
 / after some wrestling with the BIOS, we are loaded at 0x1000 absolute.
 / like all other executables we have an a.out header glued to the front.
@@ -93,6 +93,7 @@ PML0                =   0x5000      / what they are, `nth-level page table'
 / we record the BIOS-reported memory map here. we deliberately use this
 / instead of ACPI, so we don't have to play games to map in ACPI tables
 / before we've initialized memory management. chicken-and-egg stuff.
+/ the kernel references this map in locore.s (_e820_count/_e820_map).
 
 E820_N              =   0x6000      / count of BIOS E820 map entries
 E820_MAP            =   0x6008      / the map itself (0x6008 - 0x6BFF)

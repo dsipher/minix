@@ -41,6 +41,16 @@
 
 //////////////////////////////////////////////////////////////////////////////
 /
+/ the E820 map is retrieved by boot and stored at these locations.
+
+.globl _e820_map
+.globl _e820_count
+
+_e820_count = 0x6000
+_e820_map   = 0x6008
+
+//////////////////////////////////////////////////////////////////////////////
+/
 / the IDT is deliberately in the .text, and here in locore, because it
 / (and its related handlers) need to be... low in the core. if we can
 / assume everything here lives at or below 64k, it simplifies things.

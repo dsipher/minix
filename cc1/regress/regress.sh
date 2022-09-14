@@ -54,6 +54,9 @@ TESTS="		ar cpp directive evaluate input macro token vstring	\
 		vfprintf vfscanf vsprintf wait freopen dmr_cpp		\
 		dmr_eval dmr_getopt dmr_hideset dmr_include 		\
 		dmr_lex dmr_macro dmr_nlist dmr_tokens dmr_unix		\
+		lex_ccl lex_dfa lex_ecs lex_gen 			\
+		lex_main lex_misc lex_nfa lex_scan 			\
+		lex_sym lex_tblcmp lex_y.tab lex_yylex			\
 		yacc_closure yacc_lr0 yacc_output yacc_symtab		\
 		yacc_error yacc_main yacc_reader yacc_verbose		\
 		yacc_lalr yacc_mkpar yacc_skeleton yacc_warshall	"

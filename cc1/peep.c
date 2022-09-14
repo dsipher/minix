@@ -550,6 +550,7 @@ static int mul0(struct block *b, int i)
     switch (con->con.i)     /* see above, this table is incomplete */
     {
     case 3:     scale = 1; shift = 0; goto lea_shl;
+    case 9:     scale = 3; shift = 0; goto lea_shl;
     case 10:    scale = 2; shift = 1; goto lea_shl;
     case 12:    scale = 1; shift = 2; goto lea_shl;
     case 24:    scale = 1; shift = 3; goto lea_shl;

@@ -554,6 +554,7 @@ static int mul0(struct block *b, int i)
     case 12:    scale = 1; shift = 2; goto lea_shl;
     case 24:    scale = 1; shift = 3; goto lea_shl;
     case 40:    scale = 2; shift = 3; goto lea_shl;
+    case 80:    scale = 2; shift = 4; goto lea_shl;
     default:    return 0;
     }
 

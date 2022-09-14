@@ -85,10 +85,10 @@ SIZEOF_DAP          =   16          / DAP packet is 16 bytes
 / boot sets up the initial system page tables,
 / identity-mapping the first 2MB in 4K pages.
 
-PML3                =   0x2000      / the Intel/AMD manuals give all these
-PML2                =   0x3000      / levels ridiculous legacy names that
-PML1                =   0x4000      / make little sense. we just call them
-PML0                =   0x5000      / what they are, `nth-level page table'
+PTL3                =   0x2000      / the Intel/AMD manuals give all these
+PTL2                =   0x3000      / levels ridiculous legacy names that
+PTL1                =   0x4000      / make little sense. we just call them
+PTL0                =   0x5000      / what they are, `nth-level page table'
 
 / we record the BIOS-reported memory map here. we deliberately use this
 / instead of ACPI, so we don't have to play games to map in ACPI tables
@@ -609,8 +609,8 @@ load_20:            cmpl $ZMAGIC, KERNEL_ADDR
 / embryonic protected mode environment, enter long mode, and start the kernel.
 
                     xorw %ax, %ax               / zero all data areas
-                    movw $PML3, %di
-                    movw $KERNEL_ADDR - PML3, %cx
+                    movw $PTL3, %di
+                    movw $KERNEL_ADDR - PTL3, %cx
                     rep
                     stosb
 
@@ -697,19 +697,19 @@ bsp_prot_32:        movw $KERNEL_DS_32, %ax
 / above. we only need to populate one entry, the first, in each
 / of the upper-level tables, linking it down to the next level.
 
-                    movl $PML2 + 0x07, PML3     / 0x07 = user, R/W, P
-                    movl $PML1 + 0x07, PML2
-                    movl $PML0 + 0x07, PML1
+                    movl $PTL2 + 0x07, PTL3     / 0x07 = user, R/W, P
+                    movl $PTL1 + 0x07, PTL2
+                    movl $PTL0 + 0x07, PTL1
 
-/ identity map the first 2MB in PML0 using 4k system-only pages.
+/ identity map the first 2MB in PTL0 using 4k system-only pages.
 
-                    movl $PML0, %ebx
+                    movl $PTL0, %ebx
                     movl $0x03, %eax            / 0x03 = (system) R/W, P
                     movl $512, %ecx             / 512 PTEs/page = 2MB
-pml0_loop:          movl %eax, (%ebx)
+ptl0_loop:          movl %eax, (%ebx)
                     addl $8, %ebx               / next entry
                     addl $0x1000, %eax          / next page address
-                    loop pml0_loop
+                    loop ptl0_loop
 
                     / BSP setup complete - FALLTHRU to go_64
 
@@ -732,7 +732,7 @@ go_64:              movl %cr4, %eax             / enable PAE
                     orw $0x100, %ax
                     wrmsr
 
-                    movl $PML3, %eax            / set page base
+                    movl $PTL3, %eax            / set page base
                     movl %eax, %cr3
 
                     movl %cr0, %eax             / enable paging

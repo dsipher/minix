@@ -47,12 +47,17 @@
 #define BOOT_ADDR       0x00001000          /* boot starts here ... */
 #define KERNEL_ADDR     0x00008000          /* ... and kernel here */
 
+/* physical addresses up to [but not including] BOOT_MAPPED
+   are guaranteed to be identity-mapped by the boot block */
+
+#define BOOT_MAPPED     0x00200000          /* the first 2MB are mapped */
+
 /* boot retrieves the so-called E820 memory map from the BIOS */
 
 struct e820
 {
     caddr_t     base;               /* base address of region */
-    size_t      length;             /* and its length in bytes */
+    size_t      len;                /* and its length in bytes */
     int         type;               /* see E820_TYPE_* below */
     int         unused0;
 };

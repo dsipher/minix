@@ -34,6 +34,7 @@
 #include <a.out.h>
 #include <sys/boot.h>
 #include <sys/cons.h>
+#include <sys/page.h>
 #include <sys/log.h>
 
 #define KERNEL_AOUT     ((struct exec *) KERNEL_ADDR)
@@ -49,6 +50,8 @@ main(void)
             0, KERNEL_AOUT->a_bss); /* clear the bss */
 
     cninit();
+    pginit();
+
     for (;;) ;
 }
 

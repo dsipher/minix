@@ -70,9 +70,10 @@ struct exec
 #define A_MAX_STRTAB    (16 * 1024 * 1024)
 
 /* the base address of ZMAGIC files not stated, but
-   implied. for userspace it is fixed at A_EXEC_BASE. */
+   implied. for userspace it is fixed at A_EXEC_BASE:
+   see sys/page.h for why this value was chosen. */
 
-#define A_EXEC_BASE     0x04000000      /* 64Mb */
+#define A_EXEC_BASE     0x00180000      /* 1.5Mb */
 
 /* we reuse the classic xMAGIC names from 4.3BSD, but we redefine both their
    values and their meanings. 0x1eeb is not arbitrary; it encodes `jmp 0x20'.

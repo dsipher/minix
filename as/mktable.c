@@ -195,6 +195,8 @@ struct { const char *text; const char *template; } insns[] =
     {   "divq",         0               },
     {   "divss",        0               },
     {   "divsd",        0               },
+    {   "fxsave",       0               },
+    {   "fxrstor",      0               },
     {   "hlt",          0               },
     {   "idivb",        0               },
     {   "idivw",        0               },

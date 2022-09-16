@@ -940,6 +940,18 @@ struct insn i_divsd[] =
     { 0 }
 };
 
+struct insn i_fxsave[] =
+{
+    { 0, 3, { 0x0F, 0xAE, 0x00 }, { { O_MEM, F_MODRM } } },
+    { 0 }
+};
+
+struct insn i_fxrstor[] =
+{
+    { 0, 3, { 0x0F, 0xAE, 0x08 }, { { O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_hlt[]     =   { { 0, 1, { 0xF4 } }, { 0 } };
 
 struct insn i_idivb[] =

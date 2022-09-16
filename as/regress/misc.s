@@ -83,6 +83,10 @@
 	ldmxcsr (%bx)
 	stmxcsr (%bx)
 
+	fxsave 100
+	fxrstor (%bx, %si)
+	fxrstor (%ebx)
+
 .code32
 
 	aaa
@@ -168,6 +172,10 @@
 
 	ldmxcsr (%ebx)
 	stmxcsr (%ebx)
+
+	fxrstor 100
+	fxsave (%bx, %si)
+	fxrstor (%ebx)
 
 .code64
 
@@ -264,3 +272,7 @@
 
 	ldmxcsr (%eax)
 	stmxcsr 10(%rip)
+
+	fxsave 100(%rip)
+	fxrstor (%rdx,%rcx,2)
+	fxrstor (%ebx)

@@ -105,14 +105,6 @@ MAX_E820            =   170         / 170 entries * 24/per = 4080 bytes
 
 BUFFER              =   0x7000
 
-/ after loading is complete, BUFFER is reused by the
-/ kernel per_cpu[] array. each element is referenced
-/ permanently by one CPU's task register and kernel
-/ GS; boot has no knowledge of the internal structure,
-/ except that it assumes that the BSP uses per_cpu[0].
-
-PER_CPU             =   0x7000
-
 / constants related to the filesystem.
 
 SUPER_MAGIC         =   0xABE01E50
@@ -141,7 +133,8 @@ DEL                 =   0x7F        / ..... delete
 ZMAGIC              =   0x17B81EEB  / expected kernel a.out magic
 E820_SMAP           =   0x534D4150  / cookie for BIOS E820 functions
 IA32_EFER           =   0xC0000080  / extended feature enable MSR
-IA32_GS_BASE        =   0xC0000101  / current GS segment base MSR
+
+KERNEL_STACK        =   0x00102000  / top of stack - must agree with page.h
 
 / segment selectors. obviously these must agree with the GDT.
 
@@ -325,19 +318,15 @@ banner_msg:         .byte 13, 10, 10
 
 //////////////////////////////////////////////////////////////////////////////
 
-/ the CPU configuration vector. go_64 uses these to configure
-/ the task register and kernel GS base for a CPU and enter the
-/ kernel at the right place. these are prepopulated with values
-/ for the BSP, but the kernel set them for each AP in turn.
-
-/ per_cpu is a .quad for convenience, but the PER_CPU structs
-/ are in the first 64k of memory. we rely on this when setting
-/ up the task state segment descriptor; see go_64.
+/ the boot configuration vector.
 
                     .org 0x1180 - ORIGIN
 
+                    / entry point for this CPU. preset for the BSP,
+                    / but the kernel will set this to the AP entry
+                    / point before firing up the APs.
+
 entry:              .quad   KERNEL_ADDR
-per_cpu:            .quad   PER_CPU
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -755,13 +744,7 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
                     movw %ax, %fs
                     movq $BOOT_STACK, %rsp
 
-                    xorl %edx, %edx
-                    movl per_cpu, %eax
-                    movl $IA32_GS_BASE, %ecx
-                    wrmsr
-
-                    movw %ax, tss_base          / n.b.: assumes per_cpu
-                    movb $0x89, tss_type        / is in first 64k (it is)
+                    movb $0x89, tss_type(%rip)  / reset in case marked BUSY
                     movw $KERNEL_TSS, %ax
                     ltr %ax
 
@@ -1044,11 +1027,14 @@ gdt:                .short  0, 0, 0, 0      / 0x00 = null descriptor
                     .short  0xF200
                     .short  0
 
-    / each CPU gets its own TSS, but we only load the TR once
-    / (here, in go_64) so we can reset and reuse the descriptor.
+    / the TSS is only used to specify the kernel stack
+    / for a process. since this is always at the same
+    / [virtual] address in every process, we use one
+    / TSS for all CPUs and all processes: so we load the
+    / task register once (in go_64) then forget about it.
 
                     .short  0x0067          / 0x38 - 64-bit TSS
-tss_base:           .short  0               / (set to PER_CPU of this cpu)
+                    .short  tss
                     .byte   0
 tss_type:           .byte   0               / (set to available TSS, 0x89)
                     .byte   0
@@ -1057,6 +1043,12 @@ tss_type:           .byte   0               / (set to available TSS, 0x89)
 
 gdt_48:             .short  gdt_48 - gdt - 1
                     .int    gdt
+
+.align 8
+
+tss:                .int    0
+                    .quad   KERNEL_STACK    / RSP0
+                    .fill   92, 1, 0
 
 //////////////////////////////////////////////////////////////////////////////
 

@@ -121,7 +121,6 @@ struct string;
 
 /* compiler command-line flags: see cc1.c */
 
-extern char g_flag;
 extern char w_flag;
 
 /* general constant container */

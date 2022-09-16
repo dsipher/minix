@@ -244,12 +244,9 @@ struct symbol
                                             (sym)->line_no = line_no;       \
                                         } while (0)
 
-/* we assume everything is aliased unless it's S_REGISTER. when we're
-   generating a debug build (-g), all non-temps are aliased; this works
-   in concert with I_LINE insns to keep variables in memory for db. */
+/* we assume everything is aliased unless it's S_REGISTER. */
 
-#define ALIASED_SYMBOL(sym)             (g_flag ? !(sym->s & S_TEMP)        \
-                                                : !(sym->s & S_REGISTER))
+#define ALIASED_SYMBOL(sym)             (!(sym->s & S_REGISTER))
 
 /* allocate and initialize a new symbol with the given id and storage class */
 

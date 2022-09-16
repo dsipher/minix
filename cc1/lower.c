@@ -2101,7 +2101,7 @@ static struct sel sel[] =
 {
     {   0               /* N/A */           },          /* I_NOP */
     {   0,              lower_asm           },          /* I_ASM */
-    {   0               /* N/A */           },          /* I_LINE */
+    {   0                                   },          /* (unused) */
     {   0,              lower_frame         },          /* I_LIR_FRAME */
     {   0,              lower_mem           },          /* I_LIR_LOAD */
     {   0,              lower_mem           },          /* I_LIR_STORE */

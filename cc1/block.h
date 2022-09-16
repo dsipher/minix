@@ -345,14 +345,6 @@ int append_insn(struct insn *insn, struct block *b);
 
 #define EMIT_INSN(insn)     append_insn((insn), current_block)
 
-/* we only emit .line directives when generating debug info (-g). */
-
-#define EMIT_LINE()                                                         \
-    do {                                                                    \
-        if (g_flag)                                                         \
-            append_insn(new_insn(I_LINE, 0), current_block);                \
-    } while (0)
-
 /* insert insn into block b at index i */
 
 void insert_insn(struct insn *insn, struct block *b, int i);

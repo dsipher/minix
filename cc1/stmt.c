@@ -453,8 +453,6 @@ static void stmt(void)
     struct tree *tree = &void_tree;
 
 again:
-    EMIT_LINE();
-
     switch (token.k)
     {
     case K_ASM:         asm_stmt(); break;

@@ -192,20 +192,14 @@ extern const char commuted_cc[];
                              (op & I_FLAG_HAS_DST) &&                       \
                              !(op & I_FLAG_USES_DST))
 
-    /* universal insns. I_ASM and I_LINE have non-standard
-       payloads (not operands) and need special handling */
+    /* universal insns. I_ASM has a non-standard
+       payload and needs special handling */
 
 #define I_NOP               (   0 )
 #define I_ASM               (   1 | I_FLAG_SIDEFFS  /* struct asm_insn */   )
 
-    /* I_LINEs are only emitted when generating debug info; the -g flag
-       will also force all variables to be treated as aliased. we claim
-       that I_LINEs USE and DEF memory to force all variables into and
-       out of memory at line boundaries, so db can read/modify them */
-
-#define I_LINE              (   2 | I_FLAG_SIDEFFS  /* struct line_insn */  \
-                                  | I_FLAG_USES_MEM                         \
-                                  | I_FLAG_DEFS_MEM                         )
+    /* we reserve index 2 for I_LINE, for when/if we
+       decide to reintroduce debug info generation */
 
     /* since we can't reference machine registers in the LIR, we can't
        access the frame directly via the frame register, instead use:
@@ -1583,25 +1577,13 @@ struct asm_insn
     VECTOR(regmap) defs;
 };
 
-/* I_LINE is another universal insn with its own special format. when
-   generating debug info (-g flag), we drop these at strategic points. */
-
-struct line_insn
-{
-    struct insn hdr;
-
-    struct string *path;
-    int line_no;
-};
-
 /* when we wish to kill an insn without screwing up the insn indices
    in a block (so we don't disturb, e.g., live data) we point it here */
 
 extern struct insn nop_insn;
 
 /* create a new insn with the specified op. allocated from func_arena.
-   nr_args specifies the number of argument operands for op == I_LIR_CALL.
-   if op == I_LINE, then insn is prepopulated with the current location. */
+   nr_args specifies the number of argument operands for op == I_LIR_CALL. */
 
 struct insn *new_insn(int op, int nr_args);
 

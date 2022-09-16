@@ -299,7 +299,6 @@ static void eval(struct block *b, int i)
     switch (op)
     {
     case I_NOP:
-    case I_LINE:
     case I_LIR_BLKCPY:
     case I_LIR_BLKSET:
     case I_LIR_STORE:

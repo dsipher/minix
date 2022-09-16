@@ -506,7 +506,6 @@ void init_auto(struct symbol *sym)
         push(sym);
 
         lex();
-        EMIT_LINE();
         sym->type = init(sym->type, INIT_OUTER, 0);
 
         if (!SCALAR_TYPE(sym->type)) {

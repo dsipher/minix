@@ -156,7 +156,7 @@ int intersect_cc(int cc1, int cc2)
 
 static const char * const insn_text[] =
 {
-    /*   0 */   "NOP",          /* ASM */ 0,    /* .line */ 0,  "FRAME",
+    /*   0 */   "NOP",          /* ASM */ 0,    0,              "FRAME",
     /*   4 */   "LOAD",         "STORE",        /* CALL */ 0,   "ARG",
     /*   8 */   "RETURN",       "MOVE",         "CAST",         "CMP",
     /*  12 */   "NEG",          "COM",          "ADD",          "SUB",
@@ -238,19 +238,6 @@ struct insn *new_insn(int op, int nr_args)
             break;
         }
 
-    case I_LINE:
-        {
-            struct line_insn *line_insn;
-
-            line_insn = ARENA_ALLOC(&func_arena, sizeof(struct line_insn));
-            __builtin_memset(line_insn, 0, sizeof(struct line_insn));
-            line_insn->path = path;
-            line_insn->line_no = line_no;
-
-            insn = (struct insn *) line_insn;
-            break;
-        }
-
     default:
         {
             int i = I_OPERANDS(op) + nr_args;
@@ -292,21 +279,6 @@ struct insn *dup_insn(struct insn *src)
             asm_insn->text = src_asm_insn->text;
             DUP_VECTOR(asm_insn->uses, src_asm_insn->uses);
             DUP_VECTOR(asm_insn->defs, src_asm_insn->defs);
-
-            break;
-        }
-
-    case I_LINE:
-        {
-            /* it's hard to see what possible good could come from
-               copying an I_LINE, or under what circumstances that
-               might arise (-g + optimization?) but we'll do it... */
-
-            struct line_insn *line_insn;
-            struct line_insn *src_line_insn = (struct line_insn *) src;
-
-            line_insn->path = src_line_insn->path;
-            line_insn->line_no = src_line_insn->line_no;
 
             break;
         }
@@ -581,25 +553,6 @@ void out_insn(struct insn *insn)
         return;         /* suppress output of NOPs */
 #endif /* !DEBUG */
 
-    case I_LINE:
-        {
-            /* we remember the path from the last .line directive and
-               omit it if unchanged to keep the noise to a minimum */
-
-            static struct string *last_path;
-
-            struct line_insn *line_insn = (struct line_insn *) insn;
-
-            out("\t.line %d", line_insn->line_no);
-
-            if (line_insn->path != last_path) {
-                out(",\"%S\"", line_insn->path);
-                last_path = path;
-            }
-
-            break;
-        }
-
     case I_LIR_CALL:
         OUTS("\tCALL ");
         out_operand(&insn->operand[1], 1);
@@ -738,8 +691,6 @@ void insn_uses(struct insn *insn, VECTOR(reg) *set, int flags)
     case I_ASM:         regmap_regs(&((struct asm_insn *) insn)->uses, set);
                         return;
 
-    case I_LINE:        return;
-
     case I_LIR_RETURN:  if (!VOID_TYPE(func_ret_type))
                             add_reg(set, symbol_to_reg(func_ret_sym));
 
@@ -812,8 +763,6 @@ void insn_defs(struct insn *insn, VECTOR(reg) *set, int flags)
     {
     case I_ASM:         regmap_regs(&((struct asm_insn *) insn)->defs, set);
                         break;
-
-    case I_LINE:        break;
 
     case I_MCH_CALL:    for (i = 0; i < MAX_ISCRATCH; ++i)
                             add_reg(set, iscratch[i]);

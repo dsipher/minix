@@ -50,7 +50,6 @@
 #include "insn.h"
 
 int last_asmlab;                /* last assigned asmlab */
-char g_flag;                    /* -g: generate debug info */
 char w_flag;                    /* -w: enable warnings */
 FILE *out_f;                    /* output file handle ... */
 static char *out_path;          /* ... and the path to it */
@@ -244,7 +243,6 @@ int main(int argc, char **argv)
     while ((opt = getopt(argc, argv, "gkw")) != -1) {
         switch (opt)
         {
-        case 'g':   g_flag = 1; break;
         case 'w':   w_flag = 1; break;
         case '?':   goto usage;
         }
@@ -272,7 +270,7 @@ int main(int argc, char **argv)
     return 0;
 
 usage:
-    fprintf(stderr, "usage: cc1 [ -gw ] input output\n");
+    fprintf(stderr, "usage: cc1 [ -w ] input output\n");
     return -1;
 }
 

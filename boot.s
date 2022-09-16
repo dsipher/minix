@@ -86,9 +86,16 @@ SIZEOF_DAP          =   16          / DAP packet is 16 bytes
 / identity-mapping the first 2MB in 4K pages.
 
 PTL3                =   0x2000      / the Intel/AMD manuals give all these
-PTL2                =   0x3000      / levels ridiculous legacy names that
-PTL1                =   0x4000      / make little sense. we just call them
-PTL0                =   0x5000      / what they are, `nth-level page table'
+PTL2                =   0x3000      / levels names that evolved organically
+PTL1                =   0x4000      / and are confusing. we just call them
+PTL0                =   0x5000      / what they are: `page table level N'
+
+/ we also set aside room for the mid-level table for
+/ the physical ram image (starting at PHYSICAL_BASE).
+/ there's no particular reason why we do this in boot,
+/ except that we happen to have an unused page for it.
+
+PTL2P               =   0x6000
 
 / transient buffer page used by open_file, read_file, lookup, etc. the
 / kernel may recover this page by unmapping it (along with the zero page)
@@ -323,8 +330,8 @@ banner_msg:         .byte 13, 10, 10
 
                     .org 0x1180 - ORIGIN
 
-                    / entry point for this CPU. preset for the BSP,
-                    / but the kernel will set this to the AP entry
+                    / kernel entry point for this CPU. preset for the
+                    / BSP but the kernel will set this to the AP entry
                     / point before firing up the APs.
 
 entry:              .quad   KERNEL_ADDR
@@ -700,6 +707,11 @@ ptl0_loop:          movl %eax, (%ebx)
                     addl $8, %ebx               / next entry
                     addl $0x1000, %eax          / next page address
                     loop ptl0_loop
+
+/ we also link to the PTL2 for the physical memory map (PTL2P)
+/ from the last PTE in PTL3. change this if PHYSICAL_BASE moves.
+
+                    movl $PTL2P + 0x07, 4088 + PTL3
 
                     / BSP setup complete - FALLTHRU to go_64
 

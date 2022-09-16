@@ -80,6 +80,9 @@
 	popfw
 	popfl
 
+	ldmxcsr (%bx)
+	stmxcsr (%bx)
+
 .code32
 
 	aaa
@@ -162,6 +165,9 @@
 	pushfl
 	popfw
 	popfl
+
+	ldmxcsr (%ebx)
+	stmxcsr (%ebx)
 
 .code64
 
@@ -255,3 +261,6 @@
 	pushfq
 	popfw
 	popfq
+
+	ldmxcsr (%eax)
+	stmxcsr 10(%rip)

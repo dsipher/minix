@@ -1239,6 +1239,12 @@ struct insn i_js[] =
     { 0 }
 };
 
+struct insn i_ldmxcsr[] =
+{
+    { 0, 3, { 0x0F, 0xAE, 0x10 }, { { O_MEM, F_MODRM } } },
+    { 0 }
+};
+
 struct insn i_leaw[] =
 {
     { I_DATA_16,    2, { 0x8D, 0x00 }, { { O_GPR_16, F_MID   },
@@ -2143,6 +2149,12 @@ struct insn i_shrq[] =
 struct insn i_stc[]     =   { { 0, 1, { 0xF9 } }, { 0 } };
 struct insn i_std[]     =   { { 0, 1, { 0xFD } }, { 0 } };
 struct insn i_sti[]     =   { { 0, 1, { 0xFB } }, { 0 } };
+
+struct insn i_stmxcsr[] =
+{
+    { 0, 3, { 0x0F, 0xAE, 0x18 }, { { O_MEM, F_MODRM } } },
+    { 0 }
+};
 
 struct insn i_stosb[] = { { 0,         1, { 0xAA } }, { 0 } };
 struct insn i_stosw[] = { { I_DATA_16, 1, { 0xAB } }, { 0 } };

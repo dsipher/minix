@@ -53,10 +53,18 @@
 #define PAGE_COLOR_MASK     (PAGE_COLORS - 1)
 #define PAGE_COLOR(a)       (((a) >> PAGE_SHIFT) & PAGE_COLOR_MASK)
 
-/* we map all of physical RAM at the top of kernel virtual address space. */
+/* we map all of physical RAM into kernel virtual address space, starting
+   at PHYSICAL_BASE. this mapping is started by boot.s, and completed by
+   the startup code in page.c. if you want to move the base (uh, why?) be
+   sure to update both. the base must be 512GB-aligned so that it occupies
+   [exclusively] one PTL3 PTE and requires only one PTL2 for all RAM. */
 
-#define PHYSICAL_BASE   0xFFFFFF8000000000L     /* -512GB */
-#define PHYSICAL_PTE    511                     /* top-level PTE index */
+#define PHYSICAL_BASE   0xFFFFFF8000000000L     /* last 512GB */
+
+/* convert a physical address to a virtual address, or vice-versa. */
+
+#define PTOV(a)         ((a) + PHYSICAL_BASE)
+#define VTOP(a)         ((a) - PHYSICAL_BASE)
 
 /* regardless of the amount of RAM, we always map at least the first
    4GB of physical address space, because we need to access the local
@@ -70,11 +78,31 @@
 
 #define FIRST_FREE      0x0000000000100000L     /* 1MB */
 
-/* convert a physical address to a virtual address, or vice-versa. IMPORTANT:
-   if an address is already in the appropriate class, it is left unchanged! */
+/* the u. area for the current process is always found at USER_BASE.
+   it is USER_PAGES pages long; the remaining space is used for the
+   process KERNEL_STACK. it is not a coincidence that USER_BASE is
+   FIRST_FREE: the bootstrapping process relies on this. see page.c.
 
-#define PTOV(a)         ((a) | PHYSICAL_BASE)
-#define VTOP(a)         ((a) & ~PHYSICAL_BASE)
+   KERNEL_STACK must agree with the value found in the TSS (in boot.s) */
+
+#define USER_BASE       0x0000000000100000L    /* 1MB = FIRST_FREE */
+#define USER_PAGES      2                      /* 8K of user area */
+#define KERNEL_STACK    0x0000000000102000L    /* thus the stack is here */
+
+/* the initial value of RSP on entry to a user process. this value is
+   placed one page below the a.out header/entry point of the process
+   (A_EXEC_BASE from a.out.h) leaving a guard page to catch user stack
+   underflows. it grows downwards towards the KERNEL_STACK; thus it is
+   limited to ~512K, which is plenty of stack for reasonable purposes.
+
+   we cram the first 2MB of virtual space with the kernel image, user
+   area, kernel stack, and user stack to minimize the number of mid-
+   level page tables required when the user text/data/bss fit in 512kB,
+   which is the case for the vast majority of processes. this saves
+   time and space, and the only disadvantage is the limitation on the
+   user stack size, which, as noted above, isn't really restrictive. */
+
+#define USER_STACK      0x000000000017F000L
 
 #ifdef _KERNEL
 

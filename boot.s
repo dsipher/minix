@@ -90,20 +90,21 @@ PTL2                =   0x3000      / levels ridiculous legacy names that
 PTL1                =   0x4000      / make little sense. we just call them
 PTL0                =   0x5000      / what they are, `nth-level page table'
 
-/ we record the BIOS-reported memory map here. we deliberately use this
-/ instead of ACPI, so we don't have to play games to map in ACPI tables
-/ before we've initialized memory management. chicken-and-egg stuff.
-/ the kernel references this map in locore.s (_e820_count/_e820_map).
-
-E820_N              =   0x6000      / count of BIOS E820 map entries
-E820_MAP            =   0x6008      / the map itself (0x6008 - 0x6BFF)
-SIZEOF_MAPENT       =   24          / each map entry occupies 24 bytes
-MAX_E820            =   170         / 170 entries * 24/per = 4080 bytes
-
 / transient buffer page used by open_file, read_file, lookup, etc. the
 / kernel may recover this page by unmapping it (along with the zero page)
 
 BUFFER              =   0x7000
+
+/ after loading we overwrite BUFFER with the E820 map. we deliberately
+/ use this instead of ACPI so we don't have to play games to map in the
+/ ACPI tables before we've initialized memory management. chicken/egg.
+
+/ the kernel references this map in locore.s (_e820_count/_e820_map).
+
+E820_N              =   0x7000      / count of BIOS E820 map entries
+E820_MAP            =   0x7008      / the map itself (0x6008 - 0x6BFF)
+SIZEOF_MAPENT       =   24          / each map entry occupies 24 bytes
+MAX_E820            =   170         / 170 entries * 24/per = 4080 bytes
 
 / constants related to the filesystem.
 

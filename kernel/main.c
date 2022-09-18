@@ -40,8 +40,8 @@
 #define KERNEL_AOUT     ((struct exec *) KERNEL_ADDR)
 
 /* the BSP enters here after a brief bounce through
-   locore.s. we're on the boot stack, interrupts are
-   disabled, and the first 2MB is identity-mapped. */
+   the locore.s. we're in process 0, interrupts are
+   disabled, and the first 2MB are identity-mapped. */
 
 void
 main(void)

@@ -78,14 +78,14 @@
 
 #define FIRST_FREE      0x0000000000100000L     /* 1MB */
 
-/* the u. area for the current process is always found at USER_BASE.
+/* the u. area for the current process is always found at USER_ADDR.
    it is USER_PAGES pages long; the remaining space is used for the
-   process KERNEL_STACK. it is not a coincidence that USER_BASE is
+   process KERNEL_STACK. it is not a coincidence that USER_ADDR is
    FIRST_FREE: the bootstrapping process relies on this. see page.c.
 
    KERNEL_STACK must agree with the value found in the TSS (in boot.s) */
 
-#define USER_BASE       0x0000000000100000L    /* 1MB = FIRST_FREE */
+#define USER_ADDR       0x0000000000100000L    /* 1MB = FIRST_FREE */
 #define USER_PAGES      2                      /* 8K of user area */
 #define KERNEL_STACK    0x0000000000102000L    /* thus the stack is here */
 
@@ -103,6 +103,12 @@
    user stack size, which, as noted above, isn't really restrictive. */
 
 #define USER_STACK      0x000000000017F000L
+
+/* the entries of each level of page table are given their
+   own names in the Intel literature; we call them all PTEs,
+   and for the most part, treat them identically. */
+
+typedef unsigned long pte_t;
 
 #ifdef _KERNEL
 

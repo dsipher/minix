@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/boot.h                                    jewel/os standard library
+   proc.c                                                  jewel/os kernel
 
 ******************************************************************************
 
@@ -31,47 +31,23 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_BOOT_H
-#define _SYS_BOOT_H
+#include <sys/boot.h>
+#include <sys/proc.h>
 
-#include <sys/types.h>
+/* process 0 is the the context when the BSP enters the
+   kernel. during startup, it decays into an idle process
+   after forking pid 1 (which eventually becomes init). */
 
-/* definitions useful during bootstrapping. must agree with boot.s!
-
-   boot is [ultimately] loaded at 0x1000. it's only a page long, but
-   it builds permanenent data structures (shared with the kernel) in
-   [BOOT_ADDR, KERNEL_ADDR), so none of that RAM is available. the
-   zero page is only used for the boot stack, so it can be freed and
-   unmapped to catch null references once all the APs are started. */
-
-#define BOOT_ADDR       0x00001000          /* boot starts here ... */
-#define KERNEL_ADDR     0x00008000          /* ... and kernel here */
-
-/* important addresses in the prototype page tables built by boot block */
-
-#define PTL3_ADDR       0x00002000          /* the whole table */
-#define PTL2P_ADDR      0x00006000          /* mid-table for physical map */
-
-/* physical addresses up to [but not including] BOOT_MAPPED
-   are guaranteed to be identity-mapped by the boot block */
-
-#define BOOT_MAPPED     0x00200000          /* the first 2MB are mapped */
-
-/* boot retrieves the so-called E820 memory map from the BIOS */
-
-struct e820
+struct proc proc0   =
 {
-    caddr_t     base;               /* base address of region */
-    size_t      len;                /* and its length in bytes */
-    int         type;               /* see E820_TYPE_* below */
-    int         unused0;
+    (pte_t *)           PTL3_ADDR,                      /* p_ptl3 */
+    (struct user *)     PTOV(USER_ADDR),                /* p_u */
+                        0,                              /* p_pid */
+                        P_STATE_RUN,                    /* p_state */
+                        0,                              /* p_flags */
+                        0,                              /* p_cpu */
+                        0,                              /* p_age */
+                        0                               /* p_chan */
 };
-
-extern int e820_count;              /* these are exported as absolute */
-extern struct e820 e820_map[];      /* symbols from locore.s */
-
-#define E820_TYPE_FREE  1           /* the only type we care about */
-
-#endif /* _SYS_BOOT_H */
 
 /* vi: set ts=4 expandtab: */

@@ -31,13 +31,32 @@
 /
 //////////////////////////////////////////////////////////////////////////////
 
-.globl _main
-
 / kernel entry point (for the BSP).
 / head off to main(), never to return.
 
                     lidt idt_48
+
+/ configure the u. area. while u. is remapped on context switch, pginit() in
+/ page.c keeps process 0's u. identity-mapped to avoid bootstrap headaches.
+
+                    movq $_proc0, U_PROCP(%rip)     / we are process 0
+                    movb $1, U_LOCKS(%rip)          / interrupts disabled
+
                     jmp _main
+
+.globl _main
+.globl _proc0
+
+//////////////////////////////////////////////////////////////////////////////
+/
+/ definitions pertaining to the u. area; keep in sync with sys/user.h.
+
+.globl _u
+_u = 0x00100000                 / USER_ADDR from sys/page.h
+
+U_FXSAVE    =   _u + 0x0000
+U_PROCP     =   _u + 0x0200
+U_LOCKS     =   _u + 0x0208
 
 //////////////////////////////////////////////////////////////////////////////
 /
@@ -92,5 +111,23 @@ idt:                .short 0, 0, 0, 0, 0, 0, 0, 0
 
 idt_48:             .short idt_48 - idt - 1
                     .quad idt
+
+//////////////////////////////////////////////////////////////////////////////
+/
+/ void lock(void);
+/ void unlock(void);
+
+.globl _lock
+
+_lock:              cli
+                    incb U_LOCKS(%rip)
+                    ret
+
+.globl _unlock
+
+_unlock:            decb U_LOCKS(%rip)
+                    jnz unlock010
+                    sti
+unlock010:          ret
 
 / vi: set ts=4 expandtab:

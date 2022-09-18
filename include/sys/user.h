@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/boot.h                                    jewel/os standard library
+   sys/user.h                                    jewel/os standard library
 
 ******************************************************************************
 
@@ -31,47 +31,45 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_BOOT_H
-#define _SYS_BOOT_H
+#ifndef _SYS_USER_H
+#define _SYS_USER_H
 
-#include <sys/types.h>
+/* the user structure holds partial state for the current process. it is
+   always found at USER_BASE (see sys/page.h) and shares USER_PAGES with
+   the process's kernel stack. the remainder of the process state can be
+   found in its struct proc, cross-referenced here via u_procp.
 
-/* definitions useful during bootstrapping. must agree with boot.s!
+   historically, unix split the state to preserve kernel data space: the
+   user struct carried the bulk state that is only referenced from within
+   the context of the process itself, whereas the much smaller proc struct
+   held process information needed from other contexts. we continue this
+   convention, though for slightly different reasons. in particular, the
+   u. area's fixed address in kernel space allows us to avoid the headache
+   of per-cpu data. (e.g., u.procp answers `which process is on this cpu?')
 
-   boot is [ultimately] loaded at 0x1000. it's only a page long, but
-   it builds permanenent data structures (shared with the kernel) in
-   [BOOT_ADDR, KERNEL_ADDR), so none of that RAM is available. the
-   zero page is only used for the boot stack, so it can be freed and
-   unmapped to catch null references once all the APs are started. */
+   if you change the layout, be sure to keep in sync with U_* in locore.s. */
 
-#define BOOT_ADDR       0x00001000          /* boot starts here ... */
-#define KERNEL_ADDR     0x00008000          /* ... and kernel here */
-
-/* important addresses in the prototype page tables built by boot block */
-
-#define PTL3_ADDR       0x00002000          /* the whole table */
-#define PTL2P_ADDR      0x00006000          /* mid-table for physical map */
-
-/* physical addresses up to [but not including] BOOT_MAPPED
-   are guaranteed to be identity-mapped by the boot block */
-
-#define BOOT_MAPPED     0x00200000          /* the first 2MB are mapped */
-
-/* boot retrieves the so-called E820 memory map from the BIOS */
-
-struct e820
+struct user
 {
-    caddr_t     base;               /* base address of region */
-    size_t      len;                /* and its length in bytes */
-    int         type;               /* see E820_TYPE_* below */
-    int         unused0;
+    /* saved floating-point state. only used when the P_FLAG_SSE
+       flag is set in u.procp->p_flags. it comes first to ensure
+       that it's 16-byte aligned, as required by FXSAVE/FXRSTOR. */
+
+    char            u_fxsave[512];
+
+    struct proc     *u_procp;       /* 0x0200: associated struct proc */
+    unsigned char   u_locks;        /* 0x0208: depth of `cli' nesting */
 };
 
-extern int e820_count;              /* these are exported as absolute */
-extern struct e820 e820_map[];      /* symbols from locore.s */
+extern struct user u;           /* exported from locore.s */
 
-#define E820_TYPE_FREE  1           /* the only type we care about */
+#ifdef _KERNEL
 
-#endif /* _SYS_BOOT_H */
+extern void lock(void);         /* disable or enable interrupts: */
+extern void unlock(void);       /* works recursively via u_locks */
+
+#endif /* _KERNEL */
+
+#endif /* _SYS_USER_H */
 
 /* vi: set ts=4 expandtab: */

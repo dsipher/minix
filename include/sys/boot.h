@@ -36,6 +36,12 @@
 
 #include <sys/types.h>
 
+/* the limit of the kernel image in low/conventional memory. all pages
+   below kernel_top, except for the zero page, are part of the kernel's
+   text/data/bss. computed by main() from the kernel a.out header. */
+
+extern caddr_t kernel_top;      /* page-aligned for convenience */
+
 /* definitions useful during bootstrapping. must agree with boot.s!
 
    boot is [ultimately] loaded at 0x1000. it's only a page long, but

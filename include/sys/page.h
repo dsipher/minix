@@ -110,6 +110,20 @@
 
 typedef unsigned long pte_t;
 
+#define PTES_PER_PAGE   (PAGE_SIZE / sizeof(pte_t))
+
+#define PTE_P           0x0001          /* entry is present */
+#define PTE_W           0x0002          /* page is writable */
+#define PTE_U           0x0004          /* user-accessible */
+#define PTE_2MB         0x0080          /* 2MB page (PTL1) */
+#define PTE_G           0x0100          /* page is global */
+
+/* non-standard: we use PTE_LEAF to indicate a boundary that should
+   not be crossed when duplicating page tables, i.e., kernel text
+   pages and such. for a leaf, copy the PTE, not what it points to. */
+
+#define PTE_LEAF        0x0200          /* treat entry as a leaf */
+
 #ifdef _KERNEL
 
 /* called early from main(). until this completes,

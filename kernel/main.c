@@ -37,6 +37,8 @@
 #include <sys/page.h>
 #include <sys/log.h>
 
+caddr_t kernel_top;
+
 #define KERNEL_AOUT     ((struct exec *) KERNEL_ADDR)
 
 /* the BSP enters here after a brief bounce through
@@ -46,8 +48,12 @@
 void
 main(void)
 {
-    memset((void *) (N_BSSOFF(*KERNEL_AOUT) + KERNEL_ADDR),
-            0, KERNEL_AOUT->a_bss); /* clear the bss */
+    caddr_t bss;
+
+    bss = N_BSSOFF(*KERNEL_AOUT) + KERNEL_ADDR;     /* clear the BSS */
+    memset((void *) bss, 0, KERNEL_AOUT->a_bss);    /* and compute */
+    kernel_top += bss + KERNEL_AOUT->a_bss;         /* kernel_top */
+    kernel_top = PAGE_UP(kernel_top);               /* must be whole pages */
 
     cninit();
     pginit();

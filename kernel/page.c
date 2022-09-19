@@ -71,7 +71,7 @@ pgfree(caddr_t a)
    the lowest available memory regions first. */
 
 static void
-init_e820(void)
+fix_e820(void)
 {
     struct e820 *entry;
     struct e820 tmp;
@@ -142,7 +142,7 @@ overlaps(caddr_t base, size_t len)
    returns a physical base address, or panics if unable.
    performs first-fit. because the map is sorted by base
    address in init_entry(), the lowest RAM range will be
-   chosen: this is vitally important to early_pgall(). */
+   chosen: this ordering is important to pginit(). */
 
 static caddr_t
 memall(size_t n)
@@ -173,16 +173,72 @@ memall(size_t n)
     panic("memall");
 }
 
+/* map all physical RAM into the kernel's address space
+   PHYSICAL_BASE. we can't use mapin() here for several
+   important reasons:
+
+    1. the free_pages[] lists are not yet built.
+    2. we must address the tables physically
+    3. we want 2MB pages, rather than 4kB pages
+
+   luckily we're mapping in a contiguous physical range
+   to a contiguous virtual range, so fast and easy. */
+
+void
+physical(caddr_t ram_top)
+{
+    const size_t two_meg = (2 << 20);
+    const size_t one_gig = (1 << 30);
+    pte_t *ptl2p = (pte_t *) PTL2P_ADDR;
+    pte_t *pte;
+    caddr_t addr;
+    int pages;
+
+    if (ram_top < MIN_PHYSICAL) ram_top = MIN_PHYSICAL;
+
+    pages = (ram_top + one_gig - 1) / one_gig;      /* one page for every */
+    pte = (pte_t *) memall(pages);                  /* GB or part thereof */
+    memset(pte, 0, PAGE_SIZE * pages);
+
+    while (pages--)
+        *ptl2p++ = ((long) &pte[pages]) | PTE_W | PTE_P;
+
+    for (addr = 0; addr < ram_top; addr += two_meg)
+        *pte++ = addr | PTE_G | PTE_2MB | PTE_W | PTE_P;
+}
+
 /* XXX */
 
 void
 pginit(void)
 {
+    struct e820 *entry;
+    caddr_t ram_top;
     int i;
 
-    init_e820();
+    fix_e820();
 
-    for (i = 0; i < e820_count; ++i) {
+    /* we need to remove the [identity-mapped] proc0 u. area
+       from the map. the pages must where we expect them! */
+
+    if (memall(USER_PAGES) != USER_ADDR) panic("pginit");
+
+    /* find the highest physical RAM address. the result
+       is ram_top, such that all RAM addresses < ram_top. */
+
+    for (ram_top = 0, i = 0, entry = e820_map; i < e820_count; ++i)
+        if (entry->type == E820_TYPE_FREE
+          && (entry->base + entry->len) > ram_top)
+        {
+            ram_top = entry->base + entry->len;
+        }
+
+    physical(ram_top);
+
+    /* XXX: this is where we allocate proc[], mbuf[] etc. */
+    /* XXX: build free_pages[] lists, ignore pages < kernel_top */
+
+    for (i = 0; i < e820_count; ++i) {  /* to be removed */
         printf("type = %d base = %x length = %x\n", e820_map[i].type,
                                                     e820_map[i].base,
                                                     e820_map[i].len);

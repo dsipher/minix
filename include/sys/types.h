@@ -78,6 +78,11 @@ typedef __nlink_t nlink_t;
 typedef __off_t off_t;
 #endif /* __OFF_T */
 
+#ifndef __PID_T
+#define __PID_T
+typedef __pid_t pid_t;
+#endif /* __PID_T */
+
 #ifndef __SIZE_T
 #define __SIZE_T
 typedef __size_t size_t;

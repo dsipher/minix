@@ -696,24 +696,35 @@ bsp_prot_32:        movw $KERNEL_DS_32, %ax
 / above. we only need to populate one entry, the first, in each
 / of the upper-level tables, linking it down to the next level.
 
-                    movl $PTL2 + 0x07, PTL3     / 0x07 = user, R/W, P
+                    movl $PTL2 + 0x07, PTL3     / 0x07 = U, R/W, P
                     movl $PTL1 + 0x07, PTL2
                     movl $PTL0 + 0x07, PTL1
 
 / identity map the first 2MB in PTL0 using 4k system-only pages.
 
                     movl $PTL0, %ebx
-                    movl $0x03, %eax            / 0x03 = (system) R/W, P
-                    movl $512, %ecx             / 512 PTEs/page = 2MB
+
+                    movl $0x303, %eax           / 0x303 = LEAF, G, R/W, P
+                    movl $256, %ecx             / 256 PTEs = 1MB
 ptl0_loop:          movl %eax, (%ebx)
                     addl $8, %ebx               / next entry
                     addl $0x1000, %eax          / next page address
                     loop ptl0_loop
 
+                    / the 2nd 1MB (1MB-2MB) is only mapped temporarily,
+                    / so we don't want these pages to be LEAF or G.
+
+                    subl $0x300, %eax           / 0x03 = R/W, P
+                    movl $256, %ecx             / 256 PTEs again = 1MB
+plt0_loop1:         movl %eax, (%ebx)
+                    addl $8, %ebx
+                    addl $0x1000, %eax
+                    loop plt0_loop1
+
 / we also link to the PTL2 for the physical memory map (PTL2P)
 / from the last PTE in PTL3. change this if PHYSICAL_BASE moves.
 
-                    movl $PTL2P + 0x07, 4088 + PTL3
+                    movl $PTL2P + 0x203, 4088 + PTL3    / 0x203 = LEAF, R/W, P
 
                     / BSP setup complete - FALLTHRU to go_64
 
@@ -727,7 +738,7 @@ ptl0_loop:          movl %eax, (%ebx)
 / up for the BSP, but the kernel must twiddle them for APs.
 /
 
-go_64:              movl %cr4, %eax             / enable PAE
+go_64:              movl %cr4, %eax             / enable PAE and PGE
                     orl $0x20, %eax
                     movl %eax, %cr4
 

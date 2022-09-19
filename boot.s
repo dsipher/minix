@@ -326,15 +326,17 @@ banner_msg:         .byte 13, 10, 10
 
 //////////////////////////////////////////////////////////////////////////////
 
-/ the boot configuration vector.
+/ the boot configuration vector. entry_* are preset for
+/ the BSP, but the kernel will reset them to appropriate
+/ values for each AP before spinning it up. entry_ptl3,
+/ despite being a .quad, must point inot the first 4GB of
+/ addressible RAM, because %cr3 is loaded in 32-bit mode.
+/ (this should never pose a problem; change prot_64 if so)
 
                     .org 0x1180 - ORIGIN
 
-                    / kernel entry point for this CPU. preset for the
-                    / BSP but the kernel will set this to the AP entry
-                    / point before firing up the APs.
-
-entry:              .quad   KERNEL_ADDR
+entry_addr:         .quad   KERNEL_ADDR         / kernel entry point
+entry_ptl3:         .quad   PTL3                / page tables
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -734,7 +736,7 @@ go_64:              movl %cr4, %eax             / enable PAE
                     orw $0x100, %ax
                     wrmsr
 
-                    movl $PTL3, %eax            / set page base
+                    movl entry_ptl3, %eax       / set page base
                     movl %eax, %cr3
 
                     movl %cr0, %eax             / enable paging
@@ -755,13 +757,13 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
                     movw %ax, %ss               / [almost] entirely ignored.
                     movw %ax, %gs
                     movw %ax, %fs
-                    movq $BOOT_STACK, %rsp
+                    movq $KERNEL_STACK, %rsp
 
                     movb $0x89, tss_type(%rip)  / reset in case marked BUSY
                     movw $KERNEL_TSS, %ax
                     ltr %ax
 
-                    jmp *entry
+                    jmp *entry_addr
 
 .code16
 

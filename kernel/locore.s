@@ -130,4 +130,28 @@ _unlock:            decb U_LOCKS(%rip)
                     sti
 unlock010:          ret
 
+//////////////////////////////////////////////////////////////////////////////
+/
+/ void acquire(spinlock_t *lock);
+/ void release(spinlock_t *lock);
+
+.globl _acquire
+
+acquire010:         call _unlock
+acquire020:         pause
+                    testl $1, (%rdi)
+                    jnz acquire020
+                    / fallthru /
+_acquire:           call _lock
+                    lock
+                    btsl $0, (%rdi)
+                    jc acquire010
+                    ret
+
+.globl _release
+
+_release:           movl $0, (%rdi)
+                    call _unlock
+                    ret
+
 / vi: set ts=4 expandtab:

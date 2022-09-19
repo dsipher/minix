@@ -1,4 +1,6 @@
 .code16
+	pause
+
         bsrl %eax,%eax
         bsfl %eax,%eax
         bsrl %eax,%ecx
@@ -87,7 +89,21 @@
 	fxrstor (%bx, %si)
 	fxrstor (%ebx)
 
+	btcw $2, (%ecx)
+
+	btrw %ax, (%edi)
+	btrw $1, (%edi)
+	btrl $0, (%di)
+
+	btsw %ax, (%edi)
+	btsl $0, (%di)
+
+	btw %ax, (%edi)
+	btl $0, (%di)
+
 .code32
+
+	pause
 
 	aaa
 	aad
@@ -177,6 +193,12 @@
 	fxsave (%bx, %si)
 	fxrstor (%ebx)
 
+	btsw %ax, (%edi)
+	btsl $0, (%di)
+
+	btw %ax, (%eax)
+	btl $0, (%bx)
+
 .code64
 
         bsrw %r15w, %si
@@ -197,6 +219,26 @@
         jmp *%rcx
         jmp *%r13
         jmp *%rsi
+
+	btcw %di, (%r8)
+	btcl $16, (%r12d)
+	btcq %rax, 100(%rip)
+
+	btsw %ax, (%rdi)
+	btsl $0, (%rdi)
+	btsq %rax, %r15
+
+	btrl %eax, (%rdi)
+	btrw $0, (%rdi)
+	btrq %rax, %r15
+
+	btrw %ax, (%rdi)
+	btrl $0, (%rdi)
+	btrq %rax, %r15
+
+	btw %ax, (%r15)
+	btl $0, (%rax)
+	btq %r15, %rdx
 
 	cbtw
 	cwtd
@@ -269,6 +311,8 @@
 	pushfq
 	popfw
 	popfq
+
+	pause
 
 	ldmxcsr (%eax)
 	stmxcsr 10(%rip)

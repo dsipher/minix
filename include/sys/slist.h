@@ -62,7 +62,7 @@
 
 #define SLIST_INIT(head)                                                \
     do {                                                                \
-        (head)->slh_first = NULL;                                       \
+        (head)->slh_first = 0;                                          \
     } while (0)
 
 #define SLIST_INSERT_AFTER(slistelm, elm, field)                        \
@@ -96,7 +96,7 @@
         }                                                               \
     } while (0)
 
-#define SLIST_EMPTY(head)       ((head)->slh_first == NULL)
+#define SLIST_EMPTY(head)       ((head)->slh_first == 0)
 #define SLIST_FIRST(head)       ((head)->slh_first)
 #define SLIST_NEXT(elm, field)  ((elm)->field.sle_next)
 

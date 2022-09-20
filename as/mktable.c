@@ -226,6 +226,7 @@ struct { const char *text; const char *template; } insns[] =
     {   "incl",         0               },
     {   "incq",         0               },
     {   "int",          0               },
+    {   "invlpg",       0               },
     {   "iret",         0               },
     {   "ja",           "jnbe"          },
     {   "jae",          "jnb"           },

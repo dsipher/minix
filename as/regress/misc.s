@@ -101,6 +101,8 @@
 	btw %ax, (%edi)
 	btl $0, (%di)
 
+	invlpg (%bp)
+
 .code32
 
 	pause
@@ -198,6 +200,8 @@
 
 	btw %ax, (%eax)
 	btl $0, (%bx)
+
+	invlpg (%ebp)
 
 .code64
 
@@ -316,6 +320,7 @@
 
 	ldmxcsr (%eax)
 	stmxcsr 10(%rip)
+	invlpg (%rdi)
 
 	fxsave 100(%rip)
 	fxrstor (%rdx,%rcx,2)

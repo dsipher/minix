@@ -55,16 +55,15 @@
 
 /* we map all of physical RAM into kernel virtual address space, starting
    at PHYSICAL_BASE. this mapping is started by boot.s, and completed by
-   the startup code in page.c. if you want to move the base (uh, why?) be
-   sure to update both. the base must be 512GB-aligned so that it occupies
-   [exclusively] one PTL3 PTE and requires only one PTL2 for all RAM. */
+   the startup code in page.c. this is not easily changed: do not move. */
 
 #define PHYSICAL_BASE   0xFFFFFF8000000000L     /* last 512GB */
 
-/* convert a physical address to a virtual address, or vice-versa. */
+/* convert a physical address to a virtual address or vice-versa.
+   an address already in the desired class is left unchanged. */
 
-#define PTOV(a)         ((a) + PHYSICAL_BASE)
-#define VTOP(a)         ((a) - PHYSICAL_BASE)
+#define PTOV(a)         ((a) | PHYSICAL_BASE)
+#define VTOP(a)         ((a) & ~PHYSICAL_BASE)
 
 /* regardless of the amount of RAM, we always map at least the first
    4GB of physical address space, because we need to access the local
@@ -110,8 +109,6 @@
 
 typedef unsigned long pte_t;
 
-#define PTES_PER_PAGE   (PAGE_SIZE / sizeof(pte_t))
-
 #define PTE_P           0x0001          /* entry is present */
 #define PTE_W           0x0002          /* page is writable */
 #define PTE_U           0x0004          /* user-accessible */
@@ -123,6 +120,18 @@ typedef unsigned long pte_t;
    duplicated across a fork, e.g., the kernel image, or shared text. */
 
 #define PTE_SHARE       0x0200          /* duplicate entry verbatim */
+
+/* calculate the index of the PTE associated with
+   virtual address `v' at page table level `ptl'. */
+
+#define PTE_INDEX(ptl, v)       (((v) >> ((ptl) * 9 + PAGE_SHIFT))      \
+                                        & (PTES_PER_PAGE - 1))
+
+#define PTES_PER_PAGE           (PAGE_SIZE / sizeof(pte_t))
+
+/* return the physical page referenced by the PTE */
+
+#define PTE_ADDR(pte)           ((pte) & 0x0000FFFFFFFFF000)
 
 #ifdef _KERNEL
 
@@ -142,6 +151,13 @@ extern caddr_t pgall(caddr_t hint);
 /* free a page - return it to its free list */
 
 extern void pgfree(caddr_t addr);
+
+/* map a page `addr' into the address space headed by `ptl3' at virtual
+   address `vaddr', with the PTE_* `flags'. returns non-zero on success,
+   or zero on failure; can only fail when new intermediate page tables
+   are needed and there are no free pages for them. */
+
+extern int mapin(caddr_t addr, pte_t *ptl3, caddr_t vaddr, int flags);
 
 #endif /* _KERNEL */
 

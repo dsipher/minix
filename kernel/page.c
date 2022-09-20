@@ -263,6 +263,38 @@ physical(caddr_t ram_top)
         *pte = addr | PTE_G | PTE_2MB | PTE_W | PTE_P;
 }
 
+/* the `flags' are only used for the final entry. intermediate
+   entries use permissions that ensure the final entry controls
+   access. we assume the caller has passed us `addr' and `vaddr'
+   aligned on page boundaries, as they obviously must be... */
+
+int
+mapin(caddr_t addr, pte_t *ptl3, caddr_t vaddr, int flags)
+{
+    pte_t   *table = ptl3;
+    pte_t   *pte;
+    int     ptl = 3;
+
+    for (;;)
+    {
+        pte = &table[PTE_INDEX(ptl, vaddr)];
+        if (ptl == 0) break;
+
+        if (!(*pte & PTE_P)) {
+            table = (pte_t *) pgall(0);
+            if (table == 0) return 0;
+            memset(table, 0, PAGE_SIZE);
+            *pte = VTOP((caddr_t) table) | PTE_U | PTE_W | PTE_P;
+        } else
+            table = (pte_t *) PTOV(PTE_ADDR(*pte));
+
+        --ptl;
+    }
+
+    *pte = VTOP(addr) | flags | PTE_P;
+    return 1;
+}
+
 /* XXX */
 
 void

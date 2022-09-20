@@ -118,11 +118,11 @@ typedef unsigned long pte_t;
 #define PTE_2MB         0x0080          /* 2MB page (PTL1) */
 #define PTE_G           0x0100          /* page is global */
 
-/* non-standard: we use PTE_LEAF to indicate a boundary that should
-   not be crossed when duplicating page tables, i.e., kernel text
-   pages and such. for a leaf, copy the PTE, not what it points to. */
+/* we use PTE_SHARE (an AVL `available bit' in the PTE) to indicate a
+   PTE which governs address space that should be shared rather than
+   duplicated across a fork, e.g., the kernel image, or shared text. */
 
-#define PTE_LEAF        0x0200          /* treat entry as a leaf */
+#define PTE_SHARE       0x0200          /* duplicate entry verbatim */
 
 #ifdef _KERNEL
 

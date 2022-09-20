@@ -704,7 +704,7 @@ bsp_prot_32:        movw $KERNEL_DS_32, %ax
 
                     movl $PTL0, %ebx
 
-                    movl $0x303, %eax           / 0x303 = LEAF, G, R/W, P
+                    movl $0x303, %eax           / 0x303 = SHARE, G, R/W, P
                     movl $256, %ecx             / 256 PTEs = 1MB
 ptl0_loop:          movl %eax, (%ebx)
                     addl $8, %ebx               / next entry
@@ -712,7 +712,7 @@ ptl0_loop:          movl %eax, (%ebx)
                     loop ptl0_loop
 
                     / the 2nd 1MB (1MB-2MB) is only mapped temporarily,
-                    / so we don't want these pages to be LEAF or G.
+                    / so we don't want these pages to be SHARE or G.
 
                     subl $0x300, %eax           / 0x03 = R/W, P
                     movl $256, %ecx             / 256 PTEs again = 1MB
@@ -724,7 +724,7 @@ plt0_loop1:         movl %eax, (%ebx)
 / we also link to the PTL2 for the physical memory map (PTL2P)
 / from the last PTE in PTL3. change this if PHYSICAL_BASE moves.
 
-                    movl $PTL2P + 0x203, 4088 + PTL3    / 0x203 = LEAF, R/W, P
+                    movl $PTL2P + 0x203, 4088 + PTL3  / 0x203 = SHARE, R/W, P
 
                     / BSP setup complete - FALLTHRU to go_64
 

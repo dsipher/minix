@@ -107,8 +107,8 @@ printf(char *fmt, ...)
     va_end(args);
 }
 
-/* obviously a placeholder. at a minimum we need to (a) sychronize the
-   console output and (b) grab the scheduler lock to halt other CPUs */
+/* obviously a placeholder. at a minimum we'll need
+   to grab the scheduler lock to halt other CPUs. */
 
 void
 panic(char *where)  /* XXX */

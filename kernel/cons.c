@@ -34,6 +34,7 @@
 #include <string.h>
 #include <sys/cons.h>
 #include <sys/io.h>
+#include <sys/spin.h>
 
 /* number of virtual ttys. the minimum is 1, since the first vty
    is the console. the maximum is 12, since we use ALT + Fkey to
@@ -75,6 +76,11 @@ struct vty
                                         ? ((unsigned short *) 0xB8000)      \
                                         : ((vty)->framebuf))
 
+/* protects all the following global data, as well
+   as access to the framebuffer and 6845 registers. */
+
+static spinlock_t cons_lock;
+
 /* only the console vty is pre-allocated. the rest are [will
    be] allocated on demand, the first time they're opened. */
 
@@ -99,10 +105,8 @@ static struct vty *current_vty = &cons_vty;
 #define X_STATE             3           /* ......... X position next */
 #define ATTR_STATE          4           /* ......... attribute next */
 
-/* there has not been an actual MC6845 in a PC video card since the
-   CGA/MDA days, of course, but we still pretend there is. we do not
-   currently synchronize the read or write operations, but we should,
-   if we ever expect console output from an interrupt context. */
+/* there has not been an actual MC6845 in a PC video card since
+   the CGA/MDA days, of course, but we still pretend there is. */
 
 #define ADDRESS             0x3D4       /* MC6845 address latch */
 #define DATA                0x3D5       /* ...... data window */
@@ -156,7 +160,7 @@ static struct vty *current_vty = &cons_vty;
    the CURSOR bit. ignore if the vty is not the current_vty. */
 
 static void
-toggle(struct vty *vty)
+toggle(struct vty *vty)    /* hold: cons_lock */
 {
     if (vty == current_vty) {
         int shape = (vty->state & CURSOR) ? BLOCK_CURSOR
@@ -171,7 +175,7 @@ toggle(struct vty *vty)
    or if the cursor is currently hidden. */
 
 static void
-move(struct vty *vty)
+move(struct vty *vty)    /* hold: cons_lock */
 {
     if ((vty == current_vty) && (vty->state & CURSOR))
     {
@@ -192,7 +196,7 @@ move(struct vty *vty)
    always called with an `n' divisible by 4. */
 
 static void
-blank(struct vty *vty, int x, int y, int n)
+blank(struct vty *vty, int x, int y, int n)    /* hold: cons_lock */
 {
     unsigned short *framebuf = FRAMEBUF(vty);
     unsigned blank = (vty->attr << 8) | ' ';
@@ -206,7 +210,7 @@ blank(struct vty *vty, int x, int y, int n)
    see notes on blank(): should rewrite to use MOVSQ. */
 
 static void
-scroll(struct vty *vty)
+scroll(struct vty *vty)    /* hold: cons_lock */
 {
     if (vty->y > LAST_ROW) {
         unsigned short *framebuf = FRAMEBUF(vty);
@@ -222,7 +226,7 @@ scroll(struct vty *vty)
 /* clear the screen and home the cursor. */
 
 static void
-home(struct vty *vty)
+home(struct vty *vty)    /* hold: cons_lock */
 {
     blank(vty, 0, 0, ROWS * COLS);
     vty->y = 0;
@@ -240,6 +244,7 @@ home(struct vty *vty)
 static void
 cnputc(struct vty *vty, int c)
 {
+    acquire(&cons_lock);
     c &= 0xFF;
 
     if (GET_STATE(vty) == NORMAL_STATE) {
@@ -294,7 +299,7 @@ cnputc(struct vty *vty, int c)
         switch (c)
         {
         case 'a':   /* set attribute */ SET_STATE(vty, ATTR_STATE);
-                                        return;
+                                        goto out;
 
         case 'e':   /* show cursor */   vty->state |= CURSOR;
                                         toggle(vty);
@@ -345,7 +350,7 @@ cnputc(struct vty *vty, int c)
         case 'E':   /* clear & home */  home(vty); break;
 
         case 'Y':   /* set position */  SET_STATE(vty, Y_STATE);
-                                        return;
+                                        goto out;
         }
 
         SET_STATE(vty, NORMAL_STATE);
@@ -363,9 +368,13 @@ cnputc(struct vty *vty, int c)
         vty->attr = c & CONS_ATTR_MASK;
         SET_STATE(vty, NORMAL_STATE);
     }
+
+out:
+    release(&cons_lock);
 }
 
-/* called early to initialize the system console. */
+/* called early to initialize the system console. since the
+   system is barely running, don't bother with cons_lock. */
 
 void
 cninit(void)

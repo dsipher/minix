@@ -39,8 +39,8 @@
 / configure the u. area. while u. is remapped on context switch, pginit() in
 / page.c keeps process 0's u. identity-mapped to avoid bootstrap headaches.
 
-                    movq $_proc0, U_PROCP(%rip)     / we are process 0
-                    movb $1, U_LOCKS(%rip)          / interrupts disabled
+                    movq $_proc0, U_PROCP           / we are process 0
+                    movb $1, U_LOCKS                / interrupts disabled
 
                     jmp _main
 
@@ -120,12 +120,12 @@ idt_48:             .short idt_48 - idt - 1
 .globl _lock
 
 _lock:              cli
-                    incb U_LOCKS(%rip)
+                    incb U_LOCKS
                     ret
 
 .globl _unlock
 
-_unlock:            decb U_LOCKS(%rip)
+_unlock:            decb U_LOCKS
                     jnz unlock010
                     sti
 unlock010:          ret

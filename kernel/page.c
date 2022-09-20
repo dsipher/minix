@@ -263,39 +263,82 @@ physical(caddr_t ram_top)
         *pte = addr | PTE_G | PTE_2MB | PTE_W | PTE_P;
 }
 
-/* the `flags' are only used for the final entry. intermediate
-   entries use permissions that ensure the final entry controls
-   access. we assume the caller has passed us `addr' and `vaddr'
-   aligned on page boundaries, as they obviously must be... */
+/* traverse the page tables `ptl3' given and return
+   a pointer to the PTE associated with `vaddr'. if
+   `create' is true, intermediate page tables will
+   be allocated and initialized as needed to get to
+   the PTL0 PTE desired.
 
-int
-mapin(caddr_t addr, pte_t *ptl3, caddr_t vaddr, int flags)
+   returns null if:
+        1. there is no PTE for the given virtual
+           address and `create' is false, OR
+        2. `create' is true, but there are not
+           enough free pages to create new tables
+
+   intermediate page table entries are assigned
+   permissions that ensure that PTL0 controls access. */
+
+static pte_t *
+findpte(pte_t *ptl3, caddr_t vaddr, int create)
 {
-    pte_t   *table = ptl3;
-    pte_t   *pte;
-    int     ptl = 3;
+    pte_t *table = ptl3;
+    pte_t *pte;
+    int ptl = 3;
 
     for (;;)
     {
         pte = &table[PTE_INDEX(ptl, vaddr)];
-        if (ptl == 0) break;
+        if (ptl == 0) return pte;
 
         if (!(*pte & PTE_P)) {
-            table = (pte_t *) pgall(0);
-            if (table == 0) return 0;
-            memset(table, 0, PAGE_SIZE);
-            *pte = VTOP((caddr_t) table) | PTE_U | PTE_W | PTE_P;
+            if (create == 0)
+                return 0;
+            else {
+                table = (pte_t *) pgall(0);
+                if (table == 0) return 0;
+                memset(table, 0, PAGE_SIZE);
+                *pte = VTOP((caddr_t) table) | PTE_U | PTE_W | PTE_P;
+            }
         } else
             table = (pte_t *) PTOV(PTE_ADDR(*pte));
 
         --ptl;
     }
-
-    *pte = VTOP(addr) | flags | PTE_P;
-    return 1;
 }
 
-/* XXX */
+/* we assume the caller has passed us `addr' and `vaddr'
+   aligned on page boundaries, as they obviously must be. */
+
+int
+mapin(caddr_t addr, pte_t *ptl3, caddr_t vaddr, int flags)
+{
+    pte_t *pte;
+
+    if (pte = findpte(ptl3, vaddr, 1)) {
+        *pte = VTOP(addr) | flags | PTE_P;
+        return 1;
+    }
+
+    return 0;
+}
+
+void
+mapout(pte_t *ptl3, caddr_t vaddr)
+{
+    pte_t *pte;
+
+    pte = findpte(ptl3, vaddr, 0);
+    if (pte) *pte = 0;
+}
+
+/* initialize memory management. we enter here with the lower
+   2MB identity-mapped (from boot) and exit with proc0.p_ptl3
+   set up [almost] properly for process 0, the RAM image mapped
+   in at PHYSICAL_BASE, the fixed-sized kernel arrays allocated,
+   and the free_pages[] lists built. the only wrinkle is that
+   the zero page remains mapped in, since the APs will need it
+   as they trampoline through boot. (each CPU will unmap it in
+   its own context when it's ready.) */
 
 void
 pginit(void)
@@ -307,7 +350,7 @@ pginit(void)
     fix_e820();
 
     /* we need to remove the [identity-mapped] proc0 u. area
-       from the map. the pages must where we expect them! */
+       from the map. the pages must be where we expect them! */
 
     if (memall(USER_PAGES) != USER_ADDR) panic("pginit");
 

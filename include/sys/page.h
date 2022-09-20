@@ -159,6 +159,12 @@ extern void pgfree(caddr_t addr);
 
 extern int mapin(caddr_t addr, pte_t *ptl3, caddr_t vaddr, int flags);
 
+/* unmaps the page at `vaddr' in the address space headed
+   by `ptl3'. if no page is mapped there, this is a no-op.
+   the caller is responsible for invalidating TLBs if needed */
+
+extern void mapout(pte_t *ptl3, caddr_t vaddr);
+
 #endif /* _KERNEL */
 
 #endif /* _SYS_PAGE_H */

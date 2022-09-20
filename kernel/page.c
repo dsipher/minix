@@ -54,8 +54,8 @@ static int last_color;              /* for unhinted pgall() */
 static SLIST_HEAD(, free_page) free_pages[PAGE_COLORS];
 struct free_page { SLIST_ENTRY(free_page) link; };
 
-/* using 0 as a sentinel value is unambiguous,
-   that's never a valid kernel virtual address. */
+/* using 0 as a sentinel value is unambiguous.
+   (it's never a valid kernel virtual address.) */
 
 #define NEXT_COLOR(c)   (((c) + 1) & PAGE_COLOR_MASK)
 
@@ -251,15 +251,16 @@ physical(caddr_t ram_top)
 
     if (ram_top < MIN_PHYSICAL) ram_top = MIN_PHYSICAL;
 
-    pages = (ram_top + one_gig - 1) / one_gig;      /* one page for every */
-    pte = (pte_t *) memall(pages);                  /* GB or part thereof */
+    pages = (ram_top + one_gig - 1) / one_gig;      /* we need one page */
+    addr = memall(pages);                           /* of 2MB PTEs per GB */
+    pte = (pte_t *) addr;                           /* (or part thereof) */
     memset(pte, 0, PAGE_SIZE * pages);
 
-    while (pages--)
-        *ptl2p++ = ((long) &pte[pages]) | PTE_W | PTE_P;
+    for (; pages--; addr += PAGE_SIZE, ++ptl2p)
+        *ptl2p = addr | PTE_W | PTE_P;
 
-    for (addr = 0; addr < ram_top; addr += two_meg)
-        *pte++ = addr | PTE_G | PTE_2MB | PTE_W | PTE_P;
+    for (addr = 0; addr < ram_top; addr += two_meg, ++pte)
+        *pte = addr | PTE_G | PTE_2MB | PTE_W | PTE_P;
 }
 
 /* XXX */
@@ -290,8 +291,26 @@ pginit(void)
 
     physical(ram_top);
 
-    /* XXX: this is where we allocate proc[], mbuf[] etc. */
-    /* XXX: free all unused pages to build free_pages[] */
+    /* [this is where we will allocate proc[], mbuf[] etc. with memall()] */
+
+    /* build the free_pages[] lists from the remaining RAM
+       in the e820_map[]. we skip the pages occupied by the
+       kernel image and any pages disqualified by overlap. */
+
+    for (i = 0, entry = e820_map; i < e820_count; ++i, ++entry)
+    {
+        if (entry->type != E820_TYPE_FREE)
+            continue;
+
+        while (entry->len) {
+            if (entry->base >= kernel_top
+              && !overlaps(entry->base, PAGE_SIZE))
+                pgfree(entry->base);
+
+            entry->len -= PAGE_SIZE;
+            entry->base += PAGE_SIZE;
+        }
+    }
 
     for (i = 0; i < e820_count; ++i) {  /* to be removed */
         printf("type = %d base = %x length = %x\n", e820_map[i].type,

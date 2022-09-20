@@ -36,6 +36,7 @@
 #include <sys/types.h>
 #include <sys/page.h>
 #include <sys/slist.h>
+#include <sys/spin.h>
 
 /* compared to `modern' POSIX systems, memory management in jewel
    is deliberately primitive. except for early static allocations
@@ -45,21 +46,75 @@
    used to store the list links. as with [almost] all pointers in
    the kernel, the links use virtual addresses (>=PHYSICAL_BASE). */
 
+static spinlock_t page_lock;        /* protects the free page data */
+
+static int nr_free_pages;           /* simple count */
+static int last_color;              /* for unhinted pgall() */
+
 static SLIST_HEAD(, free_page) free_pages[PAGE_COLORS];
 struct free_page { SLIST_ENTRY(free_page) link; };
 
-/* XXX */
+/* using 0 as a sentinel value is unambiguous,
+   that's never a valid kernel virtual address. */
+
+#define NEXT_COLOR(c)   (((c) + 1) & PAGE_COLOR_MASK)
 
 caddr_t
 pgall(caddr_t hint)
 {
+    caddr_t a;
+    int color;
+
+    acquire(&page_lock);
+
+    if (nr_free_pages == 0) {
+        a = 0;
+        goto out;
+    }
+
+    /* if the caller hasn't provided a hint, we rotate amongst
+       the available colors to spread out the allocations. */
+
+    if (hint)
+        color = PAGE_COLOR(hint);
+    else {
+        color = NEXT_COLOR(last_color);
+        last_color = color;
+    }
+
+    /* we loop because we may not have any pages of the
+       right color. if not, we check succeeding buckets
+       until we find one. this loop will always terminate,
+       since we know there's one free page SOMEWHERE. */
+
+    while (SLIST_EMPTY(&free_pages[color]))
+        color = NEXT_COLOR(color);
+
+    a = (caddr_t) SLIST_FIRST(&free_pages[color]);
+    SLIST_REMOVE_HEAD(&free_pages[color], link);
+    --nr_free_pages;
+
+out:
+    release(&page_lock);
+    return a;
 }
 
-/* XXX */
+/* release page beginning at address `a' back to its free_pages list.
+   `a' may be the physical or kernel virtual address of the page. */
 
 void
 pgfree(caddr_t a)
 {
+    struct free_page *p;
+    int color;
+
+    color = PAGE_COLOR(a);
+    p = (struct free_page *) PTOV(a);
+
+    acquire(&page_lock);
+    SLIST_INSERT_HEAD(&free_pages[color], p, link);
+    ++nr_free_pages;
+    release(&page_lock);
 }
 
 /* the E820 map as given is not page-granular.
@@ -236,7 +291,7 @@ pginit(void)
     physical(ram_top);
 
     /* XXX: this is where we allocate proc[], mbuf[] etc. */
-    /* XXX: build free_pages[] lists, ignore pages < kernel_top */
+    /* XXX: free all unused pages to build free_pages[] */
 
     for (i = 0; i < e820_count; ++i) {  /* to be removed */
         printf("type = %d base = %x length = %x\n", e820_map[i].type,

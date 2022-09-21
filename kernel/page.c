@@ -414,12 +414,6 @@ pginit(void)
 
     mapout(kernel_top, ISA_BASE);
     mapout(KERNEL_STACK, BOOT_MAPPED);
-
-    for (i = 0; i < e820_count; ++i) {  /* to be removed */
-        printf("type = %d base = %x length = %x\n", e820_map[i].type,
-                                                    e820_map[i].base,
-                                                    e820_map[i].len);
-    }
 }
 
 /* vi: set ts=4 expandtab: */

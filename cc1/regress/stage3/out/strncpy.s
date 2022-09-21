@@ -5,8 +5,8 @@ L1:
 L2:
 	movq %rdi,%rax
 	movq %rax,%rdi
-	cmpq $0,%rdx
-	jbe L3
+	testq %rdx,%rdx
+	jz L3
 L7:
 	movb (%rsi),%cl
 	incq %rsi
@@ -16,21 +16,18 @@ L7:
 	jz L9
 L10:
 	decq %rdx
-	cmpq $0,%rdx
-	ja L7
+	jnz L7
 L9:
 	cmpb $0,-1(%rsi)
 	jnz L3
 L17:
 	decq %rdx
-	cmpq $0,%rdx
-	jbe L3
+	jz L3
 L21:
 	movb $0,(%rdi)
 	incq %rdi
 	decq %rdx
-	cmpq $0,%rdx
-	ja L21
+	jnz L21
 L3:
 	ret 
 

@@ -17,11 +17,10 @@ L12:
 	jz L31
 L16:
 	decq %rdx
-	cmpq $0,%rdx
-	ja L7
+	jnz L7
 L8:
-	cmpq $0,%rdx
-	jbe L31
+	testq %rdx,%rdx
+	jz L31
 L18:
 	movb (%rdi),%al
 	testb %al,%al

@@ -523,8 +523,8 @@ L259:
 	jnz L144
 L260:
 	movq 88(%r14),%rcx
-	cmpq $0,%rcx
-	jbe L144
+	testq %rcx,%rcx
+	jz L144
 L263:
 	movq %rcx,%rax
 	decq %rax

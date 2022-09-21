@@ -17,8 +17,8 @@ L2:
 	movq %rcx,%r14
 	movq %r8,-16(%rbp)
 L4:
-	cmpq $0,%rbx
-	jbe L6
+	testq %rbx,%rbx
+	jz L6
 L5:
 	movq %rbx,%r13
 	shrq $1,%r13

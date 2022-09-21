@@ -457,6 +457,38 @@ static struct tree *indirect0(struct tree *tree)
     return tree;
 }
 
+/* rewrite comparisons between unsigned types
+   and zero. given an unsigned value `n',
+
+    n > 0    is more simply expressed as    n != 0
+    n <= 0                                  n == 0
+    n >= 0                                  1 (constant)
+    n < 0                                   0 (constant)
+
+   the first two allow us to exploit the Z flag more thoroughly.
+   whether the last two should draw a warning is up for debate. */
+
+static struct tree *unsigned0(struct tree *tree)
+{
+    if (!BINARY_TREE(tree)) return tree;
+
+    /* fold0() has already placed
+       any zero on the right */
+
+    if (!zero_tree(tree->right)) return tree;
+    if (!UNSIGNED_TYPE(tree->left->type)) return tree;
+
+    switch (tree->op)
+    {
+    case E_GT:      tree->op = E_NEQ; break;
+    case E_LTEQ:    tree->op = E_EQ; break;
+    case E_GTEQ:    tree = I_TREE(&int_type, 1); break;
+    case E_LT:      tree = I_TREE(&int_type, 0); break;
+    }
+
+    return tree;
+}
+
 /* rewrite struct assignments. in the most straightforward case (1), we
    convert the E_ASG to a E_BLKCPY. functions which return structs, we
    attempt to elide the assignment by passing in the target directly (2).
@@ -1115,6 +1147,7 @@ struct tree *simplify(struct tree *tree)
 
     tree = indirect0(tree);
     tree = fold0(tree);
+    tree = unsigned0(tree);
     tree = restrun0(tree);
     tree = recast0(tree);
     tree = fpcast0(tree);

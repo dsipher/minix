@@ -10,8 +10,7 @@ L4:
 	incq %rdx
 L7:
 	decq %rdx
-	cmpq $0,%rdx
-	jbe L6
+	jz L6
 L8:
 	movzbl (%rdi),%eax
 	incq %rdi

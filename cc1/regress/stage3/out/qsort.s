@@ -5,8 +5,8 @@ L1:
 L4:
 	movq %rdx,%rax
 	decq %rdx
-	cmpq $0,%rax
-	jbe L3
+	testq %rax,%rax
+	jz L3
 L5:
 	movsbl (%rdi),%ecx
 	movb (%rsi),%al
@@ -24,8 +24,8 @@ L7:
 L10:
 	movq %rcx,%rax
 	decq %rcx
-	cmpq $0,%rax
-	jbe L9
+	testq %rax,%rax
+	jz L9
 L11:
 	movsbl (%rdi),%r8d
 	movb (%rdx),%al

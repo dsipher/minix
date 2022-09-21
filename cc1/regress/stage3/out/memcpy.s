@@ -11,8 +11,7 @@ L4:
 	incq %rdx
 L7:
 	decq %rdx
-	cmpq $0,%rdx
-	jbe L3
+	jz L3
 L8:
 	movb (%rsi),%cl
 	incq %rsi

@@ -204,7 +204,6 @@ L58:
 L59:
 	xorl %ecx,%ecx
 L60:
-	andb $31,%cl
 	movl $1,%edx
 	shll %cl,%edx
 	movslq %edx,%rdx

@@ -301,7 +301,6 @@ L122:
 	movq %rax,8(%rdi,%rsi)
 	movl _next_u(%rip),%eax
 	movb %al,%cl
-	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq 464(%rbx),%rcx
@@ -366,7 +365,6 @@ L147:
 	jz L146
 L148:
 	movb %bl,%cl
-	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq 488(%r12),%rcx
@@ -619,7 +617,6 @@ L255:
 	movslq %eax,%rax
 	movq (%rcx,%rax,8),%rdx
 	movb %bl,%cl
-	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax

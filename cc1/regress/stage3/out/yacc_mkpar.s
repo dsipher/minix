@@ -120,7 +120,6 @@ L27:
 	movslq %eax,%rax
 	shlq $2,%rax
 	movb %bl,%cl
-	andb $31,%cl
 	movl (%rax,%r12),%eax
 	shrl %cl,%eax
 	testl $1,%eax

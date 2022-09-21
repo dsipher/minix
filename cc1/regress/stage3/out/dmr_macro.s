@@ -341,7 +341,6 @@ L172:
 L173:
 	xorl %ecx,%ecx
 L174:
-	andb $31,%cl
 	movl $1,%eax
 	shll %cl,%eax
 	movslq %eax,%rax

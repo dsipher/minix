@@ -261,6 +261,12 @@ int nonzero_tree(struct tree *tree) CON_TREE0(0, !=)
         T = chop_left(T);                                                   \
     } while (0)
 
+#define FOLD_SHIFT_TREE(T, OP)                                              \
+    do {                                                                    \
+        FOLD_SHIFT(TYPE_BASE(T->left->type), T->left, T->right, OP);        \
+        T = chop_left(T);                                                   \
+    } while (0)
+
 #define FOLD_EQUALITY_TREE(T, OP)                                           \
     do {                                                                    \
         int _result;                                                        \
@@ -375,8 +381,8 @@ static struct tree *fold0(struct tree *tree)
                                 return tree;
 
                 case E_MUL:     FOLD_BINARY_TREE(tree, *); return tree;
-                case E_SHL:     FOLD_BINARY_I_TREE(tree, <<); return tree;
-                case E_SHR:     FOLD_BINARY_I_TREE(tree, >>); return tree;
+                case E_SHL:     FOLD_SHIFT_TREE(tree, <<); return tree;
+                case E_SHR:     FOLD_SHIFT_TREE(tree, >>); return tree;
                 case E_AND:     FOLD_BINARY_I_TREE(tree, &); return tree;
                 case E_OR:      FOLD_BINARY_I_TREE(tree, |); return tree;
                 case E_XOR:     FOLD_BINARY_I_TREE(tree, ^); return tree;
@@ -453,6 +459,43 @@ static struct tree *indirect0(struct tree *tree)
 
         break;
     }
+
+    return tree;
+}
+
+/* shift operations automatically imply a mask of the
+   shift count, by 63 if the lhs is long, 31 otherwise.
+   this reflects the semantics of ATOM shift insns. if
+   the user masks explicitly, their mask is redundant,
+   and thus can be eliminated. e.g.,
+
+     long l; l <<= (j & 63)  becomes  l <<= j;
+     int i;  i << (x & 31)   becomes  i << x;    etc. */
+
+static struct tree *shiftmask0(struct tree *tree)
+{
+    switch (tree->op)
+    {
+    case E_SHR:
+    case E_SHL:
+    case E_SHRASG:
+    case E_SHLASG:      break;
+
+    default:            return tree;
+    }
+
+    if (tree->right->op != E_AND) return tree;
+
+    /* fold0() will have put any pure constant
+       on the right side of the E_AND... */
+
+    if (!PURE_CON_TREE(tree->right->right)) return tree;
+
+    if (tree->right->right->con.i
+      != (LONGS_TYPE(tree->left->type) ? 63 : 31))
+        return tree;
+
+    tree->right = chop_left(tree->right);   /* skip E_AND */
 
     return tree;
 }
@@ -1147,6 +1190,7 @@ struct tree *simplify(struct tree *tree)
 
     tree = indirect0(tree);
     tree = fold0(tree);
+    tree = shiftmask0(tree);
     tree = unsigned0(tree);
     tree = restrun0(tree);
     tree = recast0(tree);

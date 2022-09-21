@@ -38,7 +38,6 @@ L9:
 L12:
 	subl %ecx,%edx
 	movb %dl,%cl
-	andb $31,%cl
 	movl $1,%esi
 	shll %cl,%esi
 	sarl $5,%edx
@@ -137,7 +136,6 @@ L32:
 	jl L31
 L33:
 	movb %sil,%cl
-	andb $31,%cl
 	movl $1,%edi
 	shll %cl,%edi
 	sarl $5,%esi

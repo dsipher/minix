@@ -137,7 +137,8 @@ struct tree
 #define E_SUBASG    ( 16 | E_HALF )                             /*  -=   */
 
 /* the compound shift operators, like their non-compound
-   counterparts, always have a T_CHAR on the right side. */
+   counterparts, always have a T_CHAR on the right side,
+   and the shift count is implicitly masked; see below */
 
 #define E_SHLASG    ( 17 )                                      /*  <<=  */
 #define E_SHRASG    ( 18 )                                      /*  >>=  */
@@ -159,7 +160,9 @@ struct tree
 #define E_ADD       ( 26 | E_COMMUTATIVE )                      /*  +   */
 #define E_SUB       ( 27 )                                      /*  -   */
 
-/* the bitcounts on the right side of E_SHR and E_SHL are always T_CHAR */
+/* the bitcounts on the right side of E_SHR and E_SHL are always
+   T_CHAR. ATOM always masks shift counts by 63 for 64-bit operands,
+   31 otherwise; the same masking rules apply to these tree nodes. */
 
 #define E_SHR       ( 28 )                                      /*  >>  */
 #define E_SHL       ( 29 )                                      /*  <<  */

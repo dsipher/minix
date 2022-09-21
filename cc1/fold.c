@@ -418,8 +418,8 @@ static void eval(struct block *b, int i)
         case I_LIR_NEG:     FOLD_UNARY(t, left, -); goto constant;
         case I_LIR_COM:     FOLD_UNARY_I(t, left, ~); goto constant;
         case I_LIR_MUL:     FOLD_BINARY(t, left, right, *); goto constant;
-        case I_LIR_SHR:     FOLD_BINARY_I(t, left, right, >>); goto constant;
-        case I_LIR_SHL:     FOLD_BINARY_I(t, left, right, <<); goto constant;
+        case I_LIR_SHR:     FOLD_SHIFT(t, left, right, >>); goto constant;
+        case I_LIR_SHL:     FOLD_SHIFT(t, left, right, <<); goto constant;
         case I_LIR_AND:     FOLD_BINARY_I(t, left, right, &); goto constant;
         case I_LIR_OR:      FOLD_BINARY_I(t, left, right, |); goto constant;
         case I_LIR_XOR:     FOLD_BINARY_I(t, left, right, ^); goto constant;

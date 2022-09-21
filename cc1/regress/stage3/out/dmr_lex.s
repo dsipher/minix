@@ -821,7 +821,6 @@ L123:
 L124:
 	xorl %ecx,%ecx
 L125:
-	andb $31,%cl
 	movl $1,%eax
 	shll %cl,%eax
 	andl %edx,%eax

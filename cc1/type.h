@@ -256,6 +256,7 @@ struct tnode *get_tnode(long t, long u, struct tnode *next);
 #define UNSIGNED_TYPE(type)             ((type)->t & T_UNSIGNED)
 #define UINT_TYPE(type)                 ((type)->t & T_UINT)
 #define ULONG_TYPE(type)                ((type)->t & T_ULONG)
+#define LONGS_TYPE(type)                ((type)->t & T_LONGS)
 
 #define FIELD_WIDTH(type)               (T_GET_WIDTH((type)->t))
 #define FIELD_LSB(type)                 (T_GET_LSB((type)->t))

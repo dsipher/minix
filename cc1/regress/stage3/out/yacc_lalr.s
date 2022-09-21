@@ -593,10 +593,10 @@ L172:
 	incl %edi
 	shll $1,%edi
 	call _allocate
-	movq %rax,-16(%rbp)
+	movq %rax,-24(%rbp)
 	xorl %ebx,%ebx
 	movq _F(%rip),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-16(%rbp)
 	xorl %r12d,%r12d
 L174:
 	cmpl %r12d,_ngotos(%rip)
@@ -621,8 +621,8 @@ L182:
 	movslq %r13d,%r13
 	movswq 12(%r14,%r13,2),%rcx
 	movq _accessing_symbol(%rip),%rax
-	movswl (%rax,%rcx,2),%edx
-	cmpl _start_symbol(%rip),%edx
+	movswl (%rax,%rcx,2),%ecx
+	cmpl _start_symbol(%rip),%ecx
 	jl L187
 L189:
 	cmpl %r13d,-28(%rbp)
@@ -642,7 +642,7 @@ L193:
 	movl %ebx,%edx
 	incl %ebx
 	movslq %edx,%rdx
-	movq -16(%rbp),%rcx
+	movq -24(%rbp),%rcx
 	movw %ax,(%rcx,%rdx,2)
 L195:
 	incl %r13d
@@ -663,7 +663,7 @@ L199:
 	jle L202
 L200:
 	movslq %edx,%rdx
-	movq -16(%rbp),%rcx
+	movq -24(%rbp),%rcx
 	movw (%rcx,%rdx,2),%cx
 	movw %cx,(%rax,%rdx,2)
 	incl %edx
@@ -674,20 +674,18 @@ L202:
 	xorl %ebx,%ebx
 L180:
 	movslq _tokensetsize(%rip),%rcx
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	leaq (%rax,%rcx,4),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-16(%rbp)
 	incl %r12d
 	jmp L174
 L187:
-	movb %dl,%cl
-	andb $31,%cl
-	movl $1,%esi
-	shll %cl,%esi
-	sarl $5,%edx
-	movslq %edx,%rdx
-	movq -24(%rbp),%rax
-	orl %esi,(%rax,%rdx,4)
+	movl $1,%edx
+	shll %cl,%edx
+	sarl $5,%ecx
+	movslq %ecx,%rcx
+	movq -16(%rbp),%rax
+	orl %edx,(%rax,%rcx,4)
 	incl %r13d
 	jmp L181
 L177:
@@ -713,7 +711,7 @@ L209:
 L206:
 	movq -8(%rbp),%rdi
 	call _free
-	movq -16(%rbp),%rdi
+	movq -24(%rbp),%rdi
 	call _free
 L173:
 	popq %r15

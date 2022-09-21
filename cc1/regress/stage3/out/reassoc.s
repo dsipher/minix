@@ -257,7 +257,6 @@ L128:
 	movl %r14d,%ebx
 L130:
 	movb %r13b,%cl
-	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq _ineligible+8(%rip),%rcx
@@ -443,7 +442,6 @@ L202:
 	movq (%rax,%r12,8),%rbx
 	movl %r13d,L204(%rip)
 	movb %r12b,%cl
-	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq _ineligible+8(%rip),%rcx
@@ -564,7 +562,6 @@ L247:
 	movq (%rcx,%rax,8),%r13
 	movl %r14d,L249(%rip)
 	movb %sil,%cl
-	andb $63,%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq _ineligible+8(%rip),%rcx
@@ -669,7 +666,6 @@ L282:
 	movslq %eax,%rax
 	movq (%rcx,%rax,8),%rdx
 	movb %bl,%cl
-	andb $63,%cl
 	movl $1,%eax
 	shlq %cl,%rax
 	testq %rdx,%rax

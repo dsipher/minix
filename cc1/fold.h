@@ -173,6 +173,21 @@ struct fold
             (L)->con.u = (L)->con.u OP (R)->con.u;                          \
     } while (0)
 
+/* shift counts greater than or equal to the number of bits
+   in the shifted type are technically undefined; we apply
+   these masks because the front end may have stripped off
+   masks supplied by the user. see shiftmask0() in tree.c */
+
+#define FOLD_SHIFT(T, L, R, OP)                                             \
+    do {                                                                    \
+        int _mask = (T & T_LONGS) ? 63 : 31;                                \
+                                                                            \
+        if ((T) & T_SIGNED)                                                 \
+            (L)->con.i = (L)->con.i OP ((R)->con.i & _mask);                \
+        else                                                                \
+            (L)->con.u = (L)->con.u OP ((R)->con.u & _mask);                \
+    } while (0)
+
 /* zero- or sign-extend an integer constant
    so its value is in range of type t */
 

@@ -956,8 +956,18 @@ static int lower_binary(struct block *b, int i,
     rhs = insn->operand[2];
     tmp = REG_NONE;
 
-    if ((c->flags & C_SHIFT) && !OPERAND_PURE_IMM(&rhs))
-        tmp = REG_RCX;
+    if (c->flags & C_SHIFT)
+        if (!OPERAND_PURE_IMM(&rhs))
+            tmp = REG_RCX;
+        else {
+            /* we must limit the shift constant to 8
+               bits. might as well `say what we mean'. */
+
+            if (lhs->t & T_LONGS)
+                rhs.con.i &= 63;
+            else
+                rhs.con.i &= 31;
+        }
 
     if (OPERAND_SAME_REG(&insn->operand[0], &rhs))
         tmp = temp_reg(rhs.t);

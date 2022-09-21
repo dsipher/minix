@@ -72,6 +72,11 @@
 
 #define MIN_PHYSICAL    0x0000000100000000L     /* 4GB */
 
+/* the base of the conventional ISA bus window. addresses
+   between here and FIRST_FREE are left mapped for I/O. */
+
+#define ISA_BASE        0x00000000000A0000L
+
 /* physical memory above this address is guaranteed to not be occupied by the
    kernel image. used to decide what memory is free during initialization. */
 
@@ -115,11 +120,11 @@ typedef unsigned long pte_t;
 #define PTE_2MB         0x0080          /* 2MB page (PTL1) */
 #define PTE_G           0x0100          /* page is global */
 
-/* we use PTE_SHARE (an AVL `available bit' in the PTE) to indicate a
-   PTE which governs address space that should be shared rather than
+/* we use PTE_SHARED (an AVL `available bit' in the PTE) to indicate
+   a PTE which governs address space that should be shared rather than
    duplicated across a fork, e.g., the kernel image, or shared text. */
 
-#define PTE_SHARE       0x0200          /* duplicate entry verbatim */
+#define PTE_SHARED      0x0200
 
 /* calculate the index of the PTE associated with
    virtual address `v' at page table level `ptl'. */
@@ -159,11 +164,17 @@ extern void pgfree(caddr_t addr);
 
 extern int mapin(caddr_t addr, pte_t *ptl3, caddr_t vaddr, int flags);
 
-/* unmaps the page at `vaddr' in the address space headed
-   by `ptl3'. if no page is mapped there, this is a no-op.
-   the caller is responsible for invalidating TLBs if needed */
+/* unmap a region [base, top) of the address space of the current
+   process. pages not marked SHARED are returned to free_pages[]. */
 
-extern void mapout(pte_t *ptl3, caddr_t vaddr);
+extern void mapout(caddr_t base, caddr_t top);
+
+/* invalidate TLB(s) associated with a virtual address */
+
+#define INVLPG(p)   ({                                                      \
+                        caddr_t _p = (p);                                   \
+                        __asm("invlpg (%rax)" : rax=p : mem);               \
+                    })
 
 #endif /* _KERNEL */
 

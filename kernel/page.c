@@ -37,6 +37,8 @@
 #include <sys/page.h>
 #include <sys/slist.h>
 #include <sys/spin.h>
+#include <sys/proc.h>
+#include <sys/user.h>
 
 /* compared to `modern' POSIX systems, memory management in jewel
    is deliberately primitive. except for early static allocations
@@ -306,8 +308,8 @@ findpte(pte_t *ptl3, caddr_t vaddr, int create)
     }
 }
 
-/* we assume the caller has passed us `addr' and `vaddr'
-   aligned on page boundaries, as they obviously must be. */
+/* we usually assume the caller has passed us `addr' and `vaddr'
+   aligned on page boundaries, as they obviously must be... */
 
 int
 mapin(caddr_t addr, pte_t *ptl3, caddr_t vaddr, int flags)
@@ -323,12 +325,21 @@ mapin(caddr_t addr, pte_t *ptl3, caddr_t vaddr, int flags)
 }
 
 void
-mapout(pte_t *ptl3, caddr_t vaddr)
+mapout(caddr_t base, caddr_t top)
 {
     pte_t *pte;
 
-    pte = findpte(ptl3, vaddr, 0);
-    if (pte) *pte = 0;
+    for (; base < top; base += PAGE_SIZE) {
+        pte = findpte(u.u_procp->p_ptl3, base, 0);
+
+        if (pte && (*pte & PTE_P)) {
+            if (!(*pte & PTE_SHARED))
+                pgfree(PTE_ADDR(*pte));
+
+            *pte = 0;
+            INVLPG(base);
+        }
+    }
 }
 
 /* initialize memory management. we enter here with the lower
@@ -345,6 +356,7 @@ pginit(void)
 {
     struct e820 *entry;
     caddr_t ram_top;
+    caddr_t addr;
     int i;
 
     fix_e820();
@@ -366,7 +378,7 @@ pginit(void)
 
     physical(ram_top);
 
-    /* [this is where we will allocate proc[], mbuf[] etc. with memall()] */
+    /* XXX allocate proc[], buf[], mbuf[] etc. with memall() */
 
     /* build the free_pages[] lists from the remaining RAM
        in the e820_map[]. we skip the pages occupied by the
@@ -386,6 +398,22 @@ pginit(void)
             entry->base += PAGE_SIZE;
         }
     }
+
+    /* boot marked all pages SHARED and G.
+       this is not right for the u. area. */
+
+    for (addr = USER_ADDR; addr < KERNEL_STACK; addr += PAGE_SIZE)
+    {
+        mapin(addr, proc0.p_ptl3, addr, PTE_W);
+        INVLPG(addr); /* pick up new flags */
+    }
+
+    /* unmap the pages below 1MB not used by the kernel and those above
+       1MB that are not used by proc0's u. area. n.b.: boot marked them
+       SHARED, so they won't be freed- they're already in free_pages[]. */
+
+    mapout(kernel_top, ISA_BASE);
+    mapout(KERNEL_STACK, BOOT_MAPPED);
 
     for (i = 0; i < e820_count; ++i) {  /* to be removed */
         printf("type = %d base = %x length = %x\n", e820_map[i].type,

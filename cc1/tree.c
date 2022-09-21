@@ -929,12 +929,8 @@ static struct tree *fieldcmp0(struct tree *tree)
     if ((tree->op != E_EQ) && (tree->op != E_NEQ))
         return tree;
 
-    /* put the constant on the right, and
-       the field (if present) on the left.
-       (fold0 probably did this already...) */
-
-    if (PURE_CON_TREE(tree->left))
-        FOLD_COMMUTE(struct tree *, tree->left, tree->right);
+    /* fold0() has put any constant on the right
+       and the field (if present) on the left. */
 
     if (!FIELD_TREE(tree->left)) return tree;
     if (!PURE_CON_TREE(tree->right)) return tree;

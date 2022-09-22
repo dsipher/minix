@@ -38,18 +38,21 @@
 #include <sys/page.h>
 #include <sys/tailq.h>
 
+/* locore.s accesses some of these fields, so keep
+   the offsets in sync with the definitions there.
+   ditto for the bit definitions for p_state, etc. */
+
 struct proc
 {
-    pte_t               *p_ptl3;        /* handle to page tables */
-    struct user         *p_u;           /* kernel address of u. area */
-    pid_t               p_pid;          /* the process ID */
-    char                p_state;        /* P_STATE_* (below) */
-    char                p_flags;        /* P_FLAG_* (below) */
-    char                p_cpu;          /* CPU running on/last run on */
-    unsigned char       p_age;          /* number of ticks since last run */
-    void                *p_chan;        /* sleep channel */
-    TAILQ_ENTRY(proc)   p_qlinks;       /* for sleepq or readyq */
-    TAILQ_ENTRY(proc)   p_links;        /* for allproc */
+    pte_t               *p_ptl3;        /* 0x0000: handle to page tables */
+    struct user         *p_u;           /* 0x0008: address of u. area */
+    pid_t               p_pid;          /* 0x0010: the process ID */
+    char                p_state;        /* 0x0014: P_STATE_* (below) */
+    char                p_flags;        /* 0x0015: P_FLAG_* (below) */
+    char                p_cpu;          /* 0x0016: CPU last run on */
+    unsigned char       p_age;          /* 0x0017: ticks since last run */
+    void                *p_chan;        /* 0x0018: sleep channel */
+    TAILQ_ENTRY(proc)   p_qlinks;       /* 0x0020: for sleepq or readyq */
 };
 
 /* process states are represented as a bitset so we can refer to groups
@@ -83,6 +86,11 @@ struct proc
 #ifdef _KERNEL
 
 extern struct proc proc0;
+
+/* save the current context and switch to a new process
+   `to'. must be called with the scheduler lock held. */
+
+extern void swtch(struct proc *to);
 
 #endif /* _KERNEL */
 

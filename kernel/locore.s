@@ -49,7 +49,16 @@
 
 //////////////////////////////////////////////////////////////////////////////
 /
-/ definitions pertaining to the u. area; keep in sync with sys/user.h.
+/ definitions pertaining to struct proc; see sys/proc.h
+
+P_PTL3      =   0x0000
+P_FLAGS     =   0x0015
+
+P_FLAG_SSE  =   0x02
+
+//////////////////////////////////////////////////////////////////////////////
+/
+/ definitions pertaining to the u. area; see sys/user.h.
 
 .globl _u
 _u = 0x00100000                 / USER_ADDR from sys/page.h
@@ -57,6 +66,15 @@ _u = 0x00100000                 / USER_ADDR from sys/page.h
 U_FXSAVE    =   _u + 0x0000
 U_PROCP     =   _u + 0x0200
 U_LOCKS     =   _u + 0x0208
+
+U_SYS_RBX   =   _u + 0x0210
+U_SYS_RBP   =   _u + 0x0218
+U_SYS_RSP   =   _u + 0x0220
+U_SYS_R12   =   _u + 0x0228
+U_SYS_R13   =   _u + 0x0230
+U_SYS_R14   =   _u + 0x0238
+U_SYS_R15   =   _u + 0x0240
+U_SYS_RIP   =   _u + 0x0248
 
 //////////////////////////////////////////////////////////////////////////////
 /
@@ -111,6 +129,55 @@ idt:                .short 0, 0, 0, 0, 0, 0, 0, 0
 
 idt_48:             .short idt_48 - idt - 1
                     .quad idt
+
+//////////////////////////////////////////////////////////////////////////////
+/
+/ void swtch(struct proc *to);
+/
+/ called with the scheduler lock held and thus with interrupts disabled.
+/ since this is invoked as a function, we need only honor the c calling
+/ convention and save the callee-save registers. somewhat asymmetrically,
+/ this is also where we save/restore SSE state, which is user-only state
+/ (the kernel, deliberately, avoids SSE). we don't want to save/restore
+/ on every interrupt or system call, so we do it here on context switch.
+
+.globl _swtch
+
+_swtch:             popq %rax
+                    movq %rax, U_SYS_RIP
+                    movq %rsp, U_SYS_RSP
+
+                    movq %rbx, U_SYS_RBX
+                    movq %rbp, U_SYS_RBP
+                    movq %r12, U_SYS_R12
+                    movq %r13, U_SYS_R13
+                    movq %r14, U_SYS_R14
+                    movq %r15, U_SYS_R15
+
+                    movq U_PROCP, %rax                  / only save SSE
+                    testb $P_FLAG_SSE, P_FLAGS(%rax)    / regs if the
+                    jz swtch010                         / old process
+                    fxsave U_FXSAVE                     / uses them.
+
+swtch010:           movq $0x7FFFFFFFFF, %rbx
+                    movq P_PTL3(%rdi), %rax             / new page tables
+                    andq %rbx, %rax                     / (physical address)
+                    movq %rax, %cr3
+
+                    testb $P_FLAG_SSE, P_FLAGS(%rdi)    / and only restore
+                    jz swtch020                         / SSE regs if the
+                    fxrstor U_FXSAVE                    / new proc uses them.
+
+swtch020:           movq U_SYS_R15, %r15
+                    movq U_SYS_R14, %r14
+                    movq U_SYS_R13, %r13
+                    movq U_SYS_R12, %r12
+                    movq U_SYS_RBP, %rbp
+                    movq U_SYS_RBX, %rbx
+                    movq U_SYS_RSP, %rsp
+                    movq U_SYS_RIP, %rax
+
+                    jmp *%rax
 
 //////////////////////////////////////////////////////////////////////////////
 /

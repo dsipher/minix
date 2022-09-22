@@ -59,6 +59,16 @@ struct user
 
     struct proc     *u_procp;       /* 0x0200: associated struct proc */
     unsigned char   u_locks;        /* 0x0208: depth of `cli' nesting */
+
+                                    /* (0x0209 .. 0x20F available) */
+
+    /* save area for swtch() */
+
+    unsigned long   u_sys_rbx /* 0x0210 */, u_sys_rbp /* 0x0218 */,
+                    u_sys_rsp /* 0x0220 */, u_sys_r12 /* 0x0228 */,
+                    u_sys_r13 /* 0x0230 */, u_sys_r14 /* 0x0238 */,
+                    u_sys_r15 /* 0x0240 */, u_sys_rip /* 0x0248 */ ;
+
 };
 
 extern struct user u;           /* exported from locore.s */

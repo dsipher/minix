@@ -36,6 +36,8 @@
 #include <sys/cons.h>
 #include <sys/page.h>
 #include <sys/log.h>
+#include <sys/user.h>
+#include <sys/proc.h>
 
 caddr_t kernel_top;
 
@@ -57,6 +59,10 @@ main(void)
 
     cninit();
     pginit();
+
+    swtch(&proc0);
+
+    printf("survived swtch().\n");
 
     for (;;) ;
 }

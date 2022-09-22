@@ -134,9 +134,10 @@ typedef unsigned long pte_t;
 
 #define PTES_PER_PAGE           (PAGE_SIZE / sizeof(pte_t))
 
-/* return the physical page referenced by the PTE */
+/* return the physical page referenced by the PTE, or its attributes */
 
-#define PTE_ADDR(pte)           ((pte) & 0x0000FFFFFFFFF000)
+#define PTE_ADDR(pte)           ((pte) & 0x0000007FFFFFF000)
+#define PTE_FLAGS(pte)          ((pte) & (PTE_P | PTE_W | PTE_U | PTE_G))
 
 #ifdef _KERNEL
 
@@ -173,8 +174,25 @@ extern void mapout(caddr_t base, caddr_t top);
 
 #define INVLPG(p)   ({                                                      \
                         caddr_t _p = (p);                                   \
-                        __asm("invlpg (%rax)" : rax=p : mem);               \
+                        __asm("invlpg (%rax)" : rax=_p : mem);              \
                     })
+
+/* duplicate a page table and the contents of all unshared pages.
+   returns the new table table, or 0 if there isn't enough memory. */
+
+#define ptcopy(pt)  ptcopy0((pt), 3)
+
+/* free a page table; releases all unshared pages owned by
+   the page table, and the pages of the page table itself. */
+
+#define ptfree(pt)  ptfree0((pt), 3)
+
+/* obviously the above two `functions' are macros. we use
+   recursive algorithms which descend from the top (ptl3).
+   these are exposed for efficiency, don't call them */
+
+extern pte_t *ptcopy0(pte_t *pt, int ptl);
+extern void ptfree0(pte_t *pt, int ptl);
 
 #endif /* _KERNEL */
 

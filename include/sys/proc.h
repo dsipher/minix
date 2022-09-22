@@ -40,7 +40,7 @@
 
 struct proc
 {
-    pte_t               *p_ptl3;        /* PHYSICAL address of PTL3 */
+    pte_t               *p_ptl3;        /* handle to page tables */
     struct user         *p_u;           /* kernel address of u. area */
     pid_t               p_pid;          /* the process ID */
     char                p_state;        /* P_STATE_* (below) */

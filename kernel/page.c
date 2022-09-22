@@ -31,6 +31,7 @@
 
 *****************************************************************************/
 
+#include <string.h>
 #include <sys/boot.h>
 #include <sys/log.h>
 #include <sys/types.h>
@@ -340,6 +341,70 @@ mapout(caddr_t base, caddr_t top)
             INVLPG(base);
         }
     }
+}
+
+/* ordinarily recursion is frowned upon in the kernel, if
+   only because the stack space is so limited... but page
+   tables are perfect candidates, and have limited depth. */
+
+pte_t *
+ptcopy0(pte_t *pt, int ptl)
+{
+    pte_t *pte;
+    pte_t *new_pt;
+    pte_t *new_pte;
+    caddr_t child;
+    int i;
+
+    new_pt = (pte_t *) pgall(0);
+    if (new_pt == 0) return 0;
+
+    if (ptl == -1) /* data page */
+        memmove(new_pt, pt, PAGE_SIZE); /* XXX use MOVSQ */
+    else {
+        memset(new_pt, 0, PAGE_SIZE);   /* XXX use STOSQ */
+
+        for (i = 0, pte = pt, new_pte = new_pt;
+              i < PTES_PER_PAGE; ++pte, ++new_pte, ++i)
+        {
+            if (!(*pte & PTE_P)) continue;
+            if (*pte & PTE_SHARED) { *new_pte = *pte; continue; }
+
+            child = PTE_ADDR(*pte);
+            child = (caddr_t) ptcopy0((pte_t *) PTOV(child), ptl - 1);
+
+            if (child == 0) {
+                ptfree0(new_pt, ptl);
+                return (pte_t *) 0;
+            }
+
+            *new_pte = VTOP(child) | PTE_FLAGS(*pte);
+        }
+    }
+
+    return new_pt;
+}
+
+/* the public interface doesn't say so, but because of
+   its recursive nature, this frees partial page tables
+   (at levels less than ptl == 3), and in fact ptcopy0()
+   exploits this to clean up when it fails to complete. */
+
+void
+ptfree0(pte_t *pt, int ptl)
+{
+    pte_t *pte;
+    caddr_t child;
+    int i;
+
+    for (i = 0, pte = pt; i < PTES_PER_PAGE; ++i, ++pte)
+        if ((*pte & (PTE_P | PTE_SHARED)) == PTE_P) {
+            child = PTE_ADDR(*pte);
+            if (ptl) ptfree0((pte_t *) PTOV(child), ptl - 1);
+            pgfree(child);
+        }
+
+    pgfree((caddr_t) pt);
 }
 
 /* initialize memory management. we enter here with the lower

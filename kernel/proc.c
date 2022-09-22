@@ -40,7 +40,7 @@
 
 struct proc proc0   =
 {
-    (pte_t *)           PTL3_ADDR,                      /* p_ptl3 */
+    (pte_t *)           PTOV(PTL3_ADDR),                /* p_ptl3 */
     (struct user *)     PTOV(USER_ADDR),                /* p_u */
                         0,                              /* p_pid */
                         P_STATE_RUN,                    /* p_state */

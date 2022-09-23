@@ -442,6 +442,8 @@ pass6(void)
             exec.a_bss += size;
         }
     }
+
+    exec.a_bss = N_ROUNDUP(exec.a_bss, A_PAD_SIZE);
 }
 
 /* fix up relocations. this is the hairiest pass, at least

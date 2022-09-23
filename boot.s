@@ -141,10 +141,12 @@ DEL                 =   0x7F        / ..... delete
 ZMAGIC              =   0x17B81EEB  / expected kernel a.out magic
 E820_SMAP           =   0x534D4150  / cookie for BIOS E820 functions
 IA32_EFER           =   0xC0000080  / extended feature enable MSR
+IA32_STAR           =   0xC0000081  / SYSCALL/SYSRET selectors MSR
 
 KERNEL_STACK        =   0x00102000  / top of stack - must agree with page.h
 
-/ segment selectors. obviously these must agree with the GDT.
+/ segment selectors. obviously these must agree with the GDT, and are
+/ dictated somewhat by SYSCALL/RET. should never need to change them.
 
 KERNEL_CS_32        =   0x08
 KERNEL_DS_32        =   0x10
@@ -737,7 +739,7 @@ go_64:              movl %cr4, %eax             / enable PAE and PGE
 
                     movl $IA32_EFER, %ecx       / enable long mode
                     rdmsr
-                    orw $0x100, %ax
+                    orw $0x101, %ax             / LME=1 SCE=1
                     wrmsr
 
                     movl entry_ptl3, %eax       / set page base
@@ -766,6 +768,10 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
                     movb $0x89, tss_type(%rip)  / reset in case marked BUSY
                     movw $KERNEL_TSS, %ax
                     ltr %ax
+
+                    movl $IA32_STAR, %ecx       / set SYSCALL/RET selectors
+                    movq star(%rip), %rax
+                    wrmsr
 
                     jmp *entry_addr
 
@@ -1058,11 +1064,11 @@ gdt:                .short  0, 0, 0, 0      / 0x00 = null descriptor
                     .short  0xF800
                     .short  0x0020
 
-    / the TSS is only used to specify the kernel stack
-    / for a process. since this is always at the same
-    / [virtual] address in every process, we use one
-    / TSS for all CPUs and all processes: so we load the
-    / task register once (in go_64) then forget about it.
+/ the TSS is only used to specify the kernel stack
+/ for a process. since this is always at the same
+/ [virtual] address in every process, we use one
+/ TSS for all CPUs and all processes: so we load the
+/ task register once (in go_64) then forget about it.
 
                     .short  0x0067          / 0x40 - 64-bit TSS
                     .short  tss
@@ -1080,6 +1086,18 @@ gdt_48:             .short  gdt_48 - gdt - 1
 tss:                .int    0
                     .quad   KERNEL_STACK    / RSP0
                     .fill   92, 1, 0
+
+/ contents loaded into IA32_STAR.
+/
+/   on SYSCALL:     KERNEL_CS -> CS
+/                   KERNEL_DS -> SS
+/
+/   on SYSRET:      USER_CS -> CS
+/                   USER_DS -> SS
+
+star:               .int    0               / (32-bit entry: unused)
+                    .short  KERNEL_CS       / selectors for SYSCALL
+                    .short  USER_CS_32      / ............. SYSRET
 
 //////////////////////////////////////////////////////////////////////////////
 

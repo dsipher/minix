@@ -150,7 +150,10 @@ KERNEL_CS_32        =   0x08
 KERNEL_DS_32        =   0x10
 KERNEL_CS           =   0x18
 KERNEL_DS           =   0x20
-KERNEL_TSS          =   0x38
+USER_CS_32          =   0x2B
+USER_DS             =   0x33
+USER_CS             =   0x3B
+KERNEL_TSS          =   0x40
 
 .code16
 
@@ -1023,6 +1026,9 @@ gdt:                .short  0, 0, 0, 0      / 0x00 = null descriptor
                     .short  0x9200
                     .short  0x00CF
 
+                    / KERNEL_CS, KERNEL_DS must be in
+                    / this order for SYSCALL to work.
+
                     .short  0               / 0x18 = 64-bit kernel code
                     .short  0
                     .short  0x9800
@@ -1033,15 +1039,24 @@ gdt:                .short  0, 0, 0, 0      / 0x00 = null descriptor
                     .short  0x9200
                     .short  0
 
-                    .short  0               / 0x28 = 64-bit user code (0x2B)
+                    / USER_CS_32, USER_DS, USER_CS must be in this
+                    / order for SYSRET. (we don't really need the
+                    / dummy USER_CS_32, but it keeps things tidy.)
+
+                    .short  0               / 0x28 = 32-bit user code (0x2B)
                     .short  0
-                    .short  0xF800
-                    .short  0x0020
+                    .short  0
+                    .short  0
 
                     .short  0               / 0x30 = 64-bit user data (0x33)
                     .short  0
                     .short  0xF200
                     .short  0
+
+                    .short  0               / 0x38 = 64-bit user code (0x3B)
+                    .short  0
+                    .short  0xF800
+                    .short  0x0020
 
     / the TSS is only used to specify the kernel stack
     / for a process. since this is always at the same
@@ -1049,7 +1064,7 @@ gdt:                .short  0, 0, 0, 0      / 0x00 = null descriptor
     / TSS for all CPUs and all processes: so we load the
     / task register once (in go_64) then forget about it.
 
-                    .short  0x0067          / 0x38 - 64-bit TSS
+                    .short  0x0067          / 0x40 - 64-bit TSS
                     .short  tss
                     .byte   0
 tss_type:           .byte   0               / (set to available TSS, 0x89)

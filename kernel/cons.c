@@ -185,15 +185,7 @@ move(struct vty *vty)    /* hold: cons_lock */
 }
 
 /* write a series of `n' blanks on the vty using
-   the current attribute, starting at (x, y).
-
-   n.b.: we should rewrite to use STOSW (inline).
-   writing blanks to the console for scrolling is
-   very common, and with 80 characters to blank,
-   we'd definitely see an efficiency gain on ATOM.
-
-   we could even use STOSQ, since we know we're
-   always called with an `n' divisible by 4. */
+   the current attribute, starting at (x, y). */
 
 static void
 blank(struct vty *vty, int x, int y, int n)    /* hold: cons_lock */
@@ -202,21 +194,20 @@ blank(struct vty *vty, int x, int y, int n)    /* hold: cons_lock */
     unsigned blank = (vty->attr << 8) | ' ';
 
     framebuf += y * COLS + x;
-    while (n--) *framebuf++ = blank;
+    STOSW(framebuf, blank, n);
 }
 
 /* check to see if vty->y has run out of bounds, and if
-   so, scroll the screen up and fix the cursor position.
-   see notes on blank(): should rewrite to use MOVSQ. */
+   so, scroll the screen up and fix the cursor position. */
 
 static void
 scroll(struct vty *vty)    /* hold: cons_lock */
 {
     if (vty->y > LAST_ROW) {
         unsigned short *framebuf = FRAMEBUF(vty);
-        int i = COLS * (ROWS - 1);
+        int n = COLS * (ROWS - 1) / 4;
 
-        memmove(framebuf, framebuf + COLS, i * 2);
+        MOVSQ(framebuf, framebuf + COLS, n);
         blank(vty, 0, LAST_ROW, COLS);
 
         --vty->y;

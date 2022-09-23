@@ -91,6 +91,28 @@
                                                    rax = _l);               \
                     } while (0)
 
+#define STOSW(dst, val, n)  do {                                            \
+                                void *_dst = (dst);                         \
+                                short _val = (val);                         \
+                                long _n = (n);                              \
+                                                                            \
+                                __asm("\trep\n"                             \
+                                      "\tstosw" : rdi=_dst, rax=_val,       \
+                                                  rcx=_n                    \
+                                                : rdi, rcx, mem );          \
+                            } while (0)
+
+#define MOVSQ(dst, src, n)  do {                                            \
+                                void *_dst = (dst);                         \
+                                void *_src = (src);                         \
+                                long _n = (n);                              \
+                                                                            \
+                                __asm("\trep\n"                             \
+                                      "\tmovsq" : rdi=_dst, rsi=_src,       \
+                                                  rcx=_n, mem               \
+                                                : rdi, rsi, rcx, mem );     \
+                            } while (0)
+
 #endif /* _SYS_IO_H */
 
 /* vi: set ts=4 expandtab: */

@@ -1597,11 +1597,19 @@ static int asm0(struct block *b, int i, VECTOR(regmap) *rm)
     struct symbol *sym;
     struct operand dst, src;
     int from, to;
+    int count = 0;
     int n;
 
     for (n = 0; n < VECTOR_SIZE(*rm); ++n) {
         from = VECTOR_ELEM(*rm, n).from;
         to = VECTOR_ELEM(*rm, n).to;
+
+        /* the defs map may include a `to' REG_NONE which means that
+           `from' is a reg which was DEFd but whose value is tossed.
+           [the REG_NONE is placed in `from' by asm_stmt(), but by
+           the time we get here it's been inverted by lower_asm().] */
+
+        if (to == REG_NONE) continue;
 
         /* one of the pair is a pseudo register. we use its
            type to determine what flavor of move to issue */
@@ -1614,9 +1622,10 @@ static int asm0(struct block *b, int i, VECTOR(regmap) *rm)
         REG_OPERAND(&dst, sym->type, 0, to);
         REG_OPERAND(&src, sym->type, 0, from);
         insert_insn(move(dst.t, &dst, &src), b, i++);
+        ++count;
     }
 
-    return n;
+    return count;
 }
 
 static int lower_asm(struct block *b, int i,

@@ -249,7 +249,8 @@ void add_regmap(VECTOR(regmap) *map, int from, int to);
 
 int same_regmap(VECTOR(regmap) *map1, VECTOR(regmap) *map2);
 
-/* add any/all registers of the regmap's from fields to the register set */
+/* add all regs from the regmap's from fields
+   (except REG_NONE) to the register set. */
 
 void regmap_regs(VECTOR(regmap) *map, VECTOR(reg) *set);
 

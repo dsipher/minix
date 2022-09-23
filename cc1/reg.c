@@ -158,7 +158,7 @@ void regmap_regs(VECTOR(regmap) *map, VECTOR(reg) *set)
     int i;
 
     for (i = 0; i < VECTOR_SIZE(*map); ++i)
-        if (VECTOR_ELEM(*map, i).from)
+        if (VECTOR_ELEM(*map, i).from != REG_NONE)
             add_reg(set, VECTOR_ELEM(*map, i).from);
 }
 

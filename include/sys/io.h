@@ -102,6 +102,17 @@
                                                 : rdi, rcx, mem );          \
                             } while (0)
 
+#define STOSQ(dst, val, n)  do {                                            \
+                                void *_dst = (dst);                         \
+                                long _val = (val);                          \
+                                long _n = (n);                              \
+                                                                            \
+                                __asm("\trep\n"                             \
+                                      "\tstosq" : rdi=_dst, rax=_val,       \
+                                                  rcx=_n                    \
+                                                : rdi, rcx, mem );          \
+                            } while (0)
+
 #define MOVSQ(dst, src, n)  do {                                            \
                                 void *_dst = (dst);                         \
                                 void *_src = (src);                         \

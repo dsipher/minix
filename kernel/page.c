@@ -40,6 +40,7 @@
 #include <sys/spin.h>
 #include <sys/proc.h>
 #include <sys/user.h>
+#include <sys/io.h>
 
 /* compared to `modern' POSIX systems, memory management in jewel
    is deliberately primitive. except for early static allocations
@@ -257,7 +258,7 @@ physical(caddr_t ram_top)
     pages = (ram_top + one_gig - 1) / one_gig;      /* we need one page */
     addr = memall(pages);                           /* of 2MB PTEs per GB */
     pte = (pte_t *) addr;                           /* (or part thereof) */
-    memset(pte, 0, PAGE_SIZE * pages);
+    STOSQ(pte, 0, (PAGE_SIZE / 8) * pages);
 
     for (; pages--; addr += PAGE_SIZE, ++ptl2p)
         *ptl2p = addr | PTE_W | PTE_P;
@@ -299,7 +300,7 @@ findpte(pte_t *ptl3, caddr_t vaddr, int create)
             else {
                 table = (pte_t *) pgall(0);
                 if (table == 0) return 0;
-                memset(table, 0, PAGE_SIZE);
+                STOSQ(table, 0, PAGE_SIZE / 8);
                 *pte = VTOP((caddr_t) table) | PTE_U | PTE_W | PTE_P;
             }
         } else
@@ -360,9 +361,9 @@ ptcopy0(pte_t *pt, int ptl)
     if (new_pt == 0) return 0;
 
     if (ptl == -1) /* data page */
-        memmove(new_pt, pt, PAGE_SIZE); /* XXX use MOVSQ */
+        MOVSQ(new_pt, pt, PAGE_SIZE / 8);
     else {
-        memset(new_pt, 0, PAGE_SIZE);   /* XXX use STOSQ */
+        STOSQ(new_pt, 0, PAGE_SIZE / 8);
 
         for (i = 0, pte = pt, new_pte = new_pt;
               i < PTES_PER_PAGE; ++pte, ++new_pte, ++i)

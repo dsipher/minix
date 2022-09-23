@@ -38,6 +38,7 @@
 #include <sys/log.h>
 #include <sys/user.h>
 #include <sys/proc.h>
+#include <sys/io.h>
 
 caddr_t kernel_top;
 
@@ -52,10 +53,10 @@ main(void)
 {
     caddr_t bss;
 
-    bss = N_BSSOFF(*KERNEL_AOUT) + KERNEL_ADDR;     /* clear the BSS */
-    memset((void *) bss, 0, KERNEL_AOUT->a_bss);    /* and compute */
-    kernel_top += bss + KERNEL_AOUT->a_bss;         /* kernel_top */
-    kernel_top = PAGE_UP(kernel_top);               /* must be whole pages */
+    bss = N_BSSOFF(*KERNEL_AOUT) + KERNEL_ADDR;         /* clear the BSS */
+    STOSQ((void *) bss, 0, KERNEL_AOUT->a_bss >> 3);    /* and compute */
+    kernel_top += bss + KERNEL_AOUT->a_bss;             /* kernel_top. */
+    kernel_top = PAGE_UP(kernel_top);           /* (must be whole pages) */
 
     cninit();
     pginit();

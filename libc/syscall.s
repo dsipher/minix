@@ -188,6 +188,13 @@ _waitpid:       movl $61, %eax              # WAIT4
 _kill:          movl $62, %eax              # KILL
                 jmp do_syscall
 
+# int uname(struct utsname *name);
+
+.globl _uname
+
+_uname:         movl $63, %eax              # UNAME
+                jmp do_syscall
+
 # int rename(const char *old, const char *new);
 
 .globl _rename

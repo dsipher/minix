@@ -58,6 +58,8 @@ struct symbol *func_chain;          /* out-of-scope local function symbols */
 struct symbol *func_hidden_arg;     /* hidden argument for struct return */
 struct symbol *func_ret_sym;        /* anonymous symbol for return value */
 struct tnode *func_ret_type;        /* type of function return value */
+
+int func_needs_frame;               /* whether this func needs a frame */
 static int frame_size;              /* size of local frame storage */
 
 /* we use this as an input to simple heuristics.
@@ -123,6 +125,7 @@ static void arg0(struct symbol *sym)
         sym->offset = next_stack_arg;       /* record stack position */
         next_stack_arg += size;
         next_stack_arg = ROUND_UP(next_stack_arg, STACK_ALIGN);
+        ++func_needs_frame;
 
         if (STRUN_TYPE(sym->type) || VOLATILE_TYPE(sym->type))
             return;     /* nothing more to do */
@@ -188,6 +191,7 @@ void enter_func(struct symbol *sym)
     nr_fargs = 0;
     next_stack_arg = FIRST_STACK_ARG;
     func_ret_type = DEREF(sym->type);
+    func_needs_frame = 0;
 
     if (!VOID_TYPE(func_ret_type))      /* return type */
         size_of(func_ret_type, 0);      /* must be complete */
@@ -299,9 +303,8 @@ static void logues(void)
     VECTOR(reg) func_regs;
     VECTOR(reg) scratch_regs;
     VECTOR(reg) save_regs;
-    int need_frame;
     int i, j, reg;
-    int nr_fsave;
+    int fsave_size;
     int entry_i, exit_i;
     struct insn *insn;
 
@@ -318,26 +321,21 @@ static void logues(void)
     all_regs(&func_regs);
     diff_regs(&save_regs, &func_regs, &scratch_regs);
 
-    need_frame = 0;     /* if we need to create a proper frame */
-    nr_fsave = 0;       /* number of fregs that must be saved */
+    fsave_size = 0;     /* space required to save non-volatile XMM regs */
 
-    FOR_EACH_REG(save_regs, j, reg) {
-        if (reg == REG_RSP) continue;
+    FOR_EACH_REG(save_regs, j, reg)
+        if (REG_XMM(reg))
+            fsave_size += sizeof(double);
 
-        if (REG_GP(reg)) {
-            if (reg == REG_RBP)
-                need_frame = 1;
-        } else
-            ++nr_fsave;
-    }
+    /* for now, if we need to save any XMM
+       regs, we store them on the frame */
 
-    /* set aside space in the frame for any saved
-       floating-point regs, and finally adjust the
-       frame size to keep the stack aligned */
+    if (fsave_size) func_needs_frame = 1;
+    frame_size += fsave_size;
 
-    frame_size += nr_fsave * 8; /* sizeof(double) */
+    /* adjust the frame size to keep the stack aligned */
+
     frame_size = ROUND_UP(frame_size, STACK_ALIGN);
-    if (frame_size) need_frame = 1;
 
     /* we insert the logues as matching insns, forwards
        in the entry block, and backwards from the RET in
@@ -346,7 +344,7 @@ static void logues(void)
     entry_i = 0;
     exit_i = NR_INSNS(exit_block) - 1;
 
-    if (need_frame) {
+    if (func_needs_frame) {
         insn = new_insn(I_MCH_PUSHQ, 0);
         REG_OPERAND(&insn->operand[0], 0, 0, REG_RBP);
         insert_insn(insn, entry_block, entry_i++);
@@ -388,7 +386,7 @@ static void logues(void)
             insert_insn(move(T_DOUBLE, &addr, &xmm), entry_block, entry_i++);
             insert_insn(move(T_DOUBLE, &xmm, &addr), exit_block, exit_i);
 
-            i += 8;
+            i += sizeof(double);
         }
 
     /* GP regs are saved/restored with PUSHQ/POPQ */
@@ -464,6 +462,7 @@ int frame_alloc(struct tnode *type)
 
     frame_size += size;
     frame_size = ROUND_UP(frame_size, align);
+    ++func_needs_frame;
 
     return -frame_size;
 }

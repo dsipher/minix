@@ -64,6 +64,11 @@ extern struct tnode *func_ret_type;
 
 extern struct symbol *func_hidden_arg;
 
+/* set if this function needs %rbp as the frame register.
+   (when it has local frame storage or stacked arguments) */
+
+extern int func_needs_frame;
+
 /* return the number of insns in the CFG */
 
 int func_size(void);

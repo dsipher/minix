@@ -69,6 +69,10 @@ extern struct symbol *func_hidden_arg;
 
 extern int func_needs_frame;
 
+/* the amount of storage allocated for locals on the frame */
+
+extern int func_frame_size;
+
 /* return the number of insns in the CFG */
 
 int func_size(void);

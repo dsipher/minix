@@ -60,7 +60,7 @@ struct symbol *func_ret_sym;        /* anonymous symbol for return value */
 struct tnode *func_ret_type;        /* type of function return value */
 
 int func_needs_frame;               /* whether this func needs a frame */
-static int frame_size;              /* size of local frame storage */
+int func_frame_size;                /* size of local frame storage */
 
 /* we use this as an input to simple heuristics.
    in particular, mch_switch() in switch.c uses
@@ -186,7 +186,7 @@ void enter_func(struct symbol *sym)
     reset_regs();
     reset_reach();
     ++reg_generation;
-    frame_size = 0;
+    func_frame_size = 0;
     nr_iargs = 0;
     nr_fargs = 0;
     next_stack_arg = FIRST_STACK_ARG;
@@ -331,11 +331,11 @@ static void logues(void)
        regs, we store them on the frame */
 
     if (fsave_size) func_needs_frame = 1;
-    frame_size += fsave_size;
+    func_frame_size += fsave_size;
 
     /* adjust the frame size to keep the stack aligned */
 
-    frame_size = ROUND_UP(frame_size, STACK_ALIGN);
+    func_frame_size = ROUND_UP(func_frame_size, STACK_ALIGN);
 
     /* we insert the logues as matching insns, forwards
        in the entry block, and backwards from the RET in
@@ -358,10 +358,10 @@ static void logues(void)
         REG_OPERAND(&insn->operand[1], 0, 0, REG_RSP);
         insert_insn(insn, entry_block, entry_i++);
 
-        if (frame_size) {
+        if (func_frame_size) {
             insn = new_insn(I_MCH_SUBQ, 0);
             REG_OPERAND(&insn->operand[0], 0, 0, REG_RSP);
-            I_OPERAND(&insn->operand[1], 0, T_LONG, frame_size);
+            I_OPERAND(&insn->operand[1], 0, T_LONG, func_frame_size);
             insert_insn(insn, entry_block, entry_i++);
 
             insn = new_insn(I_MCH_MOVQ, 0);
@@ -373,7 +373,7 @@ static void logues(void)
 
     /* XMM regs are manually moved to/from the frame */
 
-    i = -frame_size;
+    i = -func_frame_size;
 
     FOR_EACH_REG(save_regs, j, reg)
         if (REG_XMM(reg)) {
@@ -460,11 +460,11 @@ int frame_alloc(struct tnode *type)
     int size = size_of(type, 0);
     int align = align_of(type);
 
-    frame_size += size;
-    frame_size = ROUND_UP(frame_size, align);
+    func_frame_size += size;
+    func_frame_size = ROUND_UP(func_frame_size, align);
     ++func_needs_frame;
 
-    return -frame_size;
+    return -func_frame_size;
 }
 
 /* temporaries can be allocated at any time while processing a function, so

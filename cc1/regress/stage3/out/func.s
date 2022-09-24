@@ -286,7 +286,7 @@ L130:
 	testq $8192,(%rdi)
 	jz L136
 L134:
-	movq _current_block(%rip),%rbx
+	movq _current_block(%rip),%r13
 	movq _exit_block(%rip),%rax
 	movq %rax,_current_block(%rip)
 	xorl %esi,%esi
@@ -296,20 +296,20 @@ L134:
 	leaq -8(%rbp),%rsi
 	movl $_ulong_type,%edi
 	call _con_tree
-	movq %rax,%r13
+	movq %rax,%r12
 	movq _func_hidden_arg(%rip),%rdi
 	call _sym_tree
-	movq %rax,%r12
+	movq %rax,%rbx
 	movq _func_ret_sym(%rip),%rdi
 	call _sym_tree
-	movq %r13,%rcx
+	movq %r12,%rcx
 	movq %rax,%rdx
-	movq %r12,%rsi
+	movq %rbx,%rsi
 	movl $45,%edi
 	call _blk_tree
 	movq %rax,%rdi
 	call _gen
-	movq %rbx,_current_block(%rip)
+	movq %r13,_current_block(%rip)
 L136:
 	xorl %esi,%esi
 	movl $41943048,%edi
@@ -505,8 +505,8 @@ L192:
 	movl $1,%eax
 	cmovnzl %eax,%ecx
 	movq _exit_block(%rip),%rax
-	xorl %r12d,%r12d
-	movl 12(%rax),%ebx
+	xorl %r14d,%r14d
+	movl 12(%rax),%r13d
 	testl %ecx,%ecx
 	jz L209
 L207:
@@ -530,7 +530,7 @@ L207:
 	orl $1,%ecx
 	movl %ecx,8(%rax)
 	movl $-2147303424,16(%rax)
-	leal -1(%rbx),%edx
+	leal -1(%r13),%edx
 	movq _exit_block(%rip),%rsi
 	movq %rax,%rdi
 	call _insert_insn
@@ -547,7 +547,7 @@ L207:
 	orl $1,%ecx
 	movl %ecx,40(%rax)
 	movl $-2147319808,48(%rax)
-	movl $2,%r12d
+	movl $2,%r14d
 	movl $1,%edx
 	movq _entry_block(%rip),%rsi
 	movq %rax,%rdi
@@ -576,7 +576,7 @@ L270:
 	andl $4290773023,%ecx
 	orl $8192,%ecx
 	movl %ecx,40(%rax)
-	movl $3,%r12d
+	movl $3,%r14d
 	movl $2,%edx
 	movq _entry_block(%rip),%rsi
 	movq %rax,%rdi
@@ -594,21 +594,21 @@ L270:
 	orl $1,%ecx
 	movl %ecx,40(%rax)
 	movl $-2147303424,48(%rax)
-	leal -1(%rbx),%edx
+	leal -1(%r13),%edx
 	movq _exit_block(%rip),%rsi
 	movq %rax,%rdi
 	call _insert_insn
 L209:
-	movl _frame_size(%rip),%r14d
-	negl %r14d
-	xorl %r13d,%r13d
+	movl _frame_size(%rip),%r12d
+	negl %r12d
+	xorl %ebx,%ebx
 L336:
-	cmpl -68(%rbp),%r13d
+	cmpl -68(%rbp),%ebx
 	jge L342
 L340:
 	movq -64(%rbp),%rax
-	movslq %r13d,%r13
-	movl (%rax,%r13,4),%ecx
+	movslq %ebx,%rbx
+	movl (%rax,%rbx,4),%ecx
 	testl %ecx,%ecx
 	jz L342
 L341:
@@ -629,15 +629,15 @@ L347:
 	movl $0,-132(%rbp)
 	andl $4294967271,%eax
 	movl %eax,-144(%rbp)
-	movslq %r14d,%r14
-	movq %r14,-128(%rbp)
+	movslq %r12d,%r12
+	movq %r12,-128(%rbp)
 	movq $0,-120(%rbp)
 	leaq -112(%rbp),%rdx
 	leaq -144(%rbp),%rsi
 	movl $2048,%edi
 	call _move
-	movl %r12d,%edx
-	incl %r12d
+	movl %r14d,%edx
+	incl %r14d
 	movq _entry_block(%rip),%rsi
 	movq %rax,%rdi
 	call _insert_insn
@@ -645,35 +645,35 @@ L347:
 	leaq -112(%rbp),%rsi
 	movl $2048,%edi
 	call _move
-	leal -1(%rbx),%edx
+	leal -1(%r13),%edx
 	movq _exit_block(%rip),%rsi
 	movq %rax,%rdi
 	call _insert_insn
-	addl $8,%r14d
+	addl $8,%r12d
 L346:
-	incl %r13d
+	incl %ebx
 	jmp L336
 L342:
-	xorl %r14d,%r14d
+	xorl %r12d,%r12d
 L377:
-	cmpl -68(%rbp),%r14d
+	cmpl -68(%rbp),%r12d
 	jge L168
 L381:
 	movq -64(%rbp),%rax
-	movslq %r14d,%r14
-	movl (%rax,%r14,4),%r13d
-	testl %r13d,%r13d
+	movslq %r12d,%r12
+	movl (%rax,%r12,4),%ebx
+	testl %ebx,%ebx
 	jz L168
 L382:
-	movl %r13d,%eax
+	movl %ebx,%eax
 	andl $3221225472,%eax
 	cmpl $2147483648,%eax
 	jnz L387
 L388:
-	cmpl $2147663872,%r13d
+	cmpl $2147663872,%ebx
 	setnz %al
 	movzbl %al,%eax
-	cmpl $2147647488,%r13d
+	cmpl $2147647488,%ebx
 	setnz %cl
 	movzbl %cl,%ecx
 	testl %ecx,%eax
@@ -686,9 +686,9 @@ L389:
 	andl $4294967288,%ecx
 	orl $1,%ecx
 	movl %ecx,8(%rax)
-	movl %r13d,16(%rax)
-	movl %r12d,%edx
-	incl %r12d
+	movl %ebx,16(%rax)
+	movl %r14d,%edx
+	incl %r14d
 	movq _entry_block(%rip),%rsi
 	movq %rax,%rdi
 	call _insert_insn
@@ -699,13 +699,13 @@ L389:
 	andl $4294967288,%ecx
 	orl $1,%ecx
 	movl %ecx,8(%rax)
-	movl %r13d,16(%rax)
-	leal -1(%rbx),%edx
+	movl %ebx,16(%rax)
+	leal -1(%r13),%edx
 	movq _exit_block(%rip),%rsi
 	movq %rax,%rdi
 	call _insert_insn
 L387:
-	incl %r14d
+	incl %r12d
 	jmp L377
 L168:
 	popq %r14

@@ -396,42 +396,42 @@ L173:
 	pushq %r13
 	pushq %r14
 L176:
-	xorl %r14d,%r14d
+	xorl %r13d,%r13d
 	movl $3,%edi
 	call _live_analyze
 	movl $0,-24(%rbp)
 	movl $0,-20(%rbp)
 	movq $0,-16(%rbp)
 	movq $_local_arena,-8(%rbp)
-	movq _all_blocks(%rip),%r13
+	movq _all_blocks(%rip),%r12
 L182:
-	testq %r13,%r13
+	testq %r12,%r12
 	jz L229
 L183:
-	movl 12(%r13),%r12d
+	movl 12(%r12),%ebx
 L186:
-	movl %r12d,%eax
-	decl %r12d
+	movl %ebx,%eax
+	decl %ebx
 	testl %eax,%eax
 	jz L192
 L190:
-	movq 16(%r13),%rcx
-	movslq %r12d,%rax
-	movq (%rcx,%rax,8),%rbx
-	testq %rbx,%rbx
+	movq 16(%r12),%rcx
+	movslq %ebx,%rax
+	movq (%rcx,%rax,8),%r14
+	testq %r14,%r14
 	jz L192
 L191:
-	movl (%rbx),%eax
+	movl (%r14),%eax
 	testl $8388608,%eax
 	jnz L186
 L197:
-	testl $1,4(%rbx)
+	testl $1,4(%r14)
 	jnz L186
 L199:
 	testl $16777216,%eax
 	jnz L186
 L206:
-	movq %rbx,%rdi
+	movq %r14,%rdi
 	call _insn_defs_mem0
 	testl %eax,%eax
 	jnz L186
@@ -451,45 +451,45 @@ L215:
 L216:
 	movl $67108864,%edx
 	leaq -24(%rbp),%rsi
-	movq %rbx,%rdi
+	movq %r14,%rdi
 	call _insn_defs
-	xorl %ebx,%ebx
+	xorl %r14d,%r14d
 L217:
-	cmpl -20(%rbp),%ebx
+	cmpl -20(%rbp),%r14d
 	jge L223
 L221:
 	movq -16(%rbp),%rax
-	movslq %ebx,%rbx
-	movl (%rax,%rbx,4),%esi
+	movslq %r14d,%r14
+	movl (%rax,%r14,4),%esi
 	testl %esi,%esi
 	jz L223
 L222:
-	movl %r12d,%edx
-	movq %r13,%rdi
+	movl %ebx,%edx
+	movq %r12,%rdi
 	call _range_doa
 	testl %eax,%eax
 	jz L186
 L227:
-	incl %ebx
+	incl %r14d
 	jmp L217
 L223:
-	movq 16(%r13),%rcx
-	movslq %r12d,%rax
+	movq 16(%r12),%rcx
+	movslq %ebx,%rax
 	movq $_nop_insn,(%rcx,%rax,8)
-	movl %r12d,%esi
-	movq %r13,%rdi
+	movl %ebx,%esi
+	movq %r12,%rdi
 	call _live_kill_dead
-	orl %r14d,%eax
-	movl %eax,%r14d
+	orl %r13d,%eax
+	movl %eax,%r13d
 	orl $32,_opt_request(%rip)
 	jmp L186
 L192:
-	movq 112(%r13),%r13
+	movq 112(%r12),%r12
 	jmp L182
 L229:
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)
-	testl %r14d,%r14d
+	testl %r13d,%r13d
 	jnz L176
 L175:
 	popq %r14

@@ -28,7 +28,7 @@ L5:
 	imull $50,-2092(%rbp),%eax
 	cmpl %eax,%ecx
 	movl %esi,%ebx
-	movl -2092(%rbp),%r15d
+	movl -2092(%rbp),%r14d
 	jle L8
 L10:
 	testl %esi,%esi
@@ -52,38 +52,38 @@ L41:
 	leaq -2056(%rbp),%rdx
 	movq -2088(%rbp),%rdi
 	call _tbldiff
-	movl %eax,%r15d
+	movl %eax,%r14d
 L9:
-	imull $100,%r15d,%ecx
+	imull $100,%r14d,%ecx
 	imull $10,-2092(%rbp),%eax
 	cmpl %eax,%ecx
 	jle L23
 L21:
-	movl %ebx,%r13d
+	movl %ebx,%r15d
 L24:
-	testl %r13d,%r13d
+	testl %r15d,%r15d
 	jz L23
 L25:
-	movl $1,%r14d
-	subl %r12d,%r14d
-	movslq %r14d,%r14
-	imulq $1028,%r14,%rax
+	movl $1,%r13d
+	subl %r12d,%r13d
+	movslq %r13d,%r13
+	imulq $1028,%r13,%rax
 	leaq -2056(%rbp,%rax),%rdx
-	movl %r13d,%esi
+	movl %r15d,%esi
 	movq -2088(%rbp),%rdi
 	call _tbldiff
-	cmpl %eax,%r15d
+	cmpl %eax,%r14d
 	jle L30
 L28:
-	movl %r14d,%r12d
-	movl %eax,%r15d
-	movl %r13d,%ebx
+	movl %r13d,%r12d
+	movl %eax,%r14d
+	movl %r15d,%ebx
 L30:
-	movslq %r13d,%r13
-	movl _protnext(,%r13,4),%r13d
+	movslq %r15d,%r15
+	movl _protnext(,%r15,4),%r15d
 	jmp L24
 L23:
-	imull $100,%r15d,%eax
+	imull $100,%r14d,%eax
 	movl %eax,-2064(%rbp)
 	imull $50,-2092(%rbp),%eax
 	cmpl %eax,-2064(%rbp)
@@ -118,7 +118,7 @@ L32:
 	imulq $1028,%r12,%rax
 	movq %rax,-2072(%rbp)
 	movslq %ebx,%rbx
-	movl %r15d,%r8d
+	movl %r14d,%r8d
 	movl _prottbl(,%rbx,4),%ecx
 	movl -2076(%rbp),%edx
 	movl _numecs(%rip),%esi

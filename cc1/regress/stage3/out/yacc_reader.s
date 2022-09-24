@@ -972,14 +972,14 @@ L452:
 	movl %eax,-4(%rbp)
 	call _dup_line
 	movq %rax,-24(%rbp)
-	movq _cptr(%rip),%rcx
-	movq %rcx,%rax
+	movq _cptr(%rip),%rdi
+	movq %rdi,%rax
 	subq _line(%rip),%rax
 	movq %rax,-16(%rbp)
 	cmpb $0,_unionized(%rip)
 	jz L456
 L454:
-	leaq -6(%rcx),%rdi
+	addq $-6,%rdi
 	call _over_unionized
 L456:
 	movb $1,_unionized(%rip)
@@ -1014,16 +1014,15 @@ L464:
 	movsbl (%rcx),%r14d
 	movq _text_file(%rip),%rax
 	decl (%rax)
-	movq _text_file(%rip),%rax
+	movq _text_file(%rip),%rsi
 	js L466
 L465:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %r14b,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %r14b,(%rcx)
 	jmp L467
 L466:
-	movq %rax,%rsi
 	movl %r14d,%edi
 	call ___flushbuf
 L467:
@@ -1032,16 +1031,15 @@ L467:
 L468:
 	movq _union_file(%rip),%rax
 	decl (%rax)
-	movq _union_file(%rip),%rax
+	movq _union_file(%rip),%rsi
 	js L472
 L471:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %r14b,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %r14b,(%rcx)
 	jmp L470
 L472:
-	movq %rax,%rsi
 	movl %r14d,%edi
 	call ___flushbuf
 L470:
@@ -1084,16 +1082,15 @@ L572:
 	movq _text_file(%rip),%rax
 	subq %rcx,%r12
 	decl (%rax)
-	movq _text_file(%rip),%rax
+	movq _text_file(%rip),%rsi
 	js L576
 L575:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb $42,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb $42,(%rcx)
 	jmp L577
 L576:
-	movq %rax,%rsi
 	movl $42,%edi
 	call ___flushbuf
 L577:
@@ -1102,16 +1099,15 @@ L577:
 L578:
 	movq _union_file(%rip),%rax
 	decl (%rax)
-	movq _union_file(%rip),%rax
+	movq _union_file(%rip),%rsi
 	js L582
 L581:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb $42,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb $42,(%rcx)
 	jmp L580
 L582:
-	movq %rax,%rsi
 	movl $42,%edi
 	call ___flushbuf
 L580:
@@ -1123,16 +1119,15 @@ L584:
 	movsbl (%rcx),%ebx
 	movq _text_file(%rip),%rax
 	decl (%rax)
-	movq _text_file(%rip),%rax
+	movq _text_file(%rip),%rsi
 	js L589
 L588:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %bl,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %bl,(%rcx)
 	jmp L590
 L589:
-	movq %rax,%rsi
 	movl %ebx,%edi
 	call ___flushbuf
 L590:
@@ -1141,16 +1136,15 @@ L590:
 L591:
 	movq _union_file(%rip),%rax
 	decl (%rax)
-	movq _union_file(%rip),%rax
+	movq _union_file(%rip),%rsi
 	js L595
 L594:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %bl,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %bl,(%rcx)
 	jmp L593
 L595:
-	movq %rax,%rsi
 	movl %ebx,%edi
 	call ___flushbuf
 L593:
@@ -1163,16 +1157,15 @@ L600:
 L601:
 	movq _text_file(%rip),%rax
 	decl (%rax)
-	movq _text_file(%rip),%rax
+	movq _text_file(%rip),%rsi
 	js L605
 L604:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb $47,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb $47,(%rcx)
 	jmp L606
 L605:
-	movq %rax,%rsi
 	movl $47,%edi
 	call ___flushbuf
 L606:
@@ -1181,16 +1174,15 @@ L606:
 L607:
 	movq _union_file(%rip),%rax
 	decl (%rax)
-	movq _union_file(%rip),%rax
+	movq _union_file(%rip),%rsi
 	js L611
 L610:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb $47,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb $47,(%rcx)
 	jmp L609
 L611:
-	movq %rax,%rsi
 	movl $47,%edi
 	call ___flushbuf
 L609:
@@ -1212,16 +1204,15 @@ L617:
 L533:
 	movq _text_file(%rip),%rax
 	decl (%rax)
-	movq _text_file(%rip),%rax
+	movq _text_file(%rip),%rsi
 	js L537
 L536:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb $42,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb $42,(%rcx)
 	jmp L538
 L537:
-	movq %rax,%rsi
 	movl $42,%edi
 	call ___flushbuf
 L538:
@@ -1230,16 +1221,15 @@ L538:
 L539:
 	movq _union_file(%rip),%rax
 	decl (%rax)
-	movq _union_file(%rip),%rax
+	movq _union_file(%rip),%rsi
 	js L543
 L542:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb $42,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb $42,(%rcx)
 	jmp L545
 L543:
-	movq %rax,%rsi
 	movl $42,%edi
 L631:
 	call ___flushbuf
@@ -1272,16 +1262,15 @@ L555:
 L553:
 	movq _text_file(%rip),%rax
 	decl (%rax)
-	movq _text_file(%rip),%rax
+	movq _text_file(%rip),%rsi
 	js L559
 L558:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %bl,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %bl,(%rcx)
 	jmp L560
 L559:
-	movq %rax,%rsi
 	movl %ebx,%edi
 	call ___flushbuf
 L560:
@@ -1290,16 +1279,15 @@ L560:
 L561:
 	movq _union_file(%rip),%rax
 	decl (%rax)
-	movq _union_file(%rip),%rax
+	movq _union_file(%rip),%rsi
 	js L565
 L564:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %bl,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %bl,(%rcx)
 	jmp L545
 L565:
-	movq %rax,%rsi
 	movl %ebx,%edi
 	jmp L631
 L547:
@@ -1328,16 +1316,15 @@ L494:
 	movsbl (%rcx),%ebx
 	movq _text_file(%rip),%rax
 	decl (%rax)
-	movq _text_file(%rip),%rax
+	movq _text_file(%rip),%rsi
 	js L499
 L498:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %bl,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %bl,(%rcx)
 	jmp L500
 L499:
-	movq %rax,%rsi
 	movl %ebx,%edi
 	call ___flushbuf
 L500:
@@ -1346,16 +1333,15 @@ L500:
 L501:
 	movq _union_file(%rip),%rax
 	decl (%rax)
-	movq _union_file(%rip),%rax
+	movq _union_file(%rip),%rsi
 	js L505
 L504:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %bl,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %bl,(%rcx)
 	jmp L503
 L505:
-	movq %rax,%rsi
 	movl %ebx,%edi
 	call ___flushbuf
 L503:
@@ -1379,16 +1365,15 @@ L514:
 	movsbl (%rcx),%ebx
 	movq _text_file(%rip),%rax
 	decl (%rax)
-	movq _text_file(%rip),%rax
+	movq _text_file(%rip),%rsi
 	js L518
 L517:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %bl,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %bl,(%rcx)
 	jmp L519
 L518:
-	movq %rax,%rsi
 	movl %ebx,%edi
 	call ___flushbuf
 L519:
@@ -1397,16 +1382,15 @@ L519:
 L520:
 	movq _union_file(%rip),%rax
 	decl (%rax)
-	movq _union_file(%rip),%rax
+	movq _union_file(%rip),%rsi
 	js L524
 L523:
-	movq 24(%rax),%rdx
-	leaq 1(%rdx),%rcx
-	movq %rcx,24(%rax)
-	movb %bl,(%rdx)
+	movq 24(%rsi),%rcx
+	leaq 1(%rcx),%rax
+	movq %rax,24(%rsi)
+	movb %bl,(%rcx)
 	jmp L522
 L524:
-	movq %rax,%rsi
 	movl %ebx,%edi
 	call ___flushbuf
 L522:
@@ -1450,10 +1434,9 @@ L478:
 	cmpq $0,_line(%rip)
 	jnz L464
 L479:
-	movq -16(%rbp),%rcx
-	movq -24(%rbp),%rax
-	leaq -6(%rcx,%rax),%rdx
-	movq %rax,%rsi
+	movq -16(%rbp),%rax
+	movq -24(%rbp),%rsi
+	leaq -6(%rax,%rsi),%rdx
 	movl -4(%rbp),%edi
 	call _unterminated_union
 	jmp L464
@@ -2902,7 +2885,7 @@ _copy_action:
 L1311:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $56,%rsp
+	subq $48,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -2948,7 +2931,7 @@ L1321:
 	incq %rax
 	movq %rax,_cptr(%rip)
 L1323:
-	movl $0,-32(%rbp)
+	movl $0,-36(%rbp)
 	movl _nitems(%rip),%ecx
 	decl %ecx
 L1324:
@@ -2957,7 +2940,7 @@ L1324:
 	cmpq $0,(%rax,%rcx,8)
 	jz L1327
 L1325:
-	incl -32(%rbp)
+	incl -36(%rbp)
 	decl %ecx
 	jmp L1324
 L1327:
@@ -2977,7 +2960,7 @@ L1332:
 	movl _lineno(%rip),%eax
 	movl %eax,-40(%rbp)
 	call _dup_line
-	movq %rax,-48(%rbp)
+	movq %rax,%r13
 	movq _cptr(%rip),%rax
 	movq %rax,%r12
 	subq _line(%rip),%r12
@@ -2997,7 +2980,7 @@ L1335:
 	call _fprintf
 	addq $24,%rsp
 	incq _cptr(%rip)
-	jmp L1529
+	jmp L1544
 L1336:
 	movslq %eax,%rax
 	testb $4,___ctype+1(%rax)
@@ -3005,14 +2988,14 @@ L1336:
 L1340:
 	call _get_number
 	movl %eax,%r12d
-	cmpl %r12d,-32(%rbp)
+	cmpl %r12d,-36(%rbp)
 	jge L1345
 L1343:
 	movl %r12d,%esi
 	movl -40(%rbp),%edi
 	call _dollar_warning
 L1345:
-	subl -32(%rbp),%r12d
+	subl -36(%rbp),%r12d
 	pushq %rbx
 	pushq %r12
 	jmp L1543
@@ -3028,7 +3011,7 @@ L1352:
 	movq %rcx,_cptr(%rip)
 	call _get_number
 	negl %eax
-	subl -32(%rbp),%eax
+	subl -36(%rbp),%eax
 	pushq %rbx
 	pushq %rax
 L1543:
@@ -3036,13 +3019,10 @@ L1543:
 	pushq %r15
 	call _fprintf
 	addq $32,%rsp
-L1529:
-	movq -48(%rbp),%rdi
-	jmp L1542
+	jmp L1544
 L1353:
-	movq -48(%rbp),%rax
-	leaq (%r12,%rax),%rdx
-	movq %rax,%rsi
+	leaq (%r12,%r13),%rdx
+	movq %r13,%rsi
 	movl -40(%rbp),%edi
 	call _dollar_error
 	jmp L1331
@@ -3090,7 +3070,7 @@ L1370:
 	cmpl $0,%ebx
 	jle L1377
 L1376:
-	cmpl %ebx,-32(%rbp)
+	cmpl %ebx,-36(%rbp)
 	jge L1375
 L1377:
 	movl %ebx,%edi
@@ -3098,7 +3078,7 @@ L1377:
 L1375:
 	movl _nitems(%rip),%eax
 	addl %ebx,%eax
-	subl -32(%rbp),%eax
+	subl -36(%rbp),%eax
 	decl %eax
 	movslq %eax,%rax
 	movq _pitem(%rip),%rcx
@@ -3111,7 +3091,7 @@ L1380:
 	movl %ebx,%edi
 	call _untyped_rhs
 L1382:
-	subl -32(%rbp),%ebx
+	subl -36(%rbp),%ebx
 	pushq %r12
 	pushq %rbx
 	pushq $L1346
@@ -3120,7 +3100,7 @@ L1382:
 	addq $32,%rsp
 	jmp L1328
 L1371:
-	cmpl %ebx,-32(%rbp)
+	cmpl %ebx,-36(%rbp)
 	jge L1545
 L1383:
 	movl %ebx,%esi
@@ -3223,7 +3203,7 @@ L1479:
 	jnz L1328
 L1497:
 	movl _lineno(%rip),%eax
-	movl %eax,-36(%rbp)
+	movl %eax,-32(%rbp)
 	call _dup_line
 	movq %rax,%r13
 	movq _cptr(%rip),%r12
@@ -3250,11 +3230,10 @@ L1503:
 	decl (%r15)
 	js L1508
 L1507:
-	movb %bl,%dl
 	movq 24(%r15),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,24(%r15)
-	movb %dl,(%rcx)
+	movb %bl,(%rcx)
 	jmp L1509
 L1508:
 	movq %r15,%rsi
@@ -3293,7 +3272,7 @@ L1521:
 L1524:
 	leaq -1(%r12,%r13),%rdx
 	movq %r13,%rsi
-	movl -36(%rbp),%edi
+	movl -32(%rbp),%edi
 	call _unterminated_comment
 	jmp L1503
 L1477:
@@ -3350,7 +3329,7 @@ L1485:
 	jmp L1428
 L1449:
 	movl _lineno(%rip),%eax
-	movl %eax,-52(%rbp)
+	movl %eax,-44(%rbp)
 	call _dup_line
 	movq %rax,%r13
 	movq _cptr(%rip),%r12
@@ -3382,7 +3361,7 @@ L1459:
 L1461:
 	leaq -1(%r12,%r13),%rdx
 	movq %r13,%rsi
-	movl -52(%rbp),%edi
+	movl -44(%rbp),%edi
 	call _unterminated_string
 L1463:
 	cmpl $92,%ebx
@@ -3415,12 +3394,11 @@ L1470:
 L1473:
 	leaq -1(%r12,%r13),%rdx
 	movq %r13,%rsi
-	movl -52(%rbp),%edi
+	movl -44(%rbp),%edi
 	call _unterminated_string
 	jmp L1450
 L1544:
 	movq %r13,%rdi
-L1542:
 	call _free
 	jmp L1328
 L1442:
@@ -3473,7 +3451,7 @@ L1391:
 L1393:
 	negl %ebx
 L1545:
-	subl -32(%rbp),%ebx
+	subl -36(%rbp),%ebx
 	pushq %rbx
 	pushq $L1386
 	pushq %r15

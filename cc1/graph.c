@@ -106,8 +106,8 @@ static struct node *stack;          /* top of disconnected node stack */
 static VECTOR(reg) gp_colors;
 static VECTOR(reg) xmm_colors;
 
-#define GP_K    VECTOR_SIZE(gp_colors)
-#define XMM_K   VECTOR_SIZE(xmm_colors)
+#define GP_K    (NR_GP_REGS - 1)        /* exclude %rsp */
+#define XMM_K   NR_XMM_REGS
 
 /* attach node n to the graph */
 
@@ -831,15 +831,15 @@ retry:
     dom_analyze(DOM_ANALYZE_LOOP);      /* for spill/coalescing choices */
     live_analyze(LIVE_ANALYZE_REGS);    /* for building interference graph */
 
-    /* TODO. if any regs appear LIVE IN to the entry_block,
-       we should request an OPT_MCH_UNDEF pass to insert
-       fake DEFs to reduce the spans of the webs. */
+    /* if any regs appear LIVE IN to the entry_block, we
+       should request an OPT_MCH_UNDEF pass to insert fake
+       DEFs to reduce the spans of the webs (issue #16) */
 
     /* compute sets of colors available to the allocator.
        currently these sets are static and could be computed
        once and for all, but we do it dynamically in case we
        decide (one day) to, e.g., allow REG_RBP to be used
-       when we don't need it as a frame pointer. rainy day. */
+       when we don't need it as a frame pointer (issue #10) */
 
     INIT_VECTOR(gp_colors, &local_arena);
     INIT_VECTOR(xmm_colors, &local_arena);

@@ -109,13 +109,13 @@ L28:
 	pushq %r14
 	pushq %r15
 L29:
-	movq %rdi,%r15
+	movq %rdi,%r13
 	movl %esi,-8(%rbp)
-	movl %edx,%ebx
-	movl %ecx,%r14d
-	movl 4(%r15),%edx
-	leal (%rdx,%rbx),%eax
-	cmpl (%r15),%eax
+	movl %edx,%r14d
+	movl %ecx,%r12d
+	movl 4(%r13),%edx
+	leal (%rdx,%r14),%eax
+	cmpl (%r13),%eax
 	movl %eax,-4(%rbp)
 	jle L32
 L31:
@@ -125,19 +125,19 @@ L31:
 	subb %al,%cl
 	movl $1,%eax
 	shll %cl,%eax
-	movl %eax,(%r15)
+	movl %eax,(%r13)
 	cmpl %eax,-4(%rbp)
 	jle L36
 L34:
 	shll $1,%eax
-	movl %eax,(%r15)
+	movl %eax,(%r13)
 L36:
-	movl (%r15),%ecx
+	movl (%r13),%ecx
 	cmpl $4,%ecx
 	movl $4,%eax
 	cmovgl %ecx,%eax
-	movl %eax,(%r15)
-	movq 16(%r15),%rsi
+	movl %eax,(%r13)
+	movq 16(%r13),%rsi
 	movq 8(%rsi),%rdx
 	movq %rdx,%rcx
 	andl $7,%ecx
@@ -148,50 +148,50 @@ L43:
 	addq %rax,%rdx
 	movq %rdx,8(%rsi)
 L45:
-	movq 16(%r15),%rcx
-	movq 8(%rcx),%r13
-	movl (%r15),%eax
-	imull %r14d,%eax
+	movq 16(%r13),%rcx
+	movq 8(%rcx),%rbx
+	movl (%r13),%eax
+	imull %r12d,%eax
 	movslq %eax,%rax
-	addq %r13,%rax
+	addq %rbx,%rax
 	movq %rax,8(%rcx)
-	movl %r14d,%r12d
-	imull -8(%rbp),%r12d
-	movslq %r12d,%r12
-	movq %r12,%rdx
-	movq 8(%r15),%rsi
-	movq %r13,%rdi
+	movl %r12d,%r15d
+	imull -8(%rbp),%r15d
+	movslq %r15d,%r15
+	movq %r15,%rdx
+	movq 8(%r13),%rsi
+	movq %rbx,%rdi
 	call _memcpy
-	addl -8(%rbp),%ebx
-	imull %r14d,%ebx
-	movslq %ebx,%rdi
-	movq 8(%r15),%rsi
-	movl 4(%r15),%edx
+	addl -8(%rbp),%r14d
+	imull %r12d,%r14d
+	movslq %r14d,%rdi
+	movq 8(%r13),%rsi
+	movl 4(%r13),%edx
 	subl -8(%rbp),%edx
-	imull %r14d,%edx
+	imull %r12d,%edx
 	movslq %edx,%rdx
-	addq %r12,%rsi
-	addq %r13,%rdi
+	addq %r15,%rsi
+	addq %rbx,%rdi
 	call _memcpy
-	movq %r13,8(%r15)
+	movq %rbx,8(%r13)
 	jmp L33
 L32:
-	movq 8(%r15),%rdi
-	addl -8(%rbp),%ebx
-	imull %r14d,%ebx
-	movslq %ebx,%rbx
+	movq 8(%r13),%rdi
+	addl -8(%rbp),%r14d
+	imull %r12d,%r14d
+	movslq %r14d,%r14
 	movl -8(%rbp),%esi
-	imull %r14d,%esi
+	imull %r12d,%esi
 	movslq %esi,%rsi
 	subl -8(%rbp),%edx
-	imull %r14d,%edx
+	imull %r12d,%edx
 	movslq %edx,%rdx
 	addq %rdi,%rsi
-	addq %rbx,%rdi
+	addq %r14,%rdi
 	call _memmove
 L33:
 	movl -4(%rbp),%eax
-	movl %eax,4(%r15)
+	movl %eax,4(%r13)
 L30:
 	popq %r15
 	popq %r14

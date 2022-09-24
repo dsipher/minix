@@ -229,11 +229,11 @@ L82:
 	pushq %r12
 	pushq %r13
 L83:
-	movl 16(%rbp),%r12d
+	movl 16(%rbp),%r13d
 	movq 24(%rbp),%rbx
 	movq 32(%rbp),%rax
 	movq %rax,32(%rbp)
-	testl %r12d,%r12d
+	testl %r13d,%r13d
 	jnz L93
 L94:
 	cmpb $0,_w_flag(%rip)
@@ -265,8 +265,8 @@ L104:
 	call _fprintf
 	addq $16,%rsp
 L101:
-	movslq %r12d,%r12
-	pushq L85(,%r12,8)
+	movslq %r13d,%r13
+	pushq L85(,%r13,8)
 	pushq $L107
 	pushq $___stderr
 	call _fprintf
@@ -282,7 +282,7 @@ L108:
 	call _fprintf
 	addq $32,%rsp
 L110:
-	leaq 40(%rbp),%rbx
+	leaq 40(%rbp),%r12
 L112:
 	movq 32(%rbp),%rcx
 	movb (%rcx),%al
@@ -336,13 +336,13 @@ L215:
 	cmpb $115,%al
 	jnz L117
 L148:
-	addq $8,%rbx
-	pushq -8(%rbx)
+	addq $8,%r12
+	pushq -8(%r12)
 	pushq $L25
 	jmp L225
 L128:
-	addq $8,%rbx
-	movq -8(%rbx),%rcx
+	addq $8,%r12
+	movq -8(%r12),%rcx
 	testq $131072,%rcx
 	movl $L131,%eax
 	movl $L130,%edi
@@ -369,21 +369,21 @@ L128:
 	addq $48,%rsp
 	jmp L117
 L126:
-	addq $8,%rbx
-	movl -8(%rbx),%esi
+	addq $8,%r12
+	movl -8(%r12),%esi
 	movl $___stderr,%edi
 	call _print_k
 	jmp L117
 L124:
-	addq $8,%rbx
-	movl -8(%rbx),%eax
+	addq $8,%r12
+	movl -8(%r12),%eax
 	pushq %rax
 	pushq $L17
 	jmp L225
 L172:
-	addq $8,%rbx
-	movq -8(%rbx),%r13
-	movl 12(%r13),%eax
+	addq $8,%r12
+	movq -8(%r12),%rbx
+	movl 12(%rbx),%eax
 	andl $8191,%eax
 	cmpl $1,%eax
 	jz L176
@@ -407,7 +407,7 @@ L176:
 L226:
 	call _fputs
 L174:
-	movq (%r13),%rcx
+	movq (%rbx),%rcx
 	testq %rcx,%rcx
 	jz L117
 L185:
@@ -417,8 +417,8 @@ L185:
 	pushq $L188
 	jmp L224
 L170:
-	addq $8,%rbx
-	movq -8(%rbx),%rcx
+	addq $8,%r12
+	movq -8(%r12),%rcx
 	movl 4(%rcx),%eax
 	pushq 8(%rcx)
 	pushq %rax
@@ -429,9 +429,9 @@ L224:
 	addq $32,%rsp
 	jmp L117
 L152:
-	addq $8,%rbx
-	movq -8(%rbx),%r13
-	movl 12(%r13),%eax
+	addq $8,%r12
+	movq -8(%r12),%rbx
+	movl 12(%rbx),%eax
 	testl $2147483648,%eax
 	jnz L153
 L155:
@@ -444,7 +444,7 @@ L155:
 	pushq $___stderr
 	call _fprintf
 	addq $24,%rsp
-	movq 24(%r13),%rcx
+	movq 24(%rbx),%rcx
 	cmpq %rcx,_path(%rip)
 	jz L166
 L164:
@@ -456,7 +456,7 @@ L164:
 	call _fprintf
 	addq $32,%rsp
 L166:
-	movl 20(%r13),%eax
+	movl 20(%rbx),%eax
 	pushq %rax
 	pushq $L168
 L225:
@@ -470,8 +470,8 @@ L153:
 	call _fputs
 	jmp L117
 L150:
-	addq $8,%rbx
-	movq -8(%rbx),%rsi
+	addq $8,%r12
+	movq -8(%r12),%rsi
 	movl $___stderr,%edi
 	call _print_token
 	jmp L117
@@ -493,7 +493,7 @@ L117:
 	incq 32(%rbp)
 	jmp L112
 L114:
-	cmpl $2,%r12d
+	cmpl $2,%r13d
 	jnz L196
 L194:
 	movl _errno(%rip),%edi
@@ -517,7 +517,7 @@ L199:
 	movl $10,%edi
 	call ___flushbuf
 L200:
-	cmpl $0,%r12d
+	cmpl $0,%r13d
 	jle L84
 L201:
 	movq _out_f(%rip),%rdi

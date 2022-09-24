@@ -246,15 +246,15 @@ L124:
 	movl %edx,%r14d
 	movq 16(%r15),%rax
 	movslq %r13d,%r13
-	movq (%rax,%r13,8),%r12
-	cmpl $2952790031,(%r12)
+	movq (%rax,%r13,8),%rbx
+	cmpl $2952790031,(%rbx)
 	jnz L128
 L127:
-	movl %r14d,%ebx
-	xorl $1,%ebx
+	movl %r14d,%r12d
+	xorl $1,%r12d
 	jmp L130
 L128:
-	movl %r14d,%ebx
+	movl %r14d,%r12d
 L130:
 	movb %r13b,%cl
 	movl $1,%edx
@@ -264,15 +264,15 @@ L130:
 	sarl $6,%eax
 	movslq %eax,%rax
 	orq %rdx,(%rcx,%rax,8)
-	leaq 40(%r12),%rax
+	leaq 40(%rbx),%rax
 	movq %rax,-24(%rbp)
-	movl 40(%r12),%eax
+	movl 40(%rbx),%eax
 	movl %eax,%ecx
 	andl $7,%ecx
 	cmpl $2,%ecx
 	jnz L141
 L139:
-	cmpq $0,64(%r12)
+	cmpq $0,64(%rbx)
 	jnz L141
 L140:
 	testl %r14d,%r14d
@@ -281,15 +281,15 @@ L146:
 	testl $229376,%eax
 	jz L150
 L149:
-	movsd 56(%r12),%xmm1
+	movsd 56(%rbx),%xmm1
 	movsd L116(%rip),%xmm0
 	mulsd %xmm1,%xmm0
-	movsd %xmm0,56(%r12)
+	movsd %xmm0,56(%rbx)
 	jmp L145
 L150:
-	negq 56(%r12)
+	negq 56(%rbx)
 L145:
-	cmpl $2952790031,(%r12)
+	cmpl $2952790031,(%rbx)
 	jnz L153
 L152:
 	movl $8,%ecx
@@ -306,7 +306,7 @@ L153:
 	testl %esi,%esi
 	setz %al
 	movzbl %al,%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-12(%rbp)
 	leal 1(%rsi),%eax
 	cmpl _terms(%rip),%eax
 	jge L159
@@ -325,7 +325,7 @@ L160:
 	movslq %ecx,%rcx
 	movq -24(%rbp),%rax
 	movq %rax,(%rdx,%rcx,8)
-	cmpl $0,-4(%rbp)
+	cmpl $0,-12(%rbp)
 	jz L138
 L161:
 	movl %r14d,_minuend(%rip)
@@ -344,35 +344,35 @@ L164:
 	movq %r15,%rdi
 	call _additive0
 L138:
-	leaq 72(%r12),%rax
-	movq %rax,-16(%rbp)
-	movl 72(%r12),%eax
+	leaq 72(%rbx),%rax
+	movq %rax,-8(%rbp)
+	movl 72(%rbx),%eax
 	movl %eax,%ecx
 	andl $7,%ecx
 	cmpl $2,%ecx
 	jnz L175
 L173:
-	cmpq $0,96(%r12)
+	cmpq $0,96(%rbx)
 	jnz L175
 L174:
-	testl %ebx,%ebx
+	testl %r12d,%r12d
 	jz L179
 L180:
 	testl $229376,%eax
 	jz L184
 L183:
-	movsd 88(%r12),%xmm1
+	movsd 88(%rbx),%xmm1
 	movsd L116(%rip),%xmm0
 	mulsd %xmm1,%xmm0
-	movsd %xmm0,88(%r12)
+	movsd %xmm0,88(%rbx)
 	jmp L179
 L184:
-	negq 88(%r12)
+	negq 88(%rbx)
 L179:
 	movl _terms+4(%rip),%esi
 	testl %esi,%esi
 	setz %al
-	movzbl %al,%r12d
+	movzbl %al,%ebx
 	leal 1(%rsi),%eax
 	cmpl _terms(%rip),%eax
 	jge L193
@@ -389,12 +389,12 @@ L194:
 	movl _terms+4(%rip),%ecx
 	decl %ecx
 	movslq %ecx,%rcx
-	movq -16(%rbp),%rax
+	movq -8(%rbp),%rax
 	movq %rax,(%rdx,%rcx,8)
-	testl %r12d,%r12d
+	testl %ebx,%ebx
 	jz L125
 L195:
-	movl %ebx,_minuend(%rip)
+	movl %r12d,_minuend(%rip)
 	jmp L125
 L175:
 	movl $L126,%ecx
@@ -406,7 +406,7 @@ L175:
 	cmpl $-3,%esi
 	jz L125
 L198:
-	movl %ebx,%edx
+	movl %r12d,%edx
 	movq %r15,%rdi
 	call _additive0
 L125:

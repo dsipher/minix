@@ -798,8 +798,8 @@ L314:
 	pushq %r15
 L315:
 	call _cost0
-	movl (%rax),%r15d
-	movl %r15d,%eax
+	movl (%rax),%r13d
+	movl %r13d,%eax
 	andl $3221225472,%eax
 	cmpl $2147483648,%eax
 	movl $_double_type,%eax
@@ -809,12 +809,12 @@ L315:
 	movq %rax,%rbx
 	movq %rbx,%rdi
 	call _symbol_to_reg
-	movl %eax,%r14d
+	movl %eax,%r12d
 	movl -32(%rbp),%eax
 	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,-32(%rbp)
-	movl %r14d,-24(%rbp)
+	movl %r12d,-24(%rbp)
 	movl -64(%rbp),%eax
 	andl $4294967288,%eax
 	orl $3,%eax
@@ -827,20 +827,20 @@ L315:
 	movslq %eax,%rax
 	movq %rax,-48(%rbp)
 	movq $0,-40(%rbp)
-	movq _all_blocks(%rip),%r13
+	movq _all_blocks(%rip),%rbx
 L350:
-	testq %r13,%r13
+	testq %rbx,%rbx
 	jz L316
 L351:
-	xorl %r12d,%r12d
+	xorl %r15d,%r15d
 L354:
-	cmpl 12(%r13),%r12d
+	cmpl 12(%rbx),%r15d
 	jge L360
 L358:
-	movq 16(%r13),%rax
-	movslq %r12d,%r12
-	movq (%rax,%r12,8),%rbx
-	testq %rbx,%rbx
+	movq 16(%rbx),%rax
+	movslq %r15d,%r15
+	movq (%rax,%r15,8),%r14
+	testq %r14,%r14
 	jz L360
 L359:
 	cmpl $0,_tmp_regs(%rip)
@@ -858,13 +858,13 @@ L366:
 L367:
 	xorl %edx,%edx
 	movl $_tmp_regs,%esi
-	movq %rbx,%rdi
+	movq %r14,%rdi
 	call _insn_uses
 	leaq -72(%rbp),%r8
 	movl $1,%ecx
-	movl %r14d,%edx
-	movl %r15d,%esi
-	movq %rbx,%rdi
+	movl %r12d,%edx
+	movl %r13d,%esi
+	movq %r14,%rdi
 	call _insn_substitute_reg
 	movq -72(%rbp),%rdi
 	testq %rdi,%rdi
@@ -873,18 +873,18 @@ L368:
 	leaq -32(%rbp),%rdx
 	leaq -64(%rbp),%rsi
 	call _move
-	leal 1(%r12),%edx
-	movq %r13,%rsi
+	leal 1(%r15),%edx
+	movq %rbx,%rsi
 	movq %rax,%rdi
 	call _insert_insn
 L370:
 	leaq -80(%rbp),%r8
 	movl $2,%ecx
-	movl %r14d,%edx
-	movl %r15d,%esi
-	movq %rbx,%rdi
+	movl %r12d,%edx
+	movl %r13d,%esi
+	movq %r14,%rdi
 	call _insn_substitute_reg
-	movl %r15d,%esi
+	movl %r13d,%esi
 	movl $_tmp_regs,%edi
 	call _contains_reg
 	testl %eax,%eax
@@ -899,25 +899,25 @@ L376:
 	leaq -64(%rbp),%rdx
 	leaq -32(%rbp),%rsi
 	call _move
-	movl %r12d,%edx
-	movq %r13,%rsi
+	movl %r15d,%edx
+	movq %rbx,%rsi
 	movq %rax,%rdi
 	call _insert_insn
-	incl %r12d
+	incl %r15d
 L373:
-	incl %r12d
+	incl %r15d
 	jmp L354
 L360:
-	testl $1,4(%r13)
+	testl $1,4(%rbx)
 	jz L379
 L384:
-	movl 80(%r13),%edi
+	movl 80(%rbx),%edi
 	movl %edi,%eax
 	andl $7,%eax
 	cmpl $1,%eax
 	jnz L379
 L385:
-	cmpl 88(%r13),%r15d
+	cmpl 88(%rbx),%r13d
 	jnz L379
 L381:
 	shll $10,%edi
@@ -925,12 +925,12 @@ L381:
 	leaq -64(%rbp),%rdx
 	leaq -32(%rbp),%rsi
 	call _move
-	movq %r13,%rsi
+	movq %rbx,%rsi
 	movq %rax,%rdi
 	call _append_insn
-	movl %r14d,88(%r13)
+	movl %r12d,88(%rbx)
 L379:
-	movq 112(%r13),%r13
+	movq 112(%rbx),%rbx
 	jmp L350
 L316:
 	popq %r15

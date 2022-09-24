@@ -2065,8 +2065,8 @@ L1033:
 	movq %r8,-8(%rbp)
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
-	movl (%r15),%edx
-	cmpl $8388609,%edx
+	movl (%r15),%ecx
+	cmpl $8388609,%ecx
 	jnz L1036
 L1035:
 	testl $2,-12(%rbp)
@@ -2088,100 +2088,100 @@ L1041:
 	addl %eax,%r12d
 	jmp L1037
 L1036:
-	andl $805306368,%edx
-	sarl $28,%edx
+	andl $805306368,%ecx
+	sarl $28,%ecx
 	movl 4(%r15),%eax
 	shll $21,%eax
 	shrl $26,%eax
-	addl %eax,%edx
-	xorl %ecx,%ecx
+	addl %eax,%ecx
+	xorl %eax,%eax
 L1044:
-	cmpl %ecx,%edx
+	cmpl %eax,%ecx
 	jle L1037
 L1048:
-	xorl %eax,%eax
+	xorl %r8d,%r8d
 	testl $2,-12(%rbp)
 	jz L1053
 L1054:
-	testl %ecx,%ecx
+	testl %eax,%eax
 	jnz L1059
 L1066:
-	movl (%r15),%esi
-	testl $2147483648,%esi
+	movl (%r15),%edx
+	testl $2147483648,%edx
 	jz L1059
 L1068:
-	testl $1073741824,%esi
+	testl $1073741824,%edx
 	jnz L1059
 L1064:
-	movslq %ecx,%rsi
-	shlq $5,%rsi
-	movl 8(%r15,%rsi),%esi
-	andl $7,%esi
-	cmpl $1,%esi
+	movslq %eax,%rdx
+	shlq $5,%rdx
+	movl 8(%r15,%rdx),%edx
+	andl $7,%edx
+	cmpl $1,%edx
 	jz L1053
 L1059:
-	movslq %ecx,%r8
-	shlq $5,%r8
-	movl 8(%r15,%r8),%esi
-	movl %esi,%edi
-	andl $7,%edi
-	cmpl $3,%edi
+	movslq %eax,%rdi
+	shlq $5,%rdi
+	movl 8(%r15,%rdi),%edx
+	movl %edx,%esi
+	andl $7,%esi
+	cmpl $3,%esi
 	jz L1074
 L1135:
-	cmpl $4,%edi
+	cmpl $4,%esi
 	jz L1074
 L1136:
-	cmpl $1,%edi
+	cmpl $1,%esi
 	jz L1078
 	jnz L1071
 L1074:
-	cmpl 20(%r15,%r8),%r14d
+	cmpl 20(%r15,%rdi),%r14d
 	jnz L1078
 L1075:
-	movl $1,%eax
-	movl %r13d,20(%r15,%r8)
+	movl $1,%r8d
+	movl %r13d,20(%r15,%rdi)
 L1078:
-	cmpl 16(%r15,%r8),%r14d
+	cmpl 16(%r15,%rdi),%r14d
 	jnz L1071
 L1079:
-	incl %eax
-	movl %r13d,16(%r15,%r8)
+	incl %r8d
+	movl %r13d,16(%r15,%rdi)
 L1071:
-	testl %eax,%eax
+	testl %r8d,%r8d
 	jz L1084
 L1082:
-	cmpl $3,%edi
+	cmpl $3,%esi
 	jnz L1086
 L1085:
 	movl $256,%ebx
 	jmp L1084
 L1086:
-	shll $10,%esi
-	shrl $15,%esi
-	cmpq %rsi,%rbx
-	cmovleq %rsi,%rbx
+	shll $10,%edx
+	shrl $15,%edx
+	cmpq %rdx,%rbx
+	cmovleq %rdx,%rbx
 L1084:
-	addl %eax,%r12d
+	addl %r8d,%r12d
 L1053:
 	xorl %r8d,%r8d
 	testl $1,-12(%rbp)
 	jz L1096
 L1097:
-	testl %ecx,%ecx
+	testl %eax,%eax
 	jnz L1096
 L1105:
 	testl $2147483648,(%r15)
 	jz L1096
 L1106:
-	movl 8(%r15),%eax
-	andl $7,%eax
-	cmpl $1,%eax
+	movl 8(%r15),%edx
+	andl $7,%edx
+	cmpl $1,%edx
 	jnz L1096
 L1102:
-	movslq %ecx,%rdi
+	movslq %eax,%rdi
 	shlq $5,%rdi
-	movl 8(%r15,%rdi),%eax
-	movl %eax,%esi
+	movl 8(%r15,%rdi),%edx
+	movl %edx,%esi
 	andl $7,%esi
 	cmpl $3,%esi
 	jz L1113
@@ -2214,14 +2214,14 @@ L1124:
 	movl $256,%ebx
 	jmp L1123
 L1125:
-	shll $10,%eax
-	shrl $15,%eax
-	cmpq %rax,%rbx
-	cmovleq %rax,%rbx
+	shll $10,%edx
+	shrl $15,%edx
+	cmpq %rdx,%rbx
+	cmovleq %rdx,%rbx
 L1123:
 	addl %r8d,%r12d
 L1096:
-	incl %ecx
+	incl %eax
 	jmp L1044
 L1037:
 	cmpq $0,-8(%rbp)

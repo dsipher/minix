@@ -986,7 +986,7 @@ L278:
 	pushq %r14
 	pushq %r15
 L279:
-	movq %rdi,-16(%rbp)
+	movq %rdi,-8(%rbp)
 	movl %esi,%r15d
 	movl %r15d,%edi
 	shll $1,%edi
@@ -998,7 +998,7 @@ L281:
 	jle L284
 L282:
 	movslq %edx,%rdx
-	movq -16(%rbp),%rax
+	movq -8(%rbp),%rax
 	movq (%rax,%rdx,8),%rcx
 	testq %rcx,%rcx
 	jz L287
@@ -1019,7 +1019,7 @@ L284:
 	shll $3,%ebx
 	movq %rbx,%rdi
 	call _allocate
-	movq %rax,-8(%rbp)
+	movq %rax,-16(%rbp)
 	movq %rbx,%rdi
 	call _allocate
 	movq %rax,%r13
@@ -1036,7 +1036,7 @@ L295:
 	leal 1(%rbx),%edi
 	shll $1,%edi
 	call _allocate
-	movq -8(%rbp),%rcx
+	movq -16(%rbp),%rcx
 	movq %rax,(%rcx,%r12,8)
 	movq %rax,(%r13,%r12,8)
 	movslq %ebx,%rbx
@@ -1053,7 +1053,7 @@ L298:
 	jle L301
 L299:
 	movslq %esi,%rsi
-	movq -16(%rbp),%rax
+	movq -8(%rbp),%rax
 	movq (%rax,%rsi,8),%rdi
 	testq %rdi,%rdi
 	jz L304
@@ -1075,7 +1075,7 @@ L304:
 L301:
 	movq %r13,%rdi
 	call _free
-	movq -8(%rbp),%rax
+	movq -16(%rbp),%rax
 L280:
 	popq %r15
 	popq %r14

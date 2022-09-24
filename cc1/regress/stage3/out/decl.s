@@ -531,15 +531,15 @@ L227:
 	pushq %r14
 	pushq %r15
 L228:
-	movq %rdi,%r14
-	movq %rsi,%r13
+	movq %rdi,%r15
+	movq %rsi,%r14
+	xorl %r13d,%r13d
 	xorl %r12d,%r12d
-	xorl %ebx,%ebx
 	movq $0,-8(%rbp)
-	testq %r14,%r14
+	testq %r15,%r15
 	jz L233
 L230:
-	movl $0,(%r14)
+	movl $0,(%r15)
 L233:
 	movl _token(%rip),%eax
 	cmpl $-1610612651,%eax
@@ -567,40 +567,40 @@ L315:
 	addl $_specifiers,%ecx
 	jmp *%rcx
 L288:
-	testq %r12,%r12
+	testq %r13,%r13
 	jnz L237
 L296:
-	testl %ebx,%ebx
+	testl %r12d,%r12d
 	jnz L237
 L297:
 	movq _token+24(%rip),%rdi
 	call _named_type
-	movq %rax,%r12
+	movq %rax,%r13
 	testq %rax,%rax
 	jz L237
 L293:
-	orl $9,(%r13)
+	orl $9,(%r14)
 	jmp L309
 L265:
-	testq %r12,%r12
+	testq %r13,%r13
 	jnz L273
 L269:
 	andl $130816,%eax
-	testl %ebx,%eax
+	testl %r12d,%eax
 	jnz L273
 L271:
-	orl %eax,%ebx
+	orl %eax,%r12d
 	jmp L320
 L278:
-	testq %r12,%r12
+	testq %r13,%r13
 	jnz L273
 L282:
-	testl %ebx,%ebx
+	testl %r12d,%r12d
 	jnz L273
 L284:
-	movq %r13,%rdi
+	movq %r14,%rdi
 	call _tag_specifier
-	movq %rax,%r12
+	movq %rax,%r13
 	jmp L233
 L273:
 	pushq $L308
@@ -610,12 +610,12 @@ L273:
 	addq $24,%rsp
 	jmp L229
 L255:
-	movq %r13,%rsi
+	movq %r14,%rsi
 	leaq -8(%rbp),%rdi
 	call _qualifiers
 	jmp L233
 L244:
-	testq %r14,%r14
+	testq %r15,%r15
 	jnz L247
 L245:
 	pushq $L248
@@ -624,7 +624,7 @@ L245:
 	call _error
 	addq $24,%rsp
 L247:
-	cmpl $0,(%r14)
+	cmpl $0,(%r15)
 	jz L251
 L249:
 	pushq $L252
@@ -635,29 +635,29 @@ L249:
 L251:
 	movl _token(%rip),%edi
 	call _k_to_s
-	movl %eax,(%r14)
+	movl %eax,(%r15)
 L320:
-	orl $1,(%r13)
+	orl $1,(%r14)
 L309:
 	call _lex
 	jmp L233
 L237:
-	testl %ebx,%ebx
+	testl %r12d,%r12d
 	jz L303
 L301:
-	movl %ebx,%edi
+	movl %r12d,%edi
 	call _map_type
-	movq %rax,%r12
+	movq %rax,%r13
 L303:
-	testq %r12,%r12
+	testq %r13,%r13
 	movl $_int_type,%eax
-	cmovzq %rax,%r12
+	cmovzq %rax,%r13
 	movq -8(%rbp),%rsi
-	movq %r12,%rdi
+	movq %r13,%rdi
 	call _qualify
-	movq %rax,%r15
+	movq %rax,%rbx
 L229:
-	movq %r15,%rax
+	movq %rbx,%rax
 	popq %r15
 	popq %r14
 	popq %r13
@@ -1095,12 +1095,12 @@ L502:
 	pushq %r14
 L503:
 	movl %edi,-8(%rbp)
-	movq %rsi,%r14
-	movq %rdx,%r13
+	movq %rsi,%r13
+	movq %rdx,%r12
 	leaq -8(%rbp),%rsi
 	leaq -4(%rbp),%rdi
 	call _specifiers
-	movq %rax,%r12
+	movq %rax,%rbx
 	cmpl $23,_token(%rip)
 	jnz L510
 L512:
@@ -1123,7 +1123,7 @@ L516:
 	call _error
 	addq $32,%rsp
 L518:
-	movq (%r12),%rax
+	movq (%rbx),%rax
 	andl $393216,%eax
 	jz L547
 L520:
@@ -1149,19 +1149,19 @@ L525:
 L529:
 	andl $-9,-20(%rbp)
 L531:
-	movq %r12,%rsi
+	movq %rbx,%rsi
 	call _graft
-	movq %rax,%rbx
+	movq %rax,%r14
 	xorl %edx,%edx
 	movq -16(%rbp),%rsi
-	movq %rbx,%rdi
+	movq %r14,%rdi
 	call _validate
-	movq %r14,%r8
+	movq %r13,%r8
 	leaq -20(%rbp),%rcx
-	movq %rbx,%rdx
+	movq %r14,%rdx
 	movl -4(%rbp),%esi
 	movq -16(%rbp),%rdi
-	call *%r13
+	call *%r12
 	testl %eax,%eax
 	jnz L504
 L534:

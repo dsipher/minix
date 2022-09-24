@@ -180,19 +180,19 @@ L74:
 	pushq %r13
 	pushq %r14
 L75:
-	movq %rdi,%r14
-	leaq -16(%rbp),%r13
+	movq %rdi,%r13
+	leaq -16(%rbp),%r12
 	xorl %eax,%eax
 	movq %rax,-16(%rbp)
 	movq %rax,-8(%rbp)
 	movq $0,-16(%rbp)
-	movq %r13,-8(%rbp)
-	xorl %r12d,%r12d
-	movq (%r14),%rbx
-	cmpl $52,(%rbx)
+	movq %r12,-8(%rbp)
+	xorl %ebx,%ebx
+	movq (%r13),%r14
+	cmpl $52,(%r14)
 	jnz L115
 L79:
-	leaq 8(%rbx),%rdi
+	leaq 8(%r14),%rdi
 	call _macro_lookup
 	testq %rax,%rax
 	jz L115
@@ -207,46 +207,46 @@ L86:
 	testl $2147483648,%eax
 	jz L96
 L89:
-	movq %rbx,%rsi
-	movq %r14,%rdi
+	movq %r14,%rsi
+	movq %r13,%rdi
 	call _parentheses
-	movl %eax,%r12d
+	movl %eax,%ebx
 	cmpl $0,%eax
 	jle L76
 L96:
-	movq (%r14),%rcx
+	movq (%r13),%rcx
 	testq %rcx,%rcx
 	jz L101
 L99:
 	movq -8(%rbp),%rax
 	movq %rcx,(%rax)
 	movq -8(%rbp),%rcx
-	movq (%r14),%rax
+	movq (%r13),%rax
 	movq %rcx,40(%rax)
-	movq 8(%r14),%rax
+	movq 8(%r13),%rax
 	movq %rax,-8(%rbp)
-	movq $0,(%r14)
-	movq %r14,8(%r14)
+	movq $0,(%r13)
+	movq %r13,8(%r13)
 L101:
-	leal 1(%r12),%edx
+	leal 1(%rbx),%edx
 	leaq -16(%rbp),%rsi
-	movq %r14,%rdi
+	movq %r13,%rdi
 	call _list_move
-	movq %r14,%rdi
+	movq %r13,%rdi
 	call _macro_replace
 	movq -16(%rbp),%rcx
 	testq %rcx,%rcx
 	jz L110
 L108:
-	movq 8(%r14),%rax
+	movq 8(%r13),%rax
 	movq %rcx,(%rax)
-	movq 8(%r14),%rcx
+	movq 8(%r13),%rcx
 	movq -16(%rbp),%rax
 	movq %rcx,40(%rax)
 	movq -8(%rbp),%rax
-	movq %rax,8(%r14)
+	movq %rax,8(%r13)
 	movq $0,-16(%rbp)
-	movq %r13,-8(%rbp)
+	movq %r12,-8(%rbp)
 L110:
 	movl $1,%eax
 L76:

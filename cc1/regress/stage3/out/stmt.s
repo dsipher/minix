@@ -423,13 +423,13 @@ L146:
 L147:
 	movq _continue_block(%rip),%rax
 	movq %rax,-8(%rbp)
-	movq _break_block(%rip),%r15
+	movq _break_block(%rip),%rbx
+	call _new_block
+	movq %rax,%r15
 	call _new_block
 	movq %rax,%r14
-	call _new_block
-	movq %rax,%r13
+	xorl %r13d,%r13d
 	xorl %r12d,%r12d
-	xorl %ebx,%ebx
 	call _new_block
 	movq %rax,_continue_block(%rip)
 	call _new_block
@@ -452,7 +452,7 @@ L155:
 	jz L161
 L158:
 	call _expression
-	movq %rax,%r12
+	movq %rax,%r13
 L161:
 	movl $23,%edi
 	call _expect
@@ -461,37 +461,37 @@ L161:
 	jz L167
 L164:
 	call _expression
-	movq %rax,%rbx
+	movq %rax,%r12
 L167:
 	movl $13,%edi
 	call _expect
 	call _lex
-	movq %r14,%rdx
+	movq %r15,%rdx
 	movl $12,%esi
 	movq _current_block(%rip),%rdi
 	call _add_succ
-	movq %r14,_current_block(%rip)
-	testq %r12,%r12
+	movq %r15,_current_block(%rip)
+	testq %r13,%r13
 	jz L171
 L170:
 	movl $-2147483573,%edx
 	movl $426770485,%esi
-	movq %r12,%rdi
+	movq %r13,%rdi
 	call _test
 	movq %rax,%rdi
 	call _gen
 	movq _break_block(%rip),%rdx
-	movq %r13,%rsi
+	movq %r14,%rsi
 	movq %rax,%rdi
 	call _branch
 	jmp L172
 L171:
-	movq %r13,%rdx
+	movq %r14,%rdx
 	movl $12,%esi
-	movq %r14,%rdi
+	movq %r15,%rdi
 	call _add_succ
 L172:
-	movq %r13,_current_block(%rip)
+	movq %r14,_current_block(%rip)
 	call _stmt
 	movq _continue_block(%rip),%rdx
 	movl $12,%esi
@@ -499,13 +499,13 @@ L172:
 	call _add_succ
 	movq _continue_block(%rip),%rax
 	movq %rax,_current_block(%rip)
-	testq %rbx,%rbx
+	testq %r12,%r12
 	jz L175
 L173:
-	movq %rbx,%rdi
+	movq %r12,%rdi
 	call _gen
 L175:
-	movq %r14,%rdx
+	movq %r15,%rdx
 	movl $12,%esi
 	movq _current_block(%rip),%rdi
 	call _add_succ
@@ -513,7 +513,7 @@ L175:
 	movq %rax,_current_block(%rip)
 	movq -8(%rbp),%rax
 	movq %rax,_continue_block(%rip)
-	movq %r15,_break_block(%rip)
+	movq %rbx,_break_block(%rip)
 L148:
 	popq %r15
 	popq %r14
@@ -789,7 +789,7 @@ L223:
 	pushq %rbx
 	pushq %r12
 L224:
-	movl $_void_tree,%r12d
+	movl $_void_tree,%ebx
 L227:
 	cmpb $0,_g_flag(%rip)
 	jz L232
@@ -861,11 +861,11 @@ L262:
 L263:
 	movq _token+24(%rip),%rdi
 	call _lookup_label
-	movq %rax,%rbx
-	testl $1073741824,12(%rbx)
+	movq %rax,%r12
+	testl $1073741824,12(%r12)
 	jz L270
 L266:
-	pushq %rbx
+	pushq %r12
 	pushq $L269
 	pushq _token+24(%rip)
 	pushq $4
@@ -873,17 +873,17 @@ L266:
 	addq $32,%rsp
 L270:
 	movq _path(%rip),%rax
-	movq %rax,24(%rbx)
+	movq %rax,24(%r12)
 	movl _line_no(%rip),%eax
-	movl %eax,20(%rbx)
-	orl $1073741824,12(%rbx)
+	movl %eax,20(%r12)
+	orl $1073741824,12(%r12)
 	call _lex
 	call _lex
-	movq 48(%rbx),%rdx
+	movq 48(%r12),%rdx
 	movl $12,%esi
 	movq _current_block(%rip),%rdi
 	call _add_succ
-	movq 48(%rbx),%rax
+	movq 48(%r12),%rax
 	movq %rax,_current_block(%rip)
 	jmp L227
 L290:
@@ -896,7 +896,7 @@ L233:
 	call _expression
 	movq %rax,%rdi
 	call _gen
-	movq %rax,%r12
+	movq %rax,%rbx
 L275:
 	movl $23,%edi
 	call _expect
@@ -928,7 +928,7 @@ L250:
 L248:
 	call _for_stmt
 L234:
-	movq %r12,_stmt_tree(%rip)
+	movq %rbx,_stmt_tree(%rip)
 L225:
 	popq %r12
 	popq %rbx

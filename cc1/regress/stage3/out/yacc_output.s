@@ -1066,34 +1066,34 @@ L313:
 	cmpl $0,-44(%rbp)
 	jz L315
 L319:
-	movl $1,%r15d
-	xorl %r14d,%r14d
+	movl $1,%r13d
+	xorl %r12d,%r12d
 L325:
-	cmpl %r14d,-20(%rbp)
+	cmpl %r12d,-20(%rbp)
 	jle L324
 L322:
-	movslq %r14d,%r14
+	movslq %r12d,%r12
 	movq -32(%rbp),%rax
-	movswl (%rax,%r14,2),%ebx
-	addl -44(%rbp),%ebx
-	cmpl _maxtable(%rip),%ebx
+	movswl (%rax,%r12,2),%r14d
+	addl -44(%rbp),%r14d
+	cmpl _maxtable(%rip),%r14d
 	jl L331
 L329:
-	cmpl $32500,%ebx
+	cmpl $32500,%r14d
 	jl L334
 L332:
 	movl $L335,%edi
 	call _fatal
 L334:
-	movl _maxtable(%rip),%r13d
+	movl _maxtable(%rip),%ebx
 L336:
-	addl $200,%r13d
-	cmpl %r13d,%ebx
+	addl $200,%ebx
+	cmpl %ebx,%r14d
 	jge L336
 L337:
-	movl %r13d,%r12d
-	shll $1,%r12d
-	movq %r12,%rsi
+	movl %ebx,%r15d
+	shll $1,%r15d
+	movq %r15,%rsi
 	movq _table(%rip),%rdi
 	call _realloc
 	movq %rax,_table(%rip)
@@ -1102,7 +1102,7 @@ L337:
 L339:
 	call _no_space
 L341:
-	movq %r12,%rsi
+	movq %r15,%rsi
 	movq _check(%rip),%rdi
 	call _realloc
 	movq %rax,_check(%rip)
@@ -1113,7 +1113,7 @@ L342:
 L344:
 	movl _maxtable(%rip),%eax
 L345:
-	cmpl %eax,%r13d
+	cmpl %eax,%ebx
 	jle L348
 L346:
 	movslq %eax,%rax
@@ -1124,20 +1124,20 @@ L346:
 	incl %eax
 	jmp L345
 L348:
-	movl %r13d,_maxtable(%rip)
+	movl %ebx,_maxtable(%rip)
 L331:
-	movslq %ebx,%rbx
+	movslq %r14d,%r14
 	movq _check(%rip),%rax
-	cmpw $-1,(%rax,%rbx,2)
+	cmpw $-1,(%rax,%r14,2)
 	movl $0,%eax
-	cmovnzl %eax,%r15d
-	incl %r14d
-	testl %r15d,%r15d
+	cmovnzl %eax,%r13d
+	incl %r12d
+	testl %r13d,%r13d
 	jnz L325
 L324:
 	xorl %ecx,%ecx
 L352:
-	testl %r15d,%r15d
+	testl %r13d,%r13d
 	jz L355
 L356:
 	movq -16(%rbp),%rax
@@ -1149,11 +1149,11 @@ L353:
 	movswl (%rax,%rcx,2),%eax
 	cmpl %eax,-44(%rbp)
 	movl $0,%eax
-	cmovzl %eax,%r15d
+	cmovzl %eax,%r13d
 	incl %ecx
 	jmp L352
 L355:
-	testl %r15d,%r15d
+	testl %r13d,%r13d
 	jnz L363
 L315:
 	incl -44(%rbp)

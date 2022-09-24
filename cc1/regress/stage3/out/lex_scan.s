@@ -4659,44 +4659,44 @@ L20:
 	call _yy_load_buffer_state
 	movl $0,_yy_init(%rip)
 L21:
-	movq _yy_c_buf_p(%rip),%rcx
+	movq _yy_c_buf_p(%rip),%r8
 	movb _yy_hold_char(%rip),%al
-	movb %al,(%rcx)
+	movb %al,(%r8)
 	movl _yy_start(%rip),%eax
-	movq %rcx,%r14
-	cmpb $10,-1(%rcx)
+	movq %r8,%r14
+	cmpb $10,-1(%r8)
 	jnz L28
 L24:
 	incl %eax
 L28:
-	movzbq (%rcx),%rdx
-	movb _yy_ec(%rdx),%dil
-	movslq %eax,%rdx
-	cmpw $0,_yy_accept(,%rdx,2)
+	movzbq (%r8),%rcx
+	movb _yy_ec(%rcx),%sil
+	movslq %eax,%rcx
+	cmpw $0,_yy_accept(,%rcx,2)
 	jz L34
 L31:
 	movl %eax,_yy_last_accepting_state(%rip)
-	movq %rcx,_yy_last_accepting_cpos(%rip)
+	movq %r8,_yy_last_accepting_cpos(%rip)
 L34:
-	movslq %eax,%r8
-	movswl _yy_base(,%r8,2),%esi
-	movzbl %dil,%edi
-	addl %edi,%esi
-	movslq %esi,%rsi
-	movswl _yy_chk(,%rsi,2),%edx
-	cmpl %edx,%eax
+	movslq %eax,%rdi
+	movswl _yy_base(,%rdi,2),%edx
+	movzbl %sil,%esi
+	addl %esi,%edx
+	movslq %edx,%rdx
+	movswl _yy_chk(,%rdx,2),%ecx
+	cmpl %ecx,%eax
 	jz L36
 L35:
-	movswl _yy_def(,%r8,2),%eax
+	movswl _yy_def(,%rdi,2),%eax
 	cmpl $341,%eax
 	jl L34
 L37:
-	movzbq %dil,%rdx
-	movb _yy_meta(%rdx),%dil
+	movzbq %sil,%rcx
+	movb _yy_meta(%rcx),%sil
 	jmp L34
 L36:
-	movswl _yy_nxt(,%rsi,2),%eax
-	incq %rcx
+	movswl _yy_nxt(,%rdx,2),%eax
+	incq %r8
 	cmpl $340,%eax
 	jnz L28
 L509:
@@ -4784,7 +4784,7 @@ L487:
 	addq _yytext(%rip),%rax
 	movq %rax,_yy_c_buf_p(%rip)
 	call _yy_get_previous_state
-	movq _yy_c_buf_p(%rip),%rcx
+	movq _yy_c_buf_p(%rip),%r8
 	movq _yytext(%rip),%r14
 	jmp L28
 L464:
@@ -4798,9 +4798,9 @@ L464:
 	testl %eax,%eax
 	jz L509
 L467:
-	movq _yy_c_buf_p(%rip),%rcx
-	incq %rcx
-	movq %rcx,_yy_c_buf_p(%rip)
+	movq _yy_c_buf_p(%rip),%r8
+	incq %r8
+	movq %r8,_yy_c_buf_p(%rip)
 	jmp L28
 L45:
 	movb _yy_hold_char(%rip),%al
@@ -4812,9 +4812,9 @@ L436:
 	call _fputs
 	decl ___stderr(%rip)
 	js L534
-	jns L544
+	jns L545
 L433:
-	jmp L543
+	jmp L540
 L419:
 	jmp L532
 L417:
@@ -5094,7 +5094,7 @@ L175:
 	movl $1,%r12d
 	jmp L21
 L173:
-	jmp L540
+	jmp L541
 L166:
 	movq _yytext(%rip),%rdi
 	call _all_lower
@@ -5117,7 +5117,7 @@ L161:
 	movl %eax,_reject_really_used(%rip)
 	jmp L21
 L156:
-	jmp L540
+	jmp L541
 L147:
 	cmpl $0,L5(%rip)
 	jnz L150
@@ -5168,7 +5168,7 @@ L126:
 	jz L21
 	jnz L504
 L124:
-	jmp L543
+	jmp L540
 L119:
 	movslq _yyleng(%rip),%rsi
 	movq _yyout(%rip),%rcx
@@ -5196,16 +5196,16 @@ L502:
 	movl $1,_reject(%rip)
 	jmp L21
 L112:
-L540:
+L541:
 	incl _linenum(%rip)
 	jmp L504
 L110:
 	incl _linenum(%rip)
-	jmp L543
+	jmp L540
 L108:
-	jmp L543
+	jmp L540
 L106:
-L543:
+L540:
 	movslq _yyleng(%rip),%rsi
 	movq _yyout(%rip),%rcx
 	movq _yytext(%rip),%rdi
@@ -5214,9 +5214,9 @@ L543:
 	jmp L21
 L104:
 	incl _linenum(%rip)
-	jmp L545
+	jmp L542
 L102:
-L545:
+L542:
 	movslq _yyleng(%rip),%rsi
 	movq _yyout(%rip),%rcx
 	movq _yytext(%rip),%rdi
@@ -5331,7 +5331,7 @@ L427:
 	movq _yytext(%rip),%rdi
 	call _myesc
 	movzbl %al,%eax
-	jmp L541
+	jmp L543
 L340:
 	movl $L341,%edi
 	call _synerr
@@ -5357,7 +5357,7 @@ L324:
 	movl $93,%eax
 	jmp L3
 L321:
-	jmp L542
+	jmp L544
 L318:
 	movb _yy_hold_char(%rip),%al
 	movb %al,(%r15)
@@ -5375,7 +5375,7 @@ L318:
 	jmp L3
 L315:
 	movl $23,_yy_start(%rip)
-	jmp L542
+	jmp L544
 L312:
 	movl $23,_yy_start(%rip)
 	movl $45,_yylval(%rip)
@@ -5419,7 +5419,7 @@ L299:
 	movl $3,_yy_start(%rip)
 	jmp L515
 L296:
-	jmp L542
+	jmp L544
 L293:
 	movl $3,_yy_start(%rip)
 	jmp L514
@@ -5451,10 +5451,10 @@ L517:
 L275:
 	jmp L537
 L272:
-L542:
+L544:
 	movq _yytext(%rip),%rax
 	movzbl (%rax),%eax
-L541:
+L543:
 	movl %eax,_yylval(%rip)
 L516:
 	movl $257,%eax
@@ -5625,7 +5625,7 @@ L492:
 	call _fputs
 	decl ___stderr(%rip)
 	js L534
-L544:
+L545:
 	movq ___stderr+24(%rip),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,___stderr+24(%rip)

@@ -415,21 +415,21 @@ L153:
 	pushq %rbx
 	pushq %r12
 L154:
-	movq %rdi,%rbx
-	testl $1,8(%rbx)
+	movq %rdi,%r12
+	testl $1,8(%r12)
 	jz L157
 L156:
-	leaq 9(%rbx),%rax
+	leaq 9(%r12),%rax
 	jmp L158
 L157:
-	movq 24(%rbx),%rax
+	movq 24(%r12),%rax
 L158:
 	incq %rax
 	movq %rax,-8(%rbp)
 	leaq -8(%rbp),%rdi
 	call _escape
-	movl %eax,%r12d
-	cmpl $-1,%r12d
+	movl %eax,%ebx
+	cmpl $-1,%ebx
 	jnz L161
 L159:
 	pushq $L162
@@ -444,11 +444,11 @@ L163:
 	call _error
 	addq $8,%rsp
 L165:
-	leaq 8(%rbx),%rdi
+	leaq 8(%r12),%rdi
 	call _vstring_free
-	movl $-2147483589,(%rbx)
-	movslq %r12d,%r12
-	movq %r12,8(%rbx)
+	movl $-2147483589,(%r12)
+	movslq %ebx,%rbx
+	movq %rbx,8(%r12)
 L155:
 	popq %r12
 	popq %rbx
@@ -1100,12 +1100,12 @@ L508:
 	testl $1,-24(%rbp)
 	jz L513
 L512:
-	addq $-23,%rbp
+	leaq -23(%rbp),%rax
 	jmp L514
 L513:
-	movq -8(%rbp),%rbp
+	movq -8(%rbp),%rax
 L514:
-	pushq %rbp
+	pushq %rax
 	pushq $L511
 	call _error
 	addq $16,%rsp

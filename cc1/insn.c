@@ -704,8 +704,13 @@ void insn_uses(struct insn *insn, VECTOR(reg) *set, int flags)
 
                         break;
 
-    case I_MCH_RETF:    add_reg(set, REG_XMM0); return;
-    case I_MCH_RETI:    add_reg(set, REG_RAX);  return;
+    case I_MCH_RET:     add_reg(set, REG_RBP); return;
+
+    case I_MCH_RETF:    add_reg(set, REG_XMM0);
+                        add_reg(set, REG_RBP); return;
+
+    case I_MCH_RETI:    add_reg(set, REG_RAX);
+                        add_reg(set, REG_RBP); return;
 
     case I_MCH_DIVB:
     case I_MCH_IMULB:

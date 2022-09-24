@@ -600,7 +600,7 @@ L273:
 	pushq %r14
 	pushq %r15
 L274:
-	movl 16(%rbp),%r12d
+	movl 16(%rbp),%r15d
 	movq 24(%rbp),%rax
 	movq %rax,24(%rbp)
 	pushq $L276
@@ -627,19 +627,19 @@ L283:
 	movq 56(%rbx),%rbx
 	jmp L277
 L280:
-	leaq 32(%rbp),%rbx
-	movq 24(%rbp),%r15
+	leaq 32(%rbp),%r14
+	movq 24(%rbp),%r13
 L285:
-	movb (%r15),%dil
+	movb (%r13),%dil
 	testb %dil,%dil
 	jz L288
 L286:
 	cmpb $37,%dil
 	jnz L336
 L289:
-	leaq 1(%r15),%rax
-	movb 1(%r15),%dil
-	movq %rax,%r15
+	leaq 1(%r13),%rax
+	movb 1(%r13),%dil
+	movq %rax,%r13
 	cmpb $115,%dil
 	jz L295
 L329:
@@ -657,38 +657,38 @@ L336:
 	call _fputc
 	jmp L291
 L304:
-	addq $8,%rbx
-	movq -8(%rbx),%r13
-	movq (%r13),%r14
+	addq $8,%r14
+	movq -8(%r14),%rbx
+	movq (%rbx),%r12
 L305:
-	cmpq 16(%r13),%r14
+	cmpq 16(%rbx),%r12
 	jae L291
 L309:
-	cmpb $6,(%r14)
+	cmpb $6,(%r12)
 	jz L291
 L310:
-	cmpq (%r13),%r14
+	cmpq (%rbx),%r12
 	jbe L315
 L316:
-	cmpl $0,4(%r14)
+	cmpl $0,4(%r12)
 	jz L315
 L317:
 	movl $___stderr,%esi
 	movl $32,%edi
 	call _fputc
 L315:
-	movl 8(%r14),%eax
-	pushq 16(%r14)
+	movl 8(%r12),%eax
+	pushq 16(%r12)
 	pushq %rax
 	pushq $L302
 	pushq $___stderr
 	call _fprintf
 	addq $32,%rsp
-	addq $24,%r14
+	addq $24,%r12
 	jmp L305
 L301:
-	addq $8,%rbx
-	movq -8(%rbx),%rcx
+	addq $8,%r14
+	movq -8(%r14),%rcx
 	movl 8(%rcx),%eax
 	pushq 16(%rcx)
 	pushq %rax
@@ -698,33 +698,33 @@ L301:
 	addq $32,%rsp
 	jmp L291
 L298:
-	addq $8,%rbx
-	movl -8(%rbx),%eax
+	addq $8,%r14
+	movl -8(%r14),%eax
 	pushq %rax
 	pushq $L299
 	jmp L335
 L295:
-	addq $8,%rbx
-	pushq -8(%rbx)
+	addq $8,%r14
+	pushq -8(%r14)
 	pushq $L296
 L335:
 	pushq $___stderr
 	call _fprintf
 	addq $24,%rsp
 L291:
-	incq %r15
+	incq %r13
 	jmp L285
 L288:
 	movl $___stderr,%esi
 	movl $10,%edi
 	call _fputc
-	cmpl $2,%r12d
+	cmpl $2,%r15d
 	jnz L324
 L322:
 	movl $1,%edi
 	call _exit
 L324:
-	testl %r12d,%r12d
+	testl %r15d,%r15d
 	jz L327
 L325:
 	movl $1,_nerrs(%rip)

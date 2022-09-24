@@ -422,22 +422,22 @@ L144:
 	pushq %r14
 	pushq %r15
 L145:
-	movq %rdi,%r13
-	movl %esi,%r12d
-	testq $16384,(%r13)
+	movq %rdi,%r14
+	movl %esi,%r13d
+	testq $16384,(%r14)
 	jz L148
 L150:
-	cmpl $0,16(%r13)
+	cmpl $0,16(%r14)
 	jnz L148
 L147:
 	movq _token+24(%rip),%rax
-	movl 4(%rax),%ebx
-	incl %ebx
+	movl 4(%rax),%r12d
+	incl %r12d
 	jmp L149
 L148:
-	movl 16(%r13),%ebx
+	movl 16(%r14),%r12d
 	movq _token+24(%rip),%rax
-	cmpl 4(%rax),%ebx
+	cmpl 4(%rax),%r12d
 	jge L149
 L154:
 	pushq $L157
@@ -453,33 +453,33 @@ L149:
 	jz L159
 L158:
 	movl 4(%rdi),%eax
-	cmpl %eax,%ebx
-	movl %ebx,%r14d
-	cmovgel %eax,%r14d
+	cmpl %eax,%r12d
+	movl %r12d,%r15d
+	cmovgel %eax,%r15d
 	call _literal
 	movq %rax,%rdi
 	call _sym_tree
-	movq %rax,%r15
-	movq 8(%r15),%rdx
+	movq %rax,%rbx
+	movq 8(%rbx),%rdx
 	xorl %esi,%esi
 	movl $65536,%edi
 	call _get_tnode
-	movq %r15,%rdx
+	movq %rbx,%rdx
 	movq %rax,%rsi
 	movl $1073741831,%edi
 	call _unary_tree
-	movq %rax,%r15
-	movslq %r14d,%r14
-	movq %r14,-8(%rbp)
+	movq %rax,%rbx
+	movslq %r15d,%r15
+	movq %r15,-8(%rbp)
 	leaq -8(%rbp),%rsi
 	movl $_ulong_type,%edi
 	call _con_tree
-	movq %rax,%r14
-	movl %r12d,%esi
-	movq %r13,%rdi
+	movq %rax,%r15
+	movl %r13d,%esi
+	movq %r14,%rdi
 	call _ref
-	movq %r14,%rcx
-	movq %r15,%rdx
+	movq %r15,%rcx
+	movq %rbx,%rdx
 	movq %rax,%rsi
 	movl $45,%edi
 	call _blk_tree
@@ -491,11 +491,11 @@ L158:
 	movq %rax,8(%rcx)
 	jmp L160
 L159:
-	movl %ebx,%esi
+	movl %r12d,%esi
 	call _out_literal
 L160:
 	call _lex
-	movl %ebx,%eax
+	movl %r12d,%eax
 L146:
 	popq %r15
 	popq %r14

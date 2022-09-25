@@ -946,6 +946,37 @@ static void dvn0(struct block *b)
     }
 }
 
+/* the data on the local frame (i.e., uninitialized variables) is undefined
+   upon function entry, so we are free to assume its state to be whatever we
+   want. we prepopulate the entry_block's reload state to appear as if the
+   entire frame had zeroes stored to it. well-formed programs will of course
+   not rely state of local variables before they're initialized, but this is
+   helpful when manipulating bitfields of locally-allocated structs. consider:
+
+                f() { struct { int b : 2; int c : 30; } s; s.b = 1; }
+
+   ordinarily setting the field involves reading the entire word, manipulating
+   the bits in question [1:0] and then storing it back. obviously the state of
+   bits [31:2] is junk in this case, so assume they're zero, avoid the read,
+   and in this case everything collapses into a single store of a constant. */
+
+void preload(void)
+{
+    union con con = { 0 };
+    struct reload new = { imm(entry_block, T_LONG, con, 0), FRAME_NUMBER };
+
+    /* we overestimate the size of the frame so we can `store' a series of
+       quadwords. this is ok, since we're not actually storing anything. */
+
+    new.offset = -ROUND_UP(func_frame_size, sizeof(long));
+
+    while (new.offset)
+    {
+        new_reload(entry_block, &new);
+        new.offset += sizeof(long);
+    }
+}
+
 void opt_lir_dvn(void)
 {
     struct block *b;
@@ -960,6 +991,7 @@ void opt_lir_dvn(void)
         INIT_VECTOR(b->dvn.reloads, &local_arena);
     }
 
+    preload();
     sequence_blocks(0);         /* RPO walk */
     FOR_ALL_BLOCKS(b) dvn0(b);
 

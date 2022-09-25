@@ -89,10 +89,7 @@ L35:
 	shll $10,%r12d
 	shrl $15,%r12d
 	movq %rsi,-8(%rbp)
-	movl -40(%rbp),%eax
-	andl $4294967288,%eax
-	orl $2,%eax
-	movl %eax,-40(%rbp)
+	movl $2,-40(%rbp)
 	movq -8(%rbp),%rax
 	movq %rax,-24(%rbp)
 	movq $0,-16(%rbp)

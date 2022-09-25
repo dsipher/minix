@@ -2577,13 +2577,8 @@ L774:
 	movq 16(%r14),%rax
 	movslq %r13d,%r13
 	movq (%rax,%r13,8),%r12
-	movl -32(%rbp),%eax
-	andl $4294967288,%eax
-	orl $1,%eax
 	movl $-2147483648,-24(%rbp)
-	andl $4290773023,%eax
-	orl $64,%eax
-	movl %eax,-32(%rbp)
+	movl $65,-32(%rbp)
 	movl 72(%r12),%eax
 	andl $7,%eax
 	cmpl $2,%eax
@@ -3366,35 +3361,28 @@ L987:
 	pushq %r13
 	pushq %r14
 L988:
-	movq _func_ret_type(%rip),%rcx
+	movq _func_ret_type(%rip),%rax
 	movq %rdi,%r14
 	movl %esi,%r13d
 	movl $41943105,%r12d
 	movl $1,%ebx
-	testq $1,(%rcx)
+	testq $1,(%rax)
 	jnz L992
 L990:
 	movl $41943106,%r12d
 	movl $2,%ebx
-	movl -32(%rbp),%eax
-	andl $4294967288,%eax
-	orl $1,%eax
-	movl %eax,-32(%rbp)
+	movl $1,-32(%rbp)
 	movl $-2147483648,-24(%rbp)
-	testq %rcx,%rcx
+	testq %rax,%rax
 	jz L1007
 L999:
-	movq (%rcx),%rcx
-	andl $131071,%ecx
-	shll $5,%ecx
-	andl $4290773023,%eax
-	orl %ecx,%eax
+	movq (%rax),%rax
+	andl $131071,%eax
+	shll $5,%eax
+	orl $1,%eax
 	movl %eax,-32(%rbp)
 L1007:
-	movl -64(%rbp),%eax
-	andl $4294967288,%eax
-	orl $1,%eax
-	movl %eax,-64(%rbp)
+	movl $1,-64(%rbp)
 	movq _func_ret_sym(%rip),%rdi
 	call _symbol_to_reg
 	movl %eax,-56(%rbp)
@@ -3481,20 +3469,17 @@ L1033:
 	leal 1(%rax),%ecx
 	movl %ecx,_nr_fargs(%rip)
 	movslq %eax,%rax
-	movl _fargs(,%rax,4),%ecx
+	movl _fargs(,%rax,4),%eax
 	jmp L1036
 L1034:
 	movl _nr_iargs(%rip),%eax
 	leal 1(%rax),%ecx
 	movl %ecx,_nr_iargs(%rip)
 	movslq %eax,%rax
-	movl _iargs(,%rax,4),%ecx
+	movl _iargs(,%rax,4),%eax
 L1036:
-	movl -32(%rbp),%eax
-	andl $4294967288,%eax
-	orl $1,%eax
-	movl %eax,-32(%rbp)
-	movl %ecx,-24(%rbp)
+	movl $1,-32(%rbp)
+	movl %eax,-24(%rbp)
 	movl 8(%rsi),%edi
 	shll $10,%edi
 	shrl $15,%edi

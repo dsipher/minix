@@ -440,7 +440,7 @@ static void invalidate(struct block *b, struct insn *insn)
 
 static void address(struct block *b, int number, struct reload *reload)
 {
-    __builtin_memset(reload, 0, sizeof(struct reload));
+    memset(reload, 0, sizeof(struct reload));
     reload->base = number;
 
     while (REAL_NUMBER(reload->base))

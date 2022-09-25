@@ -107,7 +107,7 @@ struct symbol *new_symbol(struct string *id, int s)
     struct symbol *sym;
 
     sym = SLAB_ALLOC(symbol);
-    __builtin_memset(sym, 0, sizeof(*sym));
+    memset(sym, 0, sizeof(*sym));
 
     sym->id = id;
     sym->s = s;

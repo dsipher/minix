@@ -84,7 +84,7 @@ struct block *new_block(void)
 
     ARENA_ALIGN(&func_arena, UNIVERSAL_ALIGN);
     b = ARENA_ALLOC(&func_arena, sizeof(struct block));
-    __builtin_memset(b, 0, sizeof(struct block));
+    memset(b, 0, sizeof(struct block));
 
     b->asmlab = ++last_asmlab;
     INIT_VECTOR(b->insns, &func_arena);
@@ -310,8 +310,8 @@ int fuse_block(struct block *b)
 
         if (j) {
             GROW_VECTOR(b->insns, j);
-            __builtin_memcpy(&INSN(b, i), &INSN(succ_b, 0),
-                            j * VECTOR_ELEM_SIZE(b->insns));
+            memcpy(&INSN(b, i), &INSN(succ_b, 0),
+                   j * VECTOR_ELEM_SIZE(b->insns));
         }
 
         dup_succs(b, succ_b);       /* 2. hoist branches from succ_b to b */

@@ -230,7 +230,7 @@ struct insn *new_insn(int op, int nr_args)
             struct asm_insn *asm_insn;
 
             asm_insn = ARENA_ALLOC(&func_arena, sizeof(struct asm_insn));
-            __builtin_memset(asm_insn, 0, sizeof(struct asm_insn));
+            memset(asm_insn, 0, sizeof(struct asm_insn));
             INIT_VECTOR(asm_insn->uses, &func_arena);
             INIT_VECTOR(asm_insn->defs, &func_arena);
 
@@ -244,7 +244,7 @@ struct insn *new_insn(int op, int nr_args)
             size_t size = sizeof(struct insn) + i * sizeof(struct operand);
 
             insn = ARENA_ALLOC(&func_arena, size);
-            __builtin_memset(insn, 0, size);
+            memset(insn, 0, size);
             insn->nr_args = nr_args;
 
             for (i = I_OPERANDS(op); i--; )
@@ -284,9 +284,9 @@ struct insn *dup_insn(struct insn *src)
         }
 
     default:
-        __builtin_memcpy(insn->operand, src->operand,
-                         (I_OPERANDS(insn->op) + insn->nr_args)
-                            * sizeof(struct operand));
+        memcpy(insn->operand, src->operand,
+               (I_OPERANDS(insn->op) + insn->nr_args)
+                  * sizeof(struct operand));
     }
 
     return insn;

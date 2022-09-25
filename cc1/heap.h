@@ -271,7 +271,7 @@ void dup_vector(struct vector *dst, struct vector *src, int elem_size);
 
 /* fill the contents of a vector with the given byte */
 
-#define MEMSET_VECTOR(v, b) __builtin_memset((v).elements, (b),             \
+#define MEMSET_VECTOR(v, b) memset((v).elements, (b),                       \
                             VECTOR_SIZE(v) * VECTOR_ELEM_SIZE(v))
 
 /* truncates the vector to 0 length (but preserving its allocation) */

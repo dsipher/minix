@@ -146,7 +146,7 @@ static struct node *find(int reg, int create)
     if ((n == 0) && create) {
         ARENA_ALIGN(&local_arena, UNIVERSAL_ALIGN);
         n = ARENA_ALLOC(&local_arena, sizeof(struct node));
-        __builtin_memset(n, 0, sizeof(struct node));
+        memset(n, 0, sizeof(struct node));
         INIT_VECTOR(n->blocks, &local_arena);
         INIT_VECTOR(n->edges, &local_arena);
 

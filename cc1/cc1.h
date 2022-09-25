@@ -35,6 +35,7 @@
 #define CC1_H
 
 #include <stdio.h>
+#include <string.h>
 
 struct string;
 

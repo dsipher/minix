@@ -60,9 +60,7 @@ L9:
 	jle L23
 L21:
 	movl %ebx,%r15d
-L24:
-	testl %r15d,%r15d
-	jz L23
+	jmp L24
 L25:
 	movl $1,%r13d
 	subl %r12d,%r13d
@@ -81,7 +79,9 @@ L28:
 L30:
 	movslq %r15d,%r15
 	movl _protnext(,%r15,4),%r15d
-	jmp L24
+L24:
+	testl %r15d,%r15d
+	jnz L25
 L23:
 	imull $100,%r14d,%eax
 	movl %eax,-2064(%rbp)
@@ -180,9 +180,7 @@ L48:
 	call _increase_max_dfas
 L50:
 	movl $1,%ebx
-L51:
-	cmpl %ebx,_numtemps(%rip)
-	jl L44
+	jmp L51
 L52:
 	xorl %r8d,%r8d
 	movl $1,%eax
@@ -226,7 +224,9 @@ L58:
 	leaq -1028(%rbp),%rdi
 	call _mkentry
 	incl %ebx
-	jmp L51
+L51:
+	cmpl %ebx,_numtemps(%rip)
+	jge L52
 L44:
 	popq %rbx
 	movq %rbp,%rsp
@@ -320,9 +320,7 @@ L106:
 	leal 1(%rbx),%eax
 	movslq %eax,%rax
 	leaq (%rcx,%rax,4),%rcx
-L107:
-	cmpq %rcx,%rdx
-	jz L110
+	jmp L107
 L108:
 	movl (%rsi),%eax
 	addq $4,%rsi
@@ -333,7 +331,9 @@ L114:
 	jnz L110
 L116:
 	addq $4,%rcx
-	jmp L107
+L107:
+	cmpq %rcx,%rdx
+	jnz L108
 L110:
 	cmpq %rcx,%rdx
 	jz L119
@@ -373,10 +373,7 @@ L125:
 L127:
 	movl $0,_tecbck+4(%rip)
 	movl $2,%ecx
-L130:
-	movl _numecs(%rip),%eax
-	cmpl %eax,%ecx
-	jg L133
+	jmp L130
 L131:
 	movl %ecx,%eax
 	decl %eax
@@ -385,7 +382,10 @@ L131:
 	movslq %eax,%rax
 	movl %ecx,_tecfwd(,%rax,4)
 	incl %ecx
-	jmp L130
+L130:
+	movl _numecs(%rip),%eax
+	cmpl %eax,%ecx
+	jle L131
 L133:
 	movslq %eax,%rax
 	movl $0,_tecfwd(,%rax,4)
@@ -418,11 +418,7 @@ L139:
 	movl _jamstate(%rip),%edx
 	movl %edx,(%rax,%rcx,4)
 	movl $1,%ecx
-L140:
-	movl _numecs(%rip),%eax
-	movl _tblend(%rip),%edx
-	cmpl %ecx,%eax
-	jl L143
+	jmp L140
 L141:
 	addl %ecx,%edx
 	movslq %edx,%rdx
@@ -435,7 +431,11 @@ L141:
 	movl _jamstate(%rip),%esi
 	movl %esi,(%rdx,%rax,4)
 	incl %ecx
-	jmp L140
+L140:
+	movl _numecs(%rip),%eax
+	movl _tblend(%rip),%edx
+	cmpl %ecx,%eax
+	jge L141
 L143:
 	movl %edx,_jambase(%rip)
 	movslq _jamstate(%rip),%rcx
@@ -470,9 +470,7 @@ L145:
 	jz L147
 L149:
 	movl $1,%ebx
-L154:
-	cmpl %ebx,%esi
-	jl L157
+	jmp L154
 L155:
 	movslq %ebx,%rcx
 	movq -16(%rbp),%rax
@@ -487,15 +485,15 @@ L164:
 	jnz L157
 L160:
 	incl %ebx
-	jmp L154
+L154:
+	cmpl %ebx,%esi
+	jge L155
 L157:
 	cmpl $1,%r8d
 	jz L169
 L171:
 	movl %esi,%r14d
-L173:
-	cmpl $0,%r14d
-	jle L176
+	jmp L173
 L174:
 	movslq %r14d,%r14
 	movq -16(%rbp),%rax
@@ -510,7 +508,9 @@ L183:
 	jnz L176
 L179:
 	decl %r14d
-	jmp L173
+L173:
+	cmpl $0,%r14d
+	jg L174
 L176:
 	imull $100,%r8d,%ecx
 	imull $15,%esi,%eax
@@ -606,9 +606,7 @@ L234:
 	movq _def(%rip),%rcx
 	movq -24(%rbp),%rax
 	movl %r15d,(%rcx,%rax,4)
-L235:
-	cmpl %ebx,%r14d
-	jl L238
+	jmp L235
 L236:
 	movslq %ebx,%rbx
 	movq -16(%rbp),%rax
@@ -631,7 +629,9 @@ L242:
 	movl %eax,(%rdx,%rcx,4)
 L241:
 	incl %ebx
-	jmp L235
+L235:
+	cmpl %ebx,%r14d
+	jge L236
 L238:
 	movl _firstfree(%rip),%eax
 	cmpl %eax,%r13d
@@ -781,9 +781,7 @@ L292:
 	decl %r8d
 	imull _numecs(%rip),%r8d
 	movl $1,%edx
-L293:
-	cmpl %edx,_numecs(%rip)
-	jl L282
+	jmp L293
 L294:
 	movslq %edx,%rdx
 	movl (%rdi,%rdx,4),%ecx
@@ -791,7 +789,9 @@ L294:
 	movslq %eax,%rax
 	movl %ecx,_protsave(,%rax,4)
 	incl %edx
-	jmp L293
+L293:
+	cmpl %edx,_numecs(%rip)
+	jge L294
 L282:
 	ret 
 
@@ -831,10 +831,7 @@ L300:
 	movq %rax,_tnxt(%rip)
 L302:
 	movl $1,%edx
-L303:
-	movl _numecs(%rip),%r8d
-	cmpl %edx,%r8d
-	jl L306
+	jmp L303
 L304:
 	movslq %edx,%rdx
 	leal (%rdx,%rbx),%eax
@@ -854,7 +851,10 @@ L308:
 	movl %r13d,(%rcx,%rax,4)
 L309:
 	incl %edx
-	jmp L303
+L303:
+	movl _numecs(%rip),%r8d
+	cmpl %edx,%r8d
+	jge L304
 L306:
 	cmpl $0,_usemecs(%rip)
 	jz L312
@@ -954,10 +954,7 @@ L326:
 	movl $1,(%rcx,%rax,4)
 	addq $4,%rbx
 	movl $1,%edi
-L328:
-	movl _numecs(%rip),%ecx
-	cmpl %ecx,%edi
-	jg L331
+	jmp L328
 L329:
 	cmpl $0,(%rbx)
 	jz L334
@@ -972,7 +969,10 @@ L332:
 L334:
 	incl %edi
 	addq $4,%rbx
-	jmp L328
+L328:
+	movl _numecs(%rip),%ecx
+	cmpl %ecx,%edi
+	jle L329
 L331:
 	addl %eax,%ecx
 	cmpl _tblend(%rip),%ecx
@@ -1018,9 +1018,7 @@ L345:
 	imull %r9d,%esi
 	movslq %esi,%rcx
 	leaq _protsave(,%rcx,4),%r10
-L347:
-	cmpl $0,%r9d
-	jle L346
+	jmp L347
 L348:
 	leaq 4(%r10),%rcx
 	movl 4(%r10),%r8d
@@ -1041,7 +1039,9 @@ L352:
 	incl %eax
 L353:
 	decl %r9d
-	jmp L347
+L347:
+	cmpl $0,%r9d
+	jg L348
 L346:
 	ret 
 

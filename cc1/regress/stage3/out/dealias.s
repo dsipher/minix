@@ -15,9 +15,7 @@ L4:
 	movq $0,-16(%rbp)
 	movq $_local_arena,-8(%rbp)
 	movq _all_blocks(%rip),%r14
-L7:
-	testq %r14,%r14
-	jz L99
+	jmp L7
 L8:
 	xorl %r13d,%r13d
 L11:
@@ -197,7 +195,9 @@ L93:
 	call _loadstore
 L81:
 	movq 112(%r14),%r14
-	jmp L7
+L7:
+	testq %r14,%r14
+	jnz L8
 L99:
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)
@@ -226,10 +226,7 @@ L105:
 L106:
 	movl $0,-12(%rbp)
 	movq _all_blocks(%rip),%rax
-L204:
-	movq %rax,-24(%rbp)
-	cmpq $0,-24(%rbp)
-	jz L111
+	jmp L204
 L109:
 	xorl %r14d,%r14d
 L112:
@@ -407,7 +404,10 @@ L148:
 L118:
 	movq -24(%rbp),%rax
 	movq 112(%rax),%rax
-	jmp L204
+L204:
+	movq %rax,-24(%rbp)
+	cmpq $0,-24(%rbp)
+	jnz L109
 L111:
 	movl -12(%rbp),%eax
 L107:

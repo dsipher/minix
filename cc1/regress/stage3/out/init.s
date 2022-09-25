@@ -604,15 +604,15 @@ L205:
 	movq -8(%rbp),%rax
 	movq 16(%rax),%r15
 	movq 40(%r15),%r14
-L210:
-	testq %r14,%r14
-	jz L215
+	jmp L210
 L213:
 	testl $33554432,12(%r14)
 	jz L215
 L214:
 	movq 56(%r14),%r14
-	jmp L210
+L210:
+	testq %r14,%r14
+	jnz L213
 L215:
 	testl $1073741824,12(%r15)
 	jnz L221
@@ -1118,15 +1118,15 @@ L422:
 	andq $-393217,%rdi
 	movq %rdi,%r13
 	movq _fcons(%rip),%r12
-L424:
-	testq %r12,%r12
-	jz L427
+	jmp L424
 L425:
 	ucomisd (%r12),%xmm8
 	jz L427
 L430:
 	movq 16(%r12),%r12
-	jmp L424
+L424:
+	testq %r12,%r12
+	jnz L425
 L427:
 	testq %r12,%r12
 	jnz L434

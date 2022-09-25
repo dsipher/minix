@@ -608,9 +608,7 @@ L274:
 	call _fprintf
 	addq $16,%rsp
 	movq _cursource(%rip),%rbx
-L277:
-	testq %rbx,%rbx
-	jz L280
+	jmp L277
 L278:
 	movq (%rbx),%rcx
 	cmpb $0,(%rcx)
@@ -625,14 +623,13 @@ L281:
 	addq $32,%rsp
 L283:
 	movq 56(%rbx),%rbx
-	jmp L277
+L277:
+	testq %rbx,%rbx
+	jnz L278
 L280:
 	leaq 32(%rbp),%r14
 	movq 24(%rbp),%r13
-L285:
-	movb (%r13),%dil
-	testb %dil,%dil
-	jz L288
+	jmp L285
 L286:
 	cmpb $37,%dil
 	jnz L336
@@ -713,7 +710,10 @@ L335:
 	addq $24,%rsp
 L291:
 	incq %r13
-	jmp L285
+L285:
+	movb (%r13),%dil
+	testb %dil,%dil
+	jnz L286
 L288:
 	movl $___stderr,%esi
 	movl $10,%edi

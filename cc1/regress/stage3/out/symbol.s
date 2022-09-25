@@ -100,16 +100,16 @@ L32:
 	movl $64,%eax
 L33:
 	leaq _symtab(,%rax,8),%rdx
-L27:
-	movq (%rdx),%rax
-	testq %rax,%rax
-	jz L36
+	jmp L27
 L34:
 	cmpl 8(%rax),%esi
 	jge L36
 L35:
 	leaq 72(%rax),%rdx
-	jmp L27
+L27:
+	movq (%rdx),%rax
+	testq %rax,%rax
+	jnz L34
 L36:
 	movq %rdx,64(%rdi)
 	movq (%rdx),%rax
@@ -184,9 +184,7 @@ L64:
 	movl $64,%eax
 L65:
 	movq _symtab(,%rax,8),%rax
-L59:
-	testq %rax,%rax
-	jz L62
+	jmp L59
 L60:
 	movq 72(%rax),%r9
 	movl 8(%rax),%ecx
@@ -213,7 +211,9 @@ L84:
 	jnz L55
 L61:
 	movq %r9,%rax
-	jmp L59
+L59:
+	testq %rax,%rax
+	jnz L60
 L62:
 	xorl %eax,%eax
 L55:
@@ -422,9 +422,7 @@ L162:
 	movq %rdx,%r12
 	movslq %edi,%rax
 	movq _chains(,%rax,8),%rbx
-L164:
-	testq %rbx,%rbx
-	jz L163
+	jmp L164
 L165:
 	testl %r13d,12(%rbx)
 	jz L170
@@ -433,7 +431,9 @@ L168:
 	call *%r12
 L170:
 	movq 56(%rbx),%rbx
-	jmp L164
+L164:
+	testq %rbx,%rbx
+	jnz L165
 L163:
 	popq %r13
 	popq %r12
@@ -446,9 +446,7 @@ L171:
 L172:
 	movslq _current_scope(%rip),%rax
 	movq _chains(,%rax,8),%rdx
-L174:
-	testq %rdx,%rdx
-	jz L177
+	jmp L174
 L178:
 	movq 72(%rdx),%rcx
 	testq %rcx,%rcx
@@ -461,7 +459,9 @@ L183:
 	movq 64(%rdx),%rax
 	movq %rcx,(%rax)
 	movq 56(%rdx),%rdx
-	jmp L174
+L174:
+	testq %rdx,%rdx
+	jnz L178
 L177:
 	movslq _current_scope(%rip),%rax
 	testq %rdi,%rdi
@@ -504,16 +504,16 @@ L194:
 	movq %rdi,%r12
 	xorl %edi,%edi
 	call _enter_scope
-L196:
-	movq (%r12),%rdi
-	testq %rdi,%rdi
-	jz L195
+	jmp L196
 L197:
 	movq 56(%rdi),%rbx
 	movl _outer_scope(%rip),%esi
 	call _insert
 	movq %rbx,(%r12)
-	jmp L196
+L196:
+	movq (%r12),%rdi
+	testq %rdi,%rdi
+	jnz L197
 L195:
 	popq %r12
 	popq %rbx
@@ -586,9 +586,7 @@ L222:
 	movq %rdi,%r13
 	movl %edx,%r12d
 	movq 40(%rsi),%rbx
-L224:
-	testq %rbx,%rbx
-	jz L223
+	jmp L224
 L225:
 	movq (%rbx),%rdi
 	testq %rdi,%rdi
@@ -611,7 +609,9 @@ L228:
 	call _insert
 L230:
 	movq 56(%rbx),%rbx
-	jmp L224
+L224:
+	testq %rbx,%rbx
+	jnz L225
 L223:
 	popq %r13
 	popq %r12
@@ -855,9 +855,7 @@ L302:
 	leaq 40(%rbx),%rdi
 	call _exit_scope
 	movq 40(%rbx),%rdx
-L304:
-	testq %rdx,%rdx
-	jz L307
+	jmp L304
 L308:
 	leaq 48(%rbx),%rax
 	movq %rax,64(%rdx)
@@ -872,7 +870,9 @@ L311:
 L313:
 	movq %rdx,48(%rbx)
 	movq 56(%rdx),%rdx
-	jmp L304
+L304:
+	testq %rdx,%rdx
+	jnz L308
 L307:
 	cmpl $0,32(%rbx)
 	jnz L316
@@ -969,9 +969,7 @@ L336:
 	movq %rdi,%r12
 	movl %esi,%ebx
 	movq _anons(%rip),%rax
-L338:
-	testq %rax,%rax
-	jz L341
+	jmp L338
 L339:
 	cmpl 48(%rax),%ebx
 	jnz L344
@@ -980,7 +978,9 @@ L345:
 	jz L337
 L344:
 	movq 56(%rax),%rax
-	jmp L338
+L338:
+	testq %rax,%rax
+	jnz L339
 L341:
 	movl $16,%esi
 	xorl %edi,%edi
@@ -1042,9 +1042,7 @@ _registerize:
 L362:
 L363:
 	movq (%rdi),%rcx
-L365:
-	testq %rcx,%rcx
-	jz L364
+	jmp L365
 L366:
 	movl 12(%rcx),%eax
 	testl $256,%eax
@@ -1055,7 +1053,9 @@ L369:
 	movl %eax,12(%rcx)
 L371:
 	movq 56(%rcx),%rcx
-	jmp L365
+L365:
+	testq %rcx,%rcx
+	jnz L366
 L364:
 	ret 
 
@@ -1159,9 +1159,7 @@ L406:
 L408:
 	movslq %r12d,%r12
 	movq _symtab(,%r12,8),%rbx
-L411:
-	testq %rbx,%rbx
-	jz L414
+	jmp L411
 L412:
 	movl 12(%rbx),%eax
 	testl $32,%eax
@@ -1176,7 +1174,9 @@ L415:
 	addq $16,%rsp
 L417:
 	movq 72(%rbx),%rbx
-	jmp L411
+L411:
+	testq %rbx,%rbx
+	jnz L412
 L414:
 	incl %r12d
 	cmpl $64,%r12d

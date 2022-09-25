@@ -74,10 +74,7 @@ L18:
 	jz L19
 L22:
 	movq %rbx,%r12
-L24:
-	movb (%r12),%cl
-	cmpb $10,%cl
-	jz L27
+	jmp L24
 L25:
 	movsbl %cl,%eax
 	subl $32,%eax
@@ -116,7 +113,10 @@ L64:
 	call ___flushbuf
 L30:
 	incq %r12
-	jmp L24
+L24:
+	movb (%r12),%cl
+	cmpb $10,%cl
+	jnz L25
 L27:
 	decl ___stderr(%rip)
 	js L42
@@ -130,11 +130,7 @@ L42:
 	movl $___stderr,%esi
 	movl $10,%edi
 	call ___flushbuf
-L44:
-	movl ___stderr(%rip),%eax
-	decl %eax
-	cmpq %rbx,%r13
-	jbe L47
+	jmp L44
 L45:
 	cmpb $9,(%rbx)
 	jnz L49
@@ -169,7 +165,11 @@ L63:
 	call ___flushbuf
 L50:
 	incq %rbx
-	jmp L44
+L44:
+	movl ___stderr(%rip),%eax
+	decl %eax
+	cmpq %rbx,%r13
+	ja L45
 L47:
 	movl %eax,___stderr(%rip)
 	cmpl $0,%eax

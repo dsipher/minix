@@ -16,10 +16,7 @@ L12:
 	jz L32
 L13:
 	movq %rdi,%rsi
-L15:
-	movb (%rsi),%dl
-	testb %dl,%dl
-	jz L17
+	jmp L15
 L18:
 	movb (%rax),%cl
 	incq %rax
@@ -27,7 +24,10 @@ L18:
 	jnz L17
 L16:
 	incq %rsi
-	jmp L15
+L15:
+	movb (%rsi),%dl
+	testb %dl,%dl
+	jnz L18
 L17:
 	testb %dl,%dl
 	jnz L12

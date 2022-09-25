@@ -31,11 +31,7 @@ L20:
 L21:
 	movl $L23+5,%r8d
 	movb $0,L23+5(%rip)
-L24:
-	movl %esi,%eax
-	decl %esi
-	testl %eax,%eax
-	jz L26
+	jmp L24
 L25:
 	movl $10,%ecx
 	movl %edi,%eax
@@ -50,7 +46,11 @@ L25:
 	cltd 
 	idivl %ecx
 	movl %eax,%edi
-	jmp L24
+L24:
+	movl %esi,%eax
+	decl %esi
+	testl %eax,%eax
+	jnz L25
 L26:
 	movq %r8,%rax
 L22:

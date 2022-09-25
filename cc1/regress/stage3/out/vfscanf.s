@@ -190,9 +190,7 @@ L105:
 	cmovnzl %eax,%r13d
 L106:
 	xorl %r12d,%r12d
-L110:
-	cmpl %r12d,-20(%rbp)
-	jle L113
+	jmp L110
 L111:
 	decl (%r15)
 	js L115
@@ -315,7 +313,9 @@ L124:
 	incl %r13d
 L112:
 	incl %r12d
-	jmp L110
+L110:
+	cmpl %r12d,-20(%rbp)
+	jg L111
 L113:
 	movb $0,(%rbx)
 	cmpl $0,-4(%rbp)

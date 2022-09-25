@@ -599,6 +599,14 @@ L195:
 	pushq %rbx
 L196:
 	movq %rdi,%rbx
+	jmp L198
+L202:
+	xorl %esi,%esi
+	movq %rbx,%rdi
+	call _list_pop
+	xorl %esi,%esi
+	movq %rbx,%rdi
+	call _list_pop
 L198:
 	movq %rbx,%rdi
 	call _ternary
@@ -607,15 +615,7 @@ L198:
 	movq %rbx,%rdi
 	call _list_next_is
 	testl %eax,%eax
-	jz L197
-L202:
-	xorl %esi,%esi
-	movq %rbx,%rdi
-	call _list_pop
-	xorl %esi,%esi
-	movq %rbx,%rdi
-	call _list_pop
-	jmp L198
+	jnz L202
 L197:
 	popq %rbx
 	ret 

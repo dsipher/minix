@@ -2642,9 +2642,7 @@ L1342:
 	call _new_insn
 	movq %rax,%r14
 	xorl %r12d,%r12d
-L1343:
-	cmpl 4(%r15),%r12d
-	jge L1346
+	jmp L1343
 L1344:
 	leal 2(%r12),%r13d
 	movslq %r13d,%r13
@@ -2701,7 +2699,9 @@ L1350:
 	movl %ecx,12(%r14,%r13)
 L1352:
 	incl %r12d
-	jmp L1343
+L1343:
+	cmpl 4(%r15),%r12d
+	jl L1344
 L1346:
 	movq 16(%r15),%rdi
 	call _gen0

@@ -314,16 +314,16 @@ L135:
 	leaq (%rdx,%rax,8),%rax
 	movq %rax,_stmt_arena+8(%rip)
 	xorl %ecx,%ecx
-L136:
-	cmpl 4(%r12),%ecx
-	jge L139
+	jmp L136
 L137:
 	movq 24(%r12),%rax
 	movslq %ecx,%rcx
 	movq (%rax,%rcx,8),%rax
 	movq %rax,(%rdx,%rcx,8)
 	incl %ecx
-	jmp L136
+L136:
+	cmpl 4(%r12),%ecx
+	jl L137
 L139:
 	movq %rdx,24(%r12)
 L114:
@@ -1128,9 +1128,7 @@ L665:
 	pushq %rbx
 L666:
 	movq %rdi,%rbx
-L668:
-	cmpl $1073741830,(%rbx)
-	jnz L670
+	jmp L668
 L669:
 	movq 8(%rbx),%rdi
 	movq 16(%rbx),%rax
@@ -1239,7 +1237,9 @@ L674:
 	movq %rbx,%rdi
 	call _chop
 	movq %rax,%rbx
-	jmp L668
+L668:
+	cmpl $1073741830,(%rbx)
+	jz L669
 L670:
 	movq %rbx,%rax
 L667:

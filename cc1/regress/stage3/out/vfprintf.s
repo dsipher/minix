@@ -63,15 +63,15 @@ L7:
 	movq %rax,%rsi
 	testq %rsi,%rsi
 	jnz L7
-L10:
-	movb (%r9),%al
-	testb %al,%al
-	jz L12
+	jz L10
 L11:
 	incq %r9
 	movb %al,(%rdi)
 	incq %rdi
-	jmp L10
+L10:
+	movb (%r9),%al
+	testb %al,%al
+	jnz L11
 L12:
 	movq %rdi,%rax
 L3:
@@ -208,9 +208,7 @@ L55:
 	jmp L52
 L51:
 	movl $0,-568(%rbp)
-L56:
-	cmpl $48,%edi
-	jl L52
+	jmp L56
 L60:
 	cmpl $57,%edi
 	jg L52
@@ -223,7 +221,9 @@ L61:
 	movsbl (%rax),%edi
 	incq %rax
 	movq %rax,-584(%rbp)
-	jmp L56
+L56:
+	cmpl $48,%edi
+	jge L60
 L52:
 	cmpl $46,%edi
 	jnz L65

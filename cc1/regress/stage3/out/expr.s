@@ -471,9 +471,7 @@ L142:
 	movl _map+8(%rbx),%edi
 	movl _map+4(%rbx),%esi
 	xorl %edx,%edx
-L144:
-	cmpl %edx,%edi
-	jle L147
+	jmp L144
 L145:
 	movq 16(%r14),%rax
 	movq 8(%rax),%rax
@@ -493,7 +491,9 @@ L151:
 	jnz L147
 L153:
 	incl %edx
-	jmp L144
+L144:
+	cmpl %edx,%edi
+	jg L145
 L147:
 	cmpl %edx,%edi
 	jz L159
@@ -1401,11 +1401,7 @@ L482:
 	call _primary
 L534:
 	movq %rax,%rbx
-L484:
-	movl _token(%rip),%edx
-	cmpl $12,%edx
-	jz L494
-	jl L488
+	jmp L484
 L527:
 	cmpl $28,%edx
 	jz L492
@@ -1488,7 +1484,11 @@ L492:
 	call _crement
 	movq %rax,%rbx
 	call _lex
-	jmp L484
+L484:
+	movl _token(%rip),%edx
+	cmpl $12,%edx
+	jg L527
+	jl L488
 L494:
 	movq %rbx,%rdi
 	call _call
@@ -1796,12 +1796,7 @@ L662:
 L663:
 	movq %rdi,%r13
 	movl %esi,%r12d
-L665:
-	movl _token(%rip),%ebx
-	movl %ebx,%eax
-	andl $15728640,%eax
-	cmpl %eax,%r12d
-	jg L667
+	jmp L665
 L666:
 	call _lex
 	call _cast
@@ -1823,7 +1818,12 @@ L670:
 	movl %ebx,%edi
 	call _build_tree
 	movq %rax,%r13
-	jmp L665
+L665:
+	movl _token(%rip),%ebx
+	movl %ebx,%eax
+	andl $15728640,%eax
+	cmpl %eax,%r12d
+	jle L666
 L667:
 	movq %r13,%rax
 L664:

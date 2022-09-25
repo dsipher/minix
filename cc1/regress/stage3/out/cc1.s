@@ -38,11 +38,7 @@ L2:
 	movq 16(%rbp),%rax
 	movq %rax,16(%rbp)
 	leaq 24(%rbp),%rbx
-L4:
-	movq 16(%rbp),%rcx
-	movb (%rcx),%al
-	testb %al,%al
-	jz L3
+	jmp L4
 L5:
 	cmpb $37,%al
 	jz L8
@@ -182,7 +178,11 @@ L69:
 	call ___flushbuf
 L9:
 	incq 16(%rbp)
-	jmp L4
+L4:
+	movq 16(%rbp),%rcx
+	movb (%rcx),%al
+	testb %al,%al
+	jnz L5
 L3:
 	popq %r12
 	popq %rbx
@@ -283,11 +283,7 @@ L108:
 	addq $32,%rsp
 L110:
 	leaq 40(%rbp),%r12
-L112:
-	movq 32(%rbp),%rcx
-	movb (%rcx),%al
-	testb %al,%al
-	jz L114
+	jmp L112
 L113:
 	cmpb $37,%al
 	jz L116
@@ -491,7 +487,11 @@ L223:
 	call ___flushbuf
 L117:
 	incq 32(%rbp)
-	jmp L112
+L112:
+	movq 32(%rbp),%rcx
+	movb (%rcx),%al
+	testb %al,%al
+	jnz L113
 L114:
 	cmpl $2,%r13d
 	jnz L196

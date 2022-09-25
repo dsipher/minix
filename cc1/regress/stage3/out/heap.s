@@ -77,11 +77,7 @@ L22:
 	addq %rax,%rdx
 	movq %rdx,_global_arena+8(%rip)
 	xorl %esi,%esi
-L23:
-	movl %r8d,%edx
-	decl %edx
-	cmpl %edx,%esi
-	jge L26
+	jmp L23
 L24:
 	movq 8(%rdi),%rdx
 	movq %rdx,(%rax)
@@ -89,7 +85,11 @@ L24:
 	incl %esi
 	movslq %ecx,%rcx
 	addq %rcx,%rax
-	jmp L23
+L23:
+	movl %r8d,%edx
+	decl %edx
+	cmpl %edx,%esi
+	jl L24
 L26:
 	addl %r8d,16(%rdi)
 	addl 20(%rdi),%r8d

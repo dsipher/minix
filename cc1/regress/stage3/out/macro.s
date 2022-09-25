@@ -11,17 +11,17 @@ L4:
 	jmp L7
 L5:
 	movq 16(%rdi),%rdi
-L7:
-	movb (%rdi),%cl
-	testb %cl,%cl
-	jz L3
+	jmp L7
 L8:
 	shll $3,%eax
 	movsbl %cl,%ecx
 	incq %rdi
 	xorl %eax,%ecx
 	movl %ecx,%eax
-	jmp L7
+L7:
+	movb (%rdi),%cl
+	testb %cl,%cl
+	jnz L8
 L3:
 	ret 
 
@@ -376,7 +376,15 @@ L124:
 	jz L134
 L130:
 	cmpl $536870928,(%rax)
+	jnz L134
 	jz L129
+L144:
+	cmpl $536870959,(%rax)
+	jnz L129
+L145:
+	xorl %esi,%esi
+	movq %r14,%rdi
+	call _list_pop
 L134:
 	movq %r14,%rdi
 	call _list_strip_ends
@@ -399,15 +407,7 @@ L134:
 	call _list_strip_ends
 	movq (%r14),%rax
 	testq %rax,%rax
-	jz L129
-L144:
-	cmpl $536870959,(%rax)
-	jnz L129
-L145:
-	xorl %esi,%esi
-	movq %r14,%rdi
-	call _list_pop
-	jmp L134
+	jnz L144
 L129:
 	xorl %edx,%edx
 	movl $536870928,%esi
@@ -677,10 +677,7 @@ L244:
 	pushq %r12
 L245:
 	movq %rdi,%rbx
-L247:
-	movq (%rbx),%r12
-	testq %r12,%r12
-	jz L246
+	jmp L247
 L248:
 	xorl %esi,%esi
 	movq %r12,%rdi
@@ -700,7 +697,10 @@ L255:
 	movq 16(%r12),%rcx
 	movq 24(%r12),%rax
 	movq %rcx,(%rax)
-	jmp L247
+L247:
+	movq (%rbx),%r12
+	testq %r12,%r12
+	jnz L248
 L246:
 	popq %r12
 	popq %rbx
@@ -712,13 +712,13 @@ L256:
 	pushq %rbx
 L257:
 	movq (%rdi),%rbx
-L259:
-	cmpl $0,%esi
-	jle L262
+	jmp L259
 L260:
 	movq 16(%rbx),%rbx
 	decl %esi
-	jmp L259
+L259:
+	cmpl $0,%esi
+	jg L260
 L262:
 	testq %rbx,%rbx
 	jnz L265
@@ -748,9 +748,7 @@ L269:
 	movq %r15,%rdi
 	call _list_pop
 	movq 32(%r14),%r12
-L271:
-	testq %r12,%r12
-	jz L273
+	jmp L271
 L272:
 	movq %r13,%rdi
 	call _arg_new
@@ -821,7 +819,9 @@ L308:
 	xorl %esi,%esi
 	movq %r15,%rdi
 	call _list_pop
-	jmp L271
+L271:
+	testq %r12,%r12
+	jnz L272
 L273:
 	testq %r12,%r12
 	jz L314

@@ -35,10 +35,8 @@ L6:
 	movq %rax,%rdx
 	xorl %eax,%eax
 	cmpq $-1,%rdx
+	jnz L11
 	jz L3
-L11:
-	cmpl %eax,%ebx
-	jle L14
 L12:
 	movslq %r13d,%r13
 	movq _buckets(,%r13,8),%rcx
@@ -46,7 +44,9 @@ L12:
 	movq %rdx,_buckets(,%r13,8)
 	addq %r12,%rdx
 	incl %eax
-	jmp L11
+L11:
+	cmpl %eax,%ebx
+	jg L12
 L14:
 	movl %ebx,%eax
 L3:

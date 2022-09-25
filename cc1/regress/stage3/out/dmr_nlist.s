@@ -89,10 +89,7 @@ L21:
 	pushq %rbx
 L22:
 	movl $_kwtab,%ebx
-L26:
-	movq (%rbx),%rax
-	testq %rax,%rax
-	jz L23
+	jmp L26
 L27:
 	movq %rax,-8(%rbp)
 	movq (%rbx),%rdi
@@ -114,7 +111,10 @@ L30:
 	movq $0,32(%rax)
 L32:
 	addq $16,%rbx
-	jmp L26
+L26:
+	movq (%rbx),%rax
+	testq %rax,%rax
+	jnz L27
 L23:
 	popq %rbx
 	movq %rbp,%rsp
@@ -135,14 +135,14 @@ L34:
 	movq 16(%r12),%rdx
 	movl 8(%r12),%ecx
 	addq %rdx,%rcx
-L36:
-	cmpq %rcx,%rdx
-	jae L39
+	jmp L36
 L37:
 	movzbl (%rdx),%eax
 	incq %rdx
 	addl %eax,%r13d
-	jmp L36
+L36:
+	cmpq %rcx,%rdx
+	jb L37
 L39:
 	andl $127,%r13d
 	movl %r13d,%eax

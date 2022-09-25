@@ -108,9 +108,7 @@ L36:
 	movq %rsi,%rbx
 	movq %rdx,%r14
 	xorl %r13d,%r13d
-L38:
-	cmpl _imms+4(%rip),%r13d
-	jge L41
+	jmp L38
 L39:
 	movq _imms+8(%rip),%rax
 	movslq %r13d,%r13
@@ -158,7 +156,9 @@ L66:
 	jmp L37
 L40:
 	incl %r13d
-	jmp L38
+L38:
+	cmpl _imms+4(%rip),%r13d
+	jl L39
 L41:
 	leaq 16(%rbp),%rsi
 	movq %rbx,%rdi
@@ -389,9 +389,7 @@ L160:
 	movq %rdi,%r13
 	movq %rsi,%r12
 	xorl %ebx,%ebx
-L162:
-	cmpl 708(%r13),%ebx
-	jge L165
+	jmp L162
 L163:
 	movq 712(%r13),%rsi
 	movslq %ebx,%rax
@@ -403,7 +401,9 @@ L163:
 	jnz L165
 L168:
 	incl %ebx
-	jmp L162
+L162:
+	cmpl 708(%r13),%ebx
+	jl L163
 L165:
 	movl $32,%ecx
 	movl $1,%edx
@@ -493,9 +493,7 @@ L187:
 	movl $1,-4(%rbp)
 L182:
 	xorl %r12d,%r12d
-L189:
-	cmpl 660(%r14),%r12d
-	jge L192
+	jmp L189
 L190:
 	movq 664(%r14),%rax
 	movslq %r12d,%r12
@@ -599,7 +597,9 @@ L243:
 	jmp L180
 L191:
 	incl %r12d
-	jmp L189
+L189:
+	cmpl 660(%r14),%r12d
+	jl L190
 L192:
 	movl $-1,%eax
 L180:
@@ -904,9 +904,7 @@ L417:
 	movq %r12,%rdi
 	call _insn_defs
 	xorl %r12d,%r12d
-L418:
-	cmpl _tmp_regs+4(%rip),%r12d
-	jge L411
+	jmp L418
 L422:
 	movq _tmp_regs+8(%rip),%rax
 	movslq %r12d,%r12
@@ -917,7 +915,9 @@ L423:
 	movq %rbx,%rdi
 	call _dissoc
 	incl %r12d
-	jmp L418
+L418:
+	cmpl _tmp_regs+4(%rip),%r12d
+	jl L422
 L411:
 	testl %r14d,%r14d
 	jz L428
@@ -939,16 +939,16 @@ L428:
 	jz L394
 L435:
 	xorl %edx,%edx
-L438:
-	cmpl 708(%rbx),%edx
-	jge L394
+	jmp L438
 L439:
 	movq 712(%rbx),%rcx
 	movslq %edx,%rax
 	shlq $5,%rax
 	movq $0,24(%rcx,%rax)
 	incl %edx
-	jmp L438
+L438:
+	cmpl 708(%rbx),%edx
+	jl L439
 L394:
 	popq %r14
 	popq %r13
@@ -1179,9 +1179,7 @@ L564:
 	movl %eax,-32(%rbp)
 	movq $0,-72(%rbp)
 	xorl %r14d,%r14d
-L566:
-	cmpl 708(%r15),%r14d
-	jge L586
+	jmp L566
 L567:
 	movq 712(%r15),%r13
 	movslq %r14d,%r12
@@ -1250,7 +1248,9 @@ L570:
 	decl %r14d
 L568:
 	incl %r14d
-	jmp L566
+L566:
+	cmpl 708(%r15),%r14d
+	jl L567
 L586:
 	cmpq $0,-72(%rbp)
 	jz L594
@@ -1423,9 +1423,7 @@ L632:
 L633:
 	movq %rax,-8(%rbp)
 	xorl %r14d,%r14d
-L634:
-	cmpl 708(%r15),%r14d
-	jge L637
+	jmp L634
 L635:
 	movq 712(%r15),%r13
 	movslq %r14d,%r12
@@ -1518,7 +1516,9 @@ L646:
 	decl %r14d
 L636:
 	incl %r14d
-	jmp L634
+L634:
+	cmpl 708(%r15),%r14d
+	jl L635
 L637:
 	movq 16(%r15),%rcx
 	movslq %ebx,%rax
@@ -1740,9 +1740,7 @@ L762:
 	jnz L763
 L764:
 	xorl %r12d,%r12d
-L767:
-	cmpl 36(%r13),%r12d
-	jge L763
+	jmp L767
 L768:
 	movq 40(%r13),%rax
 	movslq %r12d,%r12
@@ -1769,7 +1767,9 @@ L772:
 	call _meet0
 L773:
 	incl %r12d
-	jmp L767
+L767:
+	cmpl 36(%r13),%r12d
+	jl L768
 L763:
 	popq %r13
 	popq %r12
@@ -1829,9 +1829,7 @@ L784:
 	movq %r13,%rdi
 	call _invalidate
 	xorl %r12d,%r12d
-L786:
-	cmpl 12(%r13),%r12d
-	jge L785
+	jmp L786
 L790:
 	movq 16(%r13),%rax
 	movslq %r12d,%r12
@@ -1943,7 +1941,9 @@ L794:
 	call _invalidate
 L788:
 	incl %r12d
-	jmp L786
+L786:
+	cmpl 12(%r13),%r12d
+	jl L790
 L785:
 	popq %r14
 	popq %r13
@@ -1969,9 +1969,7 @@ L849:
 	movq $0,_imms+8(%rip)
 	movq $_local_arena,_imms+16(%rip)
 	movq _all_blocks(%rip),%rax
-L858:
-	testq %rax,%rax
-	jz L861
+	jmp L858
 L862:
 	movl $0,656(%rax)
 	movl $0,660(%rax)
@@ -1986,19 +1984,21 @@ L862:
 	movq $0,712(%rax)
 	movq $_local_arena,720(%rax)
 	movq 112(%rax),%rax
-	jmp L858
+L858:
+	testq %rax,%rax
+	jnz L862
 L861:
 	xorl %edi,%edi
 	call _sequence_blocks
 	movq _all_blocks(%rip),%rbx
-L871:
-	testq %rbx,%rbx
-	jz L875
+	jmp L871
 L872:
 	movq %rbx,%rdi
 	call _dvn0
 	movq 112(%rbx),%rbx
-	jmp L871
+L871:
+	testq %rbx,%rbx
+	jnz L872
 L875:
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)

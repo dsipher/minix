@@ -266,11 +266,7 @@ L170:
 	movq _code_file(%rip),%r13
 	movq %rdi,%r14
 	xorl %r12d,%r12d
-L172:
-	movslq %r12d,%r12
-	movq (%r14,%r12,8),%rbx
-	testq %rbx,%rbx
-	jz L171
+	jmp L172
 L173:
 	incl _outline(%rip)
 L176:
@@ -311,7 +307,11 @@ L183:
 	call ___flushbuf
 L184:
 	incl %r12d
-	jmp L172
+L172:
+	movslq %r12d,%r12
+	movq (%r14,%r12,8),%rbx
+	testq %rbx,%rbx
+	jnz L173
 L171:
 	popq %r14
 	popq %r13

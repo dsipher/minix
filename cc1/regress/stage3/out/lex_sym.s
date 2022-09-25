@@ -153,18 +153,18 @@ L38:
 L39:
 	xorl %edx,%edx
 	xorl %ecx,%ecx
-L41:
-	movslq %ecx,%rcx
-	movb (%rcx,%rdi),%al
-	testb %al,%al
-	jz L43
+	jmp L41
 L42:
 	incl %ecx
 	movsbl %al,%eax
 	leal (%rax,%rdx,2),%eax
 	cltd 
 	idivl %esi
-	jmp L41
+L41:
+	movslq %ecx,%rcx
+	movb (%rcx,%rdi),%al
+	testb %al,%al
+	jnz L42
 L43:
 	movl %edx,%eax
 L40:

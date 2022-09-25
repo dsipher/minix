@@ -24,10 +24,7 @@ L6:
 	movq _shift_table(%rip),%rax
 	movq (%rax,%rbx,8),%r12
 	xorl %ebx,%ebx
-L7:
-	movswl 10(%r12),%eax
-	cmpl %eax,%ebx
-	jge L3
+	jmp L7
 L8:
 	movslq %ebx,%rbx
 	movswl 12(%r12,%rbx,2),%edx
@@ -47,7 +44,10 @@ L11:
 	addq $32,%rsp
 L13:
 	incl %ebx
-	jmp L7
+L7:
+	movswl 10(%r12),%eax
+	cmpl %eax,%ebx
+	jl L8
 L3:
 	popq %r12
 	popq %rbx
@@ -62,9 +62,7 @@ L16:
 	movq %rdi,%rbx
 	movl %esi,%r12d
 	movq %rbx,%rax
-L18:
-	testq %rax,%rax
-	jz L21
+	jmp L18
 L19:
 	cmpb $2,14(%rax)
 	jnz L24
@@ -110,7 +108,9 @@ L49:
 	jmp L17
 L24:
 	movq (%rax),%rax
-	jmp L18
+L18:
+	testq %rax,%rax
+	jnz L19
 L21:
 	pushq $L33
 	pushq _verbose_file(%rip)
@@ -129,9 +129,7 @@ L54:
 	movq %rdi,%rbx
 	xorl %ecx,%ecx
 	movq %rbx,%rax
-L56:
-	testq %rax,%rax
-	jz L59
+	jmp L56
 L57:
 	cmpb $2,16(%rax)
 	jge L62
@@ -142,13 +140,13 @@ L60:
 	incl %ecx
 L62:
 	movq (%rax),%rax
-	jmp L56
+L56:
+	testq %rax,%rax
+	jnz L57
 L59:
 	cmpl $0,%ecx
+	jg L70
 	jle L55
-L70:
-	testq %rbx,%rbx
-	jz L55
 L71:
 	cmpb $1,14(%rbx)
 	jnz L76
@@ -167,7 +165,9 @@ L74:
 	addq $32,%rsp
 L76:
 	movq (%rbx),%rbx
-	jmp L70
+L70:
+	testq %rbx,%rbx
+	jnz L71
 L55:
 	popq %rbx
 	ret 
@@ -237,9 +237,7 @@ L103:
 	call _fprintf
 	addq $16,%rsp
 	movl $3,%ebx
-L106:
-	cmpl _nrules(%rip),%ebx
-	jge L104
+	jmp L106
 L107:
 	movslq %ebx,%rbx
 	movq _rules_used(%rip),%rax
@@ -283,7 +281,9 @@ L117:
 	addq $24,%rsp
 L112:
 	incl %ebx
-	jmp L106
+L106:
+	cmpl _nrules(%rip),%ebx
+	jl L107
 L104:
 	popq %r12
 	popq %rbx
@@ -299,9 +299,7 @@ L121:
 	call _fprintf
 	addq $16,%rsp
 	xorl %ebx,%ebx
-L124:
-	cmpl _nstates(%rip),%ebx
-	jge L122
+	jmp L124
 L125:
 	movslq %ebx,%rbx
 	movq _SRconflicts(%rip),%rax
@@ -374,7 +372,9 @@ L154:
 	addq $16,%rsp
 L130:
 	incl %ebx
-	jmp L124
+L124:
+	cmpl _nstates(%rip),%ebx
+	jl L125
 L122:
 	popq %rbx
 	ret 
@@ -393,9 +393,7 @@ L162:
 	movslq %r15d,%r15
 	movq _parser(%rip),%rax
 	movq (%rax,%r15,8),%r14
-L164:
-	testq %r14,%r14
-	jz L163
+	jmp L164
 L165:
 	movb 16(%r14),%cl
 	cmpb $2,%cl
@@ -462,7 +460,9 @@ L194:
 	addq $48,%rsp
 L166:
 	movq (%r14),%r14
-	jmp L164
+L164:
+	testq %r14,%r14
+	jnz L165
 L163:
 	popq %r15
 	popq %r14
@@ -481,9 +481,7 @@ L196:
 	movslq %edi,%rcx
 	movq _parser(%rip),%rax
 	movq (%rax,%rcx,8),%rcx
-L198:
-	testq %rcx,%rcx
-	jz L201
+	jmp L198
 L199:
 	cmpb $2,14(%rcx)
 	jnz L204
@@ -554,13 +552,12 @@ L241:
 	movw %ax,(%rdx,%rsi,2)
 L204:
 	movq (%rcx),%rcx
-	jmp L198
+L198:
+	testq %rcx,%rcx
+	jnz L199
 L201:
 	xorl %ebx,%ebx
-L235:
-	movq _verbose_file(%rip),%rax
-	cmpl %ebx,%r12d
-	jle L238
+	jmp L235
 L236:
 	movslq %ebx,%rbx
 	movq _null_rules(%rip),%rcx
@@ -577,7 +574,10 @@ L236:
 	call _fprintf
 	addq $32,%rsp
 	incl %ebx
-	jmp L235
+L235:
+	movq _verbose_file(%rip),%rax
+	cmpl %ebx,%r12d
+	jg L236
 L238:
 	pushq $L240
 	pushq %rax
@@ -602,9 +602,7 @@ L243:
 	movq (%rax,%rcx,8),%r15
 	movswl 20(%r15),%r14d
 	xorl %r13d,%r13d
-L245:
-	cmpl %r13d,%r14d
-	jle L244
+	jmp L245
 L246:
 	movslq %r13d,%r13
 	movswq 22(%r15,%r13,2),%rcx
@@ -686,7 +684,9 @@ L263:
 	call _fprintf
 	addq $24,%rsp
 	incl %r13d
-	jmp L245
+L245:
+	cmpl %r13d,%r14d
+	jg L246
 L244:
 	popq %r15
 	popq %r14
@@ -758,14 +758,14 @@ L287:
 	call _fprintf
 	addq $16,%rsp
 	xorl %ebx,%ebx
-L289:
-	cmpl _nstates(%rip),%ebx
-	jge L292
+	jmp L289
 L290:
 	movl %ebx,%edi
 	call _print_state
 	incl %ebx
-	jmp L289
+L289:
+	cmpl _nstates(%rip),%ebx
+	jl L290
 L292:
 	movq _null_rules(%rip),%rdi
 	call _free

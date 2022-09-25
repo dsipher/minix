@@ -169,10 +169,8 @@ L16:
 	cqto 
 	idivq %rcx
 	cmpq %rax,%rdi
+	jz L22
 	jnz L43
-L22:
-	cmpq 16(%r13),%r12
-	jae L25
 L23:
 	movb (%r12),%al
 	cmpb (%rbx),%al
@@ -199,7 +197,9 @@ L29:
 L28:
 	addq $24,%r12
 	addq $24,%rbx
-	jmp L22
+L22:
+	cmpq 16(%r13),%r12
+	jb L23
 L25:
 	xorl %eax,%eax
 	jmp L17
@@ -344,13 +344,13 @@ L94:
 	cqto 
 	idivq %rcx
 	leal (%rax,%r12),%r13d
-L96:
-	cmpl 24(%rbx),%r13d
-	jle L98
+	jmp L96
 L97:
 	movq %rbx,%rdi
 	call _growtokenrow
-	jmp L96
+L96:
+	cmpl 24(%rbx),%r13d
+	jg L97
 L98:
 	movq 16(%rbx),%rcx
 	movq (%rbx),%rsi
@@ -432,11 +432,7 @@ L107:
 	movq %r12,%rsi
 	call _maketokenrow
 	movq (%r13),%rbx
-L112:
-	movq 16(%r13),%rax
-	movq 16(%r12),%rcx
-	cmpq %rax,%rbx
-	jae L115
+	jmp L112
 L113:
 	movq (%rbx),%rax
 	movq %rax,(%rcx)
@@ -466,7 +462,11 @@ L119:
 L118:
 	addq $24,16(%r12)
 	addq $24,%rbx
-	jmp L112
+L112:
+	movq 16(%r13),%rax
+	movq 16(%r12),%rcx
+	cmpq %rax,%rbx
+	jb L113
 L115:
 	movq 8(%r12),%rax
 	cmpq %rcx,%rax
@@ -520,9 +520,7 @@ L133:
 	addq $24,%rsp
 L135:
 	movq 8(%r13),%r12
-L141:
-	cmpq 16(%r13),%r12
-	jae L144
+	jmp L141
 L145:
 	movq 8(%r13),%rax
 	addq $768,%rax
@@ -578,7 +576,9 @@ L154:
 	addq $24,%rsp
 L155:
 	addq $24,%r12
-	jmp L141
+L141:
+	cmpq 16(%r13),%r12
+	jb L145
 L144:
 	pushq $L167
 	pushq $___stderr
@@ -609,9 +609,7 @@ L171:
 	call _peektokens
 L173:
 	movq 8(%r13),%r12
-L175:
-	cmpq 16(%r13),%r12
-	jae L178
+	jmp L175
 L176:
 	movl 8(%r12),%r14d
 	movl 4(%r12),%eax
@@ -686,7 +684,9 @@ L197:
 	subq $4096,_wbp(%rip)
 L194:
 	addq $24,%r12
-	jmp L175
+L175:
+	cmpq 16(%r13),%r12
+	jb L176
 L178:
 	movq %r12,(%r13)
 	movq _cursource(%rip),%rax

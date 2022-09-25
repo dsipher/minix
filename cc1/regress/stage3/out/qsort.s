@@ -2,11 +2,7 @@
 
 _qexchange:
 L1:
-L4:
-	movq %rdx,%rax
-	decq %rdx
-	testq %rax,%rax
-	jz L3
+	jmp L4
 L5:
 	movsbl (%rdi),%ecx
 	movb (%rsi),%al
@@ -14,18 +10,18 @@ L5:
 	incq %rdi
 	movb %cl,(%rsi)
 	incq %rsi
-	jmp L4
+L4:
+	movq %rdx,%rax
+	decq %rdx
+	testq %rax,%rax
+	jnz L5
 L3:
 	ret 
 
 
 _q3exchange:
 L7:
-L10:
-	movq %rcx,%rax
-	decq %rcx
-	testq %rax,%rax
-	jz L9
+	jmp L10
 L11:
 	movsbl (%rdi),%r8d
 	movb (%rdx),%al
@@ -36,7 +32,11 @@ L11:
 	incq %rdx
 	movb %r8b,(%rsi)
 	incq %rsi
-	jmp L10
+L10:
+	movq %rcx,%rax
+	decq %rcx
+	testq %rax,%rax
+	jnz L11
 L9:
 	ret 
 

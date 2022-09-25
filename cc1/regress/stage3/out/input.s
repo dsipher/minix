@@ -291,10 +291,7 @@ L135:
 	movq %rdi,%r12
 	movq %rsi,-8(%rbp)
 	xorl %ebx,%ebx
-L137:
-	movq -8(%rbp),%rdi
-	cmpb $0,(%rdi)
-	jz L139
+	jmp L137
 L138:
 	leaq -8(%rbp),%rsi
 	call _token_scan
@@ -306,7 +303,10 @@ L138:
 	movq %rax,(%rcx)
 	movq %rdx,8(%r12)
 	incl %ebx
-	jmp L137
+L137:
+	movq -8(%rbp),%rdi
+	cmpb $0,(%rdi)
+	jnz L138
 L139:
 	movl %ebx,%eax
 L136:

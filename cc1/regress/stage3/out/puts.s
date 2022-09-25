@@ -7,12 +7,7 @@ L1:
 L2:
 	movq %rdi,%r12
 	xorl %ebx,%ebx
-L4:
-	movb (%r12),%cl
-	movl ___stdout(%rip),%eax
-	decl %eax
-	testb %cl,%cl
-	jz L6
+	jmp L4
 L5:
 	movl %eax,___stdout(%rip)
 	leaq 1(%r12),%rcx
@@ -37,7 +32,12 @@ L12:
 	jz L22
 L8:
 	incl %ebx
-	jmp L4
+L4:
+	movb (%r12),%cl
+	movl ___stdout(%rip),%eax
+	decl %eax
+	testb %cl,%cl
+	jnz L5
 L6:
 	movl %eax,___stdout(%rip)
 	cmpl $0,%eax

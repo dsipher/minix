@@ -57,9 +57,7 @@ L8:
 	call _vector_insert
 L9:
 	xorl %r12d,%r12d
-L10:
-	cmpl 12(%r13),%r12d
-	jge L3
+	jmp L10
 L14:
 	movq 16(%r13),%rax
 	movslq %r12d,%r12
@@ -163,7 +161,9 @@ L21:
 	movq %rbx,%rdi
 	call _insn_defs
 	incl %r12d
-	jmp L10
+L10:
+	cmpl 12(%r13),%r12d
+	jl L14
 L3:
 	popq %r13
 	popq %r12
@@ -248,9 +248,7 @@ L102:
 	jle L107
 L106:
 	xorl %ecx,%ecx
-L109:
-	cmpl 60(%r12),%ecx
-	jge L112
+	jmp L109
 L110:
 	movq 64(%r12),%rdx
 	movslq %ecx,%rcx
@@ -261,7 +259,9 @@ L110:
 	jnz L107
 L115:
 	incl %ecx
-	jmp L109
+L109:
+	cmpl 60(%r12),%ecx
+	jl L110
 L112:
 	movl 12(%r12),%eax
 	movl %eax,-12(%rbp)
@@ -303,10 +303,7 @@ L125:
 	movq 16(%rax),%rax
 	movq %rax,-8(%rbp)
 	xorl %ebx,%ebx
-L138:
-	movq -8(%rbp),%rax
-	cmpl 556(%rax),%ebx
-	jge L107
+	jmp L138
 L139:
 	movq -8(%rbp),%rax
 	movq 560(%rax),%rax
@@ -422,7 +419,10 @@ L170:
 	orl $132,_opt_request(%rip)
 L157:
 	incl %ebx
-	jmp L138
+L138:
+	movq -8(%rbp),%rax
+	cmpl 556(%rax),%ebx
+	jl L139
 L107:
 	movq %r12,%rdi
 	call _eval
@@ -453,16 +453,16 @@ L174:
 	movq $0,_tmp2_regs+8(%rip)
 	movq $_local_arena,_tmp2_regs+16(%rip)
 	movq _all_blocks(%rip),%rax
-L183:
-	testq %rax,%rax
-	jz L186
+	jmp L183
 L187:
 	movl $0,552(%rax)
 	movl $0,556(%rax)
 	movq $0,560(%rax)
 	movq $_local_arena,568(%rax)
 	movq 112(%rax),%rax
-	jmp L183
+L183:
+	testq %rax,%rax
+	jnz L187
 L186:
 	movl $_hoist0,%edx
 	xorl %esi,%esi

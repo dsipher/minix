@@ -64,10 +64,7 @@ L23:
 	xorl %ebx,%ebx
 	addq $24,%rcx
 	movq %rcx,(%r15)
-L26:
-	movq (%r15),%rcx
-	cmpb $34,(%rcx)
-	jz L28
+	jmp L26
 L27:
 	cmpq 16(%r15),%rcx
 	ja L7
@@ -85,7 +82,10 @@ L31:
 	addl 8(%rax),%ebx
 	addq $24,%rax
 	movq %rax,(%r15)
-	jmp L26
+L26:
+	movq (%r15),%rcx
+	cmpb $34,(%rcx)
+	jnz L27
 L28:
 	movl $1,-516(%rbp)
 L19:

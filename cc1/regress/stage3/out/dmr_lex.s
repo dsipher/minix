@@ -508,10 +508,7 @@ _expandlex:
 L1:
 L2:
 	movl $_fsm,%r8d
-L4:
-	xorl %eax,%eax
-	cmpl $0,(%r8)
-	jl L56
+	jmp L4
 L8:
 	movslq %eax,%rax
 	movb 4(%r8,%rax),%dl
@@ -591,7 +588,10 @@ L10:
 	jmp L8
 L11:
 	addq $12,%r8
-	jmp L4
+L4:
+	xorl %eax,%eax
+	cmpl $0,(%r8)
+	jge L8
 L56:
 	xorl %esi,%esi
 L65:

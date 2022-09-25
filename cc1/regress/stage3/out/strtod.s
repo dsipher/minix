@@ -219,11 +219,7 @@ L98:
 L104:
 	xorl %edx,%edx
 	xorl %ecx,%ecx
-L106:
-	movl %esi,%eax
-	subl $48,%eax
-	cmpl $10,%eax
-	jae L109
+	jmp L106
 L107:
 	testl %edx,%edx
 	jnz L114
@@ -239,7 +235,11 @@ L112:
 	subl $48,%ecx
 	movsbl (%r15),%esi
 	incq %r15
-	jmp L106
+L106:
+	movl %esi,%eax
+	subl $48,%eax
+	cmpl $10,%eax
+	jb L107
 L109:
 	movl %ebx,%eax
 	andl $4,%eax

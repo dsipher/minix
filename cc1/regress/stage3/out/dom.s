@@ -39,9 +39,7 @@ L18:
 	call _vector_insert
 L19:
 	xorl %ebx,%ebx
-L20:
-	cmpl 36(%r12),%ebx
-	jge L23
+	jmp L20
 L21:
 	movslq %ebx,%rbx
 	movq 40(%r12),%rax
@@ -79,7 +77,9 @@ L25:
 	movq %rax,_tmp2+16(%rip)
 L26:
 	incl %ebx
-	jmp L20
+L20:
+	cmpl 36(%r12),%ebx
+	jl L21
 L23:
 	movq %r12,%rsi
 	movl $_tmp1,%edi
@@ -111,9 +111,7 @@ L42:
 	pushq %rbx
 L43:
 	movq _all_blocks(%rip),%rbx
-L45:
-	testq %rbx,%rbx
-	jz L48
+	jmp L45
 L46:
 	movq _entry_block(%rip),%rsi
 	cmpq %rsi,%rbx
@@ -129,7 +127,9 @@ L49:
 	call _add_block
 L51:
 	movq 112(%rbx),%rbx
-	jmp L45
+L45:
+	testq %rbx,%rbx
+	jnz L46
 L48:
 	movl $_dom0,%edi
 	call _iterate_blocks
@@ -146,9 +146,7 @@ L55:
 	pushq %r14
 L56:
 	movq _all_blocks(%rip),%rbx
-L58:
-	testq %rbx,%rbx
-	jz L57
+	jmp L58
 L59:
 	xorl %r14d,%r14d
 L62:
@@ -196,7 +194,9 @@ L78:
 	movq %r13,152(%rbx)
 L95:
 	movq 112(%rbx),%rbx
-	jmp L58
+L58:
+	testq %rbx,%rbx
+	jnz L59
 L57:
 	popq %r14
 	popq %r13
@@ -308,9 +308,7 @@ L128:
 	pushq %r13
 L129:
 	movq _all_blocks(%rip),%r13
-L131:
-	testq %r13,%r13
-	jz L134
+	jmp L131
 L132:
 	xorl %r12d,%r12d
 L135:
@@ -336,13 +334,13 @@ L141:
 	jmp L135
 L138:
 	movq 112(%r13),%r13
-	jmp L131
+L131:
+	testq %r13,%r13
+	jnz L132
 L134:
 	movl $0,_max_depth(%rip)
 	movq _all_blocks(%rip),%rsi
-L142:
-	testq %rsi,%rsi
-	jz L130
+	jmp L142
 L143:
 	xorl %edx,%edx
 L146:
@@ -366,7 +364,9 @@ L151:
 	jmp L146
 L152:
 	movq 112(%rsi),%rsi
-	jmp L142
+L142:
+	testq %rsi,%rsi
+	jnz L143
 L130:
 	popq %r13
 	popq %r12
@@ -397,9 +397,7 @@ L158:
 	movq $0,_stack+8(%rip)
 	movq $_local_arena,_stack+16(%rip)
 	movq _all_blocks(%rip),%r12
-L172:
-	testq %r12,%r12
-	jz L175
+	jmp L172
 L173:
 	movl $0,184(%r12)
 	movq $0,152(%r12)
@@ -433,7 +431,9 @@ L187:
 	movl $_all,%edi
 	call _add_block
 	movq 112(%r12),%r12
-	jmp L172
+L172:
+	testq %r12,%r12
+	jnz L173
 L175:
 	call _dom
 	testl $1,%ebx
@@ -465,9 +465,7 @@ L198:
 	movl $L200,%edi
 	call _fputs
 	xorl %ebx,%ebx
-L201:
-	cmpl 132(%r12),%ebx
-	jge L204
+	jmp L201
 L205:
 	movq 136(%r12),%rax
 	movslq %ebx,%rbx
@@ -498,7 +496,9 @@ L214:
 	call ___flushbuf
 L212:
 	incl %ebx
-	jmp L201
+L201:
+	cmpl 132(%r12),%ebx
+	jl L205
 L204:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
@@ -526,9 +526,7 @@ L219:
 	call _out
 	addq $16,%rsp
 	xorl %ebx,%ebx
-L227:
-	cmpl 164(%r12),%ebx
-	jge L230
+	jmp L227
 L231:
 	movq 168(%r12),%rax
 	movslq %ebx,%rbx
@@ -542,7 +540,9 @@ L228:
 	call _out
 	addq $16,%rsp
 	incl %ebx
-	jmp L227
+L227:
+	cmpl 164(%r12),%ebx
+	jl L231
 L230:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)

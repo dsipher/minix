@@ -17,17 +17,17 @@ L4:
 	call ___assert
 L6:
 	movsbl (%rbx),%eax
+	jmp L13
+L14:
+	imull $31,%eax,%eax
+	addl %ecx,%eax
+	andl $1023,%eax
 L13:
 	leaq 1(%rbx),%rdx
 	movsbl 1(%rbx),%ecx
 	movq %rdx,%rbx
 	testl %ecx,%ecx
-	jz L3
-L14:
-	imull $31,%eax,%eax
-	addl %ecx,%eax
-	andl $1023,%eax
-	jmp L13
+	jnz L14
 L3:
 	popq %rbx
 	ret 
@@ -185,14 +185,14 @@ L59:
 	pushq %rbx
 L60:
 	movq _first_symbol(%rip),%rdi
-L62:
-	testq %rdi,%rdi
-	jz L61
+	jmp L62
 L63:
 	movq 8(%rdi),%rbx
 	call _free
 	movq %rbx,%rdi
-	jmp L62
+L62:
+	testq %rdi,%rdi
+	jnz L63
 L61:
 	popq %rbx
 	ret 

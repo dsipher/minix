@@ -4984,16 +4984,16 @@ L261:
 	call _strlen
 	decl %eax
 	movl %eax,%ebx
-L264:
-	movq _yytext(%rip),%rsi
-	cmpl $0,%ebx
-	jl L267
+	jmp L264
 L265:
 	movslq %ebx,%rbx
 	movb (%rbx,%r14),%dil
 	call _yyunput
 	decl %ebx
-	jmp L264
+L264:
+	movq _yytext(%rip),%rsi
+	cmpl $0,%ebx
+	jge L265
 L267:
 	movb $40,%dil
 	call _yyunput
@@ -5257,15 +5257,15 @@ L77:
 	call _flexfatal
 L79:
 	xorl %eax,%eax
-L81:
-	cmpl %eax,_csize(%rip)
-	jle L84
+	jmp L81
 L82:
 	movslq %eax,%rax
 	movq _xlation(%rip),%rcx
 	movl $0,(%rcx,%rax,4)
 	incl %eax
-	jmp L81
+L81:
+	cmpl %eax,_csize(%rip)
+	jg L82
 L84:
 	movl $0,_num_xlations(%rip)
 	movl $43,_yy_start(%rip)
@@ -5485,16 +5485,16 @@ L250:
 	call _strlen
 	decl %eax
 	movl %eax,%ebx
-L253:
-	cmpl $1,%ebx
-	jl L256
+	jmp L253
 L254:
 	movslq %ebx,%rbx
 	movb _nmstr(%rbx),%dil
 	movq _yytext(%rip),%rsi
 	call _yyunput
 	decl %ebx
-	jmp L253
+L253:
+	cmpl $1,%ebx
+	jge L254
 L256:
 	movl $21,_yy_start(%rip)
 	movl $91,%eax
@@ -5681,16 +5681,16 @@ L551:
 	movq _yy_c_buf_p(%rip),%r12
 	subq %rax,%r12
 	xorl %ecx,%ecx
-L559:
-	cmpl %ecx,%r12d
-	jle L562
+	jmp L559
 L560:
 	movb (%rbx),%al
 	incq %rbx
 	movb %al,(%r13)
 	incq %r13
 	incl %ecx
-	jmp L559
+L559:
+	cmpl %ecx,%r12d
+	jg L560
 L562:
 	movq _yy_current_buffer(%rip),%rax
 	cmpl $0,32(%rax)
@@ -5811,9 +5811,7 @@ L597:
 	jnz L602
 L599:
 	incl %eax
-L602:
-	cmpq _yy_c_buf_p(%rip),%rdi
-	jae L598
+	jmp L602
 L603:
 	movb (%rdi),%cl
 	testb %cl,%cl
@@ -5851,7 +5849,9 @@ L615:
 L614:
 	movswl _yy_nxt(,%rdx,2),%eax
 	incq %rdi
-	jmp L602
+L602:
+	cmpq _yy_c_buf_p(%rip),%rdi
+	jb L603
 L598:
 	ret 
 
@@ -5918,10 +5918,7 @@ L638:
 	addq %rsi,%rdx
 	movslq %eax,%rax
 	addq %rax,%rsi
-L641:
-	movq _yy_current_buffer(%rip),%rcx
-	cmpq 8(%rcx),%rsi
-	jbe L643
+	jmp L641
 L642:
 	leaq -1(%rsi),%rax
 	movb -1(%rsi),%cl
@@ -5929,7 +5926,10 @@ L642:
 	leaq -1(%rdx),%rax
 	movb %cl,-1(%rdx)
 	movq %rax,%rdx
-	jmp L641
+L641:
+	movq _yy_current_buffer(%rip),%rcx
+	cmpq 8(%rcx),%rsi
+	ja L642
 L643:
 	subq %rsi,%rdx
 	addq %rdx,%rbx

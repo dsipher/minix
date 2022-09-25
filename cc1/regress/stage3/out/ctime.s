@@ -344,10 +344,7 @@ L162:
 L166:
 	movq $0,_timezone(%rip)
 	movq _tzname(%rip),%rdx
-L169:
-	movb (%rbx),%cl
-	testb %cl,%cl
-	jz L174
+	jmp L169
 L176:
 	cmpb $58,%cl
 	jz L174
@@ -360,7 +357,10 @@ L173:
 	incq %rbx
 	movb %cl,(%rdx)
 	incq %rdx
-	jmp L169
+L169:
+	movb (%rbx),%cl
+	testb %cl,%cl
+	jnz L176
 L174:
 	movb $0,(%rdx)
 L180:
@@ -387,10 +387,7 @@ L190:
 	jnz L187
 L192:
 	movq _tzname+8(%rip),%rdx
-L194:
-	movb (%rbx),%cl
-	testb %cl,%cl
-	jz L199
+	jmp L194
 L201:
 	cmpb $58,%cl
 	jz L199
@@ -403,7 +400,10 @@ L198:
 	incq %rbx
 	movb %cl,(%rdx)
 	incq %rdx
-	jmp L194
+L194:
+	movb (%rbx),%cl
+	testb %cl,%cl
+	jnz L201
 L199:
 	movb $0,(%rdx)
 L205:
@@ -474,6 +474,10 @@ L217:
 	divl %ecx
 	movl %edx,%r13d
 	movl $1970,%r12d
+	jmp L222
+L231:
+	incl %r12d
+	subl %ecx,%ebx
 L222:
 	movl %r12d,%edi
 	call _isleap
@@ -482,11 +486,7 @@ L222:
 	movl $366,%ecx
 	cmovzl %eax,%ecx
 	cmpl %ecx,%ebx
-	jb L229
-L231:
-	incl %r12d
-	subl %ecx,%ebx
-	jmp L222
+	jae L231
 L229:
 	movl %r12d,%eax
 	subl $1900,%eax
@@ -504,9 +504,7 @@ L234:
 	movb $28,_dpm+1(%rip)
 L235:
 	movl $_dpm,%eax
-L236:
-	cmpq $_dpm+12,%rax
-	jae L239
+	jmp L236
 L240:
 	movsbl (%rax),%ecx
 	cmpl %ecx,%ebx
@@ -514,7 +512,9 @@ L240:
 L237:
 	subl %ecx,%ebx
 	incq %rax
-	jmp L236
+L236:
+	cmpq $_dpm+12,%rax
+	jb L240
 L239:
 	subq $_dpm,%rax
 	movl %eax,_tm+16(%rip)

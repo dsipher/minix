@@ -289,10 +289,7 @@ L4:
 L6:
 	movl $4294967295,%r15d
 	xorl %ecx,%ecx
-L8:
-	movslq %ecx,%rcx
-	cmpq %rcx,-40(%rbp)
-	jbe L11
+	jmp L8
 L9:
 	movq -24(%rbp),%rax
 	movb (%rcx,%rax),%al
@@ -301,7 +298,10 @@ L9:
 	shrl $8,%r15d
 	xorl _crctab(,%rax,4),%r15d
 	incl %ecx
-	jmp L8
+L8:
+	movslq %ecx,%rcx
+	cmpq %rcx,-40(%rbp)
+	ja L9
 L11:
 	xorl $4294967295,%r15d
 	movl %r15d,%ebx
@@ -421,9 +421,7 @@ L52:
 	movq %rdi,%r14
 	movl %esi,%r13d
 	xorl %r12d,%r12d
-L54:
-	cmpl %r12d,%r13d
-	jle L57
+	jmp L54
 L55:
 	cmpl 4(%r14),%r12d
 	jge L59
@@ -484,7 +482,9 @@ L63:
 	call _out
 	addq $16,%rsp
 	incl %r12d
-	jmp L54
+L54:
+	cmpl %r12d,%r13d
+	jg L55
 L57:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
@@ -516,9 +516,7 @@ L79:
 L82:
 	movslq %r12d,%r12
 	movq _buckets(,%r12,8),%rbx
-L85:
-	testq %rbx,%rbx
-	jz L88
+	jmp L85
 L86:
 	cmpl $0,16(%rbx)
 	jz L91
@@ -536,7 +534,9 @@ L89:
 	call _out_literal
 L91:
 	movq 24(%rbx),%rbx
-	jmp L85
+L85:
+	testq %rbx,%rbx
+	jnz L86
 L88:
 	incl %r12d
 	cmpl $256,%r12d

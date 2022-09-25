@@ -180,11 +180,7 @@ L86:
 	cmpl $15,%ebx
 	movl $15,%eax
 	cmovgl %eax,%ebx
-L101:
-	movslq %ebx,%rax
-	addq %r14,%rax
-	cmpq %rax,%r13
-	jae L104
+	jmp L101
 L105:
 	ucomisd L129(%rip),%xmm1
 	jz L104
@@ -198,7 +194,11 @@ L102:
 	movsd L128(%rip),%xmm0
 	mulsd %xmm1,%xmm0
 	movsd %xmm0,%xmm1
-	jmp L101
+L101:
+	movslq %ebx,%rax
+	addq %r14,%rax
+	cmpq %rax,%r13
+	jb L105
 L104:
 	movb $0,(%r13)
 	ucomisd L127(%rip),%xmm1
@@ -213,11 +213,6 @@ L115:
 L113:
 	movb $0,(%r13)
 	jmp L112
-L120:
-	movq %r13,%rax
-	decq %r13
-	cmpq %rax,%r14
-	jz L122
 L121:
 	movb (%r13),%al
 	incb %al
@@ -226,7 +221,11 @@ L121:
 	jle L63
 L125:
 	movb $0,(%r13)
-	jmp L120
+L120:
+	movq %r13,%rax
+	decq %r13
+	cmpq %rax,%r14
+	jnz L121
 L122:
 	incq %r13
 L95:

@@ -14,9 +14,7 @@ L4:
 	jnz L5
 L27:
 	movq _all_blocks(%rip),%rbx
-L28:
-	testq %rbx,%rbx
-	jz L31
+	jmp L28
 L29:
 	testl $1,4(%rbx)
 	jz L34
@@ -25,12 +23,12 @@ L32:
 	call _unswitch_block
 L34:
 	movq 112(%rbx),%rbx
-	jmp L28
+L28:
+	testq %rbx,%rbx
+	jnz L29
 L31:
 	movq _all_blocks(%rip),%rbx
-L35:
-	testq %rbx,%rbx
-	jz L38
+	jmp L35
 L36:
 	movq %rbx,%rdi
 	call _fuse_block
@@ -38,12 +36,12 @@ L36:
 	jnz L27
 L41:
 	movq 112(%rbx),%rbx
-	jmp L35
+L35:
+	testq %rbx,%rbx
+	jnz L36
 L38:
 	movq _all_blocks(%rip),%r12
-L43:
-	testq %r12,%r12
-	jz L46
+	jmp L43
 L44:
 	xorl %ebx,%ebx
 L47:
@@ -63,16 +61,16 @@ L51:
 	jmp L27
 L50:
 	movq 112(%r12),%r12
-	jmp L43
+L43:
+	testq %r12,%r12
+	jnz L44
 L46:
 	xorl %edx,%edx
 	xorl %esi,%esi
 	xorl %edi,%edi
 	call _walk_blocks
 	movq _all_blocks(%rip),%rbx
-L55:
-	testq %rbx,%rbx
-	jz L3
+	jmp L55
 L56:
 	cmpq _exit_block(%rip),%rbx
 	jz L57
@@ -84,7 +82,9 @@ L63:
 	call _kill_block
 L57:
 	movq 112(%rbx),%rbx
-	jmp L55
+L55:
+	testq %rbx,%rbx
+	jnz L56
 L3:
 	popq %r12
 	popq %rbx
@@ -93,9 +93,7 @@ L3:
 	ret 
 L5:
 	xorl %ebx,%ebx
-L8:
-	cmpl 12(%r12),%ebx
-	jge L11
+	jmp L8
 L12:
 	movq 16(%r12),%rax
 	movslq %ebx,%rbx
@@ -124,7 +122,9 @@ L16:
 	decl %ebx
 L18:
 	incl %ebx
-	jmp L8
+L8:
+	cmpl 12(%r12),%ebx
+	jl L12
 L11:
 	movq 112(%r12),%r12
 	jmp L4
@@ -149,10 +149,7 @@ L67:
 	rep 
 	stosb 
 	xorl %r15d,%r15d
-L69:
-	movq -24(%rbp),%rax
-	cmpl 12(%rax),%r15d
-	jge L75
+	jmp L69
 L73:
 	movq -24(%rbp),%rax
 	movq 16(%rax),%rax
@@ -323,7 +320,10 @@ L85:
 	movb %cl,(%rdx,%rax)
 L71:
 	incl %r15d
-	jmp L69
+L69:
+	movq -24(%rbp),%rax
+	cmpl 12(%rax),%r15d
+	jl L73
 L75:
 	movl -12(%rbp),%eax
 L68:
@@ -366,15 +366,15 @@ L164:
 	call _vector_insert
 L165:
 	movq _all_blocks(%rip),%r12
-L166:
-	testq %r12,%r12
-	jz L170
+	jmp L166
 L167:
 	movq %r12,%rdi
 	call _fixcc0
 	orl %eax,%ebx
 	movq 112(%r12),%r12
-	jmp L166
+L166:
+	testq %r12,%r12
+	jnz L167
 L170:
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)
@@ -404,9 +404,7 @@ L176:
 	movq $0,-16(%rbp)
 	movq $_local_arena,-8(%rbp)
 	movq _all_blocks(%rip),%r12
-L182:
-	testq %r12,%r12
-	jz L229
+	jmp L182
 L183:
 	movl 12(%r12),%ebx
 L186:
@@ -485,7 +483,9 @@ L223:
 	jmp L186
 L192:
 	movq 112(%r12),%r12
-	jmp L182
+L182:
+	testq %r12,%r12
+	jnz L183
 L229:
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)
@@ -520,12 +520,7 @@ L233:
 L235:
 	cmpl 4(%r14),%ebx
 	jl L236
-L239:
-	movq 8(%r14),%rax
-	movq (%rax),%rcx
-	movl 12(%rcx),%eax
-	testl %eax,%eax
-	jz L234
+	jge L239
 L245:
 	movq 16(%rcx),%rcx
 	decl %eax
@@ -572,7 +567,12 @@ L262:
 	movq %r13,%rsi
 	movq %r12,%rdi
 	call _append_insn
-	jmp L239
+L239:
+	movq 8(%r14),%rax
+	movq (%rax),%rcx
+	movl 12(%rcx),%eax
+	testl %eax,%eax
+	jnz L245
 L234:
 	popq %r14
 	popq %r13
@@ -607,9 +607,7 @@ L266:
 	movq $_local_arena,-8(%rbp)
 L269:
 	movq _all_blocks(%rip),%r15
-L270:
-	testq %r15,%r15
-	jz L315
+	jmp L270
 L271:
 	xorl %r14d,%r14d
 L274:
@@ -696,7 +694,9 @@ L311:
 	jmp L269
 L277:
 	movq 112(%r15),%r15
-	jmp L270
+L270:
+	testq %r15,%r15
+	jnz L271
 L315:
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)

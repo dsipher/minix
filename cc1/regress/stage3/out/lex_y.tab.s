@@ -935,9 +935,7 @@ L1:
 	pushq %rbx
 L2:
 	movl $1,%ebx
-L4:
-	cmpl _actvp(%rip),%ebx
-	jg L7
+	jmp L4
 L5:
 	movslq %ebx,%rbx
 	movq _actvsc(%rip),%rax
@@ -963,7 +961,9 @@ L9:
 	addq $24,%rsp
 L10:
 	incl %ebx
-	jmp L4
+L4:
+	cmpl _actvp(%rip),%ebx
+	jle L5
 L7:
 	movq _temp_action_file(%rip),%rdi
 	call _line_directive_out
@@ -1288,19 +1288,19 @@ L395:
 L383:
 	movq _yyvsp(%rip),%rax
 	movl -8(%rax),%eax
+	jmp L505
+L399:
+	movl -12(%rcx),%edi
+	call _ccladd
+	movl _i(%rip),%eax
+	incl %eax
 L505:
 	movl %eax,_i(%rip)
 	movq _yyvsp(%rip),%rcx
 	movl (%rcx),%eax
 	movl _i(%rip),%esi
 	cmpl %eax,%esi
-	jg L401
-L399:
-	movl -12(%rcx),%edi
-	call _ccladd
-	movl _i(%rip),%eax
-	incl %eax
-	jmp L505
+	jle L399
 L401:
 	cmpl $0,_cclsorted(%rip)
 	jz L404
@@ -1727,10 +1727,7 @@ L218:
 L205:
 	movl $0,_actvp(%rip)
 	movl $1,_i(%rip)
-L206:
-	movl _i(%rip),%ecx
-	cmpl _lastsc(%rip),%ecx
-	jg L209
+	jmp L206
 L207:
 	movslq %ecx,%rcx
 	movq _sceof(%rip),%rax
@@ -1745,7 +1742,10 @@ L210:
 	movl %ecx,(%rdx,%rax,4)
 L212:
 	incl _i(%rip)
-	jmp L206
+L206:
+	movl _i(%rip),%ecx
+	cmpl _lastsc(%rip),%ecx
+	jle L207
 L209:
 	cmpl $0,_actvp(%rip)
 	jnz L483
@@ -1791,10 +1791,7 @@ L179:
 	movl _trailcnt(%rip),%ecx
 	call _finish_rule
 	movl $1,_i(%rip)
-L180:
-	movl _i(%rip),%ecx
-	cmpl _lastsc(%rip),%ecx
-	jg L183
+	jmp L180
 L181:
 	movslq %ecx,%rcx
 	movq _scxclu(%rip),%rax
@@ -1810,7 +1807,10 @@ L184:
 	movl %eax,(%rdx,%rcx,4)
 L186:
 	incl _i(%rip)
-	jmp L180
+L180:
+	movl _i(%rip),%ecx
+	cmpl _lastsc(%rip),%ecx
+	jle L181
 L183:
 	cmpl $0,_bol_needed(%rip)
 	jnz L127
@@ -1854,10 +1854,7 @@ L160:
 	movl _trailcnt(%rip),%ecx
 	call _finish_rule
 	movl $1,_i(%rip)
-L161:
-	movl _i(%rip),%ecx
-	cmpl _actvp(%rip),%ecx
-	jg L164
+	jmp L161
 L162:
 	movslq %ecx,%rcx
 	movq _actvsc(%rip),%rax
@@ -1872,7 +1869,10 @@ L162:
 	movq _scbol(%rip),%rdx
 	movl %eax,(%rdx,%rcx,4)
 	incl _i(%rip)
-	jmp L161
+L161:
+	movl _i(%rip),%ecx
+	cmpl _actvp(%rip),%ecx
+	jle L162
 L164:
 	cmpl $0,_bol_needed(%rip)
 	jnz L127
@@ -1936,10 +1936,7 @@ L129:
 	movl %r13d,%edi
 	call _finish_rule
 	movl $1,_i(%rip)
-L130:
-	movl _i(%rip),%ecx
-	cmpl _lastsc(%rip),%ecx
-	jg L133
+	jmp L130
 L131:
 	movslq %ecx,%rcx
 	movq _scset(%rip),%rax
@@ -1950,7 +1947,10 @@ L131:
 	movq _scset(%rip),%rdx
 	movl %eax,(%rdx,%rcx,4)
 	incl _i(%rip)
-	jmp L130
+L130:
+	movl _i(%rip),%ecx
+	cmpl _lastsc(%rip),%ecx
+	jle L131
 L133:
 	movl _spprdflt(%rip),%eax
 	movq _temp_action_file(%rip),%rsi

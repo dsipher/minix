@@ -30,15 +30,15 @@ L15:
 	jmp L14
 L8:
 	incq %rdx
-L17:
-	decq %rdx
-	jz L3
+	jmp L17
 L18:
 	movb (%rsi),%cl
 	incq %rsi
 	movb %cl,(%r8)
 	incq %r8
-	jmp L17
+L17:
+	decq %rdx
+	jnz L18
 L3:
 	ret 
 

@@ -5,13 +5,13 @@ L1:
 L2:
 	xorl %eax,%eax
 	movq _all_blocks(%rip),%rdx
-L4:
-	testq %rdx,%rdx
-	jz L3
+	jmp L4
 L5:
 	addl 12(%rdx),%eax
 	movq 112(%rdx),%rdx
-	jmp L4
+L4:
+	testq %rdx,%rdx
+	jnz L5
 L3:
 	ret 
 
@@ -340,9 +340,7 @@ L139:
 	call _out
 	addq $16,%rsp
 	movq _all_blocks(%rip),%r12
-L142:
-	testq %r12,%r12
-	jz L145
+	jmp L142
 L143:
 	movq %r12,%rdi
 	call _out_block
@@ -395,7 +393,9 @@ L151:
 	call ___flushbuf
 L144:
 	movq 112(%r12),%r12
-	jmp L142
+L142:
+	testq %r12,%r12
+	jnz L143
 L145:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
@@ -467,9 +467,7 @@ L180:
 	xorl %ecx,%ecx
 	xorl %edi,%edi
 	xorl %esi,%esi
-L186:
-	cmpl -68(%rbp),%esi
-	jge L192
+	jmp L186
 L190:
 	movq -64(%rbp),%rax
 	movslq %esi,%rsi
@@ -493,7 +491,9 @@ L199:
 	incl %edi
 L188:
 	incl %esi
-	jmp L186
+L186:
+	cmpl -68(%rbp),%esi
+	jl L190
 L192:
 	movl _frame_size(%rip),%eax
 	movl $8,%esi
@@ -602,9 +602,7 @@ L209:
 	movl _frame_size(%rip),%r12d
 	negl %r12d
 	xorl %ebx,%ebx
-L336:
-	cmpl -68(%rbp),%ebx
-	jge L342
+	jmp L336
 L340:
 	movq -64(%rbp),%rax
 	movslq %ebx,%rbx
@@ -652,12 +650,12 @@ L347:
 	addl $8,%r12d
 L346:
 	incl %ebx
-	jmp L336
+L336:
+	cmpl -68(%rbp),%ebx
+	jl L340
 L342:
 	xorl %r12d,%r12d
-L377:
-	cmpl -68(%rbp),%r12d
-	jge L168
+	jmp L377
 L381:
 	movq -64(%rbp),%rax
 	movslq %r12d,%r12
@@ -706,7 +704,9 @@ L389:
 	call _insert_insn
 L387:
 	incl %r12d
-	jmp L377
+L377:
+	cmpl -68(%rbp),%r12d
+	jl L381
 L168:
 	popq %r14
 	popq %r13

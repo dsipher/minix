@@ -96,6 +96,7 @@ DEFINE_VECTOR(succ, struct succ);
 #define B_DENSE         0x00000008      /* dense switch block (switch.c) */
 #define B_TABLE         0x00000010      /* table switch block (switch.c) */
 #define B_IMMORTAL      0x00000020      /* block can't be pruned */
+#define B_INVERTED      0x00000040      /* inverted already (block.c) */
 
 DEFINE_VECTOR(block, struct block *);
 
@@ -374,6 +375,7 @@ void intersect_blocks(VECTOR(block) *dst,       /* INTERSECT_SETS */
 
 #define NR_BLOCKS(set)          VECTOR_SIZE(set)
 #define EMPTY_BLOCKS(set)       (NR_BLOCKS(set) == 0)
+#define FIRST_BLOCK(set)        VECTOR_ELEM(set, 0)
 
 /* output a block set for human consumption */
 

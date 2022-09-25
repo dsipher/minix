@@ -102,16 +102,16 @@ L32:
 	movq 32(%r13),%rsi
 	xorl %edx,%edx
 	xorl %eax,%eax
-L36:
-	testq %rsi,%rsi
-	jz L38
+	jmp L36
 L39:
 	cmpl $51,(%rsi)
 	jnz L38
 L37:
 	movq 32(%rsi),%rsi
 	incl %eax
-	jmp L36
+L36:
+	testq %rsi,%rsi
+	jnz L39
 L38:
 	testq %rsi,%rsi
 	jz L43

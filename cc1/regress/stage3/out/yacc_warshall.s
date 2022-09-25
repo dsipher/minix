@@ -17,9 +17,7 @@ L2:
 	movq %rdi,%r10
 	xorl %r9d,%r9d
 	movq %rdi,%r8
-L4:
-	cmpq %r8,%r11
-	jbe L3
+	jmp L4
 L5:
 	movq %r10,%rsi
 	movq %rdi,%rdx
@@ -65,7 +63,9 @@ L16:
 L18:
 	movslq %eax,%rax
 	leaq (%r8,%rax,4),%r8
-	jmp L4
+L4:
+	cmpq %r8,%r11
+	ja L5
 L3:
 	popq %r14
 	popq %r13
@@ -92,9 +92,7 @@ L20:
 	movslq %r12d,%r12
 	leaq (%rbx,%r12,4),%rdi
 	xorl %esi,%esi
-L22:
-	cmpq %rbx,%rdi
-	jbe L21
+	jmp L22
 L23:
 	movb %sil,%cl
 	movl $1,%edx
@@ -110,7 +108,9 @@ L25:
 L27:
 	movslq %eax,%rax
 	leaq (%rbx,%rax,4),%rbx
-	jmp L22
+L22:
+	cmpq %rbx,%rdi
+	ja L23
 L21:
 	popq %r12
 	popq %rbx

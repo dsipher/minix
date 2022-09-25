@@ -14,16 +14,16 @@ L2:
 	movq %rdi,-8(%rbp)
 	xorl %r13d,%r13d
 	xorl %r14d,%r14d
-L4:
-	movslq %r14d,%r14
-	cmpq $0,___iotab(,%r14,8)
-	jz L7
+	jmp L4
 L5:
 	cmpl $19,%r14d
 	jge L64
 L10:
 	incl %r14d
-	jmp L4
+L4:
+	movslq %r14d,%r14
+	cmpq $0,___iotab(,%r14,8)
+	jnz L5
 L7:
 	movb (%rsi),%al
 	incq %rsi

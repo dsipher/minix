@@ -699,8 +699,8 @@ void sequence_blocks(int backward) { walk_blocks(backward, 0, sequence0); }
 void loop_sequence(void)
 {
     VECTOR(block) stack;
-    struct block *head;
     struct block *b;
+    struct block *close;
     int depth;
     int n;
 
@@ -712,6 +712,52 @@ void loop_sequence(void)
 
     SORT(>);
     sequence_blocks(0);
+
+    /* next, we invert a limited class of loops: limited to guarantee
+       the inversion will not increase the number of total branches in
+       the output code, and will almost always decrease runtime.
+
+       to be inverted here:
+
+            (1) the loop head must be a loop exit block
+                [thus it contains the main loop condition]
+
+            (2) the loop must have only one closing block,
+            (3) which is not the head block [not invertible]
+            (4) which is unconditional (a jmp to the head),
+            (5) whose following block in the RPO order is a
+                successor of the head block [so the relocated
+                head block will fall through without a branch]
+
+       these conditions guarantee that the inversion (1) will not increase
+       the number of branches in the output and (2) will always reduce the
+       number of branches inside the loop. the cost is an extra branch at
+       loop entry. this is only a penalty if the loop is never entered at
+       all, and that penalty is exactly one unconditional branch (cheap!) */
+
+    FOR_ALL_BLOCKS(b) {
+        if (EMPTY_BLOCKS(b->loop)               /* not a loop head */
+          || (b->flags & B_INVERTED)            /* we did this already */
+          || !contains_block(&b->exit, b)                   /* (1) */
+          || NR_BLOCKS(b->close) != 1                       /* (2) */
+          || (close = FIRST_BLOCK(b->close)) == b           /* (3) */
+          || !unconditional_succ(close)                     /* (4) */
+          || !close->next || !is_pred(b, close->next))      /* (5) */
+        {
+            continue;
+        }
+
+        /* we invert the loop by manipulating the output order:
+           put the loop head AFTER the close block. the effect
+           of this is to eliminate one branch from the loop body,
+           at a cost of one or two branches outside the loop: one
+           at entry, one at exit (though the latter is atypical
+           and only shows up because of our ham-handed approach) */
+
+        GET_BLOCK(b);
+        PUT_BLOCK_AFTER(b, FIRST_BLOCK(b->close));
+        b->flags |= B_INVERTED;
+    }
 
     /* finally, sort the successors in descending order. this ensures that
        when multiple branch insns occur at the end of a block, the branches

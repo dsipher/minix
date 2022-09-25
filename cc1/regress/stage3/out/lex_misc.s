@@ -5,13 +5,7 @@ L1:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $1024,%rsp
-L4:
-	movq _temp_action_file(%rip),%rdx
-	movl $1024,%esi
-	leaq -1024(%rbp),%rdi
-	call _fgets
-	testq %rax,%rax
-	jz L3
+	jmp L4
 L5:
 	cmpb $37,-1024(%rbp)
 	jnz L8
@@ -22,7 +16,13 @@ L8:
 	movl $___stdout,%esi
 	leaq -1024(%rbp),%rdi
 	call _fputs
-	jmp L4
+L4:
+	movq _temp_action_file(%rip),%rdx
+	movl $1024,%esi
+	leaq -1024(%rbp),%rdi
+	call _fgets
+	testq %rax,%rax
+	jnz L5
 L3:
 	movq %rbp,%rsp
 	popq %rbp
@@ -108,9 +108,7 @@ L44:
 
 _bubble:
 L57:
-L60:
-	cmpl $1,%esi
-	jle L59
+	jmp L60
 L61:
 	movl $1,%ecx
 L64:
@@ -130,7 +128,9 @@ L68:
 	jmp L64
 L67:
 	decl %esi
-	jmp L60
+L60:
+	cmpl $1,%esi
+	jg L61
 L59:
 	ret 
 
@@ -159,12 +159,12 @@ L82:
 L83:
 	movq %rdi,%r12
 	movq %r12,%rax
-L85:
-	cmpb $0,(%rax)
-	jz L88
+	jmp L85
 L86:
 	incq %rax
-	jmp L85
+L85:
+	cmpb $0,(%rax)
+	jnz L86
 L88:
 	subq %r12,%rax
 	incl %eax
@@ -200,12 +200,12 @@ L98:
 L99:
 	movq %rdi,%r12
 	movq %r12,%rax
-L101:
-	cmpb $0,(%rax)
-	jz L104
+	jmp L101
 L102:
 	incq %rax
-	jmp L101
+L101:
+	cmpb $0,(%rax)
+	jnz L102
 L104:
 	subq %r12,%rax
 	incl %eax
@@ -240,11 +240,7 @@ L115:
 	movl %edx,%ecx
 	movl $2,%r8d
 	movl %esi,%eax
-L148:
-	cltd 
-	idivl %r8d
-	cmpl $0,%eax
-	jle L116
+	jmp L148
 L118:
 	movl %eax,%r11d
 L121:
@@ -288,7 +284,11 @@ L128:
 	jmp L121
 L124:
 	movl $2,%r8d
-	jmp L148
+L148:
+	cltd 
+	idivl %r8d
+	cmpl $0,%eax
+	jg L118
 L116:
 	ret 
 
@@ -678,18 +678,18 @@ L311:
 	jmp *%rcx
 L292:
 	movl $1,%r13d
-L293:
-	movslq %r13d,%r13
-	movb (%r13,%rbx),%r12b
-	cmpb $128,%r12b
-	jae L295
+	jmp L293
 L296:
 	movzbq %r12b,%r12
 	testb $4,___ctype+1(%r12)
 	jz L295
 L294:
 	incl %r13d
-	jmp L293
+L293:
+	movslq %r13d,%r13
+	movb (%r13,%rbx),%r12b
+	cmpb $128,%r12b
+	jb L296
 L295:
 	movb $0,(%r13,%rbx)
 	leaq 1(%rbx),%rdi
@@ -721,11 +721,7 @@ L322:
 	jnz L265
 L301:
 	movl $2,%r13d
-L302:
-	movslq %r13d,%r13
-	movb (%r13,%rbx),%dil
-	cmpb $128,%dil
-	jae L304
+	jmp L302
 L305:
 	movzbl %dil,%edi
 	call _is_hex_digit
@@ -733,7 +729,11 @@ L305:
 	jz L304
 L303:
 	incl %r13d
-	jmp L302
+L302:
+	movslq %r13d,%r13
+	movb (%r13,%rbx),%dil
+	cmpb $128,%dil
+	jb L305
 L304:
 	movb (%r13,%rbx),%r12b
 	movb $0,(%r13,%rbx)
@@ -893,13 +893,7 @@ L390:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $1024,%rsp
-L393:
-	movq _skelfile(%rip),%rdx
-	movl $1024,%esi
-	leaq -1024(%rbp),%rdi
-	call _fgets
-	testq %rax,%rax
-	jz L392
+	jmp L393
 L394:
 	cmpb $37,-1024(%rbp)
 	jnz L397
@@ -910,7 +904,13 @@ L397:
 	movl $___stdout,%esi
 	leaq -1024(%rbp),%rdi
 	call _fputs
-	jmp L393
+L393:
+	movq _skelfile(%rip),%rdx
+	movl $1024,%esi
+	leaq -1024(%rbp),%rdi
+	call _fgets
+	testq %rax,%rax
+	jnz L394
 L392:
 	movq %rbp,%rsp
 	popq %rbp

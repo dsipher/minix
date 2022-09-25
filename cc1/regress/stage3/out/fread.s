@@ -17,10 +17,8 @@ L2:
 	movq %rdi,%r13
 	xorl %r12d,%r12d
 	testq %r15,%r15
+	jnz L7
 	jz L21
-L7:
-	cmpq %r12,-8(%rbp)
-	jbe L21
 L8:
 	movq %r15,%rbx
 L10:
@@ -45,7 +43,9 @@ L13:
 	jnz L10
 L11:
 	incq %r12
-	jmp L7
+L7:
+	cmpq %r12,-8(%rbp)
+	ja L8
 L21:
 	movq %r12,%rax
 L3:

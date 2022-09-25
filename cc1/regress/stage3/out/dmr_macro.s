@@ -51,10 +51,8 @@ L22:
 	movl $2,%edi
 	call _maketokenrow
 	cmpb $23,72(%rbx)
+	jnz L32
 	jz L31
-L32:
-	cmpb $2,(%r14)
-	jnz L63
 L38:
 	cmpl 24(%r13),%r12d
 	jl L42
@@ -105,7 +103,9 @@ L57:
 	jnz L63
 L61:
 	addq $24,%r14
-	jmp L32
+L32:
+	cmpb $2,(%r14)
+	jz L38
 L63:
 	pushq $L66
 L93:
@@ -481,9 +481,7 @@ L226:
 	movq %r12,%rdi
 	call _substargs
 	xorl %r14d,%r14d
-L229:
-	cmpl %r14d,-300(%rbp)
-	jle L219
+	jmp L229
 L230:
 	movslq %r14d,%r14
 	movq -296(%rbp,%r14,8),%rax
@@ -492,7 +490,9 @@ L230:
 	movq -296(%rbp,%r14,8),%rdi
 	call _dofree
 	incl %r14d
-	jmp L229
+L229:
+	cmpl %r14d,-300(%rbp)
+	jg L230
 L219:
 	leaq -32(%rbp),%rdi
 	call _doconcat
@@ -502,9 +502,7 @@ L219:
 	call _newhideset
 	movl %eax,%r14d
 	movq -24(%rbp),%r12
-L233:
-	cmpq -16(%rbp),%r12
-	jae L236
+	jmp L233
 L234:
 	cmpb $2,(%r12)
 	jnz L239
@@ -522,7 +520,9 @@ L241:
 	movw %ax,2(%r12)
 L239:
 	addq $24,%r12
-	jmp L233
+L233:
+	cmpq -16(%rbp),%r12
+	jb L234
 L236:
 	movq -24(%rbp),%rax
 	movq %rax,-32(%rbp)
@@ -900,12 +900,7 @@ L368:
 L369:
 	movq %rdi,%r15
 	movq 8(%r15),%rax
-L399:
-	movq %rax,(%r15)
-	movq (%r15),%r14
-	movq 16(%r15),%rcx
-	cmpq %rcx,%r14
-	jae L370
+	jmp L399
 L372:
 	movb (%r14),%al
 	cmpb $56,%al
@@ -996,7 +991,12 @@ L393:
 L373:
 	movq (%r15),%rax
 	addq $24,%rax
-	jmp L399
+L399:
+	movq %rax,(%r15)
+	movq (%r15),%r14
+	movq 16(%r15),%rcx
+	cmpq %rcx,%r14
+	jb L372
 L370:
 	popq %r15
 	popq %r14
@@ -1115,9 +1115,7 @@ L443:
 L445:
 	xorl %edx,%edx
 	movq 16(%r8),%rcx
-L450:
-	cmpl 8(%r8),%edx
-	jae L453
+	jmp L450
 L451:
 	testl %esi,%esi
 	jz L456
@@ -1137,7 +1135,9 @@ L456:
 	movb %al,(%rbx)
 	incq %rbx
 	incl %edx
-	jmp L450
+L450:
+	cmpl 8(%r8),%edx
+	jb L451
 L453:
 	addq $24,%r8
 	jmp L430
@@ -1174,15 +1174,15 @@ L467:
 	leaq 24(%rbx),%rax
 	movq %rax,(%rdi)
 	movq _cursource(%rip),%rdx
-L469:
-	testq %rdx,%rdx
-	jz L471
+	jmp L469
 L472:
 	cmpq $0,40(%rdx)
 	jnz L471
 L470:
 	movq 56(%rdx),%rdx
-	jmp L469
+L469:
+	testq %rdx,%rdx
+	jnz L472
 L471:
 	testq %rdx,%rdx
 	jnz L478

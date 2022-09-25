@@ -60,10 +60,7 @@ L17:
 	call _inserths
 	movl %eax,%ebx
 	xorl %eax,%eax
-L19:
-	movl _nhidesets(%rip),%ecx
-	cmpl %ecx,%eax
-	jge L22
+	jmp L19
 L20:
 	leaq -280(%rbp),%rsi
 	movslq %eax,%rax
@@ -82,7 +79,10 @@ L29:
 	jmp L23
 L26:
 	incl %eax
-	jmp L19
+L19:
+	movl _nhidesets(%rip),%ecx
+	cmpl %ecx,%eax
+	jl L20
 L22:
 	cmpl $32,%ebx
 	jge L31
@@ -141,10 +141,7 @@ L43:
 L44:
 	movq %rdi,%rax
 	movq %rax,%rdi
-L46:
-	movq (%rsi),%rcx
-	testq %rcx,%rcx
-	jz L48
+	jmp L46
 L49:
 	cmpq %rcx,%rdx
 	jbe L48
@@ -152,7 +149,10 @@ L47:
 	addq $8,%rsi
 	movq %rcx,(%rax)
 	addq $8,%rax
-	jmp L46
+L46:
+	movq (%rsi),%rcx
+	testq %rcx,%rcx
+	jnz L49
 L48:
 	cmpq %rcx,%rdx
 	jz L56
@@ -183,15 +183,15 @@ L61:
 	movslq %esi,%rcx
 	movq _hidesets(%rip),%rax
 	movq (%rax,%rcx,8),%rbx
-L63:
-	movq (%rbx),%rsi
-	testq %rsi,%rsi
-	jz L66
+	jmp L63
 L64:
 	call _newhideset
 	movl %eax,%edi
 	addq $8,%rbx
-	jmp L63
+L63:
+	movq (%rbx),%rsi
+	testq %rsi,%rsi
+	jnz L64
 L66:
 	movl %edi,%eax
 L62:
@@ -225,10 +225,7 @@ L72:
 	movslq %edi,%rcx
 	movq _hidesets(%rip),%rax
 	movq (%rax,%rcx,8),%rbx
-L74:
-	movq (%rbx),%rax
-	testq %rax,%rax
-	jz L73
+	jmp L74
 L75:
 	movq 8(%rax),%rcx
 	movl 16(%rax),%eax
@@ -242,7 +239,10 @@ L75:
 	call _fprintf
 	addq $16,%rsp
 	addq $8,%rbx
-	jmp L74
+L74:
+	movq (%rbx),%rax
+	testq %rax,%rax
+	jnz L75
 L73:
 	popq %rbx
 	ret 

@@ -286,9 +286,7 @@ L114:
 	jmp L109
 L99:
 	xorl %r14d,%r14d
-L102:
-	cmpl 60(%r13),%r14d
-	jge L98
+	jmp L102
 L103:
 	movq 64(%r13),%rcx
 	movslq %r14d,%r14
@@ -306,7 +304,9 @@ L106:
 	call _add_pred
 L108:
 	incl %r14d
-	jmp L102
+L102:
+	cmpl 60(%r13),%r14d
+	jl L103
 L98:
 	popq %r14
 	popq %r13
@@ -320,9 +320,7 @@ L118:
 L119:
 	xorl %eax,%eax
 	xorl %r8d,%r8d
-L121:
-	cmpl 60(%rdi),%r8d
-	jge L120
+	jmp L121
 L122:
 	movq 64(%rdi),%r9
 	movslq %r8d,%r8
@@ -345,7 +343,9 @@ L133:
 	movl $1,%eax
 L126:
 	incl %r8d
-	jmp L121
+L121:
+	cmpl 60(%rdi),%r8d
+	jl L122
 L120:
 	ret 
 
@@ -354,9 +354,7 @@ _commute_succs:
 L138:
 L139:
 	xorl %edx,%edx
-L141:
-	cmpl 60(%rdi),%edx
-	jge L140
+	jmp L141
 L142:
 	movq 64(%rdi),%rsi
 	movslq %edx,%rdx
@@ -366,7 +364,9 @@ L142:
 	movsbl _commuted_cc(%rax),%eax
 	movl %eax,(%rsi,%rcx)
 	incl %edx
-	jmp L141
+L141:
+	cmpl 60(%rdi),%edx
+	jl L142
 L140:
 	ret 
 
@@ -403,10 +403,7 @@ L148:
 L149:
 	movq %rdi,%r12
 	xorl %ebx,%ebx
-L151:
-	movl 60(%r12),%esi
-	cmpl %esi,%ebx
-	jge L155
+	jmp L151
 L152:
 	movq 64(%r12),%rcx
 	movslq %ebx,%rbx
@@ -416,7 +413,10 @@ L152:
 	movq 16(%rcx,%rax),%rdi
 	call _remove_pred
 	incl %ebx
-	jmp L151
+L151:
+	movl 60(%r12),%esi
+	cmpl %esi,%ebx
+	jl L152
 L155:
 	cmpl $0,56(%r12)
 	jl L159
@@ -467,9 +467,7 @@ L167:
 	movsb 
 L169:
 	xorl %r12d,%r12d
-L170:
-	cmpl 60(%rbx),%r12d
-	jge L163
+	jmp L170
 L171:
 	movq 64(%rbx),%rcx
 	movslq %r12d,%r12
@@ -479,7 +477,9 @@ L171:
 	movq 16(%rcx,%rax),%rdi
 	call _add_pred
 	incl %r12d
-	jmp L170
+L170:
+	cmpl 60(%rbx),%r12d
+	jl L171
 L163:
 	popq %r12
 	popq %rbx
@@ -496,9 +496,7 @@ L174:
 L175:
 	movq %rdi,%r14
 	xorl %r13d,%r13d
-L177:
-	cmpq _entry_block(%rip),%r14
-	jz L182
+	jmp L177
 L196:
 	movq %r14,%rdi
 	call _unconditional_succ
@@ -568,7 +566,9 @@ L216:
 	movq %rax,_all_blocks(%rip)
 L217:
 	incl %r13d
-	jmp L177
+L177:
+	cmpq _entry_block(%rip),%r14
+	jnz L196
 L182:
 	movl %r13d,%eax
 L176:
@@ -640,9 +640,7 @@ L243:
 	movq %rbx,%rdi
 	call _remove_succ
 	xorl %r12d,%r12d
-L249:
-	cmpl 60(%r14),%r12d
-	jge L244
+	jmp L249
 L250:
 	movq 64(%r14),%rcx
 	movslq %r12d,%r12
@@ -657,7 +655,9 @@ L250:
 	movq %rbx,%rdi
 	call _add_succ
 	incl %r12d
-	jmp L249
+L249:
+	cmpl 60(%r14),%r12d
+	jl L250
 L244:
 	movl $1,%eax
 L221:
@@ -850,10 +850,7 @@ L329:
 	movq %r13,%rsi
 	call _normalize_con
 	movl $1,%ebx
-L330:
-	movl 60(%r14),%esi
-	cmpl %esi,%ebx
-	jge L338
+	jmp L330
 L331:
 	movq 64(%r14),%rcx
 	movslq %ebx,%rbx
@@ -870,7 +867,10 @@ L334:
 	addq $24,%rsp
 L336:
 	incl %ebx
-	jmp L330
+L330:
+	movl 60(%r14),%esi
+	cmpl %esi,%ebx
+	jl L331
 L338:
 	leal 1(%rsi),%eax
 	cmpl 56(%r14),%eax
@@ -1047,9 +1047,7 @@ L374:
 	pushq %r13
 L375:
 	movq _all_blocks(%rip),%r13
-L377:
-	testq %r13,%r13
-	jz L376
+	jmp L377
 L378:
 	xorl %r12d,%r12d
 L381:
@@ -1096,7 +1094,9 @@ L387:
 	andl $-16384,88(%r13)
 	andl $-16384,92(%r13)
 	movq 112(%r13),%r13
-	jmp L377
+L377:
+	testq %r13,%r13
+	jnz L378
 L376:
 	popq %r13
 	popq %r12
@@ -1114,9 +1114,7 @@ L403:
 	movl %edi,%r13d
 	movl %esi,%r12d
 	movq _all_blocks(%rip),%rbx
-L405:
-	testq %rbx,%rbx
-	jz L404
+	jmp L405
 L406:
 	xorl %r14d,%r14d
 L409:
@@ -1151,7 +1149,9 @@ L417:
 	movl %r12d,88(%rbx)
 L419:
 	movq 112(%rbx),%rbx
-	jmp L405
+L405:
+	testq %rbx,%rbx
+	jnz L406
 L404:
 	popq %r14
 	popq %r13
@@ -1182,9 +1182,7 @@ L435:
 	call _vector_insert
 L436:
 	movq _all_blocks(%rip),%rbx
-L437:
-	testq %rbx,%rbx
-	jz L430
+	jmp L437
 L438:
 	xorl %r14d,%r14d
 L441:
@@ -1221,7 +1219,9 @@ L453:
 	call _add_reg
 L451:
 	movq 112(%rbx),%rbx
-	jmp L437
+L437:
+	testq %rbx,%rbx
+	jnz L438
 L430:
 	popq %r14
 	popq %r13
@@ -1240,9 +1240,7 @@ L457:
 L459:
 	xorl %r12d,%r12d
 	movq _all_blocks(%rip),%rbx
-L462:
-	testq %rbx,%rbx
-	jz L465
+	jmp L462
 L463:
 	movq %rbx,%rdi
 	call *%r13
@@ -1250,7 +1248,9 @@ L463:
 	movl $1,%eax
 	cmovzl %eax,%r12d
 	movq 112(%rbx),%rbx
-	jmp L462
+L462:
+	testq %rbx,%rbx
+	jnz L463
 L465:
 	testl %r12d,%r12d
 	jnz L459
@@ -1303,9 +1303,6 @@ L482:
 	call _walk0
 	incl %ebx
 	jmp L481
-L485:
-	cmpl 36(%r14),%ebx
-	jge L480
 L486:
 	movq 40(%r14),%rsi
 	movslq %ebx,%rax
@@ -1315,7 +1312,9 @@ L486:
 	movl $1,%edi
 	call _walk0
 	incl %ebx
-	jmp L485
+L485:
+	cmpl 36(%r14),%ebx
+	jl L486
 L480:
 	testq %r12,%r12
 	jz L471
@@ -1337,13 +1336,13 @@ L493:
 	movq %rsi,%r8
 	movq %rdx,%rcx
 	movq _all_blocks(%rip),%rax
-L495:
-	testq %rax,%rax
-	jz L498
+	jmp L495
 L496:
 	andl $-3,4(%rax)
 	movq 112(%rax),%rax
-	jmp L495
+L495:
+	testq %rax,%rax
+	jnz L496
 L498:
 	testl %edi,%edi
 	jz L500
@@ -1429,16 +1428,16 @@ L528:
 	call ___flushbuf
 L529:
 	xorl %r12d,%r12d
-L530:
-	cmpl 12(%rbx),%r12d
-	jge L525
+	jmp L530
 L531:
 	movq 16(%rbx),%rax
 	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rdi
 	call _out_insn
 	incl %r12d
-	jmp L530
+L530:
+	cmpl 12(%rbx),%r12d
+	jl L531
 L525:
 	popq %r12
 	popq %rbx
@@ -1520,9 +1519,7 @@ L551:
 	movq %rdi,%r13
 	movq %rsi,%r12
 	xorl %ebx,%ebx
-L553:
-	cmpl 4(%r13),%ebx
-	jge L556
+	jmp L553
 L554:
 	movq 8(%r13),%rax
 	movslq %ebx,%rbx
@@ -1531,7 +1528,9 @@ L554:
 	jz L552
 L563:
 	incl %ebx
-	jmp L553
+L553:
+	cmpl 4(%r13),%ebx
+	jl L554
 L556:
 	movl $8,%ecx
 	movl $1,%edx

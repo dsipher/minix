@@ -734,11 +734,7 @@ L242:
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
 	incq _pos(%rip)
-L244:
-	movq _pos(%rip),%rcx
-	movzbq (%rcx),%rax
-	testw $53248,_ctype(,%rax,2)
-	jnz L246
+	jmp L244
 L245:
 	cmpb $92,%al
 	jnz L248
@@ -754,7 +750,11 @@ L249:
 	movslq %eax,%rax
 	addq %rax,%rbx
 	incl %r12d
-	jmp L244
+L244:
+	movq _pos(%rip),%rcx
+	movzbq (%rcx),%rax
+	testw $53248,_ctype(,%rax,2)
+	jz L245
 L246:
 	cmpb $39,%al
 	jz L252
@@ -815,11 +815,7 @@ L275:
 L277:
 	incq _pos(%rip)
 	incl %ebx
-L281:
-	movq _pos(%rip),%rcx
-	movzbq (%rcx),%rax
-	testw $45056,_ctype(,%rax,2)
-	jnz L283
+	jmp L281
 L282:
 	cmpb $92,%al
 	jnz L285
@@ -836,7 +832,11 @@ L286:
 	leaq 1(%rdx),%rcx
 	movq %rcx,_string_arena+8(%rip)
 	movb %al,(%rdx)
-	jmp L281
+L281:
+	movq _pos(%rip),%rcx
+	movzbq (%rcx),%rax
+	testw $45056,_ctype(,%rax,2)
+	jz L282
 L283:
 	cmpb $34,%al
 	jz L289
@@ -851,10 +851,7 @@ L289:
 	incq %rdx
 	movq %rdx,_pos(%rip)
 	xorl %ecx,%ecx
-L291:
-	movzbq (%rdx),%rax
-	testw $33792,_ctype(,%rax,2)
-	jz L293
+	jmp L291
 L292:
 	cmpb $10,%al
 	jnz L296
@@ -862,7 +859,10 @@ L294:
 	incl %ecx
 L296:
 	incq %rdx
-	jmp L291
+L291:
+	movzbq (%rdx),%rax
+	testw $33792,_ctype(,%rax,2)
+	jnz L292
 L293:
 	cmpb $34,%al
 	jnz L298
@@ -910,12 +910,7 @@ L310:
 	xorl %ebx,%ebx
 	xorl %edx,%edx
 	xorl %eax,%eax
-L312:
-	movq _pos(%rip),%rsi
-	movzbq (%rsi),%rcx
-	movw _ctype(,%rcx,2),%di
-	testw $515,%di
-	jz L314
+	jmp L312
 L313:
 	testw $512,%di
 	movl $1,%ecx
@@ -938,7 +933,12 @@ L322:
 	cmovnzl %ecx,%eax
 L320:
 	incq _pos(%rip)
-	jmp L312
+L312:
+	movq _pos(%rip),%rsi
+	movzbq (%rsi),%rcx
+	movw _ctype(,%rcx,2),%di
+	testw $515,%di
+	jnz L313
 L314:
 	movl $0,_errno(%rip)
 	movq _text(%rip),%rdi
@@ -1226,15 +1226,15 @@ L748:
 _lex0:
 L399:
 	pushq %rbx
+	jmp L402
+L403:
+	incq %rax
+	movq %rax,_pos(%rip)
 L402:
 	movq _pos(%rip),%rax
 	movzbq (%rax),%rcx
 	testw $1024,_ctype(,%rcx,2)
-	jz L404
-L403:
-	incq %rax
-	movq %rax,_pos(%rip)
-	jmp L402
+	jnz L403
 L404:
 	movq %rax,_text(%rip)
 	movb (%rax),%cl
@@ -1248,15 +1248,14 @@ L745:
 	movzwl L748(,%rdx,2),%edx
 	addl $_lex0,%edx
 	jmp *%rdx
+L728:
+	incq %rsi
+	movq %rsi,_pos(%rip)
 L727:
 	movq _pos(%rip),%rsi
 	movzbq (%rsi),%rax
 	testw $3,_ctype(,%rax,2)
-	jz L729
-L728:
-	incq %rsi
-	movq %rsi,_pos(%rip)
-	jmp L727
+	jnz L728
 L729:
 	movq _text(%rip),%rdi
 	subq %rdi,%rsi

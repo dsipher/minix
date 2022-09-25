@@ -45,9 +45,7 @@ L8:
 	call _mkstate
 	movl %eax,%r12d
 	movl $1,%ebx
-L10:
-	cmpl %ebx,%r13d
-	jl L13
+	jmp L10
 L11:
 	movl %r14d,%edi
 	call _dupmachine
@@ -56,7 +54,9 @@ L11:
 	call _link_machines
 	movl %eax,%r12d
 	incl %ebx
-	jmp L10
+L10:
+	cmpl %ebx,%r13d
+	jge L11
 L13:
 	movl %r12d,%eax
 L9:
@@ -78,9 +78,7 @@ L16:
 	call _fprintf
 	addq $24,%rsp
 	movl $1,%ebx
-L19:
-	cmpl _lastnfa(%rip),%ebx
-	jg L22
+	jmp L19
 L20:
 	pushq %rbx
 	pushq $L23
@@ -117,7 +115,9 @@ L27:
 	call _fprintf
 	addq $16,%rsp
 	incl %ebx
-	jmp L19
+L19:
+	cmpl _lastnfa(%rip),%ebx
+	jle L20
 L22:
 	pushq $L30
 	pushq $___stderr
@@ -144,9 +144,7 @@ L32:
 	movl (%rax,%rcx,4),%r15d
 	movq _firstst(%rip),%rax
 	movl (%rax,%rcx,4),%r14d
-L34:
-	cmpl %r14d,%r15d
-	jl L37
+	jmp L34
 L35:
 	movslq %r14d,%r14
 	movq _transchar(%rip),%rax
@@ -184,7 +182,9 @@ L40:
 	movslq %r12d,%rax
 	movl %ecx,(%rdx,%rax,4)
 	incl %r14d
-	jmp L34
+L34:
+	cmpl %r14d,%r15d
+	jge L35
 L37:
 	testl %r12d,%r12d
 	jnz L50
@@ -639,9 +639,7 @@ L206:
 	movl $257,%edi
 	call _mkstate
 	movl %eax,%r12d
-L208:
-	cmpl %ebx,%r14d
-	jle L211
+	jmp L208
 L209:
 	movl %r15d,%edi
 	call _dupmachine
@@ -652,7 +650,9 @@ L209:
 	call _mkopt
 	movl %eax,%r12d
 	incl %ebx
-	jmp L208
+L208:
+	cmpl %ebx,%r14d
+	jg L209
 L211:
 	movl %r12d,%esi
 L213:

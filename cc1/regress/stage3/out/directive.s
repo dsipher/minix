@@ -376,10 +376,7 @@ L135:
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _list_pop
-L138:
-	movq (%rbx),%rax
-	testq %rax,%rax
-	jz L143
+	jmp L138
 L145:
 	cmpl $536871944,(%rax)
 	jz L143
@@ -392,7 +389,10 @@ L147:
 	call _token_text
 	movq -32(%rbp),%rdi
 	call _token_free
-	jmp L138
+L138:
+	movq (%rbx),%rax
+	testq %rax,%rax
+	jnz L145
 L143:
 	xorl %edx,%edx
 	movl $536871944,%esi

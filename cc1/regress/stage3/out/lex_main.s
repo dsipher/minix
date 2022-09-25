@@ -854,9 +854,7 @@ L300:
 	movq %rax,_program_name(%rip)
 	leal -1(%rdi),%r15d
 	leaq 8(%rsi),%r14
-L302:
-	testl %r15d,%r15d
-	jz L305
+	jmp L302
 L303:
 	movq (%r14),%r12
 	cmpb $45,(%r12)
@@ -1035,7 +1033,9 @@ L319:
 L350:
 	decl %r15d
 	addq $8,%r14
-	jmp L302
+L302:
+	testl %r15d,%r15d
+	jnz L303
 L305:
 	cmpl $0,_fulltbl(%rip)
 	jnz L394
@@ -1193,10 +1193,7 @@ L453:
 L455:
 	movl $0,_ecgroup+4(%rip)
 	movl $2,%ecx
-L458:
-	movl _csize(%rip),%eax
-	cmpl %ecx,%eax
-	jl L461
+	jmp L458
 L459:
 	movl %ecx,%eax
 	decl %eax
@@ -1205,22 +1202,25 @@ L459:
 	movslq %eax,%rax
 	movl %ecx,_nextecm(,%rax,4)
 	incl %ecx
-	jmp L458
+L458:
+	movl _csize(%rip),%eax
+	cmpl %ecx,%eax
+	jge L459
 L461:
 	movslq %eax,%rax
 	movl $0,_nextecm(,%rax,4)
 	jmp L457
 L456:
 	movl $1,%eax
-L462:
-	cmpl %eax,_csize(%rip)
-	jl L457
+	jmp L462
 L463:
 	movslq %eax,%rax
 	movl %eax,_ecgroup(,%rax,4)
 	movl $-32767,_nextecm(,%rax,4)
 	incl %eax
-	jmp L462
+L462:
+	cmpl %eax,_csize(%rip)
+	jge L463
 L457:
 	call _set_up_initial_allocations
 L301:

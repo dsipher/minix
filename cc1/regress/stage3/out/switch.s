@@ -363,9 +363,7 @@ L116:
 	movsb 
 L89:
 	movl $1,%r15d
-L117:
-	cmpl 60(%r14),%r15d
-	jge L120
+	jmp L117
 L118:
 	movq 64(%r14),%rcx
 	movslq %r15d,%r15
@@ -398,7 +396,9 @@ L127:
 	movq %rax,%rbx
 L119:
 	incl %r15d
-	jmp L117
+L117:
+	cmpl 60(%r14),%r15d
+	jl L118
 L120:
 	movq -24(%rbp),%rdx
 	movl $12,%esi
@@ -470,9 +470,7 @@ L130:
 	call _range0
 	movq %rax,-8(%rbp)
 	movl %r13d,%ebx
-L132:
-	cmpl %ebx,%r12d
-	jl L135
+	jmp L132
 L133:
 	movq 64(%r15),%rcx
 	movslq %ebx,%rbx
@@ -483,12 +481,12 @@ L133:
 	movq %r14,%rdi
 	call _add_switch_succ
 	incl %ebx
-	jmp L132
+L132:
+	cmpl %ebx,%r12d
+	jge L133
 L135:
 	movl $1,%ebx
-L136:
-	cmpl 60(%r15),%ebx
-	jge L139
+	jmp L136
 L137:
 	cmpl %ebx,%r13d
 	jg L140
@@ -506,7 +504,9 @@ L140:
 	call _add_switch_succ
 L142:
 	incl %ebx
-	jmp L136
+L136:
+	cmpl 60(%r15),%ebx
+	jl L137
 L139:
 	movq %r15,%rdi
 	call _remove_succs
@@ -537,11 +537,7 @@ L148:
 	xorl %esi,%esi
 	xorl %r12d,%r12d
 	movl $1,%r9d
-L150:
-	movl 60(%rdi),%eax
-	decl %eax
-	cmpl %eax,%r9d
-	jg L153
+	jmp L150
 L151:
 	movl %r9d,%r11d
 L154:
@@ -585,7 +581,11 @@ L162:
 	movl %r11d,%r12d
 L164:
 	incl %r9d
-	jmp L150
+L150:
+	movl 60(%rdi),%eax
+	decl %eax
+	cmpl %eax,%r9d
+	jle L151
 L153:
 	cmpl $5,%r12d
 	jge L166
@@ -706,9 +706,7 @@ L211:
 	pushq %r12
 L214:
 	movq _all_blocks(%rip),%r12
-L215:
-	testq %r12,%r12
-	jz L213
+	jmp L215
 L216:
 	movl 4(%r12),%eax
 	testl $1,%eax
@@ -782,7 +780,9 @@ L222:
 	call _unswitch_block
 L217:
 	movq 112(%r12),%r12
-	jmp L215
+L215:
+	testq %r12,%r12
+	jnz L216
 L213:
 	popq %r12
 	popq %rbx
@@ -919,9 +919,7 @@ L282:
 	movl $1,%r14d
 	movq 64(%r12),%rax
 	movq 32(%rax),%r15
-L291:
-	cmpl 60(%r12),%r14d
-	jge L294
+	jmp L291
 L292:
 	movq 64(%r12),%rcx
 	movslq %r14d,%r14
@@ -941,7 +939,9 @@ L296:
 	incl %r14d
 L297:
 	incq %r15
-	jmp L291
+L291:
+	cmpl 60(%r12),%r14d
+	jl L292
 L294:
 	movq %r12,%rdi
 	call _control0
@@ -1189,11 +1189,7 @@ L543:
 	call _out
 	addq $16,%rsp
 	movl $1,%r14d
-L546:
-	movl 60(%r13),%eax
-	decl %eax
-	cmpl %eax,%r14d
-	jg L549
+	jmp L546
 L547:
 	movq 64(%r13),%rcx
 	movslq %r14d,%r14
@@ -1207,7 +1203,11 @@ L547:
 	call _out_word
 	addq $8,%rsp
 	incl %r14d
-	jmp L546
+L546:
+	movl 60(%r13),%eax
+	decl %eax
+	cmpl %eax,%r14d
+	jle L547
 L549:
 	movl _last_asmlab(%rip),%esi
 	leal 1(%rsi),%eax
@@ -1229,11 +1229,7 @@ L549:
 	call _out
 	addq $16,%rsp
 	movl $1,%r14d
-L553:
-	movl 60(%r13),%eax
-	decl %eax
-	cmpl %eax,%r14d
-	jg L556
+	jmp L553
 L554:
 	movq 64(%r13),%rcx
 	movslq %r14d,%r14
@@ -1243,7 +1239,11 @@ L554:
 	movq 16(%rcx,%rax),%rdi
 	call _target0
 	incl %r14d
-	jmp L553
+L553:
+	movl 60(%r13),%eax
+	decl %eax
+	cmpl %eax,%r14d
+	jle L554
 L556:
 	movq %r13,%rdi
 	call _control0
@@ -1477,9 +1477,7 @@ L792:
 	setg %al
 	movzbl %al,%r12d
 	movq _all_blocks(%rip),%rbx
-L794:
-	testq %rbx,%rbx
-	jz L793
+	jmp L794
 L795:
 	movl 4(%rbx),%eax
 	testl $1,%eax
@@ -1501,7 +1499,9 @@ L804:
 	call _table0
 L800:
 	movq 112(%rbx),%rbx
-	jmp L794
+L794:
+	testq %rbx,%rbx
+	jnz L795
 L793:
 	popq %r12
 	popq %rbx

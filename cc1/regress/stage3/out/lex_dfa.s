@@ -58,9 +58,7 @@ _check_trailing_context:
 L22:
 L23:
 	movl $1,%r10d
-L25:
-	cmpl %r10d,%esi
-	jl L24
+	jmp L25
 L26:
 	movslq %r10d,%r10
 	movslq (%rdi,%r10,4),%r8
@@ -103,7 +101,9 @@ L43:
 	ret
 L31:
 	incl %r10d
-	jmp L25
+L25:
+	cmpl %r10d,%esi
+	jge L26
 L24:
 	ret 
 
@@ -125,10 +125,7 @@ L49:
 	movq _dfasiz(%rip),%rax
 	movl (%rax,%rcx,4),%esi
 	movl $1,%edx
-L51:
-	movl $1,%ebx
-	cmpl %edx,%esi
-	jl L54
+	jmp L51
 L52:
 	movslq %edx,%rdx
 	movslq (%rdi,%rdx,4),%rcx
@@ -158,7 +155,10 @@ L66:
 	movl %ecx,-404(%rbp,%rax,4)
 L65:
 	incl %edx
-	jmp L51
+L51:
+	movl $1,%ebx
+	cmpl %edx,%esi
+	jge L52
 L54:
 	movl %r12d,%esi
 	leaq -404(%rbp),%rdi
@@ -167,9 +167,7 @@ L54:
 	pushq %r13
 	call _fprintf
 	addq $16,%rsp
-L70:
-	cmpl %ebx,%r12d
-	jl L73
+	jmp L70
 L71:
 	movl $8,%ecx
 	movl %ebx,%eax
@@ -199,7 +197,9 @@ L76:
 	call _fprintf
 	addq $24,%rsp
 	incl %ebx
-	jmp L70
+L70:
+	cmpl %ebx,%r12d
+	jge L71
 L73:
 	decl (%r13)
 	js L82
@@ -234,9 +234,7 @@ L85:
 	movq %rdi,%r13
 	movq %rsi,%r12
 	xorl %ebx,%ebx
-L87:
-	cmpl _csize(%rip),%ebx
-	jge L90
+	jmp L87
 L88:
 	movslq %ebx,%rbx
 	movl _ecgroup(,%rbx,4),%edi
@@ -245,7 +243,9 @@ L88:
 	movl (%r12,%rax,4),%eax
 	movl %eax,-1024(%rbp,%rbx,4)
 	incl %ebx
-	jmp L87
+L87:
+	cmpl _csize(%rip),%ebx
+	jl L88
 L90:
 	pushq $L91
 	pushq %r13
@@ -255,9 +255,7 @@ L90:
 	movq %r13,%rdi
 	call _list_character_set
 	xorl %ecx,%ecx
-L92:
-	cmpl _csize(%rip),%ecx
-	jge L95
+	jmp L92
 L93:
 	movslq %ecx,%rcx
 	cmpl $0,-1024(%rbp,%rcx,4)
@@ -265,7 +263,9 @@ L93:
 	movzbl %al,%eax
 	movl %eax,-1024(%rbp,%rcx,4)
 	incl %ecx
-	jmp L92
+L92:
+	cmpl _csize(%rip),%ecx
+	jl L93
 L95:
 	pushq $L96
 	pushq %r13
@@ -334,9 +334,7 @@ L107:
 	xorl %r14d,%r14d
 	movl $0,-40(%rbp)
 	movl $1,%r15d
-L108:
-	cmpl %r15d,-36(%rbp)
-	jl L111
+	jmp L108
 L109:
 	movslq %r15d,%r15
 	movslq (%r12,%r15,4),%rbx
@@ -383,12 +381,12 @@ L118:
 L120:
 	addl %ebx,-48(%rbp)
 	incl %r15d
-	jmp L108
+L108:
+	cmpl %r15d,-36(%rbp)
+	jge L109
 L111:
 	movl $1,%ebx
-L121:
-	cmpl %ebx,%r14d
-	jl L124
+	jmp L121
 L122:
 	movslq %ebx,%rbx
 	movq L104(%rip),%rax
@@ -558,12 +556,12 @@ L171:
 	addl %r15d,-48(%rbp)
 L127:
 	incl %ebx
-	jmp L121
+L121:
+	cmpl %ebx,%r14d
+	jge L122
 L124:
 	movl $1,%ebx
-L172:
-	cmpl %ebx,%r14d
-	jl L175
+	jmp L172
 L173:
 	movslq %ebx,%rbx
 	movq L104(%rip),%rax
@@ -581,7 +579,9 @@ L177:
 	call _flexfatal
 L178:
 	incl %ebx
-	jmp L172
+L172:
+	cmpl %ebx,%r14d
+	jge L173
 L175:
 	movq -8(%rbp),%rax
 	movl %r13d,(%rax)
@@ -685,26 +685,26 @@ L192:
 	movl $0,-5184(%rbp)
 	movl $0,-5168(%rbp)
 	xorl %eax,%eax
-L193:
-	cmpl _csize(%rip),%eax
-	jg L196
+	jmp L193
 L194:
 	movslq %eax,%rax
 	movl $0,-1028(%rbp,%rax,4)
 	movl $0,-2056(%rbp,%rax,4)
 	incl %eax
-	jmp L193
+L193:
+	cmpl _csize(%rip),%eax
+	jle L194
 L196:
 	xorl %ecx,%ecx
-L197:
-	cmpl %ecx,_num_rules(%rip)
-	jl L200
+	jmp L197
 L198:
 	movslq %ecx,%rcx
 	movq -5208(%rbp),%rax
 	movl $0,(%rax,%rcx,4)
 	incl %ecx
-	jmp L197
+L197:
+	cmpl %ecx,_num_rules(%rip)
+	jge L198
 L200:
 	cmpl $0,_trace(%rip)
 	jz L203
@@ -735,15 +735,15 @@ L215:
 	jnz L214
 L216:
 	movl $1,%eax
-L219:
-	cmpl %eax,_csize(%rip)
-	jl L214
+	jmp L219
 L220:
 	cmpl %eax,_numecs(%rip)
 	jz L227
 L225:
 	shll $1,%eax
-	jmp L219
+L219:
+	cmpl %eax,_csize(%rip)
+	jge L220
 L214:
 	testl %ecx,%ecx
 	jz L207
@@ -757,14 +757,14 @@ L207:
 	jz L231
 L230:
 	xorl %eax,%eax
-L233:
-	cmpl _numecs(%rip),%eax
-	jg L236
+	jmp L233
 L234:
 	movslq %eax,%rax
 	movl $0,-3084(%rbp,%rax,4)
 	incl %eax
-	jmp L233
+L233:
+	cmpl _numecs(%rip),%eax
+	jle L234
 L236:
 	xorl %edx,%edx
 	xorl %esi,%esi
@@ -788,14 +788,14 @@ L366:
 	call _printf
 	addq $16,%rsp
 	xorl %ebx,%ebx
-L244:
-	cmpl -5172(%rbp),%ebx
-	jge L247
+	jmp L244
 L245:
 	xorl %edi,%edi
 	call _mk2data
 	incl %ebx
-	jmp L244
+L244:
+	cmpl -5172(%rbp),%ebx
+	jl L245
 L247:
 	movl $10,_datapos(%rip)
 	movl $10,_dataline(%rip)
@@ -808,9 +808,7 @@ L232:
 	movl %eax,-5164(%rbp)
 	movl %eax,-5180(%rbp)
 	movl $1,%ebx
-L248:
-	cmpl -5180(%rbp),%ebx
-	jg L251
+	jmp L248
 L249:
 	movl $1,-3088(%rbp)
 	movl $2,%ecx
@@ -873,7 +871,9 @@ L262:
 	call _check_trailing_context
 L257:
 	incl %ebx
-	jmp L248
+L248:
+	cmpl -5180(%rbp),%ebx
+	jle L249
 L251:
 	cmpl $0,_fullspd(%rip)
 	jnz L272
@@ -904,14 +904,14 @@ L273:
 	xorl %r14d,%r14d
 	xorl %r13d,%r13d
 	movl $1,%eax
-L275:
-	cmpl _numecs(%rip),%eax
-	jg L278
+	jmp L275
 L276:
 	movslq %eax,%rax
 	movl $0,-3084(%rbp,%rax,4)
 	incl %eax
-	jmp L275
+L275:
+	cmpl _numecs(%rip),%eax
+	jle L276
 L278:
 	movl -5168(%rbp),%ecx
 	incl %ecx
@@ -939,9 +939,7 @@ L281:
 	movq -5192(%rbp),%rdi
 	call _sympartition
 	movl $1,%r12d
-L283:
-	cmpl %r12d,_numecs(%rip)
-	jl L286
+	jmp L283
 L284:
 	movslq %r12d,%r12
 	cmpl $0,-2056(%rbp,%r12,4)
@@ -1041,7 +1039,9 @@ L292:
 	movl $0,-1028(%rbp,%rax,4)
 L289:
 	incl %r12d
-	jmp L283
+L283:
+	cmpl %r12d,_numecs(%rip)
+	jge L284
 L286:
 	addl %r13d,_numsnpairs(%rip)
 	cmpl $0,_caseins(%rip)
@@ -1094,9 +1094,7 @@ L367:
 	movl %eax,%edi
 	call _mk2data
 	movl $1,%ebx
-L336:
-	cmpl -5172(%rbp),%ebx
-	jge L339
+	jmp L336
 L337:
 	movslq %ebx,%rbx
 	movl -3084(%rbp,%rbx,4),%edi
@@ -1108,7 +1106,9 @@ L341:
 L342:
 	call _mk2data
 	incl %ebx
-	jmp L336
+L336:
+	cmpl -5172(%rbp),%ebx
+	jl L337
 L339:
 	movl $10,_datapos(%rip)
 	movl $10,_dataline(%rip)
@@ -1135,9 +1135,7 @@ L347:
 	xorl %r8d,%r8d
 	xorl %ecx,%ecx
 	movl $1,%edx
-L349:
-	cmpl %r14d,%edx
-	jg L352
+	jmp L349
 L350:
 	movslq %edx,%rdx
 	movl -4132(%rbp,%rdx,4),%eax
@@ -1148,7 +1146,9 @@ L353:
 	movl -5160(%rbp,%rdx,4),%ecx
 L355:
 	incl %edx
-	jmp L349
+L349:
+	cmpl %r14d,%edx
+	jle L350
 L352:
 	movl %r13d,%edx
 	movl -3100(%rbp),%esi
@@ -1166,10 +1166,7 @@ L357:
 	jnz L189
 L359:
 	call _cmptmps
-L362:
-	movl _onesp(%rip),%eax
-	cmpl $0,%eax
-	jle L364
+	jmp L362
 L363:
 	movslq %eax,%rax
 	movl _onestate(,%rax,4),%edi
@@ -1178,7 +1175,10 @@ L363:
 	movl _onedef(,%rax,4),%ecx
 	call _mk1tbl
 	decl _onesp(%rip)
-	jmp L362
+L362:
+	movl _onesp(%rip),%eax
+	cmpl $0,%eax
+	jg L363
 L364:
 	call _mkdeftbl
 L189:
@@ -1211,10 +1211,7 @@ L369:
 	movq %r9,-8(%rbp)
 	xorl %ebx,%ebx
 	movl $1,%r15d
-L371:
-	movl _lastdfa(%rip),%eax
-	cmpl %eax,%r15d
-	jg L374
+	jmp L371
 L372:
 	movslq %r15d,%r15
 	movq _dhash(%rip),%rcx
@@ -1264,7 +1261,10 @@ L379:
 	incl _hshsave(%rip)
 L377:
 	incl %r15d
-	jmp L371
+L371:
+	movl _lastdfa(%rip),%eax
+	cmpl %eax,%r15d
+	jle L372
 L374:
 	incl %eax
 	movl %eax,_lastdfa(%rip)
@@ -1295,10 +1295,7 @@ L403:
 	call _bubble
 L405:
 	movl $1,%edx
-L406:
-	movslq %r14d,%rbx
-	cmpl %edx,%r12d
-	jl L409
+	jmp L406
 L407:
 	movslq %edx,%rdx
 	movl (%r13,%rdx,4),%ecx
@@ -1306,7 +1303,10 @@ L407:
 	movq (%rax,%rbx,8),%rax
 	movl %ecx,(%rax,%rdx,4)
 	incl %edx
-	jmp L406
+L406:
+	movslq %r14d,%rbx
+	cmpl %edx,%r12d
+	jge L407
 L409:
 	movq _dfasiz(%rip),%rax
 	movl %r12d,(%rax,%rbx,4)
@@ -1350,10 +1350,7 @@ L419:
 	call _flexfatal
 L421:
 	movl $1,%edx
-L422:
-	movslq %r14d,%r14
-	cmpl %edx,-28(%rbp)
-	jl L425
+	jmp L422
 L423:
 	movslq %edx,%rdx
 	movq -24(%rbp),%rax
@@ -1362,7 +1359,10 @@ L423:
 	movq (%rax,%r14,8),%rax
 	movl %ecx,(%rax,%rdx,4)
 	incl %edx
-	jmp L422
+L422:
+	movslq %r14d,%r14
+	cmpl %edx,-28(%rbp)
+	jge L423
 L425:
 	movq _accsiz(%rip),%rcx
 	movl -28(%rbp),%eax
@@ -1372,9 +1372,7 @@ L417:
 	movl _num_rules(%rip),%edx
 	incl %edx
 	movl $1,%ecx
-L426:
-	cmpl %ecx,-28(%rbp)
-	jl L429
+	jmp L426
 L427:
 	movslq %ecx,%rcx
 	movq -24(%rbp),%rax
@@ -1382,7 +1380,9 @@ L427:
 	cmpl %eax,%edx
 	cmovgl %eax,%edx
 	incl %ecx
-	jmp L426
+L426:
+	cmpl %ecx,-28(%rbp)
+	jge L427
 L429:
 	movslq %r14d,%rax
 	movq _dfaacc(%rip),%rcx
@@ -1419,9 +1419,7 @@ L435:
 	movq %rcx,%r13
 	xorl %r15d,%r15d
 	movl $1,%r12d
-L437:
-	cmpl %r12d,-12(%rbp)
-	jl L440
+	jmp L437
 L438:
 	movslq %r12d,%r12
 	movq -8(%rbp),%rax
@@ -1514,7 +1512,9 @@ L497:
 	movl %ebx,(%r13,%rax,4)
 L461:
 	incl %r12d
-	jmp L437
+L437:
+	cmpl %r12d,-12(%rbp)
+	jge L438
 L440:
 	movl %r15d,%eax
 L436:
@@ -1544,9 +1544,7 @@ L499:
 	movq %rdx,%r15
 	movq %rcx,-1056(%rbp)
 	movl $1,%esi
-L501:
-	cmpl _numecs(%rip),%esi
-	jg L504
+	jmp L501
 L502:
 	movl %esi,%edx
 	decl %edx
@@ -1555,7 +1553,9 @@ L502:
 	movl %edx,(%rax,%rcx,4)
 	incl %esi
 	movl %esi,-1028(%rbp,%rcx,4)
-	jmp L501
+L501:
+	cmpl _numecs(%rip),%esi
+	jle L502
 L504:
 	movq -1056(%rbp),%rax
 	movl $0,4(%rax)
@@ -1651,14 +1651,14 @@ L531:
 L534:
 	cmpl %edx,%r12d
 	jg L535
-L556:
-	incl %ecx
-	cmpl %ecx,_numecs(%rip)
-	jl L511
+	jle L556
 L546:
 	movslq %ecx,%rax
 	movl $1,(%r15,%rax,4)
-	jmp L556
+L556:
+	incl %ecx
+	cmpl %ecx,_numecs(%rip)
+	jge L546
 L511:
 	incl %r14d
 	jmp L505
@@ -1671,14 +1671,14 @@ L535:
 	jnz L557
 L538:
 	movl _NUL_ec(%rip),%eax
-L557:
-	incl %ecx
-	cmpl %eax,%ecx
-	jge L544
+	jmp L557
 L542:
 	movslq %ecx,%rcx
 	movl $1,(%r15,%rcx,4)
-	jmp L557
+L557:
+	incl %ecx
+	cmpl %eax,%ecx
+	jl L542
 L544:
 	incl %edx
 	jmp L534

@@ -96,9 +96,7 @@ L38:
 	movl %edi,%r13d
 	movl _terms+4(%rip),%ebx
 	decl %ebx
-L40:
-	cmpl $1,%ebx
-	jl L43
+	jmp L40
 L41:
 	movq _terms+8(%rip),%rcx
 	movl %ebx,%eax
@@ -195,7 +193,9 @@ L95:
 	call _normalize_con
 	orl $2,_opt_request(%rip)
 	decl %ebx
-	jmp L40
+L40:
+	cmpl $1,%ebx
+	jge L41
 L43:
 	cmpl $0,_terms+4(%rip)
 	jz L39
@@ -753,14 +753,14 @@ L322:
 	movq $0,_terms+8(%rip)
 	movq $_local_arena,_terms+16(%rip)
 	movq _all_blocks(%rip),%rbx
-L333:
-	testq %rbx,%rbx
-	jz L337
+	jmp L333
 L334:
 	movq %rbx,%rdi
 	call _constant0
 	movq 112(%rbx),%rbx
-	jmp L333
+L333:
+	testq %rbx,%rbx
+	jnz L334
 L337:
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)

@@ -9,15 +9,15 @@ L2:
 	jz L3
 L4:
 	incq %rdx
-L7:
-	decq %rdx
-	jz L3
+	jmp L7
 L8:
 	movb (%rsi),%cl
 	incq %rsi
 	movb %cl,(%rdi)
 	incq %rdi
-	jmp L7
+L7:
+	decq %rdx
+	jnz L8
 L3:
 	ret 
 

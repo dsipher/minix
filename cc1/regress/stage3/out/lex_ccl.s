@@ -15,9 +15,7 @@ L2:
 	movq _cclmap(%rip),%rax
 	movl (%rax,%rcx,4),%r13d
 	xorl %edx,%edx
-L4:
-	cmpl %edx,%ebx
-	jle L7
+	jmp L4
 L5:
 	leal (%r13,%rdx),%ecx
 	movslq %ecx,%rcx
@@ -27,7 +25,9 @@ L5:
 	jz L3
 L10:
 	incl %edx
-	jmp L4
+L4:
+	cmpl %edx,%ebx
+	jg L5
 L7:
 	movl _current_max_ccl_tbl_size(%rip),%esi
 	addl %ebx,%r13d
@@ -150,9 +150,7 @@ L32:
 	call ___flushbuf
 L33:
 	xorl %r12d,%r12d
-L34:
-	cmpl _csize(%rip),%r12d
-	jge L37
+	jmp L34
 L35:
 	movslq %r12d,%r12
 	cmpl $0,(%r13,%r12,4)
@@ -213,7 +211,9 @@ L56:
 	call ___flushbuf
 L40:
 	incl %r12d
-	jmp L34
+L34:
+	cmpl _csize(%rip),%r12d
+	jl L35
 L37:
 	decl (%r14)
 	js L59

@@ -1316,12 +1316,7 @@ L681:
 	jz L684
 L682:
 	xorl %ebx,%ebx
-L685:
-	movl 4(%r12),%eax
-	shll $21,%eax
-	shrl $26,%eax
-	cmpl %eax,%ebx
-	jae L684
+	jmp L685
 L686:
 	testl %ebx,%ebx
 	jz L691
@@ -1360,7 +1355,12 @@ L695:
 	addq $24,%rsp
 L697:
 	incl %ebx
-	jmp L685
+L685:
+	movl 4(%r12),%eax
+	shll $21,%eax
+	shrl $26,%eax
+	cmpl %eax,%ebx
+	jb L686
 L684:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)
@@ -1651,19 +1651,19 @@ L905:
 	jmp *%rax
 L833:
 	xorl %ebx,%ebx
-L834:
-	movl 4(%r15),%eax
-	shll $17,%eax
-	shrl $29,%eax
-	cmpl %eax,%ebx
-	jae L837
+	jmp L834
 L835:
 	movslq %ebx,%rbx
 	movl _iargs(,%rbx,4),%esi
 	movq %r14,%rdi
 	call _add_reg
 	incl %ebx
-	jmp L834
+L834:
+	movl 4(%r15),%eax
+	shll $17,%eax
+	shrl $29,%eax
+	cmpl %eax,%ebx
+	jb L835
 L837:
 	xorl %ebx,%ebx
 L838:
@@ -1740,9 +1740,7 @@ L822:
 	shrl $26,%eax
 	addl %eax,%r12d
 	xorl %r13d,%r13d
-L867:
-	cmpl %r12d,%r13d
-	jge L802
+	jmp L867
 L868:
 	testl %r13d,%r13d
 	jnz L871
@@ -1790,7 +1788,9 @@ L895:
 	call _add_reg
 L873:
 	incl %r13d
-	jmp L867
+L867:
+	cmpl %r12d,%r13d
+	jl L868
 L802:
 	popq %r15
 	popq %r14
@@ -1985,9 +1985,7 @@ L987:
 	shrl $26,%eax
 	addl %eax,%r13d
 	xorl %r12d,%r12d
-L989:
-	cmpl %r12d,%r13d
-	jle L992
+	jmp L989
 L990:
 	testl %r12d,%r12d
 	jnz L1005
@@ -2033,7 +2031,9 @@ L997:
 	incl %r14d
 L995:
 	incl %r12d
-	jmp L989
+L989:
+	cmpl %r12d,%r13d
+	jg L990
 L992:
 	movl %r14d,%eax
 L988:
@@ -2095,9 +2095,7 @@ L1036:
 	shrl $26,%eax
 	addl %eax,%ecx
 	xorl %eax,%eax
-L1044:
-	cmpl %eax,%ecx
-	jle L1037
+	jmp L1044
 L1048:
 	xorl %r8d,%r8d
 	testl $2,-12(%rbp)
@@ -2222,7 +2220,9 @@ L1123:
 	addl %r8d,%r12d
 L1096:
 	incl %eax
-	jmp L1044
+L1044:
+	cmpl %eax,%ecx
+	jg L1048
 L1037:
 	cmpq $0,-8(%rbp)
 	jz L1132

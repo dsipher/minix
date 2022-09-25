@@ -1525,9 +1525,7 @@ L632:
 
 _externals:
 L675:
-L678:
-	cmpl $0,_token(%rip)
-	jz L677
+	jmp L678
 L679:
 	movl $_external,%edx
 	xorl %esi,%esi
@@ -1536,7 +1534,9 @@ L679:
 	movq _stmt_arena(%rip),%rax
 	movq %rax,_stmt_arena+8(%rip)
 	call _purge_anons
-	jmp L678
+L678:
+	cmpl $0,_token(%rip)
+	jnz L679
 L677:
 	ret 
 

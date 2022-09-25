@@ -947,9 +947,7 @@ L297:
 	call _lex
 	call _locals
 	movq $_void_tree,_stmt_tree(%rip)
-L302:
-	cmpl $17,_token(%rip)
-	jz L304
+	jmp L302
 L303:
 	testl %ebx,%ebx
 	jz L307
@@ -958,7 +956,9 @@ L308:
 	movq %rax,_stmt_arena+8(%rip)
 L307:
 	call _stmt
-	jmp L302
+L302:
+	cmpl $17,_token(%rip)
+	jnz L303
 L304:
 	testl %ebx,%ebx
 	jz L314

@@ -29,11 +29,8 @@ L2:
 L9:
 	leaq -256(%rbp),%rdx
 	testl %ebx,%ebx
+	jz L16
 	jnz L13
-L16:
-	movb (%r12),%al
-	testb %al,%al
-	jz L19
 L20:
 	cmpb $58,%al
 	jz L19
@@ -41,7 +38,10 @@ L17:
 	incq %r12
 	movb %al,(%rdx)
 	incq %rdx
-	jmp L16
+L16:
+	movb (%r12),%al
+	testb %al,%al
+	jnz L20
 L19:
 	leaq -256(%rbp),%rax
 	cmpq %rax,%rdx
@@ -51,15 +51,15 @@ L24:
 	incq %rdx
 L26:
 	movq %r15,%rcx
-L27:
-	movb (%rcx),%al
-	testb %al,%al
-	jz L30
+	jmp L27
 L28:
 	incq %rcx
 	movb %al,(%rdx)
 	incq %rdx
-	jmp L27
+L27:
+	movb (%rcx),%al
+	testb %al,%al
+	jnz L28
 L30:
 	movb $0,(%rdx)
 	jmp L15

@@ -192,13 +192,13 @@ L18:
 	movq %rax,(%r12)
 	movq $0,8(%r12)
 	addq $16,%rbx
+	jmp L19
+L20:
+	leaq 8(%rax),%rbx
 L19:
 	movq (%rbx),%rax
 	testq %rax,%rax
-	jz L22
-L20:
-	leaq 8(%rax),%rbx
-	jmp L19
+	jnz L20
 L22:
 	movq %r12,(%rbx)
 L15:
@@ -241,15 +241,15 @@ L32:
 	jz L31
 L29:
 	movq $0,16(%rbx)
-L36:
-	testq %r13,%r13
-	jz L31
+	jmp L36
 L37:
 	movq (%r13),%rsi
 	movq %rbx,%rdi
 	call _new_formal
 	movq 8(%r13),%r13
-	jmp L36
+L36:
+	testq %r13,%r13
+	jnz L37
 L31:
 	movq %rbx,%rax
 L25:
@@ -333,9 +333,7 @@ L72:
 	andl $127,%eax
 	movslq %eax,%rax
 	movq _buckets(,%rax,8),%rax
-L74:
-	testq %rax,%rax
-	jz L77
+	jmp L74
 L75:
 	cmpq 8(%rax),%rcx
 	jnz L76
@@ -378,7 +376,9 @@ L91:
 	jz L73
 L76:
 	movq 32(%rax),%rax
-	jmp L74
+L74:
+	testq %rax,%rax
+	jnz L75
 L77:
 	xorl %eax,%eax
 L73:
@@ -468,9 +468,7 @@ L136:
 	jz L151
 L141:
 	movq 16(%rbx),%rsi
-L144:
-	testq %rsi,%rsi
-	jz L151
+	jmp L144
 L145:
 	movq 8(%rsi),%rcx
 	movq _formal_slab+8(%rip),%rax
@@ -478,7 +476,9 @@ L145:
 	movq %rsi,_formal_slab+8(%rip)
 	incl _formal_slab+20(%rip)
 	movq %rcx,%rsi
-	jmp L144
+L144:
+	testq %rsi,%rsi
+	jnz L145
 L151:
 	movq _tnode_slab+8(%rip),%rax
 	movq %rax,(%rbx)
@@ -538,12 +538,12 @@ L169:
 	movq %rdi,%rbx
 	movq %rsi,%r12
 	movq %rbx,%rax
-L171:
-	testq $16384,(%rax)
-	jz L173
+	jmp L171
 L172:
 	movq 24(%rax),%rax
-	jmp L171
+L171:
+	testq $16384,(%rax)
+	jnz L172
 L173:
 	movq (%rbx),%rax
 	andq %r12,%rax
@@ -551,10 +551,7 @@ L173:
 	jz L174
 L176:
 	xorl %r13d,%r13d
-L178:
-	movq (%rbx),%rax
-	testq $16384,%rax
-	jz L180
+	jmp L178
 L179:
 	movslq 16(%rbx),%rsi
 	movq %r13,%rdx
@@ -562,7 +559,10 @@ L179:
 	call _new_tnode
 	movq %rax,%r13
 	movq 24(%rbx),%rbx
-	jmp L178
+L178:
+	movq (%rbx),%rax
+	testq $16384,%rax
+	jnz L179
 L180:
 	testq $32768,%rax
 	jz L183
@@ -679,16 +679,16 @@ L243:
 L234:
 	movq 16(%rdi),%rcx
 	movq 16(%rsi),%rax
-L248:
-	testq %rcx,%rcx
-	jz L251
+	jmp L248
 L252:
 	testq %rax,%rax
 	jz L251
 L249:
 	movq 8(%rcx),%rcx
 	movq 8(%rax),%rax
-	jmp L248
+L248:
+	testq %rcx,%rcx
+	jnz L252
 L251:
 	cmpq %rax,%rcx
 	jmp L265
@@ -725,9 +725,7 @@ L266:
 L267:
 	movq %rdi,%r12
 	movq %rsi,%rbx
-L269:
-	testq %r12,%r12
-	jz L272
+	jmp L269
 L281:
 	testq %rbx,%rbx
 	jz L272
@@ -779,7 +777,9 @@ L312:
 L287:
 	movq 24(%r12),%r12
 	movq 24(%rbx),%rbx
-	jmp L269
+L269:
+	testq %r12,%r12
+	jnz L281
 L272:
 	cmpq %rbx,%r12
 	setz %al
@@ -807,9 +807,7 @@ L318:
 	xorl %r15d,%r15d
 	movq %rdi,%r14
 	movq %rsi,%r13
-L320:
-	testq %r14,%r14
-	jz L323
+	jmp L320
 L332:
 	testq %r13,%r13
 	jz L323
@@ -887,7 +885,9 @@ L360:
 L338:
 	movq 24(%r14),%r14
 	movq 24(%r13),%r13
-	jmp L320
+L320:
+	testq %r14,%r14
+	jnz L332
 L323:
 	cmpq %r13,%r14
 	jz L369
@@ -969,9 +969,7 @@ L402:
 	movq %rdi,%r12
 	movq %rsi,%rbx
 	movl $1,%r13d
-L404:
-	testq %r12,%r12
-	jz L406
+	jmp L404
 L405:
 	movq (%r12),%rax
 	andl $131071,%eax
@@ -1047,7 +1045,9 @@ L429:
 	jnz L406
 L433:
 	movq 24(%r12),%r12
-	jmp L404
+L404:
+	testq %r12,%r12
+	jnz L405
 L406:
 	movl %r13d,%eax
 L403:
@@ -1061,13 +1061,13 @@ _align_of:
 L444:
 L445:
 	movq %rdi,%rcx
+	jmp L447
+L448:
+	movq 24(%rcx),%rcx
 L447:
 	movq (%rcx),%rdi
 	testq $16384,%rdi
-	jz L449
-L448:
-	movq 24(%rcx),%rcx
-	jmp L447
+	jnz L448
 L449:
 	movq %rdi,%rax
 	andl $131071,%eax
@@ -1283,9 +1283,7 @@ L550:
 	pushq $4
 	call _error
 	addq $24,%rsp
-L557:
-	testq %r13,%r13
-	jz L549
+	jmp L557
 L558:
 	movq 24(%r13),%rbx
 	testq $16384,(%r13)
@@ -1373,7 +1371,9 @@ L595:
 	addq $32,%rsp
 L597:
 	movq %rbx,%r13
-	jmp L557
+L557:
+	testq %r13,%r13
+	jnz L558
 L549:
 	popq %r13
 	popq %r12

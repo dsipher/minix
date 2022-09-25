@@ -9,13 +9,7 @@ L2:
 	movl %edi,%r13d
 	movq %rsi,%r12
 	movl %edx,%ebx
-L4:
-	movslq %ebx,%rdx
-	movq %r12,%rsi
-	movl %r13d,%edi
-	call _write
-	cmpl $0,%eax
-	jle L6
+	jmp L4
 L7:
 	cmpl %eax,%ebx
 	jle L6
@@ -23,7 +17,13 @@ L5:
 	subl %eax,%ebx
 	movslq %eax,%rax
 	addq %rax,%r12
-	jmp L4
+L4:
+	movslq %ebx,%rdx
+	movq %r12,%rsi
+	movl %r13d,%edi
+	call _write
+	cmpl $0,%eax
+	jg L7
 L6:
 	cmpl $0,%eax
 	setg %al

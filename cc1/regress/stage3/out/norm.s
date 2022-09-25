@@ -381,9 +381,7 @@ L110:
 	rep 
 	stosb 
 	xorl %r15d,%r15d
-L112:
-	cmpl 12(%r14),%r15d
-	jge L111
+	jmp L112
 L116:
 	movq 16(%r14),%rcx
 	movslq %r15d,%rax
@@ -824,7 +822,9 @@ L339:
 	orq %rdx,(%rcx,%rax,8)
 L288:
 	incl %r15d
-	jmp L112
+L112:
+	cmpl 12(%r14),%r15d
+	jl L116
 L111:
 	popq %r15
 	popq %r14
@@ -848,9 +848,7 @@ L377:
 L378:
 	movq %rdi,%r14
 	xorl %r13d,%r13d
-L380:
-	cmpl 12(%r14),%r13d
-	jge L379
+	jmp L380
 L384:
 	movq 16(%r14),%rax
 	movslq %r13d,%r13
@@ -946,7 +944,9 @@ L436:
 	jmp L423
 L382:
 	incl %r13d
-	jmp L380
+L380:
+	cmpl 12(%r14),%r13d
+	jl L384
 L379:
 	popq %r14
 	popq %r13
@@ -1005,24 +1005,24 @@ L472:
 	call _vector_insert
 L473:
 	movq _all_blocks(%rip),%rbx
-L474:
-	testq %rbx,%rbx
-	jz L477
+	jmp L474
 L475:
 	movq %rbx,%rdi
 	call _cmp
 	movq 112(%rbx),%rbx
-	jmp L474
+L474:
+	testq %rbx,%rbx
+	jnz L475
 L477:
 	movq _all_blocks(%rip),%rbx
-L478:
-	testq %rbx,%rbx
-	jz L482
+	jmp L478
 L479:
 	movq %rbx,%rdi
 	call _norm
 	movq 112(%rbx),%rbx
-	jmp L478
+L478:
+	testq %rbx,%rbx
+	jnz L479
 L482:
 	movq _local_arena(%rip),%rax
 	movq %rax,_local_arena+8(%rip)

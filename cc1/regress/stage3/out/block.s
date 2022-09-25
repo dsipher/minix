@@ -17,11 +17,10 @@ L9:
 	movq _func_arena+8(%rip),%rbx
 	leaq 824(%rbx),%rax
 	movq %rax,_func_arena+8(%rip)
-	movl $824,%ecx
+	movl $824,%edx
+	xorl %esi,%esi
 	movq %rbx,%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	movl _last_asmlab(%rip),%eax
 	incl %eax
 	movl %eax,_last_asmlab(%rip)
@@ -536,12 +535,11 @@ L207:
 L208:
 	movq 16(%r14),%rax
 	movslq %r15d,%r15
-	movslq %ebx,%rcx
-	shlq $3,%rcx
+	movslq %ebx,%rdx
+	shlq $3,%rdx
 	movq 16(%r12),%rsi
 	leaq (%rax,%r15,8),%rdi
-	rep 
-	movsb 
+	call ___builtin_memcpy
 L202:
 	movq %r12,%rsi
 	movq %r14,%rdi
@@ -1832,6 +1830,7 @@ L526:
 .globl _predict_switch_succ
 .globl _exit_block
 .globl _intersect_cc
+.globl ___builtin_memset
 .globl _current_block
 .globl _reset_blocks
 .globl _entry_block
@@ -1847,6 +1846,7 @@ L526:
 .globl _all_regs
 .globl _walk_blocks
 .globl _conditional_block
+.globl ___builtin_memcpy
 .globl _iterate_blocks
 .globl _fuse_block
 .globl _add_succ

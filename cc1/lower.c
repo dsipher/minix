@@ -1837,10 +1837,7 @@ static int copy(struct block *b, int i, struct operand *dst,
     return count;
 }
 
-/* I_LIR_BLKCPY arises from struct assignments or
-   from __builtin_memcpy(). the latter is exposed
-   to the user as a courtesy, and is not always a
-   great alternative to memcpy() in the library. */
+/* I_LIR_BLKCPY arises from struct assignments. */
 
 static int lower_blkcpy(struct block *b, int i,
                         int unused0, struct choice *unused1)
@@ -1853,10 +1850,9 @@ static int lower_blkcpy(struct block *b, int i,
 }
 
 /* I_LIR_BLKSET. as above, the compiler generates these
-   when dealing with structs (auto initializers) and to
-   handle __builtin_memset(). we try to generate a short
-   sequence when zeroing constant-sized blocks, otherwise
-   fall back to REP STOSB, which is optimized on most CPUs. */
+   when dealing with structs (auto initializers). we try
+   to generate a short sequence when zeroing constant-sized
+   blocks, otherwise fall back to REP STOSB. */
 
 static int lower_blkset(struct block *b, int i,
                         int unused0, struct choice *unused1)

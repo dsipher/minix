@@ -368,8 +368,8 @@ extern const char commuted_cc[];
 
     /* block operations:
 
-        BLKCPY (UL) size, (PTR) src, (PTR) dst  ...  __builtin_memcpy()
-        BLKSET (UL) size, (I) value, (PTR) buf  ...  __builtin_memset() */
+        BLKCPY (UL) size, (PTR) src, (PTR) dst
+        BLKSET (UL) size, (I) value, (PTR) buf */
 
 #define I_LIR_BLKCPY        (  38 | I_ENC_OPERANDS(3)                       \
                                   | I_FLAG_USES_MEM | I_FLAG_DEFS_MEM       )

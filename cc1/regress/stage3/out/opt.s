@@ -141,13 +141,12 @@ L66:
 	pushq %r14
 	pushq %r15
 L67:
-	movslq _fixcc_map+4(%rip),%rcx
+	movslq _fixcc_map+4(%rip),%rdx
 	movq %rdi,-24(%rbp)
 	movl $0,-12(%rbp)
+	movl $13,%esi
 	movq _fixcc_map+8(%rip),%rdi
-	movb $13,%al
-	rep 
-	stosb 
+	call ___builtin_memset
 	xorl %r15d,%r15d
 	jmp L69
 L73:
@@ -253,11 +252,10 @@ L125:
 	testl %eax,%eax
 	jz L127
 L126:
-	movslq _fixcc_map+4(%rip),%rcx
+	movslq _fixcc_map+4(%rip),%rdx
+	movl $13,%esi
 	movq _fixcc_map+8(%rip),%rdi
-	movb $13,%al
-	rep 
-	stosb 
+	call ___builtin_memset
 	jmp L71
 L127:
 	cmpl $0,_fixcc_regs(%rip)
@@ -852,6 +850,7 @@ L321:
 .globl _opt_lir_reassoc
 .globl _opt_lir_norm
 .globl _exit_block
+.globl ___builtin_memset
 .globl _live_analyze
 .globl _insn_is_copy
 .globl _opt_prohibit

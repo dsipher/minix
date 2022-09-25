@@ -959,31 +959,34 @@ L394:
 
 _address:
 L444:
+	pushq %rbx
+	pushq %r12
 L445:
-	xorl %eax,%eax
-	movq %rax,(%rdx)
-	movq %rax,8(%rdx)
-	movq %rax,16(%rdx)
-	movq %rax,24(%rdx)
-	movl %esi,4(%rdx)
+	movl %esi,%r12d
+	movq %rdx,%rbx
+	movl $32,%edx
+	xorl %esi,%esi
+	movq %rbx,%rdi
+	call ___builtin_memset
+	movl %r12d,4(%rbx)
 L447:
-	movl 4(%rdx),%esi
-	cmpl $0,%esi
+	movl 4(%rbx),%edx
+	cmpl $0,%edx
 	jl L446
 L448:
-	movq _values+8(%rip),%rdi
-	movslq %esi,%rsi
-	shlq $5,%rsi
-	movl (%rdi,%rsi),%eax
+	movq _values+8(%rip),%rsi
+	movslq %edx,%rdx
+	shlq $5,%rdx
+	movl (%rsi,%rdx),%eax
 	cmpl $2,%eax
 	jnz L451
 L450:
 	movl $-1,%ecx
-	movq 16(%rdi,%rsi),%r9
-	leaq 40(%r9),%r8
-	movq %r8,%rdi
-	leaq 72(%r9),%rsi
-	movl (%r9),%eax
+	movq 16(%rsi,%rdx),%r8
+	leaq 40(%r8),%rdi
+	movq %rdi,%rsi
+	leaq 72(%r8),%rdx
+	movl (%r8),%eax
 	cmpl $-1342177266,%eax
 	jz L456
 L485:
@@ -993,50 +996,52 @@ L486:
 	cmpl $-1610612733,%eax
 	jnz L446
 L477:
-	movq 56(%r9),%rcx
-	addq 8(%rdx),%rcx
-	movq %rcx,8(%rdx)
-	movl $-2,4(%rdx)
-	ret
+	movq 56(%r8),%rcx
+	addq 8(%rbx),%rcx
+	movq %rcx,8(%rbx)
+	movl $-2,4(%rbx)
+	jmp L446
 L456:
 	movl $1,%ecx
-	movl 40(%r9),%eax
+	movl 40(%r8),%eax
 	andl $7,%eax
 	cmpl $2,%eax
 	jnz L467
 L460:
-	cmpq $0,64(%r9)
+	cmpq $0,64(%r8)
 	jnz L467
 L461:
-	movq %rsi,%rdi
-	movq %r8,%rsi
+	movq %rdx,%rsi
+	movq %rdi,%rdx
 L467:
-	movl (%rsi),%eax
+	movl (%rdx),%eax
 	andl $7,%eax
 	cmpl $2,%eax
 	jnz L446
 L471:
-	cmpq $0,24(%rsi)
+	cmpq $0,24(%rdx)
 	jnz L446
 L472:
 	movslq %ecx,%rcx
-	imulq 16(%rsi),%rcx
-	addq 8(%rdx),%rcx
-	movq %rcx,8(%rdx)
-	movl 12(%rdi),%eax
-	movl %eax,4(%rdx)
+	imulq 16(%rdx),%rcx
+	addq 8(%rbx),%rcx
+	movq %rcx,8(%rbx)
+	movl 12(%rsi),%eax
+	movl %eax,4(%rbx)
 	jmp L447
 L451:
 	cmpl $1,%eax
 	jnz L446
 L479:
-	movq 16(%rdi,%rsi),%rcx
-	addq 8(%rdx),%rcx
-	movq %rcx,8(%rdx)
-	movq 24(%rdi,%rsi),%rax
-	movq %rax,16(%rdx)
-	movl $-3,4(%rdx)
+	movq 16(%rsi,%rdx),%rcx
+	addq 8(%rbx),%rcx
+	movq %rcx,8(%rbx)
+	movq 24(%rsi,%rdx),%rax
+	movq %rax,16(%rbx)
+	movl $-3,4(%rbx)
 L446:
+	popq %r12
+	popq %rbx
 	ret 
 
 
@@ -2022,6 +2027,7 @@ L848:
 .globl _is_pred
 .globl _insn_uses_mem0
 .globl _char_type
+.globl ___builtin_memset
 .globl _opt_lir_dvn
 .globl _commute_insn
 .globl _normalize_con

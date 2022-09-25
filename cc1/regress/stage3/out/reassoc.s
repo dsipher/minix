@@ -647,12 +647,11 @@ L279:
 	movl $_ineligible,%edi
 	call _vector_insert
 L280:
-	movslq _ineligible+4(%rip),%rcx
-	shlq $3,%rcx
+	movslq _ineligible+4(%rip),%rdx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq _ineligible+8(%rip),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	movl 12(%r12),%ebx
 L281:
 	movl %ebx,%eax
@@ -778,6 +777,7 @@ L323:
 .globl _all_blocks
 .globl _range_use_count
 .globl _opt_lir_reassoc
+.globl ___builtin_memset
 .globl _live_analyze
 .globl _range_by_use
 .globl _normalize_con

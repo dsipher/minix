@@ -42,25 +42,26 @@ L6:
 _find:
 L10:
 	pushq %rbx
+	pushq %r12
 L11:
 	movq _graph+8(%rip),%rcx
-	movl %edi,%r8d
-	movl %r8d,%eax
+	movl %edi,%ebx
+	movl %ebx,%eax
 	andl $1073725440,%eax
 	sarl $14,%eax
 	movslq %eax,%rax
-	movq (%rcx,%rax,8),%rbx
+	movq (%rcx,%rax,8),%r12
 	jmp L13
 L16:
-	cmpl (%rbx),%r8d
+	cmpl (%r12),%ebx
 	jz L18
 L17:
-	movq 48(%rbx),%rbx
+	movq 48(%r12),%r12
 L13:
-	testq %rbx,%rbx
+	testq %r12,%r12
 	jnz L16
 L18:
-	testq %rbx,%rbx
+	testq %r12,%r12
 	jnz L22
 L23:
 	testl %esi,%esi
@@ -76,35 +77,32 @@ L30:
 	addq %rax,%rdx
 	movq %rdx,_local_arena+8(%rip)
 L32:
-	movq _local_arena+8(%rip),%rdi
-	leaq 56(%rdi),%rax
+	movq _local_arena+8(%rip),%r12
+	leaq 56(%r12),%rax
 	movq %rax,_local_arena+8(%rip)
-	movq %rdi,%rbx
-	xorl %eax,%eax
-	movq %rax,(%rdi)
-	movq %rax,8(%rdi)
-	movq %rax,16(%rdi)
-	movq %rax,24(%rdi)
-	movq %rax,32(%rdi)
-	movq %rax,40(%rdi)
-	movq %rax,48(%rdi)
-	movl $0,16(%rdi)
-	movl $0,20(%rdi)
-	movq $0,24(%rdi)
-	movq $_local_arena,32(%rdi)
-	movl %r8d,(%rdi)
-	movl %r8d,%eax
+	movl $56,%edx
+	xorl %esi,%esi
+	movq %r12,%rdi
+	call ___builtin_memset
+	movl $0,16(%r12)
+	movl $0,20(%r12)
+	movq $0,24(%r12)
+	movq $_local_arena,32(%r12)
+	movl %ebx,(%r12)
+	movl %ebx,%eax
 	andl $1073725440,%eax
 	sarl $14,%eax
 	cmpl $34,%eax
 	jge L38
 L36:
-	movl %r8d,4(%rdi)
+	movl %ebx,4(%r12)
 L38:
+	movq %r12,%rdi
 	call _put
 L22:
-	movq %rbx,%rax
+	movq %r12,%rax
 L12:
+	popq %r12
 	popq %rbx
 	ret 
 
@@ -1232,12 +1230,11 @@ L506:
 	movl $_graph,%edi
 	call _vector_insert
 L507:
-	movslq _graph+4(%rip),%rcx
-	shlq $3,%rcx
+	movslq _graph+4(%rip),%rdx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq _graph+8(%rip),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	movl $0,_tmp_regs(%rip)
 	movl $0,_tmp_regs+4(%rip)
 	movq $0,_tmp_regs+8(%rip)
@@ -1309,6 +1306,7 @@ L464:
 .globl _long_type
 .globl _temp
 .globl _contains_reg
+.globl ___builtin_memset
 .globl _live_analyze
 .globl _insn_is_copy
 .globl _insn_substitute_reg

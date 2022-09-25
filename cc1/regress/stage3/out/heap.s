@@ -257,10 +257,9 @@ L53:
 L54:
 	movq 8(%r13),%rdi
 	imull 4(%r12),%ebx
-	movslq %ebx,%rcx
+	movl %ebx,%edx
 	movq 8(%r12),%rsi
-	rep 
-	movsb 
+	call ___builtin_memcpy
 L51:
 	popq %r13
 	popq %r12
@@ -288,6 +287,7 @@ L13:
 .globl _refill_slab
 .globl _string_arena
 .globl _mmap
+.globl ___builtin_memcpy
 .globl _local_arena
 .globl _init_arena
 .globl _vector_insert

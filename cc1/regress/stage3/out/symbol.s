@@ -12,39 +12,40 @@ _new_symbol:
 L1:
 	pushq %rbx
 	pushq %r12
+	pushq %r13
 L2:
-	movq _symbol_slab+8(%rip),%rdx
-	movq %rdi,%r12
-	movl %esi,%ebx
-	testq %rdx,%rdx
+	movq _symbol_slab+8(%rip),%rbx
+	movq %rdi,%r13
+	movl %esi,%r12d
+	testq %rbx,%rbx
 	jz L6
 L5:
-	movq (%rdx),%rax
+	movq (%rbx),%rax
 	movq %rax,_symbol_slab+8(%rip)
 	jmp L7
 L6:
 	movl $_symbol_slab,%edi
 	call _refill_slab
-	movq %rax,%rdx
+	movq %rax,%rbx
 L7:
 	decl _symbol_slab+20(%rip)
-	movl $80,%ecx
-	movq %rdx,%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
-	movq %r12,(%rdx)
-	movl %ebx,12(%rdx)
+	movl $80,%edx
+	xorl %esi,%esi
+	movq %rbx,%rdi
+	call ___builtin_memset
+	movq %r13,(%rbx)
+	movl %r12d,12(%rbx)
 	movl L4(%rip),%eax
 	incl %eax
 	movl %eax,L4(%rip)
-	movl %eax,16(%rdx)
+	movl %eax,16(%rbx)
 	movq _path(%rip),%rax
-	movq %rax,24(%rdx)
+	movq %rax,24(%rbx)
 	movl _line_no(%rip),%eax
-	movl %eax,20(%rdx)
-	movq %rdx,%rax
+	movl %eax,20(%rbx)
+	movq %rbx,%rax
 L3:
+	popq %r13
 	popq %r12
 	popq %rbx
 	ret 
@@ -1301,6 +1302,7 @@ L216:
 .globl _refill_slab
 .globl _lookup_label
 .globl _registerize
+.globl ___builtin_memset
 .globl _global
 .globl _line_no
 .globl _get_tnode

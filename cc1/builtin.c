@@ -52,20 +52,6 @@ void seed_builtin(struct string *id)
 
     switch (id->k)
     {
-    case K_BUILTIN_MEMCPY:
-        ret = PTR(&void_type);
-        new_formal(func, PTR(&void_type));
-        new_formal(func, PTR(qualify(&void_type, T_CONST)));
-        new_formal(func, &ulong_type);
-        break;
-
-    case K_BUILTIN_MEMSET:
-        ret = PTR(&void_type);
-        new_formal(func, PTR(&void_type));
-        new_formal(func, &int_type);
-        new_formal(func, &ulong_type);
-        break;
-
     case K_BUILTIN_CLZ:
     case K_BUILTIN_CTZ:
         ret = &int_type;
@@ -124,14 +110,6 @@ struct tree *rewrite_builtin(struct tree *tree)
     case K_BUILTIN_CTZ:
     case K_BUILTIN_CTZL:
         return unary_tree(E_BSF, &int_type, tree->args[0]);
-
-    case K_BUILTIN_MEMCPY:
-    case K_BUILTIN_MEMSET:
-        /* conveniently, the prototypes for the builtins have
-           already molded the arguments to acceptable types */
-
-        return blk_tree((k == K_BUILTIN_MEMCPY) ? E_BLKCPY : E_BLKSET,
-                         tree->args[0], tree->args[1], tree->args[2]);
     }
 
     return tree;

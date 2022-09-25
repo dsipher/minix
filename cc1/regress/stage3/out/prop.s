@@ -278,12 +278,11 @@ L119:
 	leaq 456(%rbx),%rdi
 	call _vector_insert
 L120:
-	movslq 460(%rbx),%rcx
-	shlq $3,%rcx
+	movslq 460(%rbx),%rdx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq 464(%rbx),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	xorl %r8d,%r8d
 	jmp L121
 L122:
@@ -337,12 +336,11 @@ L138:
 	leaq 480(%r12),%rdi
 	call _vector_insert
 L139:
-	movslq 484(%r12),%rcx
-	shlq $3,%rcx
+	movslq 484(%r12),%rdx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq 488(%r12),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	xorl %ebx,%ebx
 	jmp L140
 L141:
@@ -419,32 +417,28 @@ L173:
 L174:
 	movq _entry_block(%rip),%rax
 	movq 512(%rbx),%rdi
-	movslq 508(%rbx),%rcx
+	movslq 508(%rbx),%rdx
 	cmpq %rax,%rbx
 	jnz L176
 L175:
-	shlq $3,%rcx
-	xorl %eax,%eax
-	rep 
-	stosb 
-	movslq 532(%rbx),%rcx
-	shlq $3,%rcx
+	shlq $3,%rdx
+	xorl %esi,%esi
+	call ___builtin_memset
+	movslq 532(%rbx),%rdx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq 536(%rbx),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	jmp L156
 L176:
-	shlq $3,%rcx
-	movb $255,%al
-	rep 
-	stosb 
-	movslq 532(%rbx),%rcx
-	shlq $3,%rcx
+	shlq $3,%rdx
+	movl $255,%esi
+	call ___builtin_memset
+	movslq 532(%rbx),%rdx
+	shlq $3,%rdx
+	movl $255,%esi
 	movq 536(%rbx),%rdi
-	movb $255,%al
-	rep 
-	stosb 
+	call ___builtin_memset
 	movl 532(%rbx),%esi
 	xorl %edx,%edx
 	jmp L181
@@ -483,13 +477,12 @@ L192:
 	pushq %rbx
 	pushq %r12
 L193:
-	movslq _tmp_bits+4(%rip),%rcx
+	movslq _tmp_bits+4(%rip),%rdx
 	movq %rdi,%r12
-	shlq $3,%rcx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq _tmp_bits+8(%rip),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	xorl %ebx,%ebx
 	jmp L195
 L196:
@@ -813,6 +806,7 @@ L269:
 .globl _sequence_blocks
 .globl _union_regs
 .globl _contains_reg
+.globl ___builtin_memset
 .globl _insn_is_copy
 .globl _entry_block
 .globl _insn_substitute_reg

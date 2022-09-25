@@ -295,12 +295,11 @@ L170:
 	movq %rbx,%rdi
 	call _vector_insert
 L171:
-	movslq 4(%rbx),%rcx
-	shlq $3,%rcx
+	movslq 4(%rbx),%rdx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq 8(%rbx),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	cmpl $0,24(%rbx)
 	jl L176
 L175:
@@ -1920,6 +1919,7 @@ L824:
 .globl _sequence_blocks
 .globl _predict_succ
 .globl _predict_switch_succ
+.globl ___builtin_memset
 .globl _entry_block
 .globl _normalize_con
 .globl _opt_request

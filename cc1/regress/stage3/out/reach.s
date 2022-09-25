@@ -848,12 +848,11 @@ L291:
 	movl $_subs,%edi
 	call _vector_insert
 L292:
-	movslq _subs+4(%rip),%rcx
-	shlq $2,%rcx
+	movslq _subs+4(%rip),%rdx
+	shlq $2,%rdx
+	xorl %esi,%esi
 	movq _subs+8(%rip),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	movq _all_blocks(%rip),%r12
 	jmp L293
 L297:
@@ -1033,6 +1032,7 @@ L355:
 .globl _sequence_blocks
 .globl _union_regs
 .globl _contains_reg
+.globl ___builtin_memset
 .globl _insn_substitute_reg
 .globl _reach
 .globl _replace_indexed_regs

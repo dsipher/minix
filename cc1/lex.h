@@ -240,12 +240,10 @@
 #define K_MEM       ( 126 )
 #define K_CC        ( 127 )
 
-#define K_BUILTIN_MEMCPY    ( 128 | K_BUILTIN )     /* __builtin_memcpy */
-#define K_BUILTIN_MEMSET    ( 129 | K_BUILTIN )     /* __builtin_memset */
-#define K_BUILTIN_CLZ       ( 130 | K_BUILTIN )     /* __builtin_clz */
-#define K_BUILTIN_CLZL      ( 131 | K_BUILTIN )     /* __builtin_clzl */
-#define K_BUILTIN_CTZ       ( 132 | K_BUILTIN )     /* __builtin_ctz */
-#define K_BUILTIN_CTZL      ( 133 | K_BUILTIN )     /* __builtin_ctzl */
+#define K_BUILTIN_CLZ       ( 128 | K_BUILTIN )     /* __builtin_clz */
+#define K_BUILTIN_CLZL      ( 129 | K_BUILTIN )     /* __builtin_clzl */
+#define K_BUILTIN_CTZ       ( 130 | K_BUILTIN )     /* __builtin_ctz */
+#define K_BUILTIN_CTZL      ( 131 | K_BUILTIN )     /* __builtin_ctzl */
 
 /* convert the token value for a machine register
    into the actual machine register. relies on the

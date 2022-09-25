@@ -187,8 +187,6 @@ static struct { char *text; int k; } keywords[] =
     "xmm14",        K_XMM14,        "xmm15",        K_XMM15,
     "mem",          K_MEM,          "cc",           K_CC,
 
-    "__builtin_memcpy",             K_BUILTIN_MEMCPY,
-    "__builtin_memset",             K_BUILTIN_MEMSET,
     "__builtin_clz",                K_BUILTIN_CLZ,
     "__builtin_clzl",               K_BUILTIN_CLZL,
     "__builtin_ctz",                K_BUILTIN_CTZ,

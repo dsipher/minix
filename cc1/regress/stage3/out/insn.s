@@ -474,8 +474,13 @@ _insn_text:
 
 _new_insn:
 L273:
+	pushq %rbx
+	pushq %r12
+	pushq %r13
+	pushq %r14
 L274:
-	movl %edi,%r9d
+	movl %edi,%r13d
+	movl %esi,%r14d
 	movq _func_arena+8(%rip),%rdx
 	movq %rdx,%rcx
 	andl $7,%ecx
@@ -486,89 +491,91 @@ L279:
 	addq %rax,%rdx
 	movq %rdx,_func_arena+8(%rip)
 L281:
-	movq _func_arena+8(%rip),%r8
-	cmpl $8388609,%r9d
+	movq _func_arena+8(%rip),%r12
+	cmpl $8388609,%r13d
 	jz L285
 L303:
-	cmpl $58720258,%r9d
+	cmpl $58720258,%r13d
 	jz L293
 L304:
-	movl %r9d,%edx
-	andl $805306368,%edx
-	sarl $28,%edx
-	leal (%rdx,%rsi),%ecx
-	movslq %ecx,%rcx
-	shlq $5,%rcx
-	leaq 8(%r8,%rcx),%rax
+	movl %r13d,%ebx
+	andl $805306368,%ebx
+	sarl $28,%ebx
+	leal (%rbx,%r14),%edx
+	movslq %edx,%rdx
+	shlq $5,%rdx
+	leaq 8(%r12,%rdx),%rax
 	movq %rax,_func_arena+8(%rip)
-	addq $8,%rcx
-	movq %r8,%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
-	andl $63,%esi
-	shll $5,%esi
-	movl 4(%r8),%eax
+	addq $8,%rdx
+	xorl %esi,%esi
+	movq %r12,%rdi
+	call ___builtin_memset
+	andl $63,%r14d
+	shll $5,%r14d
+	movl 4(%r12),%eax
 	andl $4294965279,%eax
-	orl %esi,%eax
-	movl %eax,4(%r8)
+	orl %r14d,%eax
+	movl %eax,4(%r12)
 L295:
-	movl %edx,%eax
-	decl %edx
+	movl %ebx,%eax
+	decl %ebx
 	testl %eax,%eax
 	jz L283
 L296:
-	movb %dl,%cl
+	movb %bl,%cl
 	movb $5,%al
 	imulb %cl
 	leal 8(%rax),%ecx
-	movl %r9d,%eax
+	movl %r13d,%eax
 	sarl %cl,%eax
 	andb $31,%al
 	movb %al,%cl
-	movl $1,%esi
-	shll %cl,%esi
-	movslq %edx,%rcx
+	movl $1,%edx
+	shll %cl,%edx
+	movslq %ebx,%rcx
 	shlq $5,%rcx
-	andl $131071,%esi
-	shll $5,%esi
-	movl 8(%r8,%rcx),%eax
+	andl $131071,%edx
+	shll $5,%edx
+	movl 8(%r12,%rcx),%eax
 	andl $4290773023,%eax
-	orl %esi,%eax
-	movl %eax,8(%r8,%rcx)
+	orl %edx,%eax
+	movl %eax,8(%r12,%rcx)
 	jmp L295
 L293:
-	leaq 24(%r8),%rax
+	leaq 24(%r12),%rax
 	movq %rax,_func_arena+8(%rip)
-	xorl %eax,%eax
-	movq %rax,(%r8)
-	movq %rax,8(%r8)
-	movq %rax,16(%r8)
+	movl $24,%edx
+	xorl %esi,%esi
+	movq %r12,%rdi
+	call ___builtin_memset
 	movq _path(%rip),%rax
-	movq %rax,8(%r8)
+	movq %rax,8(%r12)
 	movl _line_no(%rip),%eax
-	movl %eax,16(%r8)
+	movl %eax,16(%r12)
 	jmp L283
 L285:
-	leaq 64(%r8),%rax
+	leaq 64(%r12),%rax
 	movq %rax,_func_arena+8(%rip)
-	movl $64,%ecx
-	movq %r8,%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
-	movl $0,16(%r8)
-	movl $0,20(%r8)
-	movq $0,24(%r8)
-	movq $_func_arena,32(%r8)
-	movl $0,40(%r8)
-	movl $0,44(%r8)
-	movq $0,48(%r8)
-	movq $_func_arena,56(%r8)
+	movl $64,%edx
+	xorl %esi,%esi
+	movq %r12,%rdi
+	call ___builtin_memset
+	movl $0,16(%r12)
+	movl $0,20(%r12)
+	movq $0,24(%r12)
+	movq $_func_arena,32(%r12)
+	movl $0,40(%r12)
+	movl $0,44(%r12)
+	movq $0,48(%r12)
+	movq $_func_arena,56(%r12)
 L283:
-	movl %r9d,(%r8)
-	movq %r8,%rax
+	movl %r13d,(%r12)
+	movq %r12,%rax
 L275:
+	popq %r14
+	popq %r13
+	popq %r12
+	popq %rbx
 	ret 
 
 
@@ -587,24 +594,23 @@ L307:
 	movq %rax,%rbx
 	movq (%r12),%rax
 	movq %rax,(%rbx)
-	movl (%rbx),%ecx
-	cmpl $8388609,%ecx
+	movl (%rbx),%edx
+	cmpl $8388609,%edx
 	jz L312
 L324:
-	cmpl $58720258,%ecx
+	cmpl $58720258,%edx
 	jz L320
 L325:
-	andl $805306368,%ecx
-	sarl $28,%ecx
+	andl $805306368,%edx
+	sarl $28,%edx
 	movl 4(%rbx),%eax
 	shll $21,%eax
 	shrl $26,%eax
-	addl %eax,%ecx
-	shlq $5,%rcx
+	addl %eax,%edx
+	shlq $5,%rdx
 	leaq 8(%r12),%rsi
 	leaq 8(%rbx),%rdi
-	rep 
-	movsb 
+	call ___builtin_memcpy
 	jmp L310
 L320:
 	movq 8(%r12),%rcx
@@ -2809,6 +2815,7 @@ L163:
 .globl _iargs
 .globl _regmap_substitute
 .globl _intersect_cc
+.globl ___builtin_memset
 .globl _line_no
 .globl _insn_is_copy
 .globl _insn_substitute_reg
@@ -2820,6 +2827,7 @@ L163:
 .globl _out
 .globl _same_operand
 .globl _same_regmap
+.globl ___builtin_memcpy
 .globl _normalize_operand
 .globl _out_f
 .globl _new_insn

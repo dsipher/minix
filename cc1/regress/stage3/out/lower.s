@@ -852,12 +852,11 @@ L420:
 	pushq %r15
 L421:
 	movq %rdi,%r14
-	movslq 732(%r14),%rcx
-	shlq $3,%rcx
+	movslq 732(%r14),%rdx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq 736(%r14),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	cmpl $0,752(%r14)
 	jl L427
 L426:
@@ -4885,12 +4884,11 @@ L1690:
 	call _alloc0
 	leaq 776(%rbx),%rdi
 	call _alloc0
-	movslq 780(%rbx),%rcx
-	shlq $3,%rcx
+	movslq 780(%rbx),%rdx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq 784(%rbx),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	movq 112(%rbx),%rbx
 L1689:
 	testq %rbx,%rbx
@@ -4989,6 +4987,7 @@ L618:
 .globl _func_ret_type
 .globl _lower
 .globl _iargs
+.globl ___builtin_memset
 .globl _live_analyze
 .globl _invert_regmap
 .globl _range_by_use

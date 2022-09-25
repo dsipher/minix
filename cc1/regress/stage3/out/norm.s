@@ -367,19 +367,17 @@ L109:
 	pushq %r14
 	pushq %r15
 L110:
-	movslq _norm_0s+4(%rip),%rcx
+	movslq _norm_0s+4(%rip),%rdx
 	movq %rdi,%r14
-	shlq $3,%rcx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq _norm_0s+8(%rip),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
-	movslq _norm_1s+4(%rip),%rcx
-	shlq $3,%rcx
+	call ___builtin_memset
+	movslq _norm_1s+4(%rip),%rdx
+	shlq $3,%rdx
+	xorl %esi,%esi
 	movq _norm_1s+8(%rip),%rdi
-	xorl %eax,%eax
-	rep 
-	stosb 
+	call ___builtin_memset
 	xorl %r15d,%r15d
 	jmp L112
 L116:
@@ -1044,6 +1042,7 @@ L440:
 .globl _norms
 .globl _char_type
 .globl _opt_lir_norm
+.globl ___builtin_memset
 .globl _live_analyze
 .globl _insn_is_copy
 .globl _commute_insn

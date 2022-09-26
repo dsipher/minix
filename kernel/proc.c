@@ -87,8 +87,6 @@ struct procq sleepq = TAILQ_HEAD_INITIALIZER(sleepq);
 
 struct procq idleq = TAILQ_HEAD_INITIALIZER(idleq);
 
-#define READYQ(p)   (((p)->p_flags & P_FLAG_IDLE) ? &idleq : &readyq)
-
 /* a simple linear traversal to find a P_STATE_FREE entry.
    in practice, we never have to scan more entries than the
    max number of processes that have ever been live at once.
@@ -175,7 +173,7 @@ newproc(void (*entry)(void))
             p->p_pid = INDEX_FROM_PROC(p);
     }
 
-    /* other nerdlies */
+    /* nerdlies */
 
     p->p_flags = CURPROC->p_flags;
     p->p_cpu = CURPROC->p_cpu;
@@ -190,18 +188,32 @@ newproc(void (*entry)(void))
     return p;
 }
 
-/* everything proc ends up at run() came
-   from newproc(), which has initialized
-   all relevant fields; we just queue it */
+/* set a process to P_STATE_READY and
+   put it on the appropriate queue */
+
+static void
+ready(struct proc *p)   /* hold: sched_lock */
+{
+    struct procq *procq;
+
+    p->p_age = 0;
+    p->p_state = P_STATE_READY;
+
+    procq = (p->p_flags & P_FLAG_IDLE)
+                ? &idleq
+                : &readyq;
+
+    TAILQ_INSERT_TAIL(procq, p, p_qlinks);
+}
+
+/* obviously, just ready() exposed to
+   the public with locking wrappers */
 
 void
 run(struct proc *p)
 {
     acquire(&sched_lock);
-
-    p->p_state = P_STATE_READY;
-    TAILQ_INSERT_TAIL(READYQ(p), p, p_qlinks);
-
+    ready(p);
     release(&sched_lock);
 }
 

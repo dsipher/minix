@@ -338,10 +338,19 @@ banner_msg:         .byte 13, 10, 10
 / addressible RAM, because %cr3 is loaded in 32-bit mode.
 / (this should never pose a problem; change prot_64 if so)
 
+/ these correspond to struct boot_config in sys/boot.h
+
                     .org 0x1180 - ORIGIN
 
 entry_addr:         .quad   KERNEL_ADDR         / kernel entry point
 entry_ptl3:         .quad   PTL3                / page tables
+
+/ these values are intended to be configurable by the user.
+/ (eventually we'll modify mkboot.c to view/change/reset them.)
+
+nproc:              .short  128         / number of processes
+nbuf:               .short  8192        / number of 4k block buffers
+nmbuf:              .short  1024        / number of 4k packet buffers
 
 //////////////////////////////////////////////////////////////////////////////
 

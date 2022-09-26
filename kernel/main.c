@@ -58,12 +58,23 @@ main(void)
     kernel_top += bss + KERNEL_AOUT->a_bss;             /* kernel_top. */
     kernel_top = PAGE_UP(kernel_top);           /* (must be whole pages) */
 
+    /* zap the u. area and do minimal setup: we need u_locks because
+       we'll access spinlocks. though we're identity-mapped right now,
+       pginit() will keep these pages mapped as the u. area for proc[0].
+       we don't have a proc[0] struct yet: the proc[] array is allocated
+       by pginit(), which will set proc[0].p_ptl3 and u.u_procp, since
+       it needs these fields to complete its own setup. boot spaghetti! */
+
+    STOSQ(&u, 0, USER_PAGES * (PAGE_SIZE >> 3));
+    u.u_locks = 1;  /* interrupts are disabled */
+
     cninit();
     pginit();
 
-    swtch(&proc0);
+    /* finish manually crafting proc[0] here */
 
-    printf("survived swtch().\n");
+    swtch(&proc[0]);
+    printf("survived swtch(&proc[0])\n");
 
     for (;;) ;
 }

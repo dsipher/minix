@@ -31,23 +31,48 @@
 
 *****************************************************************************/
 
+#include <errno.h>
 #include <sys/boot.h>
 #include <sys/proc.h>
+#include <sys/spin.h>
+#include <sys/user.h>
 
-/* process 0 is the the context when the BSP enters the
-   kernel. during startup, it decays into an idle process
-   after forking pid 1 (which eventually becomes init). */
+/* the scheduler lock. this protects proc[]. */
 
-struct proc proc0   =
+static spinlock_t sched_lock;
+
+/* the process table. fixed size: NPROC entries
+   allocated (and zeroed) at boot by pginit(). */
+
+struct proc *proc;
+
+/* a simple linear traversal to find a P_STATE_FREE entry.
+   in practice, we never have to scan more entries than the
+   max number of processes that have ever been live at once.
+
+   pginit() zeroes proc[], so all entries start P_STATE_FREE. */
+
+struct proc *
+allproc(void)
 {
-    (pte_t *)           PTOV(PTL3_ADDR),                /* p_ptl3 */
-    (struct user *)     PTOV(USER_ADDR),                /* p_u */
-                        0,                              /* p_pid */
-                        P_STATE_RUN,                    /* p_state */
-                        0,                              /* p_flags */
-                        0,                              /* p_cpu */
-                        0,                              /* p_age */
-                        0                               /* p_chan */
-};
+    struct proc *p;
+    int i;
+
+    acquire(&sched_lock);
+
+    for (i = 0, p = proc; i < NPROC; ++i, ++p)
+        if (p->p_state == P_STATE_FREE)
+        {
+            p->p_state = P_STATE_NEW;
+            goto out;
+        }
+
+    p = 0;
+    u.u_error = EAGAIN;
+
+out:
+    release(&sched_lock);
+    return p;
+}
 
 /* vi: set ts=4 expandtab: */

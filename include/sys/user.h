@@ -59,8 +59,9 @@ struct user
 
     struct proc     *u_procp;       /* 0x0200: associated struct proc */
     unsigned char   u_locks;        /* 0x0208: depth of `cli' nesting */
+    unsigned char   u_error;        /* 0x0209: errno to return to user */
 
-                                    /* (0x0209 .. 0x20F available) */
+                                    /* (0x020A .. 0x20F available) */
 
     /* save area for swtch() */
 

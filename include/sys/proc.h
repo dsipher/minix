@@ -58,7 +58,9 @@ struct proc
 /* process states are represented as a bitset so we can refer to groups
    of states easily, but a process may only be in one state at a time. */
 
-#define P_STATE_NEW     0x01        /* embryonic, just created */
+#define P_STATE_FREE    0           /* unused proc[] entry (must be 0) */
+
+#define P_STATE_NEW     0x01        /* embryonic, being created */
 #define P_STATE_RUN     0x02        /* currently running on a CPU */
 #define P_STATE_READY   0x04        /* ready to run (on readyq) */
 #define P_STATE_SLEEP   0x08        /* sleeping (on sleepq); interruptible */
@@ -85,7 +87,14 @@ struct proc
 
 #ifdef _KERNEL
 
-extern struct proc proc0;
+extern struct proc *proc;
+
+/* find an unused proc[] entry and return it,
+   uninitialized except p_state == P_STATE_NEW.
+   if there are no free entries, u.u_error
+   is set to EAGAIN, and null is returned. */
+
+extern struct proc *allproc(void);
 
 /* save the current context and switch to a new process
    `to'. must be called with the scheduler lock held. */

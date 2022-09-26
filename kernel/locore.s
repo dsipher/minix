@@ -35,17 +35,9 @@
 / head off to main(), never to return.
 
                     lidt idt_48
-
-/ configure the u. area. while u. is remapped on context switch, pginit() in
-/ page.c keeps process 0's u. identity-mapped to avoid bootstrap headaches.
-
-                    movq $_proc0, U_PROCP           / we are process 0
-                    movb $1, U_LOCKS                / interrupts disabled
-
                     jmp _main
 
 .globl _main
-.globl _proc0
 
 //////////////////////////////////////////////////////////////////////////////
 /
@@ -66,6 +58,7 @@ _u = 0x00100000                 / USER_ADDR from sys/page.h
 U_FXSAVE    =   _u + 0x0000
 U_PROCP     =   _u + 0x0200
 U_LOCKS     =   _u + 0x0208
+U_ERROR     =   _u + 0x0209
 
 U_SYS_RBX   =   _u + 0x0210
 U_SYS_RBP   =   _u + 0x0218
@@ -78,13 +71,15 @@ U_SYS_RIP   =   _u + 0x0248
 
 //////////////////////////////////////////////////////////////////////////////
 /
-/ the E820 map is retrieved by boot and stored at these locations.
+/ data passed in from the boot block
 
 .globl _e820_map
 .globl _e820_count
+.globl _boot_config
 
-_e820_count = 0x7000
-_e820_map   = 0x7008
+_boot_config    =   0x1180
+_e820_count     =   0x7000
+_e820_map       =   0x7008
 
 //////////////////////////////////////////////////////////////////////////////
 /

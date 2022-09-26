@@ -423,6 +423,7 @@ pginit(void)
     struct e820 *entry;
     caddr_t ram_top;
     caddr_t addr;
+    caddr_t size;
     int i;
 
     fix_e820();
@@ -430,7 +431,7 @@ pginit(void)
     /* we need to remove the [identity-mapped] proc0 u. area
        from the map. the pages must be where we expect them! */
 
-    if (memall(USER_PAGES) != USER_ADDR) panic("pginit");
+    if (memall(USER_PAGES) != USER_ADDR) panic("user");
 
     /* find the highest physical RAM address. the result
        is ram_top, such that all RAM addresses < ram_top. */
@@ -444,7 +445,30 @@ pginit(void)
 
     physical(ram_top);
 
-    /* XXX allocate proc[], buf[], mbuf[] etc. with memall() */
+    /* compute the sizes of fixed kernel tables.
+       all of these structs are quadword-aligned,
+       so we need no padding between them. */
+
+    size = NPROC * sizeof(struct proc);
+    /* addr += NBUF * sizeof(struct buf); */
+    /* addr += NMBUF + sizeof(struct mbuf); */
+
+    size = PAGE_UP(size);
+    addr = memall(size / PAGE_SIZE);
+    STOSQ((void *) addr, 0, size / 8);
+
+    proc = (struct proc *) PTOV(addr);  addr += NPROC * sizeof(struct proc);
+    /* buf = (struct buf *) addr;    addr += BUF * sizeof(struct buf); */
+    /* mbuf = (struct mbuf *) addr;  addr += NMBUF * sizeof(struct mbuf); */
+
+    /* we have to do some minimal configuration of proc[0]
+       and its u. area here so that mapin()/mapout() work,
+       but main() will do the heavy lifting when we return */
+
+    if (allproc() != &proc[0]) panic("proc0");
+    u.u_procp = &proc[0];
+    proc[0].p_ptl3 = (pte_t *) PTOV(PTL3_ADDR);
+    proc[0].p_u = (struct user *) PTOV(USER_ADDR);
 
     /* build the free_pages[] lists from the remaining RAM
        in the e820_map[]. we skip the pages occupied by the
@@ -470,7 +494,7 @@ pginit(void)
 
     for (addr = USER_ADDR; addr < KERNEL_STACK; addr += PAGE_SIZE)
     {
-        mapin(addr, proc0.p_ptl3, addr, PTE_W);
+        mapin(addr, proc[0].p_ptl3, addr, PTE_W);
         INVLPG(addr); /* pick up new flags */
     }
 

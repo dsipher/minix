@@ -35,6 +35,7 @@
 #define _SYS_BOOT_H
 
 #include <sys/types.h>
+#include <sys/page.h>
 
 /* the limit of the kernel image in low/conventional memory. all pages
    below kernel_top, except for the zero page, are part of the kernel's
@@ -62,6 +63,26 @@ extern caddr_t kernel_top;      /* page-aligned for convenience */
    are guaranteed to be identity-mapped by the boot block */
 
 #define BOOT_MAPPED     0x00200000          /* the first 2MB are mapped */
+
+/* general communication vector between the boot code and the
+   kernel. it's called the boot configuration vector because
+   many of these values are [will be] tunable by the user. */
+
+struct boot_config
+{
+    void            (*entry_addr)(void);    /* AP kernel entry function */
+    pte_t           *entry_ptl3;            /* ............... page tables */
+
+    unsigned short  nproc;                  /* number of processes */
+    unsigned short  nbuf;                   /* number of block buffers */
+    unsigned short  nmbuf;                  /* number of network buffers */
+};
+
+extern struct boot_config boot_config;      /* exported by locore.s */
+
+#define NPROC       (boot_config.nproc)     /* traditional names */
+#define NBUF        (boot_config.nbuf)
+#define NMBUF       (boot_config.nmbuf)
 
 /* boot retrieves the so-called E820 memory map from the BIOS */
 

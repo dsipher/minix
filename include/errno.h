@@ -34,10 +34,15 @@
 #ifndef _ERRNO_H
 #define _ERRNO_H
 
+#ifndef _KERNEL
+
 extern int errno;
+
+#endif /* _KERNEL */
 
 #define ENOENT       2      /* no such file or directory */
 #define EINTR        4      /* interrupted system call */
+#define EAGAIN      11      /* resource temporarily unavailable */
 #define ENOMEM      12      /* out of memory */
 #define EINVAL      22      /* invalid argument */
 #define ENOTTY      25      /* not a typewriter */

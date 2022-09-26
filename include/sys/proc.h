@@ -35,6 +35,7 @@
 #define _SYS_PROC_H
 
 #include <limits.h>
+#include <sys/spin.h>
 #include <sys/types.h>
 #include <sys/page.h>
 #include <sys/tailq.h>
@@ -110,6 +111,19 @@ extern struct proc *procall(void);
    on error, u.u_error is set and null is returned. */
 
 extern struct proc *newproc(void (*entry)(void));
+
+/* put the current process to sleep on `chan'. `state' should be one
+   of P_STATE_SLEEP (if the sleep should be interrupted by a signal)
+   or P_STATE_COMA (if it should not). if `guard' is not 0 it is a
+   lock held by the caller, and it will be unlocked during sleep but
+   will be reacquired after the process is awakened. (the guard lock
+   is used to avoid race conditions when sleeping on a resource.) */
+
+extern void sleep(void *chan, int state, spinlock_t *guard);
+
+/* wake up all processes sleeping on `chan' (if any) */
+
+extern void wakeup(void *chan);
 
 /* enter a new process into the scheduling queue. */
 

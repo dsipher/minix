@@ -72,13 +72,13 @@ struct proc *proc;
 
 TAILQ_HEAD(procq, proc);
 
-    /* P_STATE_READY are put on the readyq.
+    /* P_STATE_READYs are put on the readyq.
        they are waiting to be scheduled. */
 
 struct procq readyq = TAILQ_HEAD_INITIALIZER(readyq);
 
-    /* P_STATE_SLEEP (interruptible by a signal) and
-       P_STATE_COMA (not interruptible) are on sleepq */
+    /* P_STATE_SLEEPs (interruptible by a signal) and
+       P_STATE_COMAs (not interruptible) are on sleepq */
 
 struct procq sleepq = TAILQ_HEAD_INITIALIZER(sleepq);
 
@@ -90,8 +90,9 @@ struct procq idleq = TAILQ_HEAD_INITIALIZER(idleq);
 /* a simple linear traversal to find a P_STATE_FREE entry.
    in practice, we never have to scan more entries than the
    max number of processes that have ever been live at once.
+   we could use a freeq but that would add to boot headaches.
 
-   pginit() zeroes proc[], so all entries start FREE. */
+   pginit() zeroes proc[], so all entries start life FREE. */
 
 struct proc *
 procall(void)
@@ -116,8 +117,8 @@ out:
     return p;
 }
 
-/* return a proc to
-   the free pool */
+/* return a proc to the free pool. (the lock
+   here is almost certainly unnecessary.) */
 
 static void
 procfree(struct proc *p)
@@ -177,7 +178,6 @@ newproc(void (*entry)(void))
 
     p->p_flags = CURPROC->p_flags;
     p->p_cpu = CURPROC->p_cpu;
-    p->p_age = 0;
 
     /* finally, arrange for the process to start
        execution with a fresh stack at `entry'. */
@@ -186,6 +186,15 @@ newproc(void (*entry)(void))
     p->p_u->u_sys_rsp = KERNEL_STACK;
 
     return p;
+}
+
+/* pick the most eligible process
+   to run, and switch into it. */
+
+static void
+sched(void)     /* hold: sched_lock */
+{
+    /* XXX */
 }
 
 /* set a process to P_STATE_READY and
@@ -204,6 +213,61 @@ ready(struct proc *p)   /* hold: sched_lock */
                 : &readyq;
 
     TAILQ_INSERT_TAIL(procq, p, p_qlinks);
+}
+
+/* this is a tad bit messy, only because:
+
+    `guard' may be 0
+    `guard' may be the sched_lock
+    `guard' may be some other lock
+
+   and the behavior differs subtly in each case.
+
+   we insert sleepers at the tail of the sleepq
+   in a rudimentary attempt at fairness. */
+
+void sleep(void *chan, int state, spinlock_t *guard)
+{
+    if (guard != &sched_lock) {
+        acquire(&sched_lock);
+        if (guard) release(guard);
+    }
+
+    CURPROC->p_chan = chan;
+    CURPROC->p_state = state;
+    CURPROC->p_age = 0;
+
+    TAILQ_INSERT_TAIL(&sleepq, CURPROC, p_qlinks);
+
+    sched();
+
+    if (guard != &sched_lock) {
+        if (guard) acquire(guard);
+        release(&sched_lock);
+    }
+}
+
+void wakeup(void *chan)
+{
+    struct proc *p;
+    struct proc *next;
+
+    acquire(&sched_lock);
+
+    p = TAILQ_FIRST(&sleepq);
+
+    while (p) {
+        next = TAILQ_NEXT(p, p_qlinks);
+
+        if (p->p_chan == chan) {
+            TAILQ_REMOVE(&sleepq, p, p_qlinks);
+            ready(p);
+        }
+
+        p = next;
+    }
+
+    release(&sched_lock);
 }
 
 /* obviously, just ready() exposed to

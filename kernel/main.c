@@ -71,11 +71,6 @@ main(void)
     cninit();
     pginit();
 
-    /* finish manually crafting proc[0] here */
-
-    swtch(&proc[0]);
-    printf("survived swtch(&proc[0])\n");
-
     for (;;) ;
 }
 

@@ -76,6 +76,8 @@ extern struct user u;           /* exported from locore.s */
 
 #ifdef _KERNEL
 
+#define CURPROC (u.u_procp)     /* more readable shorthand */
+
 extern void lock(void);         /* disable or enable interrupts: */
 extern void unlock(void);       /* works recursively via u_locks */
 

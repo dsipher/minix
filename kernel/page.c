@@ -282,7 +282,7 @@ physical(caddr_t ram_top)
    intermediate page table entries are assigned
    permissions that ensure that PTL0 controls access. */
 
-static pte_t *
+pte_t *
 findpte(pte_t *ptl3, caddr_t vaddr, int create)
 {
     pte_t *table = ptl3;
@@ -465,7 +465,7 @@ pginit(void)
        and its u. area here so that mapin()/mapout() work,
        but main() will do the heavy lifting when we return */
 
-    if (allproc() != &proc[0]) panic("proc0");
+    if (procall() != &proc[0]) panic("proc0");
     u.u_procp = &proc[0];
     proc[0].p_ptl3 = (pte_t *) PTOV(PTL3_ADDR);
     proc[0].p_u = (struct user *) PTOV(USER_ADDR);

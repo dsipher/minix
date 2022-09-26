@@ -194,6 +194,23 @@ extern void mapout(caddr_t base, caddr_t top);
 extern pte_t *ptcopy0(pte_t *pt, int ptl);
 extern void ptfree0(pte_t *pt, int ptl);
 
+/* traverse the page tables `ptl3' given and return
+   a pointer to the PTE associated with `vaddr'. if
+   `create' is true, intermediate page tables will
+   be allocated and initialized as needed to get to
+   the PTL0 PTE desired.
+
+   returns null if:
+        1. there is no PTE for the given virtual
+           address and `create' is false, OR
+        2. `create' is true, but there are not
+           enough free pages to create new tables
+
+   intermediate page table entries are assigned
+   permissions that ensure that PTL0 controls access. */
+
+extern pte_t *findpte(pte_t *ptl3, caddr_t vaddr, int create);
+
 #endif /* _KERNEL */
 
 #endif /* _SYS_PAGE_H */

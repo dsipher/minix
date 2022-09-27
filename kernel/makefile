@@ -11,11 +11,12 @@ all:	kernel
 clean:
 	rm -f *.o *.lst kernel
 
-OBJS= 	locore.o cons.o log.o main.o page.o proc.o
+OBJS= 	locore.o clock.o cons.o log.o main.o page.o proc.o
 
 locore.o:	locore.s
 	$(AS) -l locore.lst -o locore.o locore.s
 
+clock.o:	clock.c
 cons.o:		cons.c
 log.o:		log.c
 main.o:		main.c

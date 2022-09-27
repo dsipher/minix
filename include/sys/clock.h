@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   main.c                                                  jewel/os kernel
+   sys/clock.h                                   jewel/os standard library
 
 ******************************************************************************
 
@@ -31,49 +31,17 @@
 
 *****************************************************************************/
 
-#include <a.out.h>
-#include <sys/boot.h>
-#include <sys/cons.h>
-#include <sys/page.h>
-#include <sys/log.h>
-#include <sys/user.h>
-#include <sys/proc.h>
-#include <sys/io.h>
-#include <sys/clock.h>
+#ifndef _SYS_CLOCK_H
+#define _SYS_CLOCK_H
 
-caddr_t kernel_top;
+#include <sys/types.h>
 
-#define KERNEL_AOUT     ((struct exec *) KERNEL_ADDR)
+#ifdef _KERNEL
 
-/* the BSP enters here after a brief bounce through
-   the locore.s. we're in process 0, interrupts are
-   disabled, and the first 2MB are identity-mapped. */
+extern time_t readrtc(void);
 
-void
-main(void)
-{
-    caddr_t bss;
+#endif /* _KERNEL */
 
-    bss = N_BSSOFF(*KERNEL_AOUT) + KERNEL_ADDR;         /* clear the BSS */
-    STOSQ((void *) bss, 0, KERNEL_AOUT->a_bss >> 3);    /* and compute */
-    kernel_top += bss + KERNEL_AOUT->a_bss;             /* kernel_top. */
-    kernel_top = PAGE_UP(kernel_top);           /* (must be whole pages) */
-
-    /* zap the u. area and do minimal setup: we need u_locks because
-       we'll access spinlocks. though we're identity-mapped right now,
-       pginit() will keep these pages mapped as the u. area for proc[0].
-       we don't have a proc[0] struct yet: the proc[] array is allocated
-       by pginit(), which will set proc[0].p_ptl3 and u.u_procp, since
-       it needs these fields to complete its own setup. boot spaghetti! */
-
-    STOSQ(&u, 0, USER_PAGES * (PAGE_SIZE >> 3));
-    u.u_locks = 1;  /* interrupts are disabled */
-
-    cninit();
-    pginit();
-
-    for (;;)
-        printf("%D\n", readrtc());
-}
+#endif /* _SYS_CLOCK_H */
 
 /* vi: set ts=4 expandtab: */

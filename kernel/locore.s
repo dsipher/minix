@@ -34,7 +34,6 @@
 / kernel entry point (for the BSP).
 / head off to main(), never to return.
 
-                    lidt idt_48
                     jmp _main
 
 .globl _main
@@ -80,50 +79,6 @@ U_SYS_RIP   =   _u + 0x0248
 _boot_config    =   0x1180
 _e820_count     =   0x7000
 _e820_map       =   0x7008
-
-//////////////////////////////////////////////////////////////////////////////
-/
-/ the IDT is deliberately in the .text, and here in locore, because it
-/ (and its related handlers) need to be... low in the core. if we can
-/ assume everything here lives at or below 64k, it simplifies things.
-
-.align 8
-
-idt:                .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-                    .short 0, 0, 0, 0, 0, 0, 0, 0
-
-idt_48:             .short idt_48 - idt - 1
-                    .quad idt
 
 //////////////////////////////////////////////////////////////////////////////
 /

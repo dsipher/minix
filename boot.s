@@ -668,15 +668,20 @@ warn_bios:          movw $0xec00, %ax
 / kill the legacy PICs: program them to generate
 / out-of-the-way vectors and mask all interrupts.
 
+/ with interrupts masked, we should never see any spurious interrupts
+/ because these only occur due to aborted interrupt acknowledge cycles.
+/ but just in case, we map both master and slave to vectors 0x38-0x3F.
+/ this sends spurious interrupts from either PIC to vector 0x3F, which
+/ the same vector we'll for spurious APIC interrupts (VECTOR_SPURIOUS).
+
                     cli
 
                     movb $0x11, %al             / ICW1 = initialize
                     outb %al, $0x20
                     outb %al, $0xA0
 
-                    movb $0x20, %al             / ICW2 = vectors (0x20-0x2F)
+                    movb $0x38, %al             / ICW2 = vectors (0x38-0x3F)
                     outb %al, $0x21
-                    movb $0x28, %al
                     outb %al, $0xA1
 
                     movb $4, %al                / ICW3 = master/slave
@@ -781,6 +786,8 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
                     movl $IA32_STAR, %ecx       / set SYSCALL/RET selectors
                     movq star(%rip), %rax
                     wrmsr
+
+                    lidt idt_48(%rip)
 
                     jmp *entry_addr
 
@@ -1090,6 +1097,9 @@ tss_type:           .byte   0               / (set to available TSS, 0x89)
 gdt_48:             .short  gdt_48 - gdt - 1
                     .int    gdt
 
+/ the task state segment. read-only.
+/ shared by all CPUs and all tasks.
+
 .align 8
 
 tss:                .int    0
@@ -1107,6 +1117,81 @@ tss:                .int    0
 star:               .int    0               / (32-bit entry: unused)
                     .short  KERNEL_CS       / selectors for SYSCALL
                     .short  USER_CS_32      / ............. SYSRET
+
+/ the interrupt descriptor table.
+
+.align 8
+
+idt:                .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x00
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x01
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x02
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x03
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x04
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x05
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x06
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x07
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x08
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x09
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x0A
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x0B
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x0C
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x0D
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x0E
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x0F
+
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x10
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x11
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x12
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x13
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x14
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x15
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x16
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x17
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x18
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x19
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x1A
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x1B
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x1C
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x1D
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x1E
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x1F
+
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x20
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x21
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x22
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x23
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x24
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x25
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x26
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x27
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x28
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x29
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2A
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2B
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2C
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2D
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2E
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2F
+
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x30
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x31
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x32
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x33
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x34
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x35
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x36
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x37
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x38
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x39
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3A
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3B
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3C
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3D
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3E
+                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3F
+
+idt_48:             .short  idt_48 - idt - 1
+                    .quad   idt
 
 //////////////////////////////////////////////////////////////////////////////
 

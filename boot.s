@@ -133,17 +133,17 @@ S_IFREG             =   0100000     / type of regular file
 / since we access them before paging is enabled.
 
 LAPIC_TPR           =   0xFEE00080
-LAPIC_SPURIOUS      =   0xFEE000F0
+LAPIC_SIR           =   0xFEE000F0
 
-LAPIC_LVT_TIMER     =   0xFEE00320
-LAPIC_LVT_THERMAL   =   0xFEE00330
-LAPIC_LVT_PERF      =   0xFEE00340
-LAPIC_LVT_LINT0     =   0xFEE00350
-LAPIC_LVT_LINT1     =   0xFEE00360
-LAPIC_LVT_ERROR     =   0xFEE00370
+LAPIC_TIMER_LVT     =   0xFEE00320
+LAPIC_THERMAL_LVT   =   0xFEE00330
+LAPIC_PERF_LVT      =   0xFEE00340
+LAPIC_LINT0_LVT     =   0xFEE00350
+LAPIC_LINT1_LVT     =   0xFEE00360
+LAPIC_ERROR_LVT     =   0xFEE00370
 
-LAPIC_ASE           =   0x100       / APIC software enable bit
-LAPIC_M             =   0x1000      / LVT interrupt disable bit
+LAPIC_SIR_ASE       =   0x100       / APIC software enable
+LAPIC_LVT_MASK      =   0x1000      / interrupt mask
 
 VECTOR_SPURIOUS     =   0x3F        / IDT vector for spurious interrupts
 
@@ -766,15 +766,15 @@ ptl0_loop:          movl %eax, (%ebx)
 / up for the BSP, but the kernel must twiddle them for APs.
 /
 
-go_64:              movl $LAPIC_ASE + VECTOR_SPURIOUS, LAPIC_SPURIOUS
-                    movl $0, LAPIC_TPR          / lowest priority
-                    movl $LAPIC_M, %eax         / mask off local IRQs
-                    movl %eax, LAPIC_LVT_TIMER
-                    movl %eax, LAPIC_LVT_THERMAL
-                    movl %eax, LAPIC_LVT_PERF
-                    movl %eax, LAPIC_LVT_LINT0
-                    movl %eax, LAPIC_LVT_LINT1
-                    movl %eax, LAPIC_LVT_ERROR
+go_64:              movl $LAPIC_SIR_ASE + VECTOR_SPURIOUS, LAPIC_SIR
+                    movl $0, LAPIC_TPR              / lowest priority
+                    movl $LAPIC_LVT_MASK, %eax      / mask off local IRQs
+                    movl %eax, LAPIC_TIMER_LVT
+                    movl %eax, LAPIC_THERMAL_LVT
+                    movl %eax, LAPIC_PERF_LVT
+                    movl %eax, LAPIC_LINT0_LVT
+                    movl %eax, LAPIC_LINT1_LVT
+                    movl %eax, LAPIC_ERROR_LVT
 
                     movl %cr4, %eax             / enable PAE and PGE
                     orl $0x20, %eax
@@ -1261,7 +1261,7 @@ load_msg_1:         .byte 13, 10
                     .ascii "loading `"
                     .byte 0
 
-load_msg_2:         .ascii "' ... "
+load_msg_2:         .ascii "': "
                     .byte 0
 
 not_found_msg:      .ascii "not found."

@@ -72,6 +72,7 @@ struct boot_config
 {
     void            (*entry_addr)(void);    /* AP kernel entry function */
     pte_t           *entry_ptl3;            /* ............... page tables */
+    void            (*trap_addr)(void);     /* kernel trap handler */
 
     unsigned short  nproc;                  /* number of processes */
     unsigned short  nbuf;                   /* number of block buffers */

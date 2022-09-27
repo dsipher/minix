@@ -76,7 +76,7 @@ U_SYS_RIP   =   _u + 0x0248
 .globl _e820_count
 .globl _boot_config
 
-_boot_config    =   0x1180
+_boot_config    =   0x1160
 _e820_count     =   0x7000
 _e820_map       =   0x7008
 

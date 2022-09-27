@@ -131,7 +131,7 @@ S_IFREG             =   0100000     / type of regular file
 
 / other useful constants
 
-TIMEOUT_TICKS       =   182         / auto-boot timeout (in BIOS ticks)
+TIMEOUT_TICKS       =   54          / auto-boot timeout (3s in BIOS ticks)
 
 SPC                 =   0x20        / ASCII space
 CR                  =   0x0D        / ..... carriage return
@@ -321,11 +321,9 @@ bad_fs_msg:         .ascii "invalid filesystem"
                     .byte 0
 
 banner_msg:         .byte 13, 10, 10
-                    .ascii "jewel/os boot block"
-                    .byte 13, 10, 10
-                    .ascii "auto-boot will begin in 10 seconds."
+                    .ascii "jewel/os: boot in 3 seconds."
                     .byte 13, 10
-                    .ascii "press any key for the boot prompt."
+                    .ascii "(press a key for boot prompt)"
                     .byte 13, 10
                     .byte 0
 
@@ -340,7 +338,7 @@ banner_msg:         .byte 13, 10, 10
 
 / these correspond to struct boot_config in sys/boot.h
 
-                    .org 0x1180 - ORIGIN
+                    .org 0x1160 - ORIGIN
 
 entry_addr:         .quad   KERNEL_ADDR         / kernel entry point
 entry_ptl3:         .quad   PTL3                / page tables

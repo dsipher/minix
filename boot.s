@@ -340,9 +340,10 @@ banner_msg:         .byte 13, 10, 10
 
                     .org 0x1160 - ORIGIN
 
-entry_addr:         .quad   KERNEL_ADDR         / kernel entry point
+entry:              .quad   KERNEL_ADDR         / kernel entry point
 entry_ptl3:         .quad   PTL3                / page tables
-trap_addr:          .quad   0                   / kernel trap handler
+trap_handler:       .quad   0                   / kernel trap handler
+irq_handler:        .quad   0                   / kernel irq handler
 
 / these values are intended to be configurable by the user.
 / (eventually we'll modify mkboot.c to view/change/reset them.)
@@ -788,135 +789,241 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
 
                     lidt idt_48(%rip)
 
-                    jmp *entry_addr(%rip)
+                    jmp *entry(%rip)
 
 / our agreement with the kernel on traps is that we'll pass
-/ control to trap_addr with the error code and trap number
-/ on the stack (in that order) and interrupts enabled. if
+/ control to trap_handler with the error code and trap number
+/ on the stack (in that order) and interrupts enabled. if the
 / the trap doesn't have an error code, we supply a dummy 0.
 / we account for every vector, even those which can't happen.
 
-trap_00:            pushq $0                    / divide by zero
+trap_0:             pushq $0                    / divide by zero
                     pushq $0
                     jmp trap
 
-trap_01:            pushq $0                    / debug trap
+trap_1:             pushq $0                    / debug trap
                     pushq $1
                     jmp trap
 
-trap_02:            pushq $0                    / NMI
-                    pushq $1
+trap_2:             pushq $0                    / NMI
+                    pushq $2
                     jmp trap
 
-trap_03:            pushq $0                    / INT3
+trap_3:             pushq $0                    / INT3
                     pushq $3
                     jmp trap
 
-trap_04:            pushq $0                    / INTO
+trap_4:             pushq $0                    / INTO
                     pushq $4
                     jmp trap
 
-trap_05:            pushq $0                    / BOUND
+trap_5:             pushq $0                    / BOUND
                     pushq $5
                     jmp trap
 
-trap_06:            pushq $0                    / invalid insn
+trap_6:             pushq $0                    / invalid insn
                     pushq $6
                     jmp trap
 
-trap_07:            pushq $0                    / device not available
+trap_7:             pushq $0                    / device not available
                     pushq $7
                     jmp trap
 
-trap_08:            pushq $8                    / double fault
+trap_8:             pushq $8                    / double fault
                     jmp trap
 
-trap_09:            pushq $0                    / (reserved)
+trap_9:             pushq $0                    / (reserved)
                     pushq $9
                     jmp trap
 
-trap_0A:            pushq $10                   / invalid TSS
+trap_10:            pushq $10                   / invalid TSS
                     jmp trap
 
-trap_0B:            pushq $11                   / segment not present
+trap_11:            pushq $11                   / segment not present
                     jmp trap
 
-trap_0C:            pushq $12                   / stack fault
+trap_12:            pushq $12                   / stack fault
                     jmp trap
 
-trap_0D:            pushq $13                   / general protection fault
+trap_13:            pushq $13                   / general protection fault
                     jmp trap
 
-trap_0E:            pushq $14                   / page fault
-                    jmp trap
-
-trap_0F:            pushq $0                    / (reserved)
-                    pushq $15
-
-trap:               jmp *trap_addr(%rip)
-
-trap_10:            pushq $0                    / x87 fp exception
-                    pushq $16
-                    jmp trap
-
-trap_11:            pushq $17                   / alignment check
-                    jmp trap
-
-trap_12:            pushq $0                    / machine check
-                    pushq $18
-                    jmp trap
-
-trap_13:            pushq $0                    / SIMD fp exception
-                    pushq $19
-                    jmp trap
-
-trap_14:            pushq $0                    / (reserved)
-                    pushq $20
+trap_14:            pushq $14                   / page fault
                     jmp trap
 
 trap_15:            pushq $0                    / (reserved)
+                    pushq $15
+
+trap:               jmp *trap_handler(%rip)
+
+trap_16:            pushq $0                    / x87 fp exception
+                    pushq $16
+                    jmp trap
+
+trap_17:            pushq $17                   / alignment check
+                    jmp trap
+
+trap_18:            pushq $0                    / machine check
+                    pushq $18
+                    jmp trap
+
+trap_19:            pushq $0                    / SIMD fp exception
+                    pushq $19
+                    jmp trap
+
+trap_20:            pushq $0                    / (reserved)
+                    pushq $20
+                    jmp trap
+
+trap_21:            pushq $0                    / (reserved)
                     pushq $21
                     jmp trap
 
-trap_16:            pushq $0                    / (reserved)
+trap_22:            pushq $0                    / (reserved)
                     pushq $22
                     jmp trap
 
-trap_17:            pushq $0                    / (reserved)
+trap_23:            pushq $0                    / (reserved)
                     pushq $23
                     jmp trap
 
-trap_18:            pushq $0                    / (reserved)
+trap_24:            pushq $0                    / (reserved)
                     pushq $24
                     jmp trap
 
-trap_19:            pushq $0                    / (reserved)
+trap_25:            pushq $0                    / (reserved)
                     pushq $25
                     jmp trap
 
-trap_1A:            pushq $0                    / (reserved)
+trap_26:            pushq $0                    / (reserved)
                     pushq $26
                     jmp trap
 
-trap_1B:            pushq $0                    / (reserved)
+trap_27:            pushq $0                    / (reserved)
                     pushq $27
                     jmp trap
 
-trap_1C:            pushq $0                    / (reserved)
+trap_28:            pushq $0                    / (reserved)
                     pushq $28
                     jmp trap
 
-trap_1D:            pushq $0                    / virtualization exception
+trap_29:            pushq $0                    / virtualization exception
                     pushq $29
                     jmp trap
 
-trap_1E:            pushq $0                    / security exception
+trap_30:            pushq $0                    / security exception
                     pushq $30
                     jmp trap
 
-trap_1F:            pushq $0                    / (reserved)
+trap_31:            pushq $0                    / (reserved)
                     pushq $31
                     jmp trap
+
+/ transfer control the kernel irq_handler with the
+/ IRQ number on the stack and interrupts disabled.
+/ as with traps above, we incur an extra branch on
+/ most interrupts to save code space/cache, since
+/ the indirect branch at irq: has a huge encoding.
+
+irq_0:              pushq $0
+                    jmp irq
+
+irq_1:              pushq $1
+                    jmp irq
+
+irq_2:              pushq $2
+                    jmp irq
+
+irq_3:              pushq $3
+                    jmp irq
+
+irq_4:              pushq $4
+                    jmp irq
+
+irq_5:              pushq $5
+                    jmp irq
+
+irq_6:              pushq $6
+                    jmp irq
+
+irq_7:              pushq $7
+                    jmp irq
+
+irq_8:              pushq $8
+                    jmp irq
+
+irq_9:              pushq $9
+                    jmp irq
+
+irq_10:             pushq $10
+                    jmp irq
+
+irq_11:             pushq $11
+                    jmp irq
+
+irq_12:             pushq $12
+                    jmp irq
+
+irq_13:             pushq $13
+                    jmp irq
+
+irq_14:             pushq $14
+                    jmp irq
+
+irq_15:             pushq $15
+
+irq:                jmp *irq_handler(%rip)
+
+irq_16:             pushq $16
+                    jmp irq
+
+irq_17:             pushq $17
+                    jmp irq
+
+irq_18:             pushq $18
+                    jmp irq
+
+irq_19:             pushq $19
+                    jmp irq
+
+irq_20:             pushq $20
+                    jmp irq
+
+irq_21:             pushq $21
+                    jmp irq
+
+irq_22:             pushq $22
+                    jmp irq
+
+irq_23:             pushq $23
+                    jmp irq
+
+irq_24:             pushq $24
+                    jmp irq
+
+irq_25:             pushq $25
+                    jmp irq
+
+irq_26:             pushq $26
+                    jmp irq
+
+irq_27:             pushq $27
+                    jmp irq
+
+irq_28:             pushq $28
+                    jmp irq
+
+irq_29:             pushq $29
+                    jmp irq
+
+irq_30:             pushq $30
+                    jmp irq
+
+/ spurious interrupts end up here. there's nothing to do
+/ except return: neither PICs nor APICs update their ISRs
+/ in these situations, so an EOI is the wrong thing to do.
+
+spurious:           iret
 
 .code16
 
@@ -1252,72 +1359,79 @@ star:               .int    0               / (32-bit entry: unused)
 idt:                / architectural exception vectors. use
                     / trap gates to keep interrupts enabled.
 
-                    .short  trap_00, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_01, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_02, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_03, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_04, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_05, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_06, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_07, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_08, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_09, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_0A, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_0B, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_0C, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_0D, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_0E, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_0F, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_10, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_11, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_12, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_13, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_14, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_15, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_16, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_17, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_18, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_19, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_1A, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_1B, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_1C, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_1D, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_1E, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
-                    .short  trap_1F, KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_0,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_1,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_2,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_3,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_4,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_5,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_6,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_7,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_8,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_9,   KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_10,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_11,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_12,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_13,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_14,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_15,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_16,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_17,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_18,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_19,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_20,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_21,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_22,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_23,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_24,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_25,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_26,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_27,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_28,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_29,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_30,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
+                    .short  trap_31,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
 
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x20
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x21
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x22
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x23
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x24
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x25
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x26
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x27
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x28
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x29
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2A
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2B
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2C
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2D
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2E
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x2F
+                    / high-priority interrupts (vectors 0x20-0x2F)
+                    / interrupt gates to automatically disable IRQs.
 
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x30
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x31
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x32
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x33
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x34
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x35
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x36
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x37
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x38
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x39
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3A
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3B
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3C
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3D
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3E
-                    .short  0, 0, 0, 0, 0, 0, 0, 0          /   0x3F
+                    .short  irq_0,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_1,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_2,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_3,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_4,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_5,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_6,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_7,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_8,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_9,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_10,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_11,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_12,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_13,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_14,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_15,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+
+                    / low-priority interrupts (vectors 0x30-0x3F)
+                    / interrupt gates again. the last vector is
+                    / reserved for spurious IRQs (VECTOR_SPURIOUS).
+
+                    .short  irq_16,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_17,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_18,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_19,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_20,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_21,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_22,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_23,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_24,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_25,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_26,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_27,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_28,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_29,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  irq_30,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
+                    .short  spurious, KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
 
 idt_48:             .short  idt_48 - idt - 1
                     .quad   idt

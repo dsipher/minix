@@ -70,9 +70,10 @@ extern caddr_t kernel_top;      /* page-aligned for convenience */
 
 struct boot_config
 {
-    void            (*entry_addr)(void);    /* AP kernel entry function */
-    pte_t           *entry_ptl3;            /* ............... page tables */
-    void            (*trap_addr)(void);     /* kernel trap handler */
+    void    (*entry)(void);                 /* AP kernel entry function */
+    pte_t   *entry_ptl3;                    /* ............... page tables */
+    void    (*trap_handler)(void);          /* kernel trap handler (locore) */
+    void    (*irq_handler)(void);           /* kernel irq handler (locore) */
 
     unsigned short  nproc;                  /* number of processes */
     unsigned short  nbuf;                   /* number of block buffers */

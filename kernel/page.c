@@ -51,11 +51,9 @@
 
 static spinlock_t page_lock;        /* protects the free page data */
 
-static int nr_free_pages;           /* simple count */
-static int last_color;              /* for unhinted pgall() */
-
 static SLIST_HEAD(, free_page) free_pages[PAGE_COLORS];
 struct free_page { SLIST_ENTRY(free_page) link; };
+static unsigned nr_free_pages;  /* simple count */
 
 /* using 0 as a sentinel value is unambiguous.
    (it's never a valid kernel virtual address.) */
@@ -65,6 +63,8 @@ struct free_page { SLIST_ENTRY(free_page) link; };
 caddr_t
 pgall(caddr_t hint)
 {
+    static char last_color;
+
     caddr_t a;
     int color;
 
@@ -503,6 +503,12 @@ pginit(void)
 
     mapout(kernel_top, ISA_BASE);
     mapout(KERNEL_STACK, BOOT_MAPPED);
+
+    printf("%d processes\n", NPROC);
+    printf("%d block buffers\n", NBUF);
+    printf("%d packet buffers\n", NMBUF);
+    printf("%d pages (%d MB) free\n\n", nr_free_pages,
+                                        (nr_free_pages * PAGE_SIZE) >> 20);
 }
 
 /* vi: set ts=4 expandtab: */

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/utsname.h                                 jewel/os standard library
+   utsname.c                                               jewel/os kernel
 
 ******************************************************************************
 
@@ -31,35 +31,15 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_UTSNAME_H
-#define _SYS_UTSNAME_H
+#include <sys/utsname.h>
 
-/* each field has room for a 64-byte
-   string, plus the NUL terminator */
-
-#define _UTSNAME_N  65
-
-struct utsname
+struct utsname utsname =
 {
-    char sysname[_UTSNAME_N];       /* operating system */
-    char nodename[_UTSNAME_N];      /* machine name */
-    char release[_UTSNAME_N];       /* release level */
-    char version[_UTSNAME_N];       /* version of release */
-    char machine[_UTSNAME_N];       /* machine type */
-
-    char __pad[_UTSNAME_N];         /* not POSIX: domainname[] on Linux */
+    /* sysname */       "jewel",
+    /* nodename */      "(noname)",
+    /* release */       "0.1",
+    /* version */       "(" __DATE__ " " __TIME__ ")",
+    /* machine */       "x86_64"
 };
-
-#ifndef _KERNEL
-
-extern int uname(struct utsname *);
-
-#else
-
-extern struct utsname utsname;
-
-#endif /* _KERNEL */
-
-#endif /* _SYS_UTSNAME_H */
 
 /* vi: set ts=4 expandtab: */

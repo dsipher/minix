@@ -40,6 +40,7 @@
 #include <sys/proc.h>
 #include <sys/io.h>
 #include <sys/clock.h>
+#include <sys/utsname.h>
 
 caddr_t kernel_top;
 
@@ -70,6 +71,15 @@ main(void)
     u.u_locks = 1;  /* interrupts are disabled */
 
     cninit();
+
+    printf("\n%s %s %s\n", utsname.sysname,
+                           utsname.release,
+                           utsname.version);
+
+    printf("[%d text/%d data/%d bss]\n\n", KERNEL_AOUT->a_text,
+                                           KERNEL_AOUT->a_data,
+                                           KERNEL_AOUT->a_bss);
+
     pginit();
     clkinit();
 

@@ -52,7 +52,6 @@
 #define LAPIC_TIMER_DCR     LAPIC_REG(0x3E0)    /* divider control */
 
 #define LAPIC_LVT_MASK      0x00010000          /* LVT interrupt mask bit */
-#define LAPIC_DIVIDER       0x0000000A          /* timer DCR: divide by 128 */
 
 #endif /* _SYS_APIC_H */
 

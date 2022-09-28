@@ -504,11 +504,8 @@ pginit(void)
     mapout(kernel_top, ISA_BASE);
     mapout(KERNEL_STACK, BOOT_MAPPED);
 
-    printf("%d processes\n", NPROC);
-    printf("%d block buffers\n", NBUF);
-    printf("%d packet buffers\n", NMBUF);
-    printf("%d pages (%d MB) free\n\n", nr_free_pages,
-                                        (nr_free_pages * PAGE_SIZE) >> 20);
+    printf("%d pages (%d MB) free", nr_free_pages,
+                                    (nr_free_pages * PAGE_SIZE) >> 20);
 }
 
 /* vi: set ts=4 expandtab: */

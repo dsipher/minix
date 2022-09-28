@@ -72,16 +72,17 @@ main(void)
 
     cninit();
 
-    printf("\n%s %s %s\n", utsname.sysname,
-                           utsname.release,
-                           utsname.version);
-
-    printf("[%d text/%d data/%d bss]\n\n", KERNEL_AOUT->a_text,
-                                           KERNEL_AOUT->a_data,
-                                           KERNEL_AOUT->a_bss);
+    printf("\n%s %s %s [%d text/%d data/%d bss]\n", utsname.sysname,
+                                                    utsname.release,
+                                                    utsname.version,
+                                                    KERNEL_AOUT->a_text,
+                                                    KERNEL_AOUT->a_data,
+                                                    KERNEL_AOUT->a_bss);
 
     pginit();
     clkinit();
+
+    printf(", 4 CPU(s), root on 0/0.\n\n");     /* obviously dummies */
 
     for (;;) ;
 }

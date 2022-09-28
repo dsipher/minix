@@ -35,14 +35,20 @@
 #include <sys/io.h>
 #include <sys/clock.h>
 #include <sys/apic.h>
+#include <sys/log.h>
 
 /* the current time of day. read-only outside of this compilation unit.
    no need to protect it with a lock since it's updated atomically. */
 
 time_t time;
 
-/* the number of APIC timer ticks per second
-   (when the DCR is set to LAPIC_DIVIDER) */
+/* we don't need fine resolution for scheduling,
+   so we use the max APIC clock divider (128). */
+
+#define LAPIC_DIVIDER           0x0000000A  /* DCR */
+#define LAPIC_TICKS_TO_MHZ(x)   (((x) * 128) / 1000000)
+
+/* the number of APIC timer ticks per second */
 
 static unsigned apics_per_sec;
 
@@ -214,6 +220,8 @@ clkinit(void)
 
     LAPIC_TIMER_ICR = 0;
     LAPIC_TIMER = LAPIC_LVT_MASK;
+
+    printf(", timer %d MHz", LAPIC_TICKS_TO_MHZ(apics_per_sec));
 }
 
 /* vi: set ts=4 expandtab: */

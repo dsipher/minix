@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/clock.h                                   jewel/os standard library
+   sys/apic.h                                    jewel/os standard library
 
 ******************************************************************************
 
@@ -31,46 +31,29 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_CLOCK_H
-#define _SYS_CLOCK_H
+#ifndef _SYS_APIC_H
+#define _SYS_APIC_H
 
-/* both the local scheduling clocks and the
-   global event clock fire at TICKS_PER_SEC. */
+#include <sys/page.h>
 
-#define TICKS_PER_SEC   100
+/* the local APIC base is technically
+   not fixed, but in practice it is */
 
-/* the number of ticks in a scheduling quantum */
+#define LAPIC_BASE          0xFEE00000
 
-#define QUANTUM         10
+#define LAPIC_REG(x)        (*((volatile unsigned *) PTOV(LAPIC_BASE + (x))))
 
+#define LAPIC_ID            LAPIC_REG(0x020)    /* APIC ID */
+#define LAPIC_ICR0          LAPIC_REG(0x300)    /* interrupt command (LSW) */
+#define LAPIC_ICR1          LAPIC_REG(0x310)    /* ................. (MSW) */
+#define LAPIC_TIMER         LAPIC_REG(0x320)    /* timer vector */
+#define LAPIC_TIMER_ICR     LAPIC_REG(0x380)    /* initial count */
+#define LAPIC_TIMER_CCR     LAPIC_REG(0x390)    /* current count */
+#define LAPIC_TIMER_DCR     LAPIC_REG(0x3E0)    /* divider control */
 
-#ifdef _KERNEL
+#define LAPIC_LVT_MASK      0x00010000          /* LVT interrupt mask bit */
+#define LAPIC_DIVIDER       0x0000000A          /* timer DCR: divide by 128 */
 
-#include <sys/types.h>
-
-/* the current time */
-
-extern time_t time;
-
-/* called by the BSP at boot time to
-
-    (a) determine the APIC timer frequency
-    (b) read the CMOS time-of-day clock */
-
-extern void clkinit(void);
-
-/* called on each CPU to start its local clock (its
-   APIC) firing at TICKS_PER_SEC, for scheduling */
-
-extern void localclk(void);
-
-/* called at boot to start the global clock (the 8254
-   PIT) firing at TICKS_PER_SEC, for time-of-day */
-
-extern void globalclk(void);
-
-#endif /* _KERNEL */
-
-#endif /* _SYS_CLOCK_H */
+#endif /* _SYS_APIC_H */
 
 /* vi: set ts=4 expandtab: */

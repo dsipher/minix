@@ -34,6 +34,18 @@
 #include <sys/types.h>
 #include <sys/io.h>
 #include <sys/clock.h>
+#include <sys/apic.h>
+#include <sys/log.h>
+
+/* the current time of day. read-only outside of this compilation unit.
+   no need to protect it with a lock since it's updated atomically. */
+
+time_t time;
+
+/* the number of APIC timer ticks per second
+   (when the DCR is set to LAPIC_DIVIDER) */
+
+static unsigned apics_per_sec;
 
 /* convert a byte in BCD format to binary. */
 
@@ -94,8 +106,8 @@ hinnant(int y, int m, int d)
                                     INB(CMOS_DATA);                         \
                                 })
 
-time_t
-readrtc(void)
+static time_t
+rtcread(void)
 {
     /* the RTC registers we want are not
        at contiguous addresses, so map 'em */
@@ -130,7 +142,7 @@ readrtc(void)
        update, then read the state (within the next second).
 
        there are faster ways to synchronize, but this way
-       back-to-back calls to readrtc() mark out one second,
+       back-to-back calls to rtcread() mark out one second,
        which is handy for clkinit(). */
 
     while (!(READ_CMOS(CMOS_STATUS_A) & A_BUSY)) ;  /* wait for update */
@@ -164,6 +176,42 @@ readrtc(void)
     time += state[SECOND];
 
     return time;
+}
+
+/* XXX */
+
+void
+clkinit(void)
+{
+    /* first, we stop the local APIC timer if it's
+       running, set our chosen divider (which we'll
+       use on all APICs) and arm it for one-shot */
+
+    LAPIC_TIMER_ICR = 0;                /* stop timer if running */
+    LAPIC_TIMER_DCR = LAPIC_DIVIDER;    /* (see apic.h for divisor) */
+    LAPIC_TIMER = 0;                    /* enable (one-shot mode) */
+
+    /* then read the real-time clock. we're not interested in
+       the value; we want to synchronize to a second boundary,
+       then quickly start the local APIC timer. */
+
+    rtcread();
+    LAPIC_TIMER_ICR = 0xFFFFFFFF;
+
+    /* the next rtcread() returns approximately one second
+       after the first call did, so we can count APIC ticks.
+       (we stash the current time of day this time, too.) */
+
+    time = rtcread();
+    apics_per_sec = 0xFFFFFFFF - LAPIC_TIMER_CCR;
+
+    /* shut the timer down for now. */
+
+    LAPIC_TIMER_ICR = 0;
+    LAPIC_TIMER = LAPIC_LVT_MASK;
+
+    printf("apics_per_sec = %u (%u)\n", apics_per_sec,
+                                        apics_per_sec * 128);
 }
 
 /* vi: set ts=4 expandtab: */

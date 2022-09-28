@@ -132,20 +132,20 @@ S_IFREG             =   0100000     / type of regular file
 / local APIC registers. the physical addresses,
 / since we access them before paging is enabled.
 
-LAPIC_TPR           =   0xFEE00080
-LAPIC_SIR           =   0xFEE000F0
+LAPIC_TPR           =   0xFEE00080  / task priority reg
+LAPIC_SIR           =   0xFEE000F0  / spurious interrupt reg
 
-LAPIC_TIMER_LVT     =   0xFEE00320
-LAPIC_THERMAL_LVT   =   0xFEE00330
-LAPIC_PERF_LVT      =   0xFEE00340
-LAPIC_LINT0_LVT     =   0xFEE00350
-LAPIC_LINT1_LVT     =   0xFEE00360
-LAPIC_ERROR_LVT     =   0xFEE00370
+LAPIC_TIMER         =   0xFEE00320  / LVT
+LAPIC_THERMAL       =   0xFEE00330
+LAPIC_PERF          =   0xFEE00340
+LAPIC_LINT0         =   0xFEE00350
+LAPIC_LINT1         =   0xFEE00360
+LAPIC_ERROR         =   0xFEE00370
 
 LAPIC_SIR_ASE       =   0x100       / APIC software enable
 LAPIC_LVT_MASK      =   0x1000      / interrupt mask
 
-VECTOR_SPURIOUS     =   0x3F        / IDT vector for spurious interrupts
+VECTOR_SPURIOUS     =   0x3F        / vector for spurious interrupts
 
 / other useful constants
 
@@ -769,12 +769,12 @@ ptl0_loop:          movl %eax, (%ebx)
 go_64:              movl $LAPIC_SIR_ASE + VECTOR_SPURIOUS, LAPIC_SIR
                     movl $0, LAPIC_TPR              / lowest priority
                     movl $LAPIC_LVT_MASK, %eax      / mask off local IRQs
-                    movl %eax, LAPIC_TIMER_LVT
-                    movl %eax, LAPIC_THERMAL_LVT
-                    movl %eax, LAPIC_PERF_LVT
-                    movl %eax, LAPIC_LINT0_LVT
-                    movl %eax, LAPIC_LINT1_LVT
-                    movl %eax, LAPIC_ERROR_LVT
+                    movl %eax, LAPIC_TIMER
+                    movl %eax, LAPIC_THERMAL
+                    movl %eax, LAPIC_PERF
+                    movl %eax, LAPIC_LINT0
+                    movl %eax, LAPIC_LINT1
+                    movl %eax, LAPIC_ERROR
 
                     movl %cr4, %eax             / enable PAE and PGE
                     orl $0x20, %eax

@@ -71,9 +71,9 @@ main(void)
 
     cninit();
     pginit();
+    clkinit();
 
-    for (;;)
-        printf("%D\n", readrtc());
+    for (;;) ;
 }
 
 /* vi: set ts=4 expandtab: */

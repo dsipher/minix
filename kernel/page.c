@@ -31,7 +31,6 @@
 
 *****************************************************************************/
 
-#include <string.h>
 #include <sys/boot.h>
 #include <sys/log.h>
 #include <sys/types.h>

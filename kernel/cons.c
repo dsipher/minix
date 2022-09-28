@@ -31,7 +31,6 @@
 
 *****************************************************************************/
 
-#include <string.h>
 #include <sys/cons.h>
 #include <sys/io.h>
 #include <sys/spin.h>

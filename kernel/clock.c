@@ -45,8 +45,12 @@ time_t time;
 /* we don't need fine resolution for scheduling,
    so we use the max APIC clock divider (128). */
 
-#define LAPIC_DIVIDER           0x0000000A  /* DCR */
-#define LAPIC_TICKS_TO_MHZ(x)   (((x) * 128) / 1000000)
+#define DIVIDER             0x0000000A  /* DCR */
+#define APICS_TO_MHZ(x)     (((x) * 128) / 1000000)
+
+/* set in timer LVT to disable its IRQ  */
+
+#define TIMER_IRQ_MASK      0x10000
 
 /* the number of APIC timer ticks per second */
 
@@ -198,7 +202,7 @@ clkinit(void)
        use on all APICs) and arm it for one-shot */
 
     LAPIC_TIMER_ICR = 0;                /* stop timer if running */
-    LAPIC_TIMER_DCR = LAPIC_DIVIDER;    /* (see apic.h for divisor) */
+    LAPIC_TIMER_DCR = DIVIDER;          /* (see apic.h for divisor) */
     LAPIC_TIMER = 0;                    /* enable (one-shot mode) */
 
     /* then read the real-time clock. we're not interested in
@@ -219,9 +223,9 @@ clkinit(void)
        be restarted in localclk() */
 
     LAPIC_TIMER_ICR = 0;
-    LAPIC_TIMER = LAPIC_LVT_MASK;
+    LAPIC_TIMER = TIMER_IRQ_MASK;
 
-    printf(", timer %d MHz", LAPIC_TICKS_TO_MHZ(apics_per_sec));
+    printf(", timer %d MHz", APICS_TO_MHZ(apics_per_sec));
 }
 
 /* vi: set ts=4 expandtab: */

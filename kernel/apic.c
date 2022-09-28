@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/apic.h                                    jewel/os standard library
+   apic.c                                                  jewel/os kernel
 
 ******************************************************************************
 
@@ -31,25 +31,12 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_APIC_H
-#define _SYS_APIC_H
+#include <sys/page.h>
+#include <sys/apic.h>
 
-/* the local APIC is at a fixed address, but
-   because it's mapped into the RAM image it
-   is faster to index through a variable. */
+/* the local APIC technically has a floating
+   base address, but in practice it's fixed. */
 
-extern unsigned volatile *lapic;
-
-#define LAPIC_REG(x)        (lapic[(x) >> 2])
-
-#define LAPIC_ID            LAPIC_REG(0x020)    /* APIC ID */
-#define LAPIC_ICR0          LAPIC_REG(0x300)    /* interrupt command (LSW) */
-#define LAPIC_ICR1          LAPIC_REG(0x310)    /* ................. (MSW) */
-#define LAPIC_TIMER         LAPIC_REG(0x320)    /* timer vector */
-#define LAPIC_TIMER_ICR     LAPIC_REG(0x380)    /* initial count */
-#define LAPIC_TIMER_CCR     LAPIC_REG(0x390)    /* current count */
-#define LAPIC_TIMER_DCR     LAPIC_REG(0x3E0)    /* divider control */
-
-#endif /* _SYS_APIC_H */
+volatile unsigned *lapic = (volatile unsigned *) PTOV(0xFEE00000);
 
 /* vi: set ts=4 expandtab: */

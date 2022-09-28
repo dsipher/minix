@@ -34,6 +34,8 @@
 #ifndef _SYS_PAGE_H
 #define _SYS_PAGE_H
 
+#include <sys/types.h>
+
 /* ATOM supports multiple page sizes, of course, but (except for
    the physical memory image, see below) we only use 4k pages. */
 

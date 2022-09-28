@@ -90,10 +90,12 @@ printf(char *fmt, ...)
                         }
 
             case 'd':   printn(va_arg(args, int)); break;
+            case 'u':   printu(va_arg(args, unsigned), 10); break;
             case 'o':   printu(va_arg(args, unsigned), 8); break;
             case 'x':   printu(va_arg(args, unsigned), 16); break;
 
             case 'D':   printn(va_arg(args, long)); break;
+            case 'U':   printu(va_arg(args, long), 10); break;
             case 'O':   printu(va_arg(args, long), 8); break;
             case 'X':   printu(va_arg(args, long), 16); break;
 

@@ -35,7 +35,6 @@
 #include <sys/io.h>
 #include <sys/clock.h>
 #include <sys/apic.h>
-#include <sys/log.h>
 
 /* the current time of day. read-only outside of this compilation unit.
    no need to protect it with a lock since it's updated atomically. */
@@ -178,13 +177,18 @@ rtcread(void)
     return time;
 }
 
-/* XXX */
+/* we don't need to be especially accurate when determining
+   the local APIC frequency, as we only use the timer for
+   scheduling. note that we don't account for local APICs
+   whose timers vary in frequency with power state (or even
+   stop ticking). this doesn't apply to ATOM; that sort of
+   complexity is precisely what jewel is trying to escape. */
 
 void
 clkinit(void)
 {
-    /* first, we stop the local APIC timer if it's
-       running, set our chosen divider (which we'll
+    /* first, we stop the local APIC timer in case it's
+       running, plug in our chosen divider (which we'll
        use on all APICs) and arm it for one-shot */
 
     LAPIC_TIMER_ICR = 0;                /* stop timer if running */
@@ -192,7 +196,7 @@ clkinit(void)
     LAPIC_TIMER = 0;                    /* enable (one-shot mode) */
 
     /* then read the real-time clock. we're not interested in
-       the value; we want to synchronize to a second boundary,
+       the value; we want to synchronize to a second boundary.
        then quickly start the local APIC timer. */
 
     rtcread();
@@ -205,13 +209,11 @@ clkinit(void)
     time = rtcread();
     apics_per_sec = 0xFFFFFFFF - LAPIC_TIMER_CCR;
 
-    /* shut the timer down for now. */
+    /* stop the timer for now; to
+       be restarted in localclk() */
 
     LAPIC_TIMER_ICR = 0;
     LAPIC_TIMER = LAPIC_LVT_MASK;
-
-    printf("apics_per_sec = %u (%u)\n", apics_per_sec,
-                                        apics_per_sec * 128);
 }
 
 /* vi: set ts=4 expandtab: */

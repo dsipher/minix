@@ -182,6 +182,7 @@ KERNEL_TSS          =   0x40
 / BOOT_SEG on the APs and [something else] on the BSP.
 
 boot:               cli
+                    cld
 
                     xorw %ax, %ax
                     movw %ax, %ds
@@ -200,7 +201,6 @@ boot:               cli
 / disk, but this is the easiest way to avoid tripping over ourselves.
 
 bsp:                sti
-                    cld
                     movw $BIOS_ADDR, %si
                     movw $BOOT_ADDR, %di
                     movw $256, %cx          / = 512 bytes/sector

@@ -49,9 +49,14 @@ time_t time;
 #define DIVIDER             0x0000000A  /* DCR */
 #define APICS_TO_MHZ(x)     (((x) * 128) / 1000000)
 
-/* set in timer LVT to disable its IRQ  */
+/* bits in the timer LVT */
 
-#define TIMER_IRQ_MASK      0x10000
+#define TIMER_MASKED        0x00010000      /* interrupt masked */
+#define TIMER_PERIODIC      0x00020000      /* automatic restart */
+
+/* the maximum counter value */
+
+#define TIMER_MAX           0xFFFFFFFF
 
 /* the number of APIC timer ticks per second */
 
@@ -184,31 +189,44 @@ clkinit(void)
        running, plug in our chosen divider (which we'll
        use on all APICs) and arm it for one-shot */
 
-    LAPIC_TIMER_ICR = 0;                /* stop timer if running */
+    LAPIC_TIMER = TIMER_MASKED;         /* one-shot, no IRQs please */
     LAPIC_TIMER_DCR = DIVIDER;          /* (see apic.h for divisor) */
-    LAPIC_TIMER = 0;                    /* enable (one-shot mode) */
 
     /* then read the real-time clock. we're not interested in
        the value; we want to synchronize to a second boundary.
        then quickly start the local APIC timer. */
 
     rtcread();
-    LAPIC_TIMER_ICR = 0xFFFFFFFF;
+    LAPIC_TIMER_ICR = TIMER_MAX;
 
     /* the next rtcread() returns approximately one second
        after the first call did, so we can count APIC ticks.
        (we stash the current time of day this time, too.) */
 
     time = rtcread();
-    apics_per_sec = 0xFFFFFFFF - LAPIC_TIMER_CCR;
-
-    /* stop the timer for now; to
-       be restarted in localclk() */
-
-    LAPIC_TIMER_ICR = 0;
-    LAPIC_TIMER = TIMER_IRQ_MASK;
+    apics_per_sec = TIMER_MAX - LAPIC_TIMER_CCR;
 
     printf(", timer %d MHz", APICS_TO_MHZ(apics_per_sec));
+}
+
+/* we borrow the local APIC timer to effect delays on
+   the order of usec; they are necessarily approximate.
+   we try to err on the side of longer-than-requested.
+   since we are (1) busy waiting and (2) clobbering the
+   APIC timer, this is only used during initialization */
+
+void
+udelay(int usec)
+{
+    unsigned deadline;
+
+    deadline = TIMER_MAX - (((apics_per_sec) / 1000000) + 1) * usec;
+
+    /* udelay() is only called by the BSP, which also called clkinit(),
+       so we know LAPIC_TIMER and LAPIC_TIMER_DCR are already set... */
+
+    LAPIC_TIMER_ICR = TIMER_MAX;            /* start counting */
+    while (LAPIC_TIMER_CCR > deadline) ;    /* and wait for the deadline */
 }
 
 /* vi: set ts=4 expandtab: */

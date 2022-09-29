@@ -59,6 +59,11 @@ extern time_t time;
 
 extern void clkinit(void);
 
+/* called only by the BSP, after clkinit() but
+   before localclk(), for [rough] usec delays. */
+
+extern void udelay(int usec);
+
 /* called on each CPU to start its local clock (its
    APIC) firing at TICKS_PER_SEC, for scheduling */
 

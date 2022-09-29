@@ -50,6 +50,11 @@ extern unsigned volatile *lapic;
 #define LAPIC_TIMER_CCR     LAPIC_REG(0x390)    /* current count */
 #define LAPIC_TIMER_DCR     LAPIC_REG(0x3E0)    /* divider control */
 
+/* the APIC ID of the current CPU. (it goes without saying that
+   this is only valid for as long as interrupts are disabled.) */
+
+#define CURCPU              ((LAPIC_ID >> 24) & 0xFF)
+
 #endif /* _SYS_APIC_H */
 
 /* vi: set ts=4 expandtab: */

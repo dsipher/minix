@@ -39,6 +39,7 @@
 #include <sys/user.h>
 #include <sys/proc.h>
 #include <sys/io.h>
+#include <sys/apic.h>
 #include <sys/clock.h>
 #include <sys/utsname.h>
 
@@ -81,6 +82,12 @@ main(void)
 
     pginit();
     clkinit();
+
+    /* the BSP APIC ID must be 0. this is a simplifying assumption we
+       use everywhere, and it's true every `reasonable' system. (jewel
+       is not 100% symmetric; in particular, the BSP fields all IRQs.) */
+
+    if (CURCPU != 0) panic("bsp");
 
     printf(", 4 CPU(s), root on 0/0.\n\n");     /* obviously dummies */
 

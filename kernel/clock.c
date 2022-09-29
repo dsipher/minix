@@ -35,6 +35,7 @@
 #include <sys/io.h>
 #include <sys/clock.h>
 #include <sys/apic.h>
+#include <sys/cmos.h>
 #include <sys/log.h>
 
 /* the current time of day. read-only outside of this compilation unit.
@@ -96,24 +97,6 @@ hinnant(int y, int m, int d)
 #define A_BUSY          0x80        /* update in progress */
 #define B_24HR          0x02        /* time is in 24-hour format */
 #define B_BIN           0x01        /* values are binary (not BCD) */
-
-#define CMOS_ADDR       0x70        /* CMOS address port */
-#define CMOS_DATA       0x71        /* CMOS data window */
-
-#define CMOS_SECOND     0           /* RTC addresses in CMOS */
-#define CMOS_MINUTE     2
-#define CMOS_HOUR       4
-#define CMOS_DAY        7
-#define CMOS_MONTH      8
-#define CMOS_YEAR       9
-#define CMOS_STATUS_A   10
-#define CMOS_STATUS_B   11
-
-#define READ_CMOS(addr)         ({                                          \
-                                    /* 0x80 is the NMI disable */           \
-                                    OUTB(CMOS_ADDR, (addr) | 0x80);         \
-                                    INB(CMOS_DATA);                         \
-                                })
 
 static time_t
 rtcread(void)

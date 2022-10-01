@@ -43,6 +43,8 @@
 
 typedef int spinlock_t;
 
+#define SPINLOCK_LOCKED     1
+
 #ifdef _KERNEL
 
 extern void acquire(spinlock_t *lock);

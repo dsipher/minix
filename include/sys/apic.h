@@ -34,6 +34,9 @@
 #ifndef _SYS_APIC_H
 #define _SYS_APIC_H
 
+#include <sys/boot.h>
+#include <sys/page.h>
+
 /* the local APIC is at a fixed address, but
    because it's mapped into the RAM image it
    is faster to index through a variable. */
@@ -54,6 +57,11 @@ extern unsigned volatile *lapic;
    this is only valid for as long as interrupts are disabled.) */
 
 #define CURCPU              ((LAPIC_ID >> 24) & 0xFF)
+
+/* values for LAPIC_ICR0 for AP startup IPIs (see main.c) */
+
+#define INIT_IPI            (0x00004500)
+#define STARTUP_IPI         (0x00004600 | (BOOT_ADDR >> PAGE_SHIFT))
 
 #endif /* _SYS_APIC_H */
 

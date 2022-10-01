@@ -229,4 +229,11 @@ udelay(int usec)
     while (LAPIC_TIMER_CCR > deadline) ;    /* and wait for the deadline */
 }
 
+/* XXX */
+
+void
+schedclk(void)
+{
+}
+
 /* vi: set ts=4 expandtab: */

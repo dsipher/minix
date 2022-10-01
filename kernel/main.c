@@ -41,8 +41,41 @@
 #include <sys/apic.h>
 #include <sys/clock.h>
 #include <sys/utsname.h>
+#include <sys/spin.h>
 
 caddr_t kernel_top;
+
+/* the boot lock is used to keep parts of the boot process in
+   lockstep (specifically spinning up the APs and starting init) */
+
+static spinlock_t boot_lock = SPINLOCK_LOCKED;
+
+/* every CPU eventually ends up here during initialization
+   (the BSP last). we start the local scheduling timer and
+   then release the boot_lock; this release not only allows
+   boot to proceed but enables interrupts on the current cpu */
+
+static void
+idle(void)
+{
+    printf(" %d", CURCPU);
+    schedclk();
+    release(&boot_lock);
+
+    for (;;) __asm("hlt");
+}
+
+/* process 1. this will complete system initialization
+   with scheduling running (so sleep/wakeup work) and
+   eventually disappear into userland as /bin/init */
+
+static void
+init(void)
+{
+    acquire(&boot_lock);    /* see notes at end of main() */
+
+    /* XXX */
+}
 
 /* the BSP enters here after a brief bounce through
    the locore.s. we're in process 0, interrupts are
@@ -51,7 +84,9 @@ caddr_t kernel_top;
 void
 main(void)
 {
+    struct proc *initp;
     caddr_t bss;
+    int cpu;
 
     bss = N_BSSOFF(*KERNEL_EXEC) + KERNEL_ADDR;         /* clear the BSS */
     STOSQ((void *) bss, 0, KERNEL_EXEC->a_bss >> 3);    /* and compute */
@@ -86,9 +121,48 @@ main(void)
 
     if (CURCPU != 0) panic("bsp");
 
-    printf(", 4 CPU(s), root on 0/0.\n\n");     /* obviously dummies */
+    /* conventionally, `init' is always process 1, so create first. */
 
-    for (;;) ;
+    initp = newproc(init);
+    if (initp == 0) panic("initp");
+
+    /* spin up the APs. use the procedure in intel's multiprocessor
+       specification 1.4, which still works, though it may be overly
+       conservative. in particular, it's unclear if we still need to
+       repeat the STARTUP_IPI- is its delivery still unreliable?
+
+       the BSP holds the boot_lock when spinning up each AP, and each
+       AP releases it when ready in idle(). reacquiring boot_lock at
+       the end of the loop forces us to wait. since the spinlock is
+       acquired in one context and released in another, u_locks gets
+       skewed, and we must manually correct with unlock(). */
+
+    printf(", %d CPU(s):", 4);
+
+    for (cpu = 1; cpu < 4; ++cpu) {
+        struct proc *idlep;
+
+        idlep = newproc(idle);
+        if (idlep == 0) panic("idlep");
+
+        boot_config.entry = idle;
+        boot_config.entry_ptl3 = idlep->p_ptl3;
+
+        LAPIC_ICR1 = cpu << 24;
+        LAPIC_ICR0 = INIT_IPI; udelay(200);
+        LAPIC_ICR0 = STARTUP_IPI; udelay(200);
+        LAPIC_ICR0 = STARTUP_IPI;
+        acquire(&boot_lock);
+        unlock();
+    }
+
+    /* we've exited the above loop still holding boot_lock; we'll release
+       it in idle() just like the APs do. init() acquires it on entry out
+       of an abundance of caution: we don't want any weird races if init()
+       starts running on an AP before the BSP is done (shouldn't happen) */
+
+    /* run(initp); XXX */
+    idle();
 }
 
 /* vi: set ts=4 expandtab: */

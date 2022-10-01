@@ -192,7 +192,8 @@ boot:               cli
 
                     movw %cs, %ax
                     cmpw $BOOT_SEG, %ax
-                    jz ap_boot
+                    jnz bsp
+                    ljmp 0, ap
 
 / first-stage boot: complete loading boot itself. the BIOS has loaded
 / only our first sector, and that to BIOS_ADDR; let's copy ourselves
@@ -1466,9 +1467,22 @@ idt_48:             .short  idt_48 - idt - 1
                     .quad   idt
 
 //////////////////////////////////////////////////////////////////////////////
+/
+/ control is transferred here from boot: in real mode with zero segments.
+/ trampoline briefly through 32-bit to go_64, and enter the kernel. easy.
 
-ap_boot:            ljmp 0, ap_reloc        / XXX
-ap_reloc:           jmp halt
+.code16
+
+ap:                 lgdt gdt_48
+                    movw $1, %ax
+                    lmsw %ax
+                    ljmp KERNEL_CS_32, ap_prot_32
+
+.code32
+
+ap_prot_32:         movw $KERNEL_DS_32, %ax
+                    movw %ax, %ds
+                    jmp go_64
 
 //////////////////////////////////////////////////////////////////////////////
 

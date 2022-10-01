@@ -42,6 +42,7 @@
 #include <sys/clock.h>
 #include <sys/utsname.h>
 #include <sys/spin.h>
+#include "machdep.h"
 
 caddr_t kernel_top;
 
@@ -137,9 +138,9 @@ main(void)
        acquired in one context and released in another, u_locks gets
        skewed, and we must manually correct with unlock(). */
 
-    printf(", %d CPU(s):", 4);
+    printf(", %d CPU(s):", NCPU);
 
-    for (cpu = 1; cpu < 4; ++cpu) {
+    for (cpu = 1; cpu < NCPU; ++cpu) {
         struct proc *idlep;
 
         idlep = newproc(idle);

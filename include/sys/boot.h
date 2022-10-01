@@ -79,17 +79,9 @@ struct boot_config
     pte_t   *entry_ptl3;                    /* ............... page tables */
     void    (*trap_handler)(void);          /* kernel trap handler (locore) */
     void    (*irq_handler)(void);           /* kernel irq handler (locore) */
-
-    unsigned short  nproc;                  /* number of processes */
-    unsigned short  nbuf;                   /* number of block buffers */
-    unsigned short  nmbuf;                  /* number of network buffers */
 };
 
 extern struct boot_config boot_config;      /* exported by locore.s */
-
-#define NPROC       (boot_config.nproc)     /* traditional names */
-#define NBUF        (boot_config.nbuf)
-#define NMBUF       (boot_config.nmbuf)
 
 /* boot retrieves the so-called E820 memory map from the BIOS */
 

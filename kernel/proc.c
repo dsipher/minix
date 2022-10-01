@@ -36,6 +36,7 @@
 #include <sys/proc.h>
 #include <sys/spin.h>
 #include <sys/user.h>
+#include "machdep.h"
 
 /* the scheduler lock. this protects proc[]. */
 

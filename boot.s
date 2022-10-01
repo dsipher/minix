@@ -364,13 +364,6 @@ entry_ptl3:         .quad   PTL3                / page tables
 trap_handler:       .quad   0                   / kernel trap handler
 irq_handler:        .quad   0                   / kernel irq handler
 
-/ these values are intended to be configurable by the user.
-/ (eventually we'll modify mkboot.c to view/change/reset them.)
-
-nproc:              .short  128         / number of processes
-nbuf:               .short  8192        / number of 4k block buffers
-nmbuf:              .short  1024        / number of 4k packet buffers
-
 //////////////////////////////////////////////////////////////////////////////
 
 / the default kernel to boot.

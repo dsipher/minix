@@ -31,7 +31,6 @@
 
 *****************************************************************************/
 
-#include <a.out.h>
 #include <sys/boot.h>
 #include <sys/cons.h>
 #include <sys/page.h>
@@ -45,8 +44,6 @@
 
 caddr_t kernel_top;
 
-#define KERNEL_AOUT     ((struct exec *) KERNEL_ADDR)
-
 /* the BSP enters here after a brief bounce through
    the locore.s. we're in process 0, interrupts are
    disabled, and the first 2MB are identity-mapped. */
@@ -56,9 +53,9 @@ main(void)
 {
     caddr_t bss;
 
-    bss = N_BSSOFF(*KERNEL_AOUT) + KERNEL_ADDR;         /* clear the BSS */
-    STOSQ((void *) bss, 0, KERNEL_AOUT->a_bss >> 3);    /* and compute */
-    kernel_top += bss + KERNEL_AOUT->a_bss;             /* kernel_top. */
+    bss = N_BSSOFF(*KERNEL_EXEC) + KERNEL_ADDR;         /* clear the BSS */
+    STOSQ((void *) bss, 0, KERNEL_EXEC->a_bss >> 3);    /* and compute */
+    kernel_top += bss + KERNEL_EXEC->a_bss;             /* kernel_top. */
     kernel_top = PAGE_UP(kernel_top);           /* (must be whole pages) */
 
     /* zap the u. area and do minimal setup: we need u_locks because
@@ -76,9 +73,9 @@ main(void)
     printf("\n%s %s %s [%d text/%d data/%d bss]\n", utsname.sysname,
                                                     utsname.release,
                                                     utsname.version,
-                                                    KERNEL_AOUT->a_text,
-                                                    KERNEL_AOUT->a_data,
-                                                    KERNEL_AOUT->a_bss);
+                                                    KERNEL_EXEC->a_text,
+                                                    KERNEL_EXEC->a_data,
+                                                    KERNEL_EXEC->a_bss);
 
     pginit();
     clkinit();

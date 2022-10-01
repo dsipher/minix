@@ -36,6 +36,7 @@
 
 #include <sys/types.h>
 #include <sys/page.h>
+#include <a.out.h>
 
 /* the limit of the kernel image in low/conventional memory. all pages
    below kernel_top, except for the zero page, are part of the kernel's
@@ -53,6 +54,10 @@ extern caddr_t kernel_top;      /* page-aligned for convenience */
 
 #define BOOT_ADDR       0x00001000          /* boot starts here ... */
 #define KERNEL_ADDR     0x00008000          /* ... and kernel here */
+
+/* the kernel retains its a.out header, which we read during initialization */
+
+#define KERNEL_EXEC     ((struct exec *) KERNEL_ADDR)
 
 /* important addresses in the prototype page tables built by boot block */
 

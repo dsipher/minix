@@ -412,10 +412,7 @@ ptfree0(pte_t *pt, int ptl)
    2MB identity-mapped (from boot) and exit with proc0.p_ptl3
    set up [almost] properly for process 0, the RAM image mapped
    in at PHYSICAL_BASE, the fixed-sized kernel arrays allocated,
-   and the free_pages[] lists built. the only wrinkle is that
-   the zero page remains mapped in, since the APs will need it
-   as they trampoline through boot. (each CPU will unmap it in
-   its own context when it's ready.) */
+   and the free_pages[] lists built. */
 
 void
 pginit(void)
@@ -500,10 +497,12 @@ pginit(void)
 
     /* unmap the pages below 1MB not used by the kernel and those above
        1MB that are not used by proc0's u. area. n.b.: boot marked them
-       SHARED, so they won't be freed- they're already in free_pages[]. */
+       SHARED, so they won't be freed- they're already in free_pages[],
+       except for the zero page, which we must free explicitly. */
 
     mapout(kernel_top, ISA_BASE);
     mapout(KERNEL_STACK, BOOT_MAPPED);
+    mapout(0, PAGE_SIZE); pgfree(0);
 
     printf("%d pages (%d MB) free", nr_free_pages,
                                     (nr_free_pages * PAGE_SIZE) >> 20);

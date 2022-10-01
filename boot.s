@@ -188,7 +188,6 @@ boot:               cli
                     movw %ax, %ds
                     movw %ax, %es
                     movw %ax, %ss
-                    movw $BOOT_STACK, %sp
 
                     movw %cs, %ax
                     cmpw $BOOT_SEG, %ax
@@ -202,6 +201,7 @@ boot:               cli
 / disk, but this is the easiest way to avoid tripping over ourselves.
 
 bsp:                sti
+                    movw $BOOT_STACK, %sp
                     movw $BIOS_ADDR, %si
                     movw $BOOT_ADDR, %di
                     movw $256, %cx          / = 512 bytes/sector

@@ -7,7 +7,7 @@
 # discarded once jewel/os is minimally self-hosting.
 
 TOOLS=~/xcc/jewel
-DEVICE=/dev/sdb
+DEVICE=$1
 BLOCKS=25600
 
 export AS=$TOOLS/bin/as

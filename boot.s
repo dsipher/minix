@@ -945,8 +945,8 @@ trap_31:            pushq $0                    / (reserved)
 / transfer control the kernel irq_handler with the
 / IRQ number on the stack and interrupts disabled.
 / as with traps above, we incur an extra branch on
-/ most interrupts to save code space/cache, since
-/ the indirect branch at irq: has a huge encoding.
+/ [most] interrupts to save code space/cache, since
+/ the indirect branch at irq: has a large encoding.
 
 irq_0:              pushq $0
                     jmp irq
@@ -1415,8 +1415,9 @@ idt:                / architectural exception vectors. use
                     .short  trap_30,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
                     .short  trap_31,  KERNEL_CS, 0x8F00, 0, 0, 0, 0, 0
 
-                    / high-priority interrupts (vectors 0x20-0x2F)
+                    / hardware interrupts (vectors 0x20-0x3F). use
                     / interrupt gates to automatically disable IRQs.
+                    / the last vector is reserved (VECTOR_SPURIOUS).
 
                     .short  irq_0,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
                     .short  irq_1,    KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
@@ -1434,11 +1435,6 @@ idt:                / architectural exception vectors. use
                     .short  irq_13,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
                     .short  irq_14,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
                     .short  irq_15,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
-
-                    / low-priority interrupts (vectors 0x30-0x3F)
-                    / interrupt gates again. the last vector is
-                    / reserved for spurious IRQs (VECTOR_SPURIOUS).
-
                     .short  irq_16,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
                     .short  irq_17,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0
                     .short  irq_18,   KERNEL_CS, 0x8E00, 0, 0, 0, 0, 0

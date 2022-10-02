@@ -86,14 +86,14 @@ _e820_map       =   0x7008
 / the interrupt frame has been left on the stack
 / undisturbed, with the irq number pushed on top.
 
-.globl _irq_handler
+.globl _irqhook
 .globl _isr
 .globl _preempt
 .globl _lapic
 
 LAPIC_EOI       =   0x0B0
 
-_irq_handler:       pushq %rax              / save volatile GP regs:
+_irqhook:           pushq %rax              / save volatile GP regs:
                     pushq %rcx              / c calling conventions
                     pushq %rdx              / will preserve the others.
                     pushq %rsi              / no need to save the SSE

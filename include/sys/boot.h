@@ -75,10 +75,10 @@ extern caddr_t kernel_top;      /* page-aligned for convenience */
 
 struct boot_config
 {
-    void    (*entry)(void);                 /* AP kernel entry function */
-    pte_t   *entry_ptl3;                    /* ............... page tables */
-    void    (*trap_handler)(void);          /* kernel trap handler (locore) */
-    void    (*irq_handler)(void);           /* kernel irq handler (locore) */
+    void    (*entry)(void);             /* AP kernel entry function */
+    pte_t   *entry_ptl3;                /* ............... page tables */
+    void    (*traphook)(void);          /* kernel trap handler (locore) */
+    void    (*irqhook)(void);           /* kernel irq handler (locore) */
 };
 
 extern struct boot_config boot_config;      /* exported by locore.s */

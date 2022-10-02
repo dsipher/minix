@@ -77,10 +77,10 @@ extern unsigned volatile *lapic;
 #define ISA_IRQ(irq)        ((irq) < 16)        /* posedge triggered */
 #define IOAPIC_IRQ(irq)     ((irq) < 24)        /* attached to I/O APIC */
 
-/* IRQs are fielded in locore.s by irq_handler()
-   and then dispatched to the appropriate isr[] */
+/* IRQs are fielded in locore.s by irqhook()
+   then dispatched to the appropriate isr[] */
 
-extern void irq_handler(void);
+extern void irqhook(void);
 
 /* c interrupt service handlers. these are defined
    in machdep.c (since they're platform-dependent) */

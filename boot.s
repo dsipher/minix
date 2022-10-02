@@ -361,8 +361,8 @@ banner_msg:         .byte 13, 10, 10
 
 entry:              .quad   KERNEL_ADDR         / kernel entry point
 entry_ptl3:         .quad   PTL3                / page tables
-trap_handler:       .quad   0                   / kernel trap handler
-irq_handler:        .quad   0                   / kernel irq handler
+traphook:           .quad   0                   / kernel trap handler
+irqhook:            .quad   0                   / kernel irq handler
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -818,7 +818,7 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
                     jmp *entry(%rip)
 
 / our agreement with the kernel on traps is that we'll pass
-/ control to trap_handler with the error code and trap number
+/ control to traphook with the error code and trap number
 / on the stack (in that order) and interrupts enabled. if the
 / the trap doesn't have an error code, we supply a dummy 0.
 / we account for every vector, even those which can't happen.
@@ -880,7 +880,7 @@ trap_14:            pushq $14                   / page fault
 trap_15:            pushq $0                    / (reserved)
                     pushq $15
 
-trap:               jmp *trap_handler(%rip)
+trap:               jmp *trap(%rip)
 
 trap_16:            pushq $0                    / x87 fp exception
                     pushq $16
@@ -945,7 +945,7 @@ trap_31:            pushq $0                    / (reserved)
                     pushq $31
                     jmp trap
 
-/ transfer control the kernel irq_handler with the
+/ transfer control the kernel irqhook with the
 / IRQ number on the stack and interrupts disabled.
 / as with traps above, we incur an extra branch on
 / [most] interrupts to save code space/cache, since
@@ -998,7 +998,7 @@ irq_14:             pushq $14
 
 irq_15:             pushq $15
 
-irq:                jmp *irq_handler(%rip)
+irq:                jmp *irqhook(%rip)
 
 irq_16:             pushq $16
                     jmp irq

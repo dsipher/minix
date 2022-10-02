@@ -152,16 +152,20 @@ _swtch:             popq %rax
                     movq U_PROCP, %rax                  / only save SSE
                     testb $P_FLAG_SSE, P_FLAGS(%rax)    / regs if the
                     jz swtch010                         / old process
-                    fxsave U_FXSAVE                     / uses them.
+                    fxsave U_FXSAVE                     / uses them,
+                    movq %cr0, %rax                     / then disable SSE
+                    orq $8, %rax                        / by setting TS bit
+                    movq %rax, %cr0                     / (there is no `stts')
 
 swtch010:           movq $0x7FFFFFFFFF, %rbx
                     movq P_PTL3(%rdi), %rax             / new page tables
                     andq %rbx, %rax                     / (physical address)
                     movq %rax, %cr3
 
-                    testb $P_FLAG_SSE, P_FLAGS(%rdi)    / and only restore
-                    jz swtch020                         / SSE regs if the
-                    fxrstor U_FXSAVE                    / new proc uses them.
+                    testb $P_FLAG_SSE, P_FLAGS(%rdi)    / and only re-enable
+                    jz swtch020                         / SSE and restore
+                    clts                                / the SSE state if
+                    fxrstor U_FXSAVE                    / the proc uses them
 
 swtch020:           movq U_SYS_R15, %r15
                     movq U_SYS_R14, %r14

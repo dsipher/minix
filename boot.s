@@ -786,8 +786,8 @@ go_64:              movl $LAPIC_SIR_ASE + VECTOR_SPURIOUS, LAPIC_SIR
                     movl entry_ptl3, %eax       / set page base
                     movl %eax, %cr3
 
-                    movl %cr0, %eax             / enable paging
-                    orl $0x80000000, %eax
+                    movl %cr0, %eax             / set paging enable (PE)
+                    orl $0x80000008, %eax       / and task-switched (TS)
                     movl %eax, %cr0
 
                     movl %cr4, %eax             / enable SSE
@@ -815,7 +815,6 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
                     wrmsr
 
                     lidt idt_48(%rip)
-
                     jmp *entry(%rip)
 
 / our agreement with the kernel on traps is that we'll pass

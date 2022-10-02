@@ -82,6 +82,51 @@ _e820_map       =   0x7008
 
 //////////////////////////////////////////////////////////////////////////////
 /
+/ irqs are sent here from the idt stubs in boot.
+/ the interrupt frame has been left on the stack
+/ undisturbed, with the irq number pushed on top.
+
+.globl _irq_handler
+.globl _isr
+.globl _preempt
+.globl _lapic
+
+LAPIC_EOI       =   0x0B0
+
+_irq_handler:       pushq %rax              / save volatile GP regs:
+                    pushq %rcx              / c calling conventions
+                    pushq %rdx              / will preserve the others.
+                    pushq %rsi              / no need to save the SSE
+                    pushq %rdi              / state, since the kernel
+                    pushq %r8               / will not touch it unless
+                    pushq %r9               / we preempt(), in which
+                    pushq %r10              / case swtch() will deal
+                    pushq %r11              / with it (if necessary).
+                    incb U_LOCKS            / interrupt gate locked IRQs
+
+                    movq 72(%rsp), %rdi         / buried irq #
+                    call *_isr(,%rdi,8)         / call isr(irq)
+
+                    movq _lapic(%rip), %rax     / tell local APIC
+                    movl $0, LAPIC_EOI(%rax)    / we serviced it
+
+                    call _preempt           / maybe it's someone else's turn
+
+                    decb U_LOCKS
+                    popq %r11
+                    popq %r10
+                    popq %r9
+                    popq %r8
+                    popq %rdi
+                    popq %rsi
+                    popq %rdx
+                    popq %rcx
+                    popq %rax
+                    addq $8, %rsp           / discard irq number
+                    iret
+
+//////////////////////////////////////////////////////////////////////////////
+/
 / void swtch(struct proc *to);
 /
 / called with the scheduler lock held and thus with interrupts disabled.

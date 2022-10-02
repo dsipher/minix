@@ -705,6 +705,10 @@ warn_bios:          movw $0xec00, %ax
                     outb %al, $0x21
                     outb %al, $0xA1
 
+                    movb $0xFF, %al             / mask all IRQs
+                    outb %al, $0x21
+                    outb %al, $0xA1
+
 / kill NMIs. these usually just mean the computer
 / is exploding. if so, we'll find out soon enough.
 

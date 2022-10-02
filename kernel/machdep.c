@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/clock.h                                   jewel/os standard library
+   machdep.c                                               jewel/os kernel
 
 ******************************************************************************
 
@@ -31,51 +31,31 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_CLOCK_H
-#define _SYS_CLOCK_H
+#include <sys/apic.h>
+#include <sys/proc.h>
+#include "machdep.h"
 
-/* both the local scheduling clocks and the
-   global event clock fire at TICKS_PER_SEC. */
+/* irq service routines; indices must match assignments
+   in machdep.h (and, of course, the hardware platform) */
 
-#define TICKS_PER_SEC   100
-
-/* the number of ticks in a scheduling quantum */
-
-#define QUANTUM         10
-
-
-#ifdef _KERNEL
-
-#include <sys/types.h>
-
-/* the current time */
-
-extern time_t time;
-
-/* called by the BSP at boot time to
-
-    (a) determine the APIC timer frequency
-    (b) read the CMOS time-of-day clock */
-
-extern void clkinit(void);
-
-/* called only by the BSP, after clkinit() but
-   before schedclk(), for [rough] usec delays. */
-
-extern void udelay(int usec);
-
-/* called on each CPU to start its local clock (its
-   APIC) firing at TICKS_PER_SEC, for scheduling */
-
-extern void tmrinit(void);
-
-/* called at boot to start the global clock (the 8254
-   PIT) firing at TICKS_PER_SEC, for time-of-day */
-
-extern void pitinit(void);
-
-#endif /* _KERNEL */
-
-#endif /* _SYS_CLOCK_H */
+void (*isr[NIRQ])(int irq) =
+{
+    /*  0 */    0,              /*  1 */    0,
+    /*  2 */    0,              /*  3 */    0,
+    /*  4 */    0,              /*  5 */    0,
+    /*  6 */    0,              /*  7 */    0,
+    /*  8 */    0,              /*  9 */    0,
+    /* 10 */    0,              /* 11 */    0,
+    /* 12 */    0,              /* 13 */    0,
+    /* 14 */    0,              /* 15 */    0,
+    /* 16 */    0,              /* 17 */    0,
+    /* 18 */    0,              /* 19 */    0,
+    /* 20 */    0,              /* 21 */    0,
+    /* 22 */    0,              /* 23 */    0,
+    /* 24 */    0,              /* 25 */    0,
+    /* 26 */    0,              /* 27 */    0,
+    /* 28 */    0,              /* 29 */    0,
+    /* 30 */    tmrisr
+};
 
 /* vi: set ts=4 expandtab: */

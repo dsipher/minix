@@ -60,7 +60,7 @@ static void
 idle(void)
 {
     printf(" %d", CURCPU);
-    schedclk();
+    tmrinit();
     release(&boot_lock);
 
     for (;;) __asm("hlt");
@@ -93,6 +93,8 @@ main(void)
     STOSQ((void *) bss, 0, KERNEL_EXEC->a_bss >> 3);    /* and compute */
     kernel_top += bss + KERNEL_EXEC->a_bss;             /* kernel_top. */
     kernel_top = PAGE_UP(kernel_top);           /* (must be whole pages) */
+
+    boot_config.irq_handler = irq_handler;
 
     /* zap the u. area and do minimal setup: we need u_locks because
        we'll access spinlocks. though we're identity-mapped right now,

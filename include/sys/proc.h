@@ -134,6 +134,15 @@ extern void run(struct proc *p);
 
 extern void swtch(struct proc *to);
 
+/* check to see if the current proc's quantum
+   has expired, and preempt it if necessary */
+
+extern void preempt(void);
+
+/* scheduling timer ISR */
+
+extern void tmrisr(int irq);
+
 #endif /* _KERNEL */
 
 #endif /* _SYS_PROC_H */

@@ -37,6 +37,7 @@
 #include <sys/apic.h>
 #include <sys/cmos.h>
 #include <sys/log.h>
+#include "machdep.h"
 
 /* the current time of day. read-only outside of this compilation unit.
    no need to protect it with a lock since it's updated atomically. */
@@ -229,11 +230,16 @@ udelay(int usec)
     while (LAPIC_TIMER_CCR > deadline) ;    /* and wait for the deadline */
 }
 
-/* XXX */
+/* we slightly vary the period of the scheduling
+   timer on every CPU so they won't synchronize. */
 
 void
-schedclk(void)
+tmrinit(void)
 {
+    LAPIC_TIMER_ICR = 0;
+    LAPIC_TIMER_DCR = DIVIDER;
+    LAPIC_TIMER = TIMER_PERIODIC | VECTOR(TMR_IRQ);
+    LAPIC_TIMER_ICR = (apics_per_sec / TICKS_PER_SEC) - (CURCPU * 512);
 }
 
 /* vi: set ts=4 expandtab: */

@@ -46,6 +46,7 @@ extern unsigned volatile *lapic;
 #define LAPIC_REG(x)        (lapic[(x) >> 2])
 
 #define LAPIC_ID            LAPIC_REG(0x020)    /* APIC ID */
+#define LAPIC_EOI           LAPIC_REG(0x0B0)    /* end-of-interrupt */
 #define LAPIC_ICR0          LAPIC_REG(0x300)    /* interrupt command (LSW) */
 #define LAPIC_ICR1          LAPIC_REG(0x310)    /* ................. (MSW) */
 #define LAPIC_TIMER         LAPIC_REG(0x320)    /* timer vector */
@@ -62,6 +63,29 @@ extern unsigned volatile *lapic;
 
 #define INIT_IPI            (0x00004500)
 #define STARTUP_IPI         (0x00004600 | (BOOT_ADDR >> PAGE_SHIFT))
+
+/* we reserve 31 vectors for interrupts at 0x20-0x3E (see boot.s).
+   we disregard vector priorities, instead mapping I/O APIC pins
+   directly to vectors, e.g., IOAPIC pin 0 -> IRQ 0 -> vector 0x20.
+   IRQs 0-15 (pins 0-15) are assumed to be positive-edge triggered
+   ISA sources, and IRQs 16-23 low-level PCI sources. IRQs 24-30
+   are from `virtual' sources, e.g., the local APIC, MSI, or IPI. */
+
+#define NIRQ                31
+
+#define VECTOR(irq)         (0x20 + (irq))      /* irq # -> vector # */
+#define ISA_IRQ(irq)        ((irq) < 16)        /* posedge triggered */
+#define IOAPIC_IRQ(irq)     ((irq) < 24)        /* attached to I/O APIC */
+
+/* IRQs are fielded in locore.s by irq_handler()
+   and then dispatched to the appropriate isr[] */
+
+extern void irq_handler(void);
+
+/* c interrupt service handlers. these are defined
+   in machdep.c (since they're platform-dependent) */
+
+extern void (*isr[NIRQ])(int irq);
 
 #endif /* _SYS_APIC_H */
 

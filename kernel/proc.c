@@ -36,6 +36,8 @@
 #include <sys/proc.h>
 #include <sys/spin.h>
 #include <sys/user.h>
+#include <sys/apic.h>
+#include <sys/log.h>
 #include "machdep.h"
 
 /* the scheduler lock. this protects proc[]. */
@@ -269,6 +271,21 @@ void wakeup(void *chan)
     }
 
     release(&sched_lock);
+}
+
+/* XXX */
+
+void
+preempt(void)
+{
+}
+
+/* XXX */
+
+void
+tmrisr(int irq)
+{
+    printf("%d", CURCPU);
 }
 
 /* obviously, just ready() exposed to

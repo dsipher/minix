@@ -43,6 +43,12 @@
 #define NBUF        8192        /* number of block buffers (32MB) */
 #define NMBUF       1024        /* number of packet buffers (4MB) */
 
+/* these IRQ assignments must match the isr[] entries in machdep.c */
+
+#define KBD_IRQ     1           /* PS/2 keyboard */
+#define PIT_IRQ     2           /* 8254 global timer */
+#define TMR_IRQ     30          /* scheduling timer */
+
 #endif /* _MACHDEP_H */
 
 /* vi: set ts=4 expandtab: */

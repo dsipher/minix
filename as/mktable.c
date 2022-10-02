@@ -85,6 +85,7 @@ struct { const char *text; const char *template; } insns[] =
     {   "cld",          0               },
     {   "cli",          0               },
     {   "cltd",         0               },
+    {   "clts",         0               },
     {   "cmc",          0               },
     {   "cmovaw",       "cmovnbew"      },
     {   "cmoval",       "cmovnbel"      },

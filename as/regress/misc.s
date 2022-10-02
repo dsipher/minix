@@ -304,6 +304,7 @@
 
 	rdmsr
 	wrmsr
+	clts
 
 	movq %rax, %cr3
 	movq %cr7, %rbx

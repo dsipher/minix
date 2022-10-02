@@ -308,25 +308,26 @@ misc.s
  304  00024a                    
  305  00024a  0f32              	rdmsr
  306  00024c  0f30              	wrmsr
- 307  00024e                    
- 308  00024e  0f22d8            	movq %rax, %cr3
- 309  000251  0f20fb            	movq %cr7, %rbx
- 310  000254  440f20c0          	movq %cr8, %rax
- 311  000258  450f22c7          	movq %r15, %cr8
- 312  00025c                    
- 313  00025c  0fa2              	cpuid
- 314  00025e  669c              	pushfw
- 315  000260  9c                	pushfq
- 316  000261  669d              	popfw
- 317  000263  9d                	popfq
- 318  000264                    
- 319  000264  f390              	pause
- 320  000266                    
- 321  000266  670fae10          	ldmxcsr (%eax)
- 322  00026a  0fae1d0a000000    	stmxcsr 10(%rip)
- 323  000271  0f013f            	invlpg (%rdi)
- 324  000274                    
- 325  000274  0fae0564000000    	fxsave 100(%rip)
- 326  00027b  0fae0c4a          	fxrstor (%rdx,%rcx,2)
- 327  00027f  670fae0b          	fxrstor (%ebx)
- 328  000283                    
+ 307  00024e  0f06              	clts
+ 308  000250                    
+ 309  000250  0f22d8            	movq %rax, %cr3
+ 310  000253  0f20fb            	movq %cr7, %rbx
+ 311  000256  440f20c0          	movq %cr8, %rax
+ 312  00025a  450f22c7          	movq %r15, %cr8
+ 313  00025e                    
+ 314  00025e  0fa2              	cpuid
+ 315  000260  669c              	pushfw
+ 316  000262  9c                	pushfq
+ 317  000263  669d              	popfw
+ 318  000265  9d                	popfq
+ 319  000266                    
+ 320  000266  f390              	pause
+ 321  000268                    
+ 322  000268  670fae10          	ldmxcsr (%eax)
+ 323  00026c  0fae1d0a000000    	stmxcsr 10(%rip)
+ 324  000273  0f013f            	invlpg (%rdi)
+ 325  000276                    
+ 326  000276  0fae0564000000    	fxsave 100(%rip)
+ 327  00027d  0fae0c4a          	fxrstor (%rdx,%rcx,2)
+ 328  000281  670fae0b          	fxrstor (%ebx)
+ 329  000285                    

@@ -57,6 +57,12 @@
 
 #include <sys/types.h>
 
+/* a dummy variable whose address is used
+   as the `lightning bolt', a sleep channel
+   which is awakened roughly once a second. */
+
+extern char lbolt;
+
 /* the current time */
 
 extern time_t time;

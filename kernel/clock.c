@@ -36,8 +36,13 @@
 #include <sys/clock.h>
 #include <sys/apic.h>
 #include <sys/cmos.h>
+#include <sys/proc.h>
 #include <sys/log.h>
 #include "machdep.h"
+
+/* the `lightning bolt' sleep channel */
+
+char lbolt;
 
 /* the current time of day. read-only outside of this compilation unit.
    no need to protect it with a lock since it's updated atomically. */
@@ -260,7 +265,7 @@ pitisr(int irq)
     if (++ticks == TICKS_PER_SEC) {
         ticks = 0;
         ++time;
-        printf("%D\n", time);
+        wakeup(&lbolt);
     }
 }
 

@@ -75,10 +75,15 @@ idle(void)
 static void
 init(void)
 {
+    int count = 0;
+
     release(&sched_lock);
     printf(".\n\n", CURCPU);
 
-    sleep(0, P_STATE_COMA, 0);
+    for (;;) {
+        sleep(&lbolt, P_STATE_COMA, 0);
+        printf("init is awake on CPU %d (%d)\n", CURCPU, ++count);
+    }
 }
 
 /* the BSP enters here after a brief bounce through

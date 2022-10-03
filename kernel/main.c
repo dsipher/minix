@@ -60,6 +60,8 @@ static void
 idle(void)
 {
     printf(" %d", CURCPU);
+    CURPROC->p_flags |= P_FLAG_IDLE;
+
     tmrinit();
     release(&boot_lock);
 
@@ -73,9 +75,12 @@ idle(void)
 static void
 init(void)
 {
-    acquire(&boot_lock);    /* see notes at end of main() */
+    static int forever;
 
-    /* XXX */
+    acquire(&boot_lock);    /* see notes at end of main() */
+    printf(".\n\n");
+
+    sleep(&forever, P_STATE_COMA, 0);
 }
 
 /* the BSP enters here after a brief bounce through
@@ -164,7 +169,7 @@ main(void)
        of an abundance of caution: we don't want any weird races if init()
        starts running on an AP before the BSP is done (shouldn't happen) */
 
-    /* run(initp); XXX */
+    run(initp);
     idle();
 }
 

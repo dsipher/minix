@@ -37,6 +37,7 @@
 #include <sys/spin.h>
 #include <sys/user.h>
 #include <sys/apic.h>
+#include <sys/clock.h>
 #include <sys/log.h>
 #include "machdep.h"
 
@@ -75,20 +76,26 @@ struct proc *proc;
 
 TAILQ_HEAD(procq, proc);
 
+#define PROCQ_INITIALIZER(q)    TAILQ_HEAD_INITIALIZER(q)
+#define PROCQ_FIRST(q)          TAILQ_FIRST(q)
+#define PROCQ_NEXT(p)           TAILQ_NEXT((p), p_qlinks)
+#define PROCQ_INSERT(q, p)      TAILQ_INSERT_TAIL((q), (p), p_qlinks)
+#define PROCQ_REMOVE(q, p)      TAILQ_REMOVE((q), (p), p_qlinks)
+
     /* P_STATE_READYs are put on the readyq.
        they are waiting to be scheduled. */
 
-struct procq readyq = TAILQ_HEAD_INITIALIZER(readyq);
+struct procq readyq = PROCQ_INITIALIZER(readyq);
 
     /* P_STATE_SLEEPs (interruptible by a signal) and
        P_STATE_COMAs (not interruptible) are on sleepq */
 
-struct procq sleepq = TAILQ_HEAD_INITIALIZER(sleepq);
+struct procq sleepq = PROCQ_INITIALIZER(sleepq);
 
     /* as a matter of convenience, P_FLAG_IDLE procs
        never go on the readyq; they are put here */
 
-struct procq idleq = TAILQ_HEAD_INITIALIZER(idleq);
+struct procq idleq = PROCQ_INITIALIZER(idleq);
 
 /* a simple linear traversal to find a P_STATE_FREE entry.
    in practice, we never have to scan more entries than the
@@ -192,12 +199,42 @@ newproc(void (*entry)(void))
 }
 
 /* pick the most eligible process
-   to run, and switch into it. */
+   to run, and switch into it. the
+   current process has already been
+   placed on any relevant queue if
+   it expects to be revived later */
 
 static void
 sched(void)     /* hold: sched_lock */
 {
-    /* XXX */
+    struct proc *p;
+    int curcpu = CURCPU;
+
+    /* we only pick processes that have recently run on this
+       cpu, or processes that haven't recently run anywhere */
+
+    for (p = PROCQ_FIRST(&readyq); p; p = PROCQ_NEXT(p))
+        if (p->p_cpu == curcpu || p->p_age >= P_AGE_OLD)
+        {
+            PROCQ_REMOVE(&readyq, p);
+            p->p_ticks = QUANTUM;
+            break;
+        }
+
+    /* if nothing is eligible, grab any of the idle processes.
+       (there's guaranteed to be one.) these get a zero quantum
+       so they'll be preempted as soon as someone else is ready */
+
+    if (p == 0) {
+        p = PROCQ_FIRST(&idleq);
+        PROCQ_REMOVE(&idleq, p);
+        p->p_ticks = 0;
+    }
+
+    p->p_state = P_STATE_RUN;
+    p->p_cpu = curcpu;
+
+    swtch(p);
 }
 
 /* set a process to P_STATE_READY and
@@ -215,7 +252,7 @@ ready(struct proc *p)   /* hold: sched_lock */
                 ? &idleq
                 : &readyq;
 
-    TAILQ_INSERT_TAIL(procq, p, p_qlinks);
+    PROCQ_INSERT(procq, p);
 }
 
 /* this is a tad bit messy, only because:
@@ -224,10 +261,7 @@ ready(struct proc *p)   /* hold: sched_lock */
     `guard' may be the sched_lock
     `guard' may be some other lock
 
-   and the behavior differs subtly in each case.
-
-   we insert sleepers at the tail of the sleepq
-   in a rudimentary attempt at fairness. */
+   and the behavior differs subtly in each case. */
 
 void sleep(void *chan, int state, spinlock_t *guard)
 {
@@ -240,7 +274,7 @@ void sleep(void *chan, int state, spinlock_t *guard)
     CURPROC->p_state = state;
     CURPROC->p_age = 0;
 
-    TAILQ_INSERT_TAIL(&sleepq, CURPROC, p_qlinks);
+    PROCQ_INSERT(&sleepq, CURPROC);
 
     sched();
 
@@ -257,13 +291,13 @@ void wakeup(void *chan)
 
     acquire(&sched_lock);
 
-    p = TAILQ_FIRST(&sleepq);
+    p = PROCQ_FIRST(&sleepq);
 
     while (p) {
-        next = TAILQ_NEXT(p, p_qlinks);
+        next = PROCQ_NEXT(p);
 
         if (p->p_chan == chan) {
-            TAILQ_REMOVE(&sleepq, p, p_qlinks);
+            PROCQ_REMOVE(&sleepq, p);
             ready(p);
         }
 
@@ -273,19 +307,45 @@ void wakeup(void *chan)
     release(&sched_lock);
 }
 
-/* XXX */
+/* check to see if the current process's
+   quantum has expired, and if so, invoke
+   sched() to [maybe] run another process. */
 
 void
 preempt(void)
 {
+    if (CURPROC->p_ticks == 0) {
+        acquire(&sched_lock);
+        ready(CURPROC);
+        sched();
+        release(&sched_lock);
+    }
 }
 
-/* XXX */
+/* the scheduling timer; called TICKS_PER_SEC times per second.
+   charge the current process for the timeslice, and update the
+   age of all ready or sleeping processes last run on this CPU.
+   we leave it to the IRQ exit sequence to preempt the current
+   process if its quantum has expired. */
+
+#define TMRISR0(q)                                                          \
+    for (p = PROCQ_FIRST(q); p; p = PROCQ_NEXT(p))                          \
+        if (p->p_cpu == curcpu && p->p_age < P_AGE_MAX)                     \
+            ++p->p_age;
 
 void
 tmrisr(int irq)
 {
-    printf("%d", CURCPU);
+    struct proc *p;
+    int curcpu = CURCPU;
+
+    if (CURPROC->p_ticks)       /* p_ticks never */
+        --CURPROC->p_ticks;     /* goes below 0 */
+
+    acquire(&sched_lock);
+    TMRISR0(&readyq);
+    TMRISR0(&sleepq);
+    release(&sched_lock);
 }
 
 /* obviously, just ready() exposed to

@@ -121,6 +121,7 @@ main(void)
                                                     KERNEL_EXEC->a_bss);
 
     pginit();
+    irqinit();
     clkinit();
 
     /* the BSP APIC ID must be 0. this is a simplifying assumption we

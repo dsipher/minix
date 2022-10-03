@@ -32,11 +32,50 @@
 *****************************************************************************/
 
 #include <sys/page.h>
+#include <sys/spin.h>
 #include <sys/apic.h>
 
-/* the local APIC technically has a floating
-   base address, but in practice it's fixed. */
+/* the APICs technically has a floating base
+   addresses, but in practice they're fixed. */
 
-volatile unsigned *lapic = (volatile unsigned *) PTOV(0xFEE00000);
+volatile unsigned *lapic  = (volatile unsigned *) PTOV(0xFEE00000);
+volatile unsigned *ioapic = (volatile unsigned *) PTOV(0xFEC00000);
+
+/* accesses to the I/O APIC must be atomic */
+
+static spinlock_t ioapic_lock;
+
+/* reconstruct the redirection entry every time
+   rather than reading it and toggling a bit. */
+
+void
+enable(int irq, int on)
+{
+    unsigned lo;
+
+    lo = VECTOR(irq);
+    lo |= ISAIRQ(irq) ? IOREDISA : IOREDPCI;
+    lo |= on ? 0 : IOREDMASK;
+
+    acquire(&ioapic_lock);
+    IOREGSEL = IOREDHI(irq);
+    IOREGWIN = 0; /* BSP */
+    IOREGSEL = IOREDLO(irq);
+    IOREGWIN = lo;
+    release(&ioapic_lock);
+}
+
+/* set up all redirection entries, and mask
+   them all off. enable() does all the work! */
+
+void
+irqinit(void)
+{
+    int irq;
+
+    for (irq = 0; irq < NIRQ; ++irq)
+        if (IOAPICIRQ(irq))
+            enable(irq, 0);
+}
 
 /* vi: set ts=4 expandtab: */

@@ -39,7 +39,7 @@
 
 /* the local APIC is at a fixed address, but
    because it's mapped into the RAM image it
-   is faster to index through a variable. */
+   is simpler to index through a variable. */
 
 extern unsigned volatile *lapic;
 
@@ -74,8 +74,8 @@ extern unsigned volatile *lapic;
 #define NIRQ                31
 
 #define VECTOR(irq)         (0x20 + (irq))      /* irq # -> vector # */
-#define ISA_IRQ(irq)        ((irq) < 16)        /* posedge triggered */
-#define IOAPIC_IRQ(irq)     ((irq) < 24)        /* attached to I/O APIC */
+#define ISAIRQ(irq)         ((irq) < 16)        /* posedge triggered */
+#define IOAPICIRQ(irq)      ((irq) < 24)        /* attached to I/O APIC */
 
 /* IRQs are fielded in locore.s by irqhook()
    then dispatched to the appropriate isr[] */
@@ -86,6 +86,36 @@ extern void irqhook(void);
    in machdep.c (since they're platform-dependent) */
 
 extern void (*isr[NIRQ])(int irq);
+
+/* the I/O APIC lives at 0xFEC00000 physical but we
+   access it via a pointer variable; see `lapic' */
+
+extern volatile unsigned *ioapic;
+
+#define IOREGSEL        (ioapic[0])     /* I/O APIC register selection */
+#define IOREGWIN        (ioapic[4])     /* and the window into that reg */
+
+/* the register numbers for the I/O APIC
+   redirection entries. these are 64 bit
+   registers accessed as 2x32-bit words.
+
+   redirection entry x corresponds to pin x */
+
+#define IOREDLO(x)      (0x10 + ((x) * 2))      /* bits[31:0] */
+#define IOREDHI(x)      (IOREDLO(x) + 1)        /* ...[63:32] */
+
+#define IOREDISA    0x00000000      /* ISA: active high, edge-triggered */
+#define IOREDPCI    0x0000A000      /* PCI: active low, level-triggered */
+#define IOREDMASK   0x00010000      /* mask interrupt */
+
+/* initialize the I/O APIC at startup */
+
+extern void irqinit(void);
+
+/* enable (on = 1) or disable (on = 0)
+   the interrupt on I/O APIC pin/irq */
+
+extern void enable(int irq, int on);
 
 #endif /* _SYS_APIC_H */
 

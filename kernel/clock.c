@@ -208,6 +208,14 @@ clkinit(void)
     apics_per_sec = TIMER_MAX - LAPIC_TIMER_CCR;
 
     printf(", timer %d MHz", APICS_TO_MHZ(apics_per_sec));
+
+    /* and now tell the PIT to start firing at TICKS_PER_SEC */
+
+    OUTB(PITCTL, 0x36);                             /* ch0 sq wave */
+    OUTB(PITCH0, PITFREQ / TICKS_PER_SEC);          /* divider LSB */
+    OUTB(PITCH0, (PITFREQ / TICKS_PER_SEC) >> 8);   /* ....... MSB */
+
+    enable(PIT_IRQ, 1);
 }
 
 /* we borrow the local APIC timer to effect delays on
@@ -240,6 +248,20 @@ tmrinit(void)
     LAPIC_TIMER_DCR = DIVIDER;
     LAPIC_TIMER = TIMER_PERIODIC | VECTOR(TMR_IRQ);
     LAPIC_TIMER_ICR = (apics_per_sec / TICKS_PER_SEC) - (CURCPU * 512);
+}
+
+/* XXX */
+
+void
+pitisr(int irq)
+{
+    static unsigned char ticks;
+
+    if (++ticks == TICKS_PER_SEC) {
+        ticks = 0;
+        ++time;
+        printf("%D\n", time);
+    }
 }
 
 /* vi: set ts=4 expandtab: */

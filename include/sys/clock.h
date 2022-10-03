@@ -43,6 +43,15 @@
 
 #define QUANTUM         10
 
+/* definitions associated with the 8254 PIT */
+
+#define PITCH0          0x40        /* I/O registers */
+#define PITCH1          0x41
+#define PITCH2          0x42
+#define PITCTL          0x43
+
+#define PITFREQ         1193182     /* 1.193182 MHz */
+
 
 #ifdef _KERNEL
 
@@ -55,7 +64,8 @@ extern time_t time;
 /* called by the BSP at boot time to
 
     (a) determine the APIC timer frequency
-    (b) read the CMOS time-of-day clock */
+    (b) read the CMOS time-of-day clock
+    (c) start the global timer (8254 PIT) */
 
 extern void clkinit(void);
 
@@ -64,15 +74,15 @@ extern void clkinit(void);
 
 extern void udelay(int usec);
 
+/* the global timer ISR; update time-of-day
+   clock and fire off global events */
+
+extern void pitisr(int irq);
+
 /* called on each CPU to start its local clock (its
    APIC) firing at TICKS_PER_SEC, for scheduling */
 
 extern void tmrinit(void);
-
-/* called at boot to start the global clock (the 8254
-   PIT) firing at TICKS_PER_SEC, for time-of-day */
-
-extern void pitinit(void);
 
 #endif /* _KERNEL */
 

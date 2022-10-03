@@ -46,8 +46,7 @@
 
 caddr_t kernel_top;
 
-/* the boot lock is used to keep parts of the boot process in
-   lockstep (specifically spinning up the APs and starting init) */
+/* used to keep CPUs in lockstep during boot */
 
 static spinlock_t boot_lock = SPINLOCK_LOCKED;
 
@@ -69,18 +68,17 @@ idle(void)
 }
 
 /* process 1. this will complete system initialization
-   with scheduling running (so sleep/wakeup work) and
-   eventually disappear into userland as /bin/init */
+   with the scheduler running and eventually disappear
+   into userland /bin/init. we come alive holding the
+   sched_lock: see child() in proc.c for more details. */
 
 static void
 init(void)
 {
-    static int forever;
+    release(&sched_lock);
+    printf(".\n\n", CURCPU);
 
-    acquire(&boot_lock);    /* see notes at end of main() */
-    printf(".\n\n");
-
-    sleep(&forever, P_STATE_COMA, 0);
+    sleep(0, P_STATE_COMA, 0);
 }
 
 /* the BSP enters here after a brief bounce through
@@ -109,7 +107,16 @@ main(void)
        it needs these fields to complete its own setup. boot spaghetti! */
 
     STOSQ(&u, 0, USER_PAGES * (PAGE_SIZE >> 3));
-    u.u_locks = 1;  /* interrupts are disabled */
+
+    /* interrupts were disabled by boot; make note of it.
+       this is consistent with the fact that we're holding
+       boot_lock (by default- we never actually acquired it).
+
+       all the children we create here will inherit u_locks == 1.
+       this is important: idle processes come into being holding
+       boot_lock, and init comes into being holding sched_lock. */
+
+    u.u_locks = 1;
 
     cninit();
 
@@ -151,7 +158,7 @@ main(void)
     for (cpu = 1; cpu < NCPU; ++cpu) {
         struct proc *idlep;
 
-        idlep = newproc(idle);
+        idlep = newproc(0);
         if (idlep == 0) panic("idlep");
 
         boot_config.entry = idle;
@@ -165,10 +172,8 @@ main(void)
         unlock();
     }
 
-    /* we've exited the above loop still holding boot_lock; we'll release
-       it in idle() just like the APs do. init() acquires it on entry out
-       of an abundance of caution: we don't want any weird races if init()
-       starts running on an AP before the BSP is done (shouldn't happen) */
+    /* we've exited the above loop still holding boot_lock;
+       we'll release it in idle() just like the APs do. */
 
     run(initp);
     idle();

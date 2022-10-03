@@ -91,6 +91,14 @@ struct proc
 
 #ifdef _KERNEL
 
+/* the scheduler lock protects proc[]
+   (and related queues in proc.c) */
+
+extern spinlock_t sched_lock;
+
+/* the process table. fixed size: NPROC entries
+   are allocated and zeroed by pginit() at boot */
+
 extern struct proc *proc;
 
 /* find an unused proc[] entry and return it,

@@ -38,17 +38,10 @@
 #include <sys/user.h>
 #include <sys/apic.h>
 #include <sys/clock.h>
-#include <sys/log.h>
 #include "machdep.h"
 
-/* the scheduler lock. this protects proc[]. */
-
-static spinlock_t sched_lock;
-
-/* the process table. fixed size: NPROC entries
-   allocated (and zeroed) at boot by pginit(). */
-
-struct proc *proc;
+spinlock_t sched_lock;      /* protects proc[] and procqs */
+struct proc *proc;          /* proc[] table: NPROC entries */
 
 /* get the index into proc[] from a struct proc
    or pid. note that a given slot `n' in proc[]

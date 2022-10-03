@@ -45,8 +45,8 @@
 
 /* these IRQ assignments must match the isr[] entries in machdep.c */
 
+#define PIT_IRQ     0           /* 8254 global timer */
 #define KBD_IRQ     1           /* PS/2 keyboard */
-#define PIT_IRQ     2           /* 8254 global timer */
 #define TMR_IRQ     30          /* scheduling timer */
 
 #endif /* _MACHDEP_H */

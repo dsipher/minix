@@ -1237,7 +1237,7 @@ struct tree *rewrite_volatiles(struct tree *tree)
 
     if ((tree->op == E_SYM) && VOLATILE_TYPE(tree->sym->type)) {
         tree = addrof(tree, PTR(tree->sym->type));
-        tree = unary_tree(E_FETCH, tree->child->type, tree);
+        tree = unary_tree(E_FETCH, DEREF(tree->type), tree);
     } else
         WALK_TREE(tree, rewrite_volatiles);
 

@@ -47,7 +47,7 @@ char lbolt;
 /* the current time of day. read-only outside of this compilation unit.
    no need to protect it with a lock since it's updated atomically. */
 
-time_t time;
+volatile time_t time;
 
 /* we don't need fine resolution for scheduling,
    so we use the max APIC clock divider (128). */

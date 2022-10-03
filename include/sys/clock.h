@@ -65,7 +65,7 @@ extern char lbolt;
 
 /* the current time */
 
-extern time_t time;
+extern volatile time_t time;
 
 /* called by the BSP at boot time to
 

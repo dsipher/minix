@@ -42,7 +42,7 @@
 #include <sys/clock.h>
 #include <sys/utsname.h>
 #include <sys/spin.h>
-#include "machdep.h"
+#include "config.h"
 
 caddr_t kernel_top;
 

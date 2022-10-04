@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   machdep.c                                               jewel/os kernel
+   config.c                                                jewel/os kernel
 
 ******************************************************************************
 
@@ -34,10 +34,10 @@
 #include <sys/apic.h>
 #include <sys/clock.h>
 #include <sys/proc.h>
-#include "machdep.h"
+#include "config.h"
 
 /* irq service routines; indices must match assignments
-   in machdep.h (and, of course, the hardware platform) */
+   in config.h (and, of course, the hardware platform) */
 
 void (*isr[NIRQ])(int irq) =
 {

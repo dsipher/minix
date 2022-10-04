@@ -39,7 +39,7 @@
 #include <sys/apic.h>
 #include <sys/clock.h>
 #include <sys/log.h>
-#include "machdep.h"
+#include "config.h"
 
 spinlock_t sched_lock;      /* protects proc[] and procqs */
 struct proc *proc;          /* proc[] table: NPROC entries */

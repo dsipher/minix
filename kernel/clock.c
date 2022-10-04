@@ -38,7 +38,7 @@
 #include <sys/cmos.h>
 #include <sys/proc.h>
 #include <sys/log.h>
-#include "machdep.h"
+#include "config.h"
 
 /* the `lightning bolt' sleep channel */
 

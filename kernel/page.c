@@ -40,7 +40,7 @@
 #include <sys/proc.h>
 #include <sys/user.h>
 #include <sys/io.h>
-#include "machdep.h"
+#include "config.h"
 
 /* compared to `modern' POSIX systems, memory management in jewel
    is deliberately primitive. except for early static allocations

@@ -1,5 +1,6 @@
 LICENSE				0100644 0 0 LICENSE
-kernel				0100644 0 0 kernel/kernel
+asrock				0100644 0 0 proto/asrock
+qemu   				0100644 0 0 proto/qemu
 
 bin 				0040755 0 0 				$
 

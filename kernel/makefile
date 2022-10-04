@@ -9,10 +9,14 @@ CFLAGS=-D_KERNEL -w
 all:	kernel
 
 clean:
-	rm -f *.o *.lst kernel
+	rm -f *.o *.lst config.[ch] kernel
 
 OBJS= 	locore.o apic.o clock.o config.o cons.o	\
 	log.o main.o page.o proc.o utsname.o
+
+config.h config.c:
+	cp config/$(CONFIG).c config.c
+	cp config/$(CONFIG).h config.h
 
 locore.o:	locore.s
 	$(AS) -l locore.lst -o locore.o locore.s

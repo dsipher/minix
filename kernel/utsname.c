@@ -32,13 +32,14 @@
 *****************************************************************************/
 
 #include <sys/utsname.h>
+#include "config.h"
 
 struct utsname utsname =
 {
     /* sysname */       "jewel",
     /* nodename */      "(noname)",
     /* release */       "0.1",
-    /* version */       "(" __DATE__ " " __TIME__ ")",
+    /* version */       "(" CONFIG " " __DATE__ " " __TIME__ ")",
     /* machine */       "x86_64"
 };
 

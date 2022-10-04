@@ -20,8 +20,13 @@ set -e
 make clean
 
 make boot
-(cd kernel; make)
+
+for i in asrock qemu
+do
+	(cd kernel; make clean; make CONFIG=$i)
+	mv kernel/kernel proto/$i
+done
 
 dd if=/dev/zero of=$DEVICE bs=4k count=$BLOCKS
-$MKFS -p proto $DEVICE $BLOCKS
+$MKFS -p proto/proto $DEVICE $BLOCKS
 $MKBOOT -b boot $DEVICE

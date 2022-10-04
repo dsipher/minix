@@ -38,6 +38,7 @@
 #include <sys/user.h>
 #include <sys/apic.h>
 #include <sys/clock.h>
+#include <sys/log.h>
 #include "machdep.h"
 
 spinlock_t sched_lock;      /* protects proc[] and procqs */
@@ -281,6 +282,7 @@ void wakeup(void *chan)
 {
     struct proc *p;
     struct proc *next;
+    int ipi = 0;
 
     acquire(&sched_lock);
 
@@ -292,9 +294,21 @@ void wakeup(void *chan)
         if (p->p_chan == chan) {
             PROCQ_REMOVE(&sleepq, p);
             ready(p);
+            ++ipi;
         }
 
         p = next;
+    }
+
+    if (ipi) {
+        /* prod all other CPUs in case process(es)
+           awakened can be scheduled immediately.
+
+           in some circumstances, we may be able to
+           narrow the IPI to a specific CPU (or skip
+           it altogether) for efficiency. rainy day. */
+
+        LAPIC_ICR0 = BROADCAST_IPI | VECTOR(IPI_IRQ);
     }
 
     release(&sched_lock);
@@ -339,6 +353,16 @@ tmrisr(int irq)
     TMRISR0(&readyq);
     TMRISR0(&sleepq);
     release(&sched_lock);
+}
+
+/* there's nothing for this handler to do:
+   the point of the IPI is to trip the exit
+   sequence of `irqhook' in locore.s, which
+   will preempt an idle process if needed. */
+
+void
+ipiisr(int irq)
+{
 }
 
 /* obviously, just ready() exposed to

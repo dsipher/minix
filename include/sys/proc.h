@@ -151,6 +151,10 @@ extern void preempt(void);
 
 extern void tmrisr(int irq);
 
+/* rescheduling IPI ISR */
+
+extern void ipiisr(int irq);
+
 #endif /* _KERNEL */
 
 #endif /* _SYS_PROC_H */

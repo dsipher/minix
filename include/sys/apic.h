@@ -59,10 +59,11 @@ extern unsigned volatile *lapic;
 
 #define CURCPU              ((LAPIC_ID >> 24) & 0xFF)
 
-/* values for LAPIC_ICR0 for AP startup IPIs (see main.c) */
+/* values for LAPIC_ICR0 for various IPIs */
 
 #define INIT_IPI            (0x00004500)
 #define STARTUP_IPI         (0x00004600 | (BOOT_ADDR >> PAGE_SHIFT))
+#define BROADCAST_IPI       (0x000C0000)  /* everyone but sender */
 
 /* we reserve 31 vectors for interrupts at 0x20-0x3E (see boot.s).
    we disregard vector priorities, instead mapping I/O APIC pins

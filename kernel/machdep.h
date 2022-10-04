@@ -47,6 +47,7 @@
 
 #define PIT_IRQ     0           /* 8254 global timer */
 #define KBD_IRQ     1           /* PS/2 keyboard */
+#define IPI_IRQ     29          /* rescheduling IPI */
 #define TMR_IRQ     30          /* scheduling timer */
 
 #endif /* _MACHDEP_H */

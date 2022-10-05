@@ -279,7 +279,7 @@ static int lea0(struct block *b, int i)
 
     if ((ea->sym == 0) && (ea->con.i == 0)) {
         if ((ea->reg == REG_NONE) && (ea->index == dst->reg)) {
-            /* LEAx (,%dst,n), %dst -> SHLx $LOG2(n), %dst */
+            /* LEAx (,%dst,n), %dst -> SHLx $log2(n), %dst */
 
             new = new_insn(shl, 0);
             I_OPERAND(&new->operand[1], 0, 0, ea->scale);

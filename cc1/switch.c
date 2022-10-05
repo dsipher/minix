@@ -520,7 +520,7 @@ static int control0(struct block *b)
 /* pick element 0, 1, 2, or 3 from an array, given
    a type whose size is 1, 2, 4, or 8 (respectively). */
 
-#define OP(t, ops)    (ops)[LOG2(t_size(t))]
+#define OP(t, ops)    (ops)[t_log2_size(t)]
 
 /* generate the machine code for a B_DENSE switch block b.
    these have labels sufficiently densely packed that we
@@ -684,7 +684,7 @@ static void table0(struct block *b, int long_func)
 
     insn = new_insn(OP(t, cmps), 0);        /* cmpX ctab(%ireg,n), %creg */
     REG_OPERAND(&insn->operand[0], 0, 0, creg);
-    INDEX_OPERAND(&insn->operand[1], 0, 0, O_MEM, ireg, LOG2(t_size(t)));
+    INDEX_OPERAND(&insn->operand[1], 0, 0, O_MEM, ireg, t_log2_size(t));
     insn->operand[1].sym = ctab;
     append_insn(insn, test);
     add_succ(test, CC_Z, match);

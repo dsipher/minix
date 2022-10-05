@@ -151,6 +151,10 @@ struct string;
 
 int t_size(long t);
 
+/* same as t_size() except we return log2(size). handy for scaling. */
+
+int t_log2_size(long t);
+
 /* return the simpatico unsigned type of `t'. if `t' is
    not integral or is already unsigned, returns `t'. */
 

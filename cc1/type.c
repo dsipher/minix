@@ -477,6 +477,15 @@ int t_size(long t)
     return 1;   /* T_CHARs */
 }
 
+int t_log2_size(long t)
+{
+    if (t & T_SHORTS) return 1;
+    if (t & (T_INTS | T_FLOAT)) return 2;
+    if (t & (T_LONGS | T_DOUBLE | T_LDOUBLE | T_PTR)) return 3;
+
+    return 0;   /* T_CHARs */
+}
+
 int size_of(struct tnode *type, struct string *id)
 {
     long size = 1;

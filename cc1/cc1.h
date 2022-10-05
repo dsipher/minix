@@ -49,7 +49,8 @@ struct string;
 /* fixed constants */
 
 #define BITS_PER_BYTE           8
-#define BITS_PER_LONG           64
+#define LOG2_BITS_PER_LONG      6 /* 64 */
+#define BITS_PER_LONG           (1 << LOG2_BITS_PER_LONG)
 #define PAGE_SIZE               4096
 #define UNIVERSAL_ALIGN         8
 #define STACK_ALIGN             8

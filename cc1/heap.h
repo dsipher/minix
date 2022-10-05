@@ -310,11 +310,11 @@ DEFINE_VECTOR(bitvec, long);
 /* return the number of longs to required to hold n bits.
    doesn't look it, but it's constant-foldable when n is. */
 
-#define BITVEC_WORDS(n)     (((n) + BITS_PER_LONG - 1) >> LOG2(BITS_PER_LONG))
+#define BITVEC_WORDS(n)     (((n) + BITS_PER_LONG - 1) >> LOG2_BITS_PER_LONG)
 
 /* calculate the word index or bit index of the specified bit, respectively */
 
-#define BITVEC_WORD(n)      ((n) >> LOG2(BITS_PER_LONG))
+#define BITVEC_WORD(n)      ((n) >> LOG2_BITS_PER_LONG)
 #define BITVEC_BIT(n)       ((n) & (BITS_PER_LONG - 1))
 
 /* wrappers analogous to their VECTOR counterparts, (with type checking) */

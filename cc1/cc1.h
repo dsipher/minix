@@ -73,6 +73,20 @@ struct string;
 
 #define BIT_MASK(n)             (~(-1L << (n)))
 
+/* count trailing zeros. this is a [crappy] portable
+   version. once self-hosted, replace with __asm().
+   the usual caveat applies: undefined if (i == 0). */
+
+#define CTZ(i)      ({                                                      \
+                        int _n;                                             \
+                        int _i = (i);                                       \
+                                                                            \
+                        for (_n = 0; ((1 << _n) & _i) == 0; ++_n)           \
+                            ;                                               \
+                                                                            \
+                        (_n);                                               \
+                    })
+
 /* technically, floor(log2(n)). works for signed or unsigned
    integers, but of course produces nonsense if n <= 0 */
 

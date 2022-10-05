@@ -171,7 +171,7 @@ static unsigned long tnode_hash(long t, long u, struct tnode *next)
        the qualifiers fill in the gaps. the resulting 7-bit value
        (4..71) is spread across all 64 bits by the multiplication. */
 
-    hash = (__builtin_ctz(T_BASE(t)) + 1) << 2;
+    hash = (CTZ(T_BASE(t)) + 1) << 2;
     if (t & T_CONST) hash += 2;
     if (t & T_VOLATILE) hash += 1;
     hash *= 0x810204080204081L;

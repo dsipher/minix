@@ -212,9 +212,12 @@ DEFINE_VECTOR(int, int);            /* general vector of ints */
 DEFINE_VECTOR(long, long);          /* ................ longs */
 
 /* minimum capacity for an allocation; a vector may have zero capacity,
-   but if it has any capacity at all, it is >= MIN_VECTOR_CAP. */
+   but if it has any capacity at all, it is >= MIN_VECTOR_CAP. it must
+   be a multiple of 8; with this constraint, regardless of the size of
+   an element, the size of elements[] is always (1) a quadword multiple.
+   in the future, vector_insert() will rely on this for efficiency. */
 
-#define MIN_VECTOR_CAP              4
+#define MIN_VECTOR_CAP              8
 
 /* make room for n new elements in vector v at index i. trailing elements
    are shifted rearwards and the vector grows in size. an 'insertion' is

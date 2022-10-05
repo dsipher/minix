@@ -177,11 +177,6 @@ void error(int level, struct string *id, char *fmt, ...)
         case 'L':   {
                         struct symbol *sym = va_arg(args, struct symbol *);
 
-                        if (BUILTIN_SYMBOL(sym)) {
-                            fputs("(built-in)", stderr);
-                            break;
-                        }
-
                         fprintf(stderr, "(%s ",
                                         DEFINED_SYMBOL(sym) ? "defined"
                                                             : "first seen");

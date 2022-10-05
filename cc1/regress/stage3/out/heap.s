@@ -113,14 +113,14 @@ L29:
 	movl %esi,-8(%rbp)
 	movl %edx,%r14d
 	movl %ecx,%r12d
-	movl 4(%r13),%edx
-	leal (%rdx,%r14),%eax
+	movl 4(%r13),%edi
+	leal (%rdi,%r14),%eax
 	cmpl (%r13),%eax
 	movl %eax,-4(%rbp)
 	jle L32
 L31:
-	bsrl -4(%rbp),%eax
-	xorb $31,%al
+	addl %r14d,%edi
+	call ___builtin_clz
 	movb $31,%cl
 	subb %al,%cl
 	movl $1,%eax
@@ -176,18 +176,18 @@ L45:
 	movq %rbx,8(%r13)
 	jmp L33
 L32:
-	movq 8(%r13),%rdi
+	movq 8(%r13),%rax
 	addl -8(%rbp),%r14d
 	imull %r12d,%r14d
 	movslq %r14d,%r14
 	movl -8(%rbp),%esi
 	imull %r12d,%esi
 	movslq %esi,%rsi
-	subl -8(%rbp),%edx
-	imull %r12d,%edx
-	movslq %edx,%rdx
-	addq %rdi,%rsi
-	addq %r14,%rdi
+	subl -8(%rbp),%edi
+	imull %r12d,%edi
+	movslq %edi,%rdx
+	addq %rax,%rsi
+	leaq (%rax,%r14),%rdi
 	call _memmove
 L33:
 	movl -4(%rbp),%eax
@@ -287,6 +287,7 @@ L13:
 .globl _refill_slab
 .globl _string_arena
 .globl _mmap
+.globl ___builtin_clz
 .globl ___builtin_memcpy
 .globl _local_arena
 .globl _init_arena

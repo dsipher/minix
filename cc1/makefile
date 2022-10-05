@@ -14,23 +14,22 @@ clean:
 	rm -rf regress/stage3/lib
 	rm -rf regress/stage3/include
 
-HDRS=	cc1.h block.h builtin.h cmov.h cmp.h dealias.h 			\
-	decl.h delay.h dep.h dom.h dvn.h expr.h fold.h 			\
-	func.h fuse.h gen.h graph.h heap.h hoist.h init.h 		\
+HDRS=	cc1.h block.h cmov.h cmp.h dealias.h decl.h 			\
+	delay.h dep.h dom.h dvn.h expr.h fold.h func.h			\
+	fuse.h gen.h graph.h heap.h hoist.h init.h 			\
 	insn.h lex.h live.h lower.h norm.h opt.h peep.h			\
 	pos.h prop.h reach.h reassoc.h reg.h stmt.h 			\
 	string.h switch.h symbol.h tree.h type.h zlq.h
 
-OBJS=	cc1.o block.o builtin.o cmov.o cmp.o dealias.o 			\
-	decl.o delay.o dep.o dom.o dvn.o expr.o fold.o 			\
-	func.o fuse.o gen.o graph.o heap.o hoist.o init.o 		\
+OBJS=	cc1.o block.o cmov.o cmp.o dealias.o decl.o			\
+	delay.o dep.o dom.o dvn.o expr.o fold.o func.o 			\
+	fuse.o gen.o graph.o heap.o hoist.o init.o 			\
 	insn.o lex.o live.o lower.o norm.o opt.o peep.o			\
 	pos.o prop.o reach.o reassoc.o reg.o stmt.o 			\
 	string.o switch.o symbol.o tree.o type.o zlq.o
 
 cc1.o: 		cc1.c $(HDRS)
 block.o:	block.c $(HDRS)
-builtin.o:	builtin.c $(HDRS)
 cmov.o:		cmov.c $(HDRS)
 cmp.o:		cmp.c $(HDRS)
 dealias.o:	dealias.c $(HDRS)

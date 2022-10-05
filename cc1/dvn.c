@@ -905,8 +905,7 @@ static void dvn0(struct block *b)
         case I_LIR_COM:     case I_LIR_ADD:     case I_LIR_SUB:
         case I_LIR_MUL:     case I_LIR_DIV:     case I_LIR_MOD:
         case I_LIR_SHR:     case I_LIR_SHL:     case I_LIR_AND:
-        case I_LIR_OR:      case I_LIR_XOR:     case I_LIR_BSF:
-        case I_LIR_BSR:
+        case I_LIR_OR:      case I_LIR_XOR:
 
                             break;
 

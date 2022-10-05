@@ -433,12 +433,6 @@ static void eval(struct block *b, int i)
                                 goto nac;
 
                             FOLD_BINARY(t, left, right, /); goto constant;
-
-                            /* bit scanning is undefined for a zero operand,
-                               but again, it's not fatal, so we don't check */
-
-        case I_LIR_BSF:     FOLD_UNARY_B(t, left, BSF, BSFL); goto constant;
-        case I_LIR_BSR:     FOLD_UNARY_B(t, left, BSR, BSRL); goto constant;
     }
 
     /* fall thru to nac as a safe default if we fail to process an

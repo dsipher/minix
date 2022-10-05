@@ -59,7 +59,6 @@
 #define K_SPEC_SIGNED       0x00010000
 
 #define K_REG               0x00020000      /* bit[17]: __asm register */
-#define K_BUILTIN           0x00040000      /* bit[18]: __builtin function */
 
     /* bits[23:20] encode the precedence of (most) binary operators */
 
@@ -240,11 +239,6 @@
 #define K_MEM       ( 126 )
 #define K_CC        ( 127 )
 
-#define K_BUILTIN_CLZ       ( 128 | K_BUILTIN )     /* __builtin_clz */
-#define K_BUILTIN_CLZL      ( 129 | K_BUILTIN )     /* __builtin_clzl */
-#define K_BUILTIN_CTZ       ( 130 | K_BUILTIN )     /* __builtin_ctz */
-#define K_BUILTIN_CTZL      ( 131 | K_BUILTIN )     /* __builtin_ctzl */
-
 /* convert the token value for a machine register
    into the actual machine register. relies on the
    identical sequencing of K_* and REG_* constants */
@@ -269,8 +263,7 @@ struct token
     };
 };
 
-/* seeds keywords and special identifiers. installs builtins in the symbol
-   table. because of the latter, must be called after entering FILE_SCOPE. */
+/* seeds keywords and special identifiers. */
 
 void seed_keywords(void);
 

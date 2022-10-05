@@ -201,9 +201,9 @@ static char arith[] =   /* indexed by I_INDEX */
     0,  /*  172  I_MCH_SETLE      */        0,  /*  173  I_MCH_SETGE      */
     0,  /*  174  I_MCH_SETL       */        0,  /*  175  I_MCH_SETA       */
     0,  /*  176  I_MCH_SETBE      */        0,  /*  177  I_MCH_SETAE      */
-    0,  /*  178  I_MCH_SETB       */        0,  /*  179  I_MCH_BSFL       */
-    0,  /*  180  I_MCH_BSFQ       */        0,  /*  181  I_MCH_BSRL       */
-    0,  /*  182  I_MCH_BSRQ       */        0,  /*  183  I_MCH_MOVSB      */
+    0,  /*  178  I_MCH_SETB       */        0,  /*  179  (unused)         */
+    0,  /*  180  (unused)         */        0,  /*  181  (unused)         */
+    0,  /*  182  (unused)         */        0,  /*  183  I_MCH_MOVSB      */
     0,  /*  184  I_MCH_STOSB      */        0,  /*  185  I_MCH_REP        */
     0,  /*  186  I_MCH_CBTW       */        0,  /*  187  I_MCH_CWTD       */
     0,  /*  188  I_MCH_CLTD       */        0,  /*  189  I_MCH_CQTO       */

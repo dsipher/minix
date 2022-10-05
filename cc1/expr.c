@@ -42,7 +42,6 @@
 #include "stmt.h"
 #include "symbol.h"
 #include "string.h"
-#include "builtin.h"
 #include "expr.h"
 
 static struct tree *cast(void);
@@ -696,7 +695,6 @@ static struct tree *call(struct tree *tree)
 
     MATCH(K_RPAREN);
     if (formal) error(ERROR, id, "too few function arguments");
-    tree = rewrite_builtin(tree);
 
     return tree;
 }

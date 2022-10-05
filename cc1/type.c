@@ -526,7 +526,7 @@ int size_of(struct tnode *type, struct string *id)
 /* we need to know the alignment of a type in two situations:
 
     1. when allocating storage
-    2. when constructing a block trees (E_BLKCPY, etc.) for a __builtin
+    2. when constructing a block trees (E_BLKCPY, etc.)
 
    in the first situation, an incomplete type is not permitted, but
    we'll always need to know the size as well: leave it to size_of()

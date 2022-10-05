@@ -259,55 +259,70 @@ L36:
 _gen0:
 L109:
 	pushq %rbx
+	pushq %r12
+	pushq %r13
+	pushq %r14
 L110:
-	movq %rdi,%rbx
-	movl _u_card(%rip),%edx
-	addl $63,%edx
-	sarl $6,%edx
-	cmpl 456(%rbx),%edx
+	movq %rdi,%r12
+	movl _u_card(%rip),%ebx
+	addl $63,%ebx
+	movl $64,%edi
+	call ___builtin_clz
+	movb $31,%cl
+	subb %al,%cl
+	movl %ebx,%edx
+	sarl %cl,%edx
+	cmpl 456(%r12),%edx
 	jg L119
 L118:
-	movl %edx,460(%rbx)
+	movl %edx,460(%r12)
 	jmp L120
 L119:
-	movl 460(%rbx),%esi
+	movl 460(%r12),%esi
 	subl %esi,%edx
 	movl $8,%ecx
-	leaq 456(%rbx),%rdi
+	leaq 456(%r12),%rdi
 	call _vector_insert
 L120:
-	movslq 460(%rbx),%rdx
+	movslq 460(%r12),%rdx
 	shlq $3,%rdx
 	xorl %esi,%esi
-	movq 464(%rbx),%rdi
+	movq 464(%r12),%rdi
 	call ___builtin_memset
-	xorl %r8d,%r8d
+	xorl %ebx,%ebx
 	jmp L121
 L122:
 	movq _u+8(%rip),%rdi
 	movslq _next_u(%rip),%rsi
 	shlq $4,%rsi
-	movq 416(%rbx),%rdx
-	movl %r8d,%ecx
+	movq 416(%r12),%rdx
+	movl %ebx,%ecx
 	shlq $4,%rcx
 	movq (%rdx,%rcx),%rax
 	movq %rax,(%rdi,%rsi)
 	movq 8(%rdx,%rcx),%rax
 	movq %rax,8(%rdi,%rsi)
+	movl _next_u(%rip),%ecx
+	movl $1,%r14d
+	shlq %cl,%r14
+	movq 464(%r12),%r13
+	movl $64,%edi
+	call ___builtin_clz
+	movb $31,%cl
+	subb %al,%cl
 	movl _next_u(%rip),%eax
-	movb %al,%cl
-	movl $1,%edx
-	shlq %cl,%rdx
-	movq 464(%rbx),%rcx
-	sarl $6,%eax
+	sarl %cl,%eax
 	movslq %eax,%rax
-	orq %rdx,(%rcx,%rax,8)
+	orq %r14,(%r13,%rax,8)
 	incl _next_u(%rip)
-	incl %r8d
+	incl %ebx
 L121:
-	cmpl 412(%rbx),%r8d
+	cmpl 412(%r12),%ebx
 	jl L122
 L111:
+	popq %r14
+	popq %r13
+	popq %r12
 	popq %rbx
 	ret 
 
@@ -317,11 +332,17 @@ L128:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
+	pushq %r14
 L129:
 	movq %rdi,%r12
-	movl _u_card(%rip),%edx
-	addl $63,%edx
-	sarl $6,%edx
+	movl _u_card(%rip),%ebx
+	addl $63,%ebx
+	movl $64,%edi
+	call ___builtin_clz
+	movb $31,%cl
+	subb %al,%cl
+	movl %ebx,%edx
+	sarl %cl,%edx
 	cmpl 480(%r12),%edx
 	jg L138
 L137:
@@ -359,18 +380,23 @@ L147:
 	jz L146
 L148:
 	movb %bl,%cl
-	movl $1,%edx
-	shlq %cl,%rdx
-	movq 488(%r12),%rcx
+	movl $1,%r14d
+	shlq %cl,%r14
+	movq 488(%r12),%r13
+	movl $64,%edi
+	call ___builtin_clz
+	movb $31,%cl
+	subb %al,%cl
 	movl %ebx,%eax
-	sarl $6,%eax
-	orq %rdx,(%rcx,%rax,8)
+	sarl %cl,%eax
+	orq %r14,(%r13,%rax,8)
 L146:
 	incl %ebx
 L140:
 	cmpl _u+4(%rip),%ebx
 	jl L141
 L130:
+	popq %r14
 	popq %r13
 	popq %r12
 	popq %rbx
@@ -380,11 +406,17 @@ L130:
 _init0:
 L154:
 	pushq %rbx
+	pushq %r12
 L155:
 	movq %rdi,%rbx
-	movl _u_card(%rip),%edx
-	addl $63,%edx
-	sarl $6,%edx
+	movl _u_card(%rip),%r12d
+	addl $63,%r12d
+	movl $64,%edi
+	call ___builtin_clz
+	movb $31,%cl
+	subb %al,%cl
+	movl %r12d,%edx
+	sarl %cl,%edx
 	cmpl 504(%rbx),%edx
 	jg L164
 L163:
@@ -397,9 +429,14 @@ L164:
 	leaq 504(%rbx),%rdi
 	call _vector_insert
 L165:
-	movl _u_card(%rip),%edx
-	addl $63,%edx
-	sarl $6,%edx
+	movl _u_card(%rip),%r12d
+	addl $63,%r12d
+	movl $64,%edi
+	call ___builtin_clz
+	movb $31,%cl
+	subb %al,%cl
+	movl %r12d,%edx
+	sarl %cl,%edx
 	cmpl 528(%rbx),%edx
 	jg L173
 L172:
@@ -463,6 +500,7 @@ L188:
 	cmpl %edx,%esi
 	jg L189
 L156:
+	popq %r12
 	popq %rbx
 	ret 
 
@@ -574,6 +612,7 @@ _import0:
 L245:
 	pushq %rbx
 	pushq %r12
+	pushq %r13
 L246:
 	movq %rdi,%r12
 	cmpl $0,408(%r12)
@@ -592,10 +631,14 @@ L253:
 	xorl %ebx,%ebx
 	jmp L254
 L255:
-	movq 512(%r12),%rcx
+	movq 512(%r12),%r13
+	movl $64,%edi
+	call ___builtin_clz
+	movb $31,%cl
+	subb %al,%cl
 	movl %ebx,%eax
-	sarl $6,%eax
-	movq (%rcx,%rax,8),%rdx
+	sarl %cl,%eax
+	movq (%r13,%rax,8),%rdx
 	movb %bl,%cl
 	movl $1,%eax
 	shlq %cl,%rax
@@ -633,6 +676,7 @@ L254:
 	cmpl _u_card(%rip),%ebx
 	jl L255
 L247:
+	popq %r13
 	popq %r12
 	popq %rbx
 	ret 
@@ -733,9 +777,14 @@ L311:
 	testq %rbx,%rbx
 	jnz L312
 L315:
-	movl _u_card(%rip),%edx
-	addl $63,%edx
-	sarl $6,%edx
+	movl _u_card(%rip),%ebx
+	addl $63,%ebx
+	movl $64,%edi
+	call ___builtin_clz
+	movb $31,%cl
+	subb %al,%cl
+	movl %ebx,%edx
+	sarl %cl,%edx
 	cmpl _tmp_bits(%rip),%edx
 	jg L322
 L321:
@@ -796,6 +845,7 @@ L269:
 .globl _union_regs
 .globl _contains_reg
 .globl ___builtin_memset
+.globl ___builtin_clz
 .globl _insn_is_copy
 .globl _entry_block
 .globl _insn_substitute_reg

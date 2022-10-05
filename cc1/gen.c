@@ -133,7 +133,7 @@ static struct tree *gen_binary(struct tree *tree, int op)
     return sym_tree(tmp);
 }
 
-/* general unary operators:     E_NEG E_COM E_BSF E_BSR */
+/* general unary operators:     E_NEG E_COM */
 
 static struct tree *gen_unary(struct tree *tree, int op)
 {
@@ -875,9 +875,6 @@ static struct tree *gen0(struct tree *tree)
 
     case E_BLKCPY:      return gen_blk(tree, I_LIR_BLKCPY);
     case E_BLKSET:      return gen_blk(tree, I_LIR_BLKSET);
-
-    case E_BSF:         return gen_unary(tree, I_LIR_BSF);
-    case E_BSR:         return gen_unary(tree, I_LIR_BSR);
     }
 }
 

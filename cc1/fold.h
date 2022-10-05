@@ -115,22 +115,6 @@ struct fold
         (O)->con.i = OP (O)->con.i;                                         \
     } while (0)
 
-/* FOLD_UNARY_B() is only for discrete types (like _I) but
-   differentiates between 64-bit values and other values. */
-
-#define BSF(x)      __builtin_ctz(x)
-#define BSFL(x)     __builtin_ctzl(x)
-#define BSR(x)      (__builtin_clz(x) ^ 31)
-#define BSRL(x)     (__builtin_clzl(x) ^ 63)
-
-#define FOLD_UNARY_B(T, O, OP, OPL)                                         \
-    do {                                                                    \
-        if ((T) & T_LONGS)                                                  \
-            (O)->con.i = OPL ((O)->con.i);                                  \
-        else                                                                \
-            (O)->con.i = OP ((O)->con.i);                                   \
-    } while (0)
-
 /* normalize a commutative operation by placing the impure
    operand, if any, on the left, as required by FOLD_BINARY(). */
 

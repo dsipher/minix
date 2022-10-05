@@ -41,7 +41,6 @@
 #include <limits.h>
 #include "cc1.h"
 #include "string.h"
-#include "builtin.h"
 #include "lex.h"
 
 struct token token;         /* last token seen */
@@ -185,12 +184,7 @@ static struct { char *text; int k; } keywords[] =
     "xmm10",        K_XMM10,        "xmm11",        K_XMM11,
     "xmm12",        K_XMM12,        "xmm13",        K_XMM13,
     "xmm14",        K_XMM14,        "xmm15",        K_XMM15,
-    "mem",          K_MEM,          "cc",           K_CC,
-
-    "__builtin_clz",                K_BUILTIN_CLZ,
-    "__builtin_clzl",               K_BUILTIN_CLZL,
-    "__builtin_ctz",                K_BUILTIN_CTZ,
-    "__builtin_ctzl",               K_BUILTIN_CTZL
+    "mem",          K_MEM,          "cc",           K_CC
 };
 
 void seed_keywords(void)
@@ -201,7 +195,6 @@ void seed_keywords(void)
     for (i = 0; i < ARRAY_SIZE(keywords); ++i) {
         s = STRING(keywords[i].text, strlen(keywords[i].text));
         s->k = keywords[i].k;
-        if (s->k & K_BUILTIN) seed_builtin(s);
     }
 }
 

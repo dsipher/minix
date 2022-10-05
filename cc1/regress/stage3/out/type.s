@@ -262,19 +262,27 @@ L25:
 
 _tnode_hash:
 L41:
+	pushq %rbx
+	pushq %r12
+	pushq %r13
+	pushq %r14
 L42:
-	movl %edi,%eax
-	andl $131071,%eax
-	bsfl %eax,%eax
+	movq %rdi,%r12
+	movq %rsi,%rbx
+	movq %rdx,%r14
+	movq %r12,%r13
+	andl $131071,%r13d
+	movq %r13,%rdi
+	call ___builtin_ctz
 	incl %eax
 	shll $2,%eax
 	movslq %eax,%rax
-	testq $131072,%rdi
+	testq $131072,%r12
 	jz L46
 L44:
 	addq $2,%rax
 L46:
-	testq $262144,%rdi
+	testq $262144,%r12
 	jz L49
 L47:
 	incq %rax
@@ -282,47 +290,50 @@ L49:
 	movq $580999813330387073,%rcx
 	imulq %rcx,%rax
 	movq $549755813888,%rcx
-	testq %rdi,%rcx
+	testq %r12,%rcx
 	jz L52
 L50:
 	xorq $-1,%rax
-	movq $545460846592,%r8
-	andq %rdi,%r8
-	sarq $32,%r8
+	movq $545460846592,%rdx
+	andq %r12,%rdx
+	sarq $32,%rdx
 	movq $69269232549888,%rcx
-	andq %rdi,%rcx
+	andq %r12,%rcx
 	sarq $40,%rcx
-	addq %rcx,%r8
-	addq %r8,%rax
+	addq %rcx,%rdx
+	addq %rdx,%rax
 L52:
-	andl $131071,%edi
-	cmpq $16384,%rdi
+	cmpq $16384,%r13
 	jz L56
 L67:
-	cmpq $8192,%rdi
+	cmpq $8192,%r13
 	jz L58
 L68:
-	cmpq $32768,%rdi
+	cmpq $32768,%r13
 	jnz L54
 L61:
-	testq %rsi,%rsi
+	testq %rbx,%rbx
 	jz L54
 L62:
-	movq (%rsi),%rcx
+	movq (%rbx),%rcx
 	xorq 8(%rcx),%rax
-	movq 8(%rsi),%rsi
+	movq 8(%rbx),%rbx
 	jmp L61
 L58:
-	sarq $5,%rsi
-	xorq %rsi,%rax
+	sarq $5,%rbx
+	xorq %rbx,%rax
 	jmp L54
 L56:
-	xorq %rax,%rsi
-	movq %rsi,%rax
+	xorq %rax,%rbx
+	movq %rbx,%rax
 L54:
-	sarq $5,%rdx
-	xorq %rdx,%rax
+	sarq $5,%r14
+	xorq %r14,%rax
 L43:
+	popq %r14
+	popq %r13
+	popq %r12
+	popq %rbx
 	ret 
 
 
@@ -1469,6 +1480,7 @@ L606:
 .globl _qualify
 .globl _formal_type
 .globl _unfieldify
+.globl ___builtin_ctz
 .globl _double_type
 .globl _align_of
 .globl _ushort_type

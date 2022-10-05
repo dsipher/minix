@@ -86,8 +86,6 @@ static void eval(struct block *b)
         case I_LIR_AND:
         case I_LIR_OR:
         case I_LIR_XOR:
-        case I_LIR_BSF:
-        case I_LIR_BSR:
         case I_LIR_LOAD:    break;
 
         default:            goto ineligible;

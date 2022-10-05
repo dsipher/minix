@@ -678,8 +678,8 @@ static struct choice cmp_choices[] =
     { 0 }
 };
 
-/* two-address unary operations. this includes casts and BSF/BSR.
-   tough casts (between certain ints and floating-point types)
+/* two-address unary operations. mostly casts. tough
+   casts (between certain ints and floating-point types)
    have already been dealt with in gen.c.
 
    the only gotcha is that some of these on ATOM do not permit
@@ -708,28 +708,6 @@ static int lower_unary2(struct block *b, int i,
 
     return ++count;
 }
-
-static struct choice bsf_choices[] =
-{
-    T_ANY,                  T_INTS,                 0,
-    I_MCH_BSFL,             C_NOIMM,                lower_unary2,
-
-    T_ANY,                  T_LONGS | T_PTR,        0,
-    I_MCH_BSFQ,             C_NOIMM,                lower_unary2,
-
-    { 0 }
-};
-
-static struct choice bsr_choices[] =
-{
-    T_ANY,                  T_INTS,                 0,
-    I_MCH_BSRL,             C_NOIMM,                lower_unary2,
-
-    T_ANY,                  T_LONGS | T_PTR,        0,
-    I_MCH_BSRQ,             C_NOIMM,                lower_unary2,
-
-    { 0 }
-};
 
 static struct choice cast_choices[] =
 {
@@ -2150,8 +2128,8 @@ static struct sel sel[] =
     {   0,              lower_setcc         },          /* I_LIR_SETBE */
     {   0,              lower_setcc         },          /* I_LIR_SETAE */
     {   0,              lower_setcc         },          /* I_LIR_SETB */
-    {   bsf_choices,    choose              },          /* I_LIR_BSF */
-    {   bsr_choices,    choose              },          /* I_LIR_BSR */
+    {   0                                   },          /* (unused) */
+    {   0                                   },          /* (unused) */
     {   0,              lower_blkcpy        },          /* I_LIR_BLKCPY */
     {   0,              lower_blkset        }           /* I_LIR_BLKSET */
 };

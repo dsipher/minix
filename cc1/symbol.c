@@ -663,8 +663,7 @@ void dump_symbol(struct symbol *sym)
         S_IMPLICIT,     "implicit",     S_FIXFLOAT,     "fixfloat",
         S_SKIP,         "skip",         S_FLEXIBLE,     "flexible",
         S_ARG,          "arg",          S_TENTATIVE,    "tentative",
-        S_REFERENCED,   "referenced",   S_DEFINED,      "defined",
-        S_BUILTIN,      "builtin"
+        S_REFERENCED,   "referenced",   S_DEFINED,      "defined"
     };
 
     struct symbol *member;

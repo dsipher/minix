@@ -201,8 +201,8 @@ void actual(struct tree *call, struct tree *arg)
         new_args = ARENA_ALLOC(&stmt_arena,
                                new_nr_args * sizeof(struct tree *));
 
-        for (i = 0; i < call->nr_args; ++i) /* not worth __builtin_memcpy, */
-            new_args[i] = call->args[i];    /* args[] vector is quite short */
+        for (i = 0; i < call->nr_args; ++i)
+            new_args[i] = call->args[i];
 
         call->args = new_args;
     }
@@ -1259,7 +1259,7 @@ void dump_tree(struct tree *tree, int depth)
         /* 30 */    "XOR",      "AND",      "OR",       "EQ",       "NEQ",
         /* 35 */    "GT",       "GTEQ",     "LTEQ",     "LT",       "LOR",
         /* 40 */    "LAND",     "QUEST",    "COLON",    "COMMA",    "SEQ",
-        /* 45 */    "BLKCPY",   "BLKSET",   "BSF",      "BSR"
+        /* 45 */    "BLKCPY",   "BLKSET"
     };
 
     int i;

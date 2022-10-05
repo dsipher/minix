@@ -218,12 +218,6 @@ struct tree
 #define E_BLKCPY    ( 45 )
 #define E_BLKSET    ( 46 )
 
-/* bit-scanning operators, with the semantics of the
-   x86 instructions. used to implement builtins. */
-
-#define E_BSF       ( 47 | E_UNARY )
-#define E_BSR       ( 48 | E_UNARY )
-
 /* return a duplicate of an entire tree */
 
 struct tree *dup_tree(struct tree *tree);

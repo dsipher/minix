@@ -163,11 +163,6 @@ extern int outer_scope;
 
 #define S_DEFINED       0x40000000
 
-    /* flag: set on declarations of __builtin functions.
-       this triggers special handling in call() [expr.c] */
-
-#define S_BUILTIN       0x80000000
-
 /* symbols cover a lot of ground. the storage
    class determines which fields are valid. */
 
@@ -228,7 +223,6 @@ struct symbol
 };
 
 #define DEFINED_SYMBOL(sym)             ((sym)->s & S_DEFINED)
-#define BUILTIN_SYMBOL(sym)             ((sym)->s & S_BUILTIN)
 #define TAG_SYMBOL(sym)                 ((sym)->s & S_TAG)
 #define TEMP_SYMBOL(sym)                ((sym)->s & S_TEMP)
 #define STRUCT_SYMBOL(sym)              ((sym)->s & S_STRUCT)

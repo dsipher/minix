@@ -360,11 +360,7 @@ extern const char commuted_cc[];
 #define I_LIR_SETB          (  35 | I_ENC_OPERANDS(1) | I_FLAG_HAS_DST      \
                                   | I_FLAG_USES_CC                          )
 
-#define I_LIR_BSF           (  36 | I_ENC_OPERANDS(2) | I_FLAG_HAS_DST      \
-                                  | I_FLAG_DEFS_CC                          )
-
-#define I_LIR_BSR           (  37 | I_ENC_OPERANDS(2) | I_FLAG_HAS_DST      \
-                                  | I_FLAG_DEFS_CC                          )
+    /* indices 36 and 37 are available */
 
     /* block operations:
 
@@ -1005,29 +1001,7 @@ extern const char commuted_cc[];
                                   | I_TYPE_ENC(0, T_INDEX_CHAR)             \
                                   | I_FLAG_USES_CC                          )
 
-#define I_MCH_BSFL          ( 179 | I_ENC_OPERANDS(2)                       \
-                                  | I_FLAG_HAS_DST                          \
-                                  | I_TYPE_ENC(0, T_INDEX_INT)              \
-                                  | I_TYPE_ENC(1, T_INDEX_INT)              \
-                                  | I_FLAG_DEFS_CC                          )
-
-#define I_MCH_BSFQ          ( 180 | I_ENC_OPERANDS(2)                       \
-                                  | I_FLAG_HAS_DST                          \
-                                  | I_TYPE_ENC(0, T_INDEX_LONG)             \
-                                  | I_TYPE_ENC(1, T_INDEX_LONG)             \
-                                  | I_FLAG_DEFS_CC                          )
-
-#define I_MCH_BSRL          ( 181 | I_ENC_OPERANDS(2)                       \
-                                  | I_FLAG_HAS_DST                          \
-                                  | I_TYPE_ENC(0, T_INDEX_INT)              \
-                                  | I_TYPE_ENC(1, T_INDEX_INT)              \
-                                  | I_FLAG_DEFS_CC                          )
-
-#define I_MCH_BSRQ          ( 182 | I_ENC_OPERANDS(2)                       \
-                                  | I_FLAG_HAS_DST                          \
-                                  | I_TYPE_ENC(0, T_INDEX_LONG)             \
-                                  | I_TYPE_ENC(1, T_INDEX_LONG)             \
-                                  | I_FLAG_DEFS_CC                          )
+    /* indices 179 .. 182 are available */
 
 #define I_MCH_MOVSB         ( 183 | I_FLAG_USES_MEM | I_FLAG_DEFS_MEM       )
 #define I_MCH_STOSB         ( 184 | I_FLAG_DEFS_MEM                         )

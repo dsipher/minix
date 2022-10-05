@@ -23,7 +23,6 @@ _vstring_init:
 L7:
 L8:
 	movl (%rdi),%eax
-	andl $-2,%eax
 	orl $1,%eax
 	andl $-255,%eax
 	movl %eax,(%rdi)

@@ -232,10 +232,7 @@ L109:
 	testq $262144,(%rax)
 	jz L136
 L134:
-	movl 4(%r13),%eax
-	andl $4294967294,%eax
-	orl $1,%eax
-	movl %eax,4(%r13)
+	orl $1,4(%r13)
 L136:
 	movl -16(%rbp),%edx
 	movq -8(%rbp),%rsi
@@ -1721,10 +1718,7 @@ L977:
 	testq $262144,(%rax)
 	jz L976
 L978:
-	movl 4(%rbx),%eax
-	andl $4294967294,%eax
-	orl $1,%eax
-	movl %eax,4(%rbx)
+	orl $1,4(%rbx)
 L976:
 	movq _current_block(%rip),%rsi
 	movq %rbx,%rdi
@@ -1836,10 +1830,7 @@ L1020:
 	testq $262144,(%rax)
 	jz L1019
 L1021:
-	movl 4(%rbx),%eax
-	andl $4294967294,%eax
-	orl $1,%eax
-	movl %eax,4(%rbx)
+	orl $1,4(%rbx)
 L1019:
 	movq 16(%r13),%rdi
 	movl (%rdi),%eax
@@ -2720,10 +2711,7 @@ L1364:
 	testq $1048576,%rax
 	jz L1355
 L1365:
-	movl 4(%r14),%eax
-	andl $4294965247,%eax
-	orl $2048,%eax
-	movl %eax,4(%r14)
+	orl $2048,4(%r14)
 L1355:
 	cmpq $0,-8(%rbp)
 	jz L1370

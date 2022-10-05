@@ -1181,6 +1181,42 @@ static struct tree *fieldmask0(struct tree *tree)
     return tree;
 }
 
+/* setting a bit field involves reading the host word, masking
+   all the field's bits, ORing in the new field value, then
+   storing host word back. when setting a bit field to all 1s,
+   we do not need to zero the field first, just proceed to OR. */
+
+struct tree *fieldset0(struct tree *tree)
+{
+    struct tree *field_tree;
+    long t;
+
+    /* must be an assignment of a
+       pure constant to bit field */
+
+    if (tree->op != E_ASG
+      || !FIELD_TREE(tree->left)
+      || !PURE_CON_TREE(tree->right)) return tree;
+
+    /* and that constant must be
+       all 1s to the field's width */
+
+    field_tree = tree->left->child;
+    t = DEREF(field_tree->type)->t;
+    if (tree->right->con.i != BIT_MASK(T_GET_WIDTH(t)))
+        return tree;
+
+    /* looks good; rewrite the bitfield assignment
+       as an OR-assignment to the host word. adjust
+       the constant to account for field position */
+
+    tree->op = E_ORASG;
+    field_tree->type = PTR(unfieldify(DEREF(field_tree->type)));
+    tree->right->con.i <<= T_GET_LSB(t);
+
+    return tree;
+}
+
 /* order is important when simplifying, since
    the transformations are interdependent */
 
@@ -1204,6 +1240,7 @@ struct tree *simplify(struct tree *tree)
     tree = fieldcmp0(tree);
     tree = fieldcmp1(tree);
     tree = fieldmask0(tree);
+    tree = fieldset0(tree);
 
     return tree;
 }

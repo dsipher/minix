@@ -401,10 +401,7 @@ L168:
 	rep 
 	movsb 
 	movl %r15d,48(%rax)
-	movl 4(%rax),%ecx
-	andl $4294967293,%ecx
-	orl $2,%ecx
-	movl %ecx,4(%rax)
+	orl $2,4(%rax)
 	movq 576(%r13),%rcx
 	movq %rax,(%rcx)
 	incl %r14d

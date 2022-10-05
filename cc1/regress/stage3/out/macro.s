@@ -111,10 +111,7 @@ L34:
 	movq %rax,-24(%rbp)
 	movq %rax,-16(%rbp)
 	movq %rax,-8(%rbp)
-	movl -24(%rbp),%eax
-	andl $-2,%eax
-	orl $1,%eax
-	movl %eax,-24(%rbp)
+	orl $1,-24(%rbp)
 	xorl %r12d,%r12d
 L37:
 	leaq -24(%rbp),%rdi

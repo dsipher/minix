@@ -140,13 +140,13 @@ L48:
 	movq 32(%rbx),%rax
 	movq (%rax),%rcx
 	testq $66558,%rcx
-	jz L59
+	jz L53
 L57:
 	movl %r12d,%eax
 	andl $3221225472,%eax
 	cmpl $2147483648,%eax
-	jnz L54
-L59:
+	jnz L50
+L53:
 	testq $7168,%rcx
 	jz L52
 L61:
@@ -154,7 +154,7 @@ L61:
 	andl $3221225472,%eax
 	cmpl $3221225472,%eax
 	jz L52
-L54:
+L50:
 	pushq $L65
 	pushq (%rbx)
 	pushq $4
@@ -188,10 +188,8 @@ L70:
 	testl %r15d,%r15d
 	jz L74
 L73:
-	movl 4(%r14),%eax
-	andl $4294967279,%eax
-	orl $16,%eax
-	jmp L89
+	orl $16,4(%r14)
+	jmp L88
 L74:
 	pushq $L76
 	pushq $0
@@ -207,11 +205,9 @@ L77:
 	testl %r15d,%r15d
 	jz L81
 L80:
-	andl $4294967287,%eax
 	orl $8,%eax
 	jmp L89
 L81:
-	andl $4294967291,%eax
 	orl $4,%eax
 L89:
 	movl %eax,4(%r14)

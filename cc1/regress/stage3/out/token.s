@@ -1066,10 +1066,7 @@ L499:
 	movq %rax,-24(%rbp)
 	movq %rax,-16(%rbp)
 	movq %rax,-8(%rbp)
-	movl -24(%rbp),%eax
-	andl $-2,%eax
-	orl $1,%eax
-	movl %eax,-24(%rbp)
+	orl $1,-24(%rbp)
 	leaq -24(%rbp),%rsi
 	call _token_text
 	leaq -24(%rbp),%rsi
@@ -1088,11 +1085,11 @@ L503:
 	movq %rax,%rbx
 	movq -32(%rbp),%rax
 	cmpb $0,(%rax)
-	jnz L508
+	jnz L504
 L507:
 	testl $1073741824,(%rbx)
 	jz L506
-L508:
+L504:
 	testl $1,-24(%rbp)
 	jz L513
 L512:

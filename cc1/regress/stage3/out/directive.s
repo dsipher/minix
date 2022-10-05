@@ -326,23 +326,20 @@ L107:
 	movq %rax,-24(%rbp)
 	movq %rax,-16(%rbp)
 	movq %rax,-8(%rbp)
-	movl -24(%rbp),%eax
-	andl $-2,%eax
-	orl $1,%eax
-	movl %eax,-24(%rbp)
+	orl $1,-24(%rbp)
 	movq (%rbx),%rax
 	testq %rax,%rax
-	jz L118
+	jz L112
 L116:
 	cmpl $55,(%rax)
 	jz L111
-L118:
+L112:
 	testq %rax,%rax
-	jz L122
+	jz L109
 L120:
 	cmpl $536871946,(%rax)
 	jz L111
-L122:
+L109:
 	movq %rbx,%rdi
 	call _macro_replace_all
 	movq %rbx,%rdi
@@ -350,11 +347,11 @@ L122:
 L111:
 	movq (%rbx),%rax
 	testq %rax,%rax
-	jz L129
+	jz L125
 L127:
 	cmpl $55,(%rax)
-	jnz L129
-L128:
+	jnz L125
+L124:
 	leaq -32(%rbp),%rsi
 	movq %rbx,%rdi
 	call _list_pop
@@ -365,21 +362,21 @@ L128:
 	call _token_free
 	movl $2,%r12d
 	jmp L126
-L129:
+L125:
 	testq %rax,%rax
-	jz L136
+	jz L132
 L134:
 	cmpl $536871946,(%rax)
-	jnz L136
-L135:
+	jnz L132
+L131:
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _list_pop
 	jmp L138
 L145:
 	cmpl $536871944,(%rax)
-	jz L143
-L147:
+	jz L140
+L139:
 	leaq -32(%rbp),%rsi
 	movq %rbx,%rdi
 	call _list_pop
@@ -392,14 +389,14 @@ L138:
 	movq (%rbx),%rax
 	testq %rax,%rax
 	jnz L145
-L143:
+L140:
 	xorl %edx,%edx
 	movl $536871944,%esi
 	movq %rbx,%rdi
 	call _list_match
 	movl $1,%r12d
 	jmp L126
-L136:
+L132:
 	pushq $L149
 	call _error
 	addq $8,%rsp

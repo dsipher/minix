@@ -310,6 +310,14 @@ static void eval(struct block *b, int i)
 
     switch (op)
     {
+    default:                    /* sometimes we insert constants that
+                                   should not be propagated. for a use
+                                   case, see deconst() in dealias.c */
+
+                                if (insn->force_nac == 0)
+                                    break;
+
+                                /* otherwise fall thru */
     case I_ASM:
     case I_LIR_FRAME:
     case I_LIR_ARG:

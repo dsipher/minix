@@ -1506,6 +1506,7 @@ struct insn
 
     unsigned is_volatile : 1;               /* volatile memory access */
     unsigned was_hoisted : 1;               /* see hoist.c */
+    unsigned force_nac   : 1;               /* see fold.c */
 
     unsigned uses_mem    : 1;               /* for I_ASM insns */
     unsigned defs_mem    : 1;

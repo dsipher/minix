@@ -92,8 +92,6 @@ void dealias(void)
 /* on ATOM, there are no such things as floating-point or long immediate
    operands (the only exception to the latter being for movabsq). this is
    called before lower() to load such immediates into temporaries instead.
-   don't invoke constant propagation (OPT_FOLD) after this, since it will
-   just reinject the constants into the operands.
 
    we also take the opportunity here to rewrite floating-point I_LIR_NEG
    operations as multiplication by -1.0. this may seem an odd place, but:
@@ -140,9 +138,16 @@ int deconst(void)
                 } else if (OPERAND_HUGE(o)) {
                     int reg = temp_reg(T_LONG);
                     struct insn *new = new_insn(I_LIR_MOVE, 0);
+
                     REG_OPERAND(&new->operand[0], &long_type, 0, reg);
                     IMM_OPERAND(&new->operand[1], &long_type, 0, o->con, 0);
                     insert_insn(new, b, i);
+
+                    /* OPT_LIR_FOLD would propagate this constant,
+                       undoing all our work, so tell it not to. */
+
+                    new->force_nac = 1;
+
                     o->class = O_REG;
                     o->reg = reg;
                     ++changes;

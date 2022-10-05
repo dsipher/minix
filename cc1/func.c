@@ -417,11 +417,9 @@ void exit_func(void)
     lir_switch();               /* simple switches -> LIR */
 
     /* if deconst() actually does anything, run another (abbreviated)
-       opt() pass to deal with any redundant load/stores we might have
-       issued, but not OPT_LIR_FOLD, as it will simply undo the work ... */
+       opt() pass to deal with redundant load/stores we might have added */
 
-    if (deconst()) opt(OPT_LIR_HOIST | OPT_LIR_DVN,
-                       OPT_LIR_FOLD | OPT_MCH_PASSES);
+    if (deconst()) opt(OPT_LIR_HOIST | OPT_LIR_DVN, OPT_MCH_PASSES);
 
     lower();                    /* convert to MCH IR */
     mch_switch();               /* complex switches -> MCH */

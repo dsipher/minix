@@ -128,10 +128,10 @@ static unsigned long __strtoul(const char *nptr, char **endptr,
             break;
         }
 
-    if (val < quot || (val == quot && c <= rem))
-        val = val * base + c;
-    else
-        ++overflow;
+        if (val < quot || (val == quot && c <= rem))
+            val = val * base + c;
+        else
+            ++overflow;
     }
 
 done:

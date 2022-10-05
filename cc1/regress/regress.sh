@@ -94,7 +94,7 @@ do_stage()	# ( $compiler, $cflags, $stage )
 
 	(	cd ../../libc;						\
 		make clean;						\
-		make CC=$ROOT/$3/bin/cc CFLAGS=;			\
+		make CC=$ROOT/$3/bin/cc;				\
 		mv crt0.o libc.a $ROOT/$3/lib				)
 	echo
 	echo ................................................... running $3

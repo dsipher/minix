@@ -36,13 +36,12 @@
 
 struct string;
 
-/* type bits (T_*) are used to represent fundamental types and modifiers.
-   by convention, we call variables with a single base bit t. where multiple
-   base bits are allowed (to, e.g., match sets of types), we call them ts.
-
-   the base bits are not arbitrarily positioned or ordered. many parts of
-   the compiler are sensitive to their values and/or indices as mapped by
-   T_INDEX_BASE() <-> T_BASE_INDEX(). (for example see usuals() in expr.c) */
+/* type bits (T_*) are used to represent fundamental types and
+   modifiers. by convention, we call variables with a single
+   base bit t. where multiple base bits are allowed (to, e.g.,
+   match sets of types), we call them ts. the base bits are not
+   arbitrarily positioned or ordered. many parts of the compiler
+   are sensitive to their values. don't change them willy-nilly. */
 
 #define T_VOID              0x0000000000000001L
 #define T_CHAR              0x0000000000000002L
@@ -69,11 +68,10 @@ struct string;
 
 #define T_ANY               T_BASE_MASK
 
-#define T_BASE_INDEX(t)     __builtin_ctzl(T_BASE(t))
 #define T_INDEX_BASE(i)     (1L << (i))
 
-#define T_INDEX_VOID        0       /* must map to T_BASE_INDEX() */
-#define T_INDEX_CHAR        1       /* of base bits defined above */
+#define T_INDEX_VOID        0       /* obviously correlated */
+#define T_INDEX_CHAR        1       /* with T_* bits above */
 #define T_INDEX_SCHAR       2
 #define T_INDEX_UCHAR       3
 #define T_INDEX_SHORT       4

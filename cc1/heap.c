@@ -109,9 +109,12 @@ void vector_insert(struct vector *v, int i, int n, int elem_size)
     if (v->cap < new_size) {
         char *new_elements;
 
-        v->cap = 1 << LOG2(new_size);           /* this is the floor... */
-        if (v->cap < new_size) v->cap <<= 1;    /* we want the ceiling */
+        /* because MIN_VECTOR_CAP is a multiple of 8
+           (see heap.h) and we only grow by powers of
+           2, v->cap will be always a power of 2 */
+
         v->cap = MAX(v->cap, MIN_VECTOR_CAP);
+        while (v->cap < new_size) v->cap <<= 1;
 
         ARENA_ALIGN(v->arena, UNIVERSAL_ALIGN);
         new_elements = ARENA_ALLOC(v->arena, v->cap * elem_size);

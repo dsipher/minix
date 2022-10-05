@@ -52,7 +52,6 @@ L23:
 L24:
 	xorl %ecx,%ecx
 L27:
-	movslq %ecx,%rcx
 	cmpl _s_k_map(,%rcx,8),%edi
 	jz L30
 L32:
@@ -71,7 +70,6 @@ L34:
 L35:
 	xorl %ecx,%ecx
 L38:
-	movslq %ecx,%rcx
 	cmpl _s_k_map+4(,%rcx,8),%edi
 	jz L41
 L43:

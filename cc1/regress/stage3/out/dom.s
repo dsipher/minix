@@ -41,7 +41,6 @@ L19:
 	xorl %ebx,%ebx
 	jmp L20
 L21:
-	movslq %ebx,%rbx
 	movq 40(%r12),%rax
 	movq (%rax,%rbx,8),%rsi
 	testl %ebx,%ebx
@@ -154,7 +153,6 @@ L62:
 	jge L95
 L66:
 	movq 136(%rbx),%rax
-	movslq %r14d,%r14
 	movq (%rax,%r14,8),%r13
 	testq %r13,%r13
 	jz L95
@@ -168,7 +166,6 @@ L75:
 	jge L78
 L79:
 	movq 136(%rbx),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rdi
 	testq %rdi,%rdi
 	jz L78
@@ -288,7 +285,6 @@ L124:
 	jge L121
 L125:
 	movq 40(%r13),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rsi
 	movq %rbx,%rdi
 	call _insert0
@@ -316,7 +312,6 @@ L135:
 	jge L138
 L136:
 	movq 64(%r13),%rcx
-	movslq %r12d,%r12
 	leaq (%r12,%r12,2),%rax
 	shlq $3,%rax
 	movq 16(%rcx,%rax),%rbx
@@ -348,7 +343,6 @@ L146:
 	jge L152
 L150:
 	movq 168(%rsi),%rax
-	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	testq %rcx,%rcx
 	jz L152
@@ -468,7 +462,6 @@ L198:
 	jmp L201
 L205:
 	movq 136(%r12),%rax
-	movslq %ebx,%rbx
 	movq (%rax,%rbx,8),%r13
 	testq %r13,%r13
 	jz L204
@@ -529,7 +522,6 @@ L219:
 	jmp L227
 L231:
 	movq 168(%r12),%rax
-	movslq %ebx,%rbx
 	movq (%rax,%rbx,8),%rax
 	testq %rax,%rax
 	jz L230

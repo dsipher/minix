@@ -2645,10 +2645,8 @@ L1342:
 	jmp L1343
 L1344:
 	leal 2(%r12),%r13d
-	movslq %r13d,%r13
 	shlq $5,%r13
 	movq 24(%r15),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rax
 	movq 8(%rax),%rbx
 	movq %rax,-16(%rbp)

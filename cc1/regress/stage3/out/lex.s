@@ -424,7 +424,7 @@ L127:
 L128:
 	xorl %r13d,%r13d
 L131:
-	movslq %r13d,%r12
+	movl %r13d,%r12d
 	shlq $4,%r12
 	movq _keywords(%r12),%rbx
 	movq %rbx,%rdi
@@ -458,7 +458,6 @@ L138:
 	cmpl $61,%eax
 	jge L141
 L140:
-	movslq %eax,%rax
 	movq _token_text(,%rax,8),%r8
 	movzbq (%r8),%rax
 	testw $1,_ctype(,%rax,2)
@@ -472,7 +471,7 @@ L153:
 L141:
 	xorl %ecx,%ecx
 L144:
-	movslq %ecx,%rax
+	movl %ecx,%eax
 	shlq $4,%rax
 	cmpl _keywords+8(%rax),%esi
 	jz L147

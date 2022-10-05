@@ -52,7 +52,6 @@ L28:
 	jge L34
 L32:
 	movq -16(%rbp),%rax
-	movslq %ebx,%rbx
 	movl (%rax,%rbx,4),%eax
 	testl %eax,%eax
 	jz L34
@@ -113,7 +112,6 @@ L58:
 	jge L64
 L62:
 	movq -16(%rbp),%rax
-	movslq %ebx,%rbx
 	movl (%rax,%rbx,4),%eax
 	testl %eax,%eax
 	jz L64
@@ -236,7 +234,6 @@ L112:
 L116:
 	movq -24(%rbp),%rax
 	movq 16(%rax),%rax
-	movslq %r14d,%r14
 	movq (%rax,%r14,8),%rbx
 	movq %rbx,%r13
 	testq %rbx,%rbx
@@ -300,7 +297,7 @@ L145:
 	cmpl %ecx,%r12d
 	jae L148
 L146:
-	movslq %r12d,%rbx
+	movl %r12d,%ebx
 	shlq $5,%rbx
 	movl 8(%r13,%rbx),%edi
 	movl %edi,%eax

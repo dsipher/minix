@@ -937,7 +937,6 @@ L2:
 	movl $1,%ebx
 	jmp L4
 L5:
-	movslq %ebx,%rbx
 	movq _actvsc(%rip),%rax
 	movslq (%rax,%rbx,4),%rcx
 	movq _sceof(%rip),%rax

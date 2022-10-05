@@ -15,7 +15,6 @@ L5:
 	jge L8
 L6:
 	movq 64(%r12),%rcx
-	movslq %r13d,%r13
 	leaq (%r13,%r13,2),%rax
 	shlq $3,%rax
 	leaq 8(%rcx,%rax),%rsi
@@ -366,7 +365,6 @@ L89:
 	jmp L117
 L118:
 	movq 64(%r14),%rcx
-	movslq %r15d,%r15
 	leaq (%r15,%r15,2),%r13
 	shlq $3,%r13
 	leaq (%rcx,%r13),%rax
@@ -495,7 +493,6 @@ L143:
 	jge L142
 L140:
 	movq 64(%r15),%rcx
-	movslq %ebx,%rbx
 	leaq (%rbx,%rbx,2),%rax
 	shlq $3,%rax
 	movq 16(%rcx,%rax),%rdx
@@ -547,11 +544,10 @@ L154:
 	jg L157
 L155:
 	movq 64(%rdi),%rbx
-	movslq %r11d,%r11
 	leaq (%r11,%r11,2),%r10
 	shlq $3,%r10
 	leaq (%rbx,%r10),%rax
-	movslq %r9d,%r9
+	movl %r9d,%r9d
 	leaq (%r9,%r9,2),%r8
 	shlq $3,%r8
 	leaq (%rbx,%r8),%rcx
@@ -922,7 +918,7 @@ L282:
 	jmp L291
 L292:
 	movq 64(%r12),%rcx
-	movslq %r14d,%r14
+	movl %r14d,%r14d
 	leaq (%r14,%r14,2),%rax
 	shlq $3,%rax
 	cmpq 8(%rcx,%rax),%r15
@@ -1192,7 +1188,6 @@ L543:
 	jmp L546
 L547:
 	movq 64(%r13),%rcx
-	movslq %r14d,%r14
 	leaq (%r14,%r14,2),%rax
 	shlq $3,%rax
 	subq $8,%rsp
@@ -1232,7 +1227,6 @@ L549:
 	jmp L553
 L554:
 	movq 64(%r13),%rcx
-	movslq %r14d,%r14
 	leaq (%r14,%r14,2),%rax
 	shlq $3,%rax
 	movl -48(%rbp),%esi

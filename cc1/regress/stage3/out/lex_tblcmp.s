@@ -194,7 +194,6 @@ L56:
 	movslq %edx,%rdx
 	movq _tnxt(%rip),%rcx
 	movl (%rcx,%rdx,4),%edx
-	movslq %eax,%rax
 	cmpl $0,_usemecs(%rip)
 	jz L60
 L59:
@@ -377,7 +376,6 @@ L127:
 L131:
 	movl %ecx,%eax
 	decl %eax
-	movslq %ecx,%rcx
 	movl %eax,_tecbck(,%rcx,4)
 	movslq %eax,%rax
 	movl %ecx,_tecfwd(,%rax,4)
@@ -472,7 +470,7 @@ L149:
 	movl $1,%ebx
 	jmp L154
 L155:
-	movslq %ebx,%rcx
+	movl %ebx,%ecx
 	movq -16(%rbp),%rax
 	movl (%rax,%rcx,4),%eax
 	cmpl $-1,%eax
@@ -608,7 +606,7 @@ L234:
 	movl %r15d,(%rcx,%rax,4)
 	jmp L235
 L236:
-	movslq %ebx,%rbx
+	movl %ebx,%ebx
 	movq -16(%rbp),%rax
 	movl (%rax,%rbx,4),%edx
 	cmpl $-1,%edx
@@ -651,7 +649,7 @@ L251:
 	movl %ecx,_tblend(%rip)
 	jmp L146
 L169:
-	movslq %ebx,%rdx
+	movl %ebx,%edx
 	movl %r15d,%ecx
 	movq -16(%rbp),%rax
 	movl (%rax,%rdx,4),%edx
@@ -783,7 +781,6 @@ L292:
 	movl $1,%edx
 	jmp L293
 L294:
-	movslq %edx,%rdx
 	movl (%rdi,%rdx,4),%ecx
 	leal (%rdx,%r8),%eax
 	movslq %eax,%rax
@@ -833,7 +830,6 @@ L302:
 	movl $1,%edx
 	jmp L303
 L304:
-	movslq %edx,%rdx
 	leal (%rdx,%rbx),%eax
 	movslq %eax,%rax
 	cmpl $0,(%r15,%rdx,4)
@@ -845,7 +841,6 @@ L307:
 L308:
 	movl %r12d,%ecx
 	incl %r12d
-	movslq %ecx,%rcx
 	movb %dl,-257(%rbp,%rcx)
 	movq _tnxt(%rip),%rcx
 	movl %r13d,(%rcx,%rax,4)

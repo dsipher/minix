@@ -311,6 +311,10 @@ int main(int argc, char **argv)
             ++n_flag;
             break;
 
+        case 'O':
+            add(&cc1, "-O", 0);
+            break;
+
         case 'w':
             add(&cc1, "-w", 0);
             break;

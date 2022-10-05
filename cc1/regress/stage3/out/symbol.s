@@ -1158,7 +1158,6 @@ L405:
 L406:
 	xorl %r12d,%r12d
 L408:
-	movslq %r12d,%r12
 	movq _symtab(,%r12,8),%rbx
 	jmp L411
 L412:

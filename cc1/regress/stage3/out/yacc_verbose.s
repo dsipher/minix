@@ -26,7 +26,6 @@ L6:
 	xorl %ebx,%ebx
 	jmp L7
 L8:
-	movslq %ebx,%rbx
 	movswl 12(%r12,%rbx,2),%edx
 	movslq %edx,%rdx
 	movq _accessing_symbol(%rip),%rax
@@ -239,7 +238,6 @@ L103:
 	movl $3,%ebx
 	jmp L106
 L107:
-	movslq %ebx,%rbx
 	movq _rules_used(%rip),%rax
 	cmpw $0,(%rax,%rbx,2)
 	jnz L112
@@ -301,7 +299,6 @@ L121:
 	xorl %ebx,%ebx
 	jmp L124
 L125:
-	movslq %ebx,%rbx
 	movq _SRconflicts(%rip),%rax
 	cmpw $0,(%rax,%rbx,2)
 	jnz L128
@@ -509,7 +506,6 @@ L216:
 	cmpl %r8d,%r12d
 	jle L219
 L220:
-	movslq %r8d,%r8
 	movq _null_rules(%rip),%rdx
 	movswl (%rdx,%r8,2),%edx
 	cmpl %edx,%eax
@@ -518,7 +514,7 @@ L218:
 	incl %r8d
 	jmp L216
 L219:
-	movslq %r8d,%rsi
+	movl %r8d,%esi
 	movq _null_rules(%rip),%rdx
 	cmpl %r8d,%r12d
 	jnz L226
@@ -547,7 +543,7 @@ L232:
 	decl %esi
 	jmp L231
 L234:
-	movslq %r8d,%rsi
+	movl %r8d,%esi
 L241:
 	movw %ax,(%rdx,%rsi,2)
 L204:
@@ -559,7 +555,6 @@ L201:
 	xorl %ebx,%ebx
 	jmp L235
 L236:
-	movslq %ebx,%rbx
 	movq _null_rules(%rip),%rcx
 	movswl (%rcx,%rbx,2),%esi
 	movslq %esi,%rsi
@@ -604,7 +599,6 @@ L243:
 	xorl %r13d,%r13d
 	jmp L245
 L246:
-	movslq %r13d,%r13
 	movswq 22(%r15,%r13,2),%rcx
 	movq _ritem(%rip),%rax
 	leaq (%rax,%rcx,2),%r12

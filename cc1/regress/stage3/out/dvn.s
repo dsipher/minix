@@ -111,7 +111,6 @@ L36:
 	jmp L38
 L39:
 	movq _imms+8(%rip),%rax
-	movslq %r13d,%r13
 	movq (%rax,%r13,8),%r12
 	cmpq 24(%r12),%r14
 	jnz L40
@@ -201,7 +200,6 @@ L74:
 	jge L77
 L75:
 	movq 688(%r14),%rcx
-	movslq %ebx,%rbx
 	movl (%rcx,%rbx,8),%eax
 	cmpl %eax,%r13d
 	jz L78
@@ -221,7 +219,7 @@ L77:
 	leaq 680(%r14),%rdi
 	call _vector_insert
 	movq 688(%r14),%rax
-	movslq %ebx,%rcx
+	movl %ebx,%ecx
 	movl %r13d,(%rax,%rcx,8)
 	movq 688(%r14),%rax
 	movl %r12d,4(%rax,%rcx,8)
@@ -249,7 +247,6 @@ L89:
 	jge L92
 L90:
 	movq 688(%r14),%rcx
-	movslq %ebx,%rbx
 	movl (%rcx,%rbx,8),%eax
 	cmpl %eax,%r13d
 	jz L93
@@ -269,7 +266,6 @@ L92:
 	leaq 680(%r14),%rdi
 	call _vector_insert
 	movq 688(%r14),%rax
-	movslq %ebx,%rbx
 	movl %r13d,(%rax,%rbx,8)
 	movq %r12,%rdx
 	xorl %esi,%esi
@@ -296,7 +292,6 @@ L105:
 	jge L108
 L106:
 	movq 688(%rdi),%rcx
-	movslq %eax,%rax
 	cmpl 4(%rcx,%rax,8),%esi
 	jz L109
 L111:
@@ -321,7 +316,7 @@ L117:
 	jge L116
 L118:
 	movq 688(%rdi),%rcx
-	movslq %esi,%rax
+	movl %esi,%eax
 	movl (%rcx,%rax,8),%eax
 	cmpl %eax,%edx
 	jz L121
@@ -392,7 +387,7 @@ L160:
 	jmp L162
 L163:
 	movq 712(%r13),%rsi
-	movslq %ebx,%rax
+	movl %ebx,%eax
 	shlq $5,%rax
 	addq %rax,%rsi
 	movq %r12,%rdi
@@ -411,7 +406,7 @@ L165:
 	leaq 704(%r13),%rdi
 	call _vector_insert
 	movq 712(%r13),%rdi
-	movslq %ebx,%rax
+	movl %ebx,%eax
 	shlq $5,%rax
 	movl $32,%ecx
 	movq %r12,%rsi
@@ -517,7 +512,7 @@ L197:
 	jge L200
 L198:
 	movq 16(%rbx),%rcx
-	movslq %esi,%rdx
+	movl %esi,%edx
 	shlq $5,%rdx
 	movl 20(%rcx,%rdx),%eax
 	cmpl 20(%rdx,%r13),%eax
@@ -907,7 +902,6 @@ L417:
 	jmp L418
 L422:
 	movq _tmp_regs+8(%rip),%rax
-	movslq %r12d,%r12
 	movl (%rax,%r12,4),%esi
 	testl %esi,%esi
 	jz L411
@@ -942,7 +936,7 @@ L435:
 	jmp L438
 L439:
 	movq 712(%rbx),%rcx
-	movslq %edx,%rax
+	movl %edx,%eax
 	shlq $5,%rax
 	movq $0,24(%rcx,%rax)
 	incl %edx
@@ -1569,12 +1563,12 @@ L699:
 	jge L701
 L700:
 	movq 664(%rbx),%rax
-	movslq %r13d,%r13
+	movl %r13d,%r13d
 	movq (%rax,%r13,8),%rax
 	movq %rax,-24(%rbp)
 	movq -8(%rbp),%rax
 	movq 664(%rax),%rax
-	movslq %r12d,%r12
+	movl %r12d,%r12d
 	movq (%rax,%r12,8),%rax
 	movl 4(%rax),%ecx
 	movq -24(%rbp),%rax
@@ -1619,10 +1613,10 @@ L718:
 	jge L720
 L719:
 	movq 688(%rbx),%rdx
-	movslq %r13d,%r13
+	movl %r13d,%r13d
 	movq -8(%rbp),%rax
 	movq 688(%rax),%rcx
-	movslq %r12d,%r12
+	movl %r12d,%r12d
 	movl (%rcx,%r12,8),%eax
 	cmpl (%rdx,%r13,8),%eax
 	jb L722
@@ -1671,11 +1665,11 @@ L741:
 L742:
 	movq 712(%rbx),%rax
 	movq %rax,-32(%rbp)
-	movslq %r12d,%r15
+	movl %r12d,%r15d
 	shlq $5,%r15
 	movq -8(%rbp),%rax
 	movq 712(%rax),%r14
-	movslq -12(%rbp),%r13
+	movl -12(%rbp),%r13d
 	shlq $5,%r13
 	movq -32(%rbp),%rsi
 	addq %r15,%rsi
@@ -1748,7 +1742,6 @@ L764:
 	jmp L767
 L768:
 	movq 40(%r13),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rbx
 	testl %r12d,%r12d
 	jnz L772
@@ -1837,7 +1830,6 @@ L784:
 	jmp L786
 L790:
 	movq 16(%r13),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rbx
 	testq %rbx,%rbx
 	jz L785

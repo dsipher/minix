@@ -143,7 +143,7 @@ L1:
 L2:
 	xorl %ecx,%ecx
 L5:
-	movslq %ecx,%rax
+	movl %ecx,%eax
 	shlq $4,%rax
 	cmpl _map(%rax),%edi
 	jz L8
@@ -501,7 +501,7 @@ L155:
 L156:
 	xorl %r12d,%r12d
 L159:
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	shlq $4,%rax
 	movq _map+8(%rax),%rbx
 	cmpq $0,8(%rbx)

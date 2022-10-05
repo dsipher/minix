@@ -308,7 +308,6 @@ L183:
 L184:
 	incl %r12d
 L172:
-	movslq %r12d,%r12
 	movq (%r14,%r12,8),%rbx
 	testq %rbx,%rbx
 	jnz L173

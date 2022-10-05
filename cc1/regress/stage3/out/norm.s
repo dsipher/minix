@@ -382,7 +382,7 @@ L110:
 	jmp L112
 L116:
 	movq 16(%r14),%rcx
-	movslq %r15d,%rax
+	movl %r15d,%eax
 	movq (%rcx,%rax,8),%r13
 	testq %r13,%r13
 	jz L111
@@ -402,7 +402,7 @@ L128:
 L124:
 	xorl %r12d,%r12d
 L132:
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	shlq $5,%rax
 	movl _norms+8(%rax),%eax
 	cmpl (%r13),%eax
@@ -423,7 +423,7 @@ L142:
 	cmpl $24,%r12d
 	jge L284
 L146:
-	movslq %r12d,%rbx
+	movl %r12d,%ebx
 	shlq $5,%rbx
 	movl _norms+8(%rbx),%eax
 	cmpl (%r13),%eax
@@ -451,7 +451,6 @@ L159:
 	andl $1073725440,%ecx
 	movl %ecx,%r8d
 	sarl $20,%r8d
-	movslq %r8d,%r8
 	movq (%rdx,%r8,8),%r9
 	sarl $14,%ecx
 	movl $1,%r8d
@@ -532,7 +531,6 @@ L221:
 	andl $1073725440,%ecx
 	movl %ecx,%eax
 	sarl $20,%eax
-	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
 	movl $1,%eax
@@ -570,7 +568,6 @@ L199:
 	andl $1073725440,%ecx
 	movl %ecx,%eax
 	sarl $20,%eax
-	movslq %eax,%rax
 	movq (%rdx,%rax,8),%rdx
 	sarl $14,%ecx
 	movl $1,%eax
@@ -610,7 +607,7 @@ L187:
 	call *%rax
 	movq %rax,%r13
 	movq 16(%r14),%rcx
-	movslq %r15d,%r15
+	movl %r15d,%r15d
 	movq %rax,(%rcx,%r15,8)
 	jmp L284
 L144:
@@ -629,7 +626,6 @@ L286:
 	andl $1073725440,%ecx
 	movl %ecx,%eax
 	sarl $20,%eax
-	movslq %eax,%rax
 	sarl $14,%ecx
 	movl $1,%esi
 	shlq %cl,%rsi
@@ -639,7 +635,6 @@ L286:
 	movl %eax,%ecx
 	sarl $14,%ecx
 	sarl $20,%eax
-	movslq %eax,%rax
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq (%rdi,%rax,8),%rcx
@@ -659,7 +654,6 @@ L291:
 	andl $1073725440,%ecx
 	movl %ecx,%eax
 	sarl $20,%eax
-	movslq %eax,%rax
 	sarl $14,%ecx
 	movl $1,%esi
 	shlq %cl,%rsi
@@ -669,7 +663,6 @@ L291:
 	movl %eax,%ecx
 	sarl $14,%ecx
 	sarl $20,%eax
-	movslq %eax,%rax
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq (%rdi,%rax,8),%rcx
@@ -711,7 +704,6 @@ L358:
 	jge L288
 L362:
 	movq _norm_regs+8(%rip),%rax
-	movslq %esi,%rsi
 	movl (%rax,%rsi,4),%eax
 	movl %eax,-12(%rbp)
 	testl %eax,%eax
@@ -725,7 +717,6 @@ L363:
 	notq %rdx
 	movq _norm_0s+8(%rip),%rcx
 	sarl $20,%eax
-	movslq %eax,%rax
 	andq %rdx,(%rcx,%rax,8)
 	movl -12(%rbp),%eax
 	andl $1073725440,%eax
@@ -736,7 +727,6 @@ L363:
 	notq %rdx
 	movq _norm_1s+8(%rip),%rcx
 	sarl $20,%eax
-	movslq %eax,%rax
 	andq %rdx,(%rcx,%rax,8)
 	incl %esi
 	jmp L358
@@ -761,7 +751,6 @@ L314:
 	shlq %cl,%rdx
 	movq _norm_0s+8(%rip),%rcx
 	sarl $20,%eax
-	movslq %eax,%rax
 	orq %rdx,(%rcx,%rax,8)
 	jmp L312
 L315:
@@ -773,7 +762,6 @@ L315:
 	notq %rdx
 	movq _norm_0s+8(%rip),%rcx
 	sarl $20,%eax
-	movslq %eax,%rax
 	andq %rdx,(%rcx,%rax,8)
 L312:
 	movl 40(%r13),%eax
@@ -804,7 +792,6 @@ L332:
 	notq %rdx
 	movq _norm_1s+8(%rip),%rcx
 	sarl $20,%eax
-	movslq %eax,%rax
 	andq %rdx,(%rcx,%rax,8)
 	jmp L288
 L339:
@@ -816,7 +803,6 @@ L339:
 	shlq %cl,%rdx
 	movq _norm_1s+8(%rip),%rcx
 	sarl $20,%eax
-	movslq %eax,%rax
 	orq %rdx,(%rcx,%rax,8)
 L288:
 	incl %r15d
@@ -849,7 +835,6 @@ L378:
 	jmp L380
 L384:
 	movq 16(%r14),%rax
-	movslq %r13d,%r13
 	movq (%rax,%r13,8),%r12
 	testq %r12,%r12
 	jz L379

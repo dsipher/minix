@@ -510,7 +510,6 @@ L2:
 	movl $_fsm,%r8d
 	jmp L4
 L8:
-	movslq %eax,%rax
 	movb 4(%r8,%rax),%dl
 	testb %dl,%dl
 	jz L11
@@ -538,7 +537,7 @@ L79:
 L49:
 	movl $48,%esi
 L51:
-	movslq %esi,%rdx
+	movl %esi,%edx
 	shlq $6,%rdx
 	movslq (%r8),%rcx
 	movw %di,_bigfsm(%rdx,%rcx,2)
@@ -568,7 +567,7 @@ L32:
 	cmpl $95,%esi
 	jnz L31
 L29:
-	movslq %esi,%rdx
+	movl %esi,%edx
 	shlq $6,%rdx
 	movslq (%r8),%rcx
 	movw %di,_bigfsm(%rdx,%rcx,2)
@@ -576,7 +575,7 @@ L29:
 L18:
 	xorl %esi,%esi
 L20:
-	movslq %esi,%rdx
+	movl %esi,%edx
 	shlq $6,%rdx
 	movslq (%r8),%rcx
 	movw %di,_bigfsm(%rdx,%rcx,2)
@@ -605,9 +604,9 @@ L66:
 	cmpl $92,%esi
 	jnz L65
 L63:
-	movslq %esi,%rdx
+	movl %esi,%edx
 	shlq $6,%rdx
-	movslq %eax,%rax
+	movl %eax,%eax
 	movw _bigfsm(%rdx,%rax,2),%cx
 	cmpw $0,%cx
 	jle L72
@@ -618,7 +617,7 @@ L72:
 	andw $-65,_bigfsm(%rdx,%rax,2)
 	jmp L65
 L62:
-	movslq %eax,%rax
+	movl %eax,%eax
 	movw $-42,_bigfsm+16256(,%rax,2)
 	cmpw $0,_bigfsm+16192(,%rax,2)
 	jl L75
@@ -740,7 +739,7 @@ L184:
 L107:
 	movzbl (%r13),%r12d
 	movl %ebx,-28(%rbp)
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	shlq $6,%rax
 	movslq %ebx,%rbx
 	movswl _bigfsm(%rax,%rbx,2),%ebx

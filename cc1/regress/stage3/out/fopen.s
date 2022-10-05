@@ -21,7 +21,6 @@ L5:
 L10:
 	incl %r14d
 L4:
-	movslq %r14d,%r14
 	cmpq $0,___iotab(,%r14,8)
 	jnz L5
 L7:
@@ -116,7 +115,7 @@ L62:
 	movl %r12d,4(%rax)
 	movl %ebx,8(%rax)
 	movq $0,16(%rax)
-	movslq %r14d,%rcx
+	movl %r14d,%ecx
 	movq %rax,___iotab(,%rcx,8)
 	jmp L3
 L56:

@@ -284,7 +284,6 @@ L109:
 	movl $0,%eax
 	movl $1,%ecx
 	cmovnzl %eax,%ecx
-	movslq %ecx,%rcx
 	movq _tzname(,%rcx,8),%r12
 	movq %r12,%rdi
 	jmp L143

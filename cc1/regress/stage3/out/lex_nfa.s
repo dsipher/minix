@@ -85,7 +85,6 @@ L20:
 	pushq $___stderr
 	call _fprintf
 	addq $24,%rsp
-	movslq %ebx,%rbx
 	movq _transchar(%rip),%rax
 	movl (%rax,%rbx,4),%esi
 	movq _trans1(%rip),%rax

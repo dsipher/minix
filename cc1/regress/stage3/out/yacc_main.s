@@ -119,7 +119,6 @@ L39:
 	cmpl %r12d,%r14d
 	jle L56
 L40:
-	movslq %r12d,%r12
 	movq (%r13,%r12,8),%rcx
 	cmpb $45,(%rcx)
 	jnz L56
@@ -162,7 +161,7 @@ L72:
 	cmpl %r12d,%r14d
 	jle L113
 L74:
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	movq (%r13,%rax,8),%rax
 L133:
 	movq %rax,_symbol_prefix(%rip)
@@ -217,7 +216,7 @@ L113:
 	call _usage
 	jmp L41
 L62:
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	movq (%r13,%rax,8),%rax
 L134:
 	movq %rax,_file_prefix(%rip)
@@ -242,7 +241,7 @@ L56:
 L104:
 	call _usage
 L106:
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	movq (%r13,%rax,8),%rax
 	movq %rax,_input_file_name(%rip)
 L35:

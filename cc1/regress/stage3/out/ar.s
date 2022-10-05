@@ -34,7 +34,6 @@ L2:
 L7:
 	xorl %ecx,%ecx
 L13:
-	movslq %ecx,%rcx
 	movb _arbuf(%rcx),%al
 	movb %al,L4(%rcx)
 	incl %ecx
@@ -65,7 +64,6 @@ L18:
 	xorl %edx,%edx
 	jmp L20
 L21:
-	movslq %edx,%rdx
 	movq _namv(%rip),%rcx
 	cmpq $0,(%rcx,%rdx,8)
 	jz L26
@@ -540,7 +538,6 @@ L208:
 	call _signal
 	incl %ebx
 L207:
-	movslq %ebx,%rbx
 	movl _signum(,%rbx,4),%edi
 	testl %edi,%edi
 	jnz L208
@@ -598,7 +595,6 @@ L223:
 	xorl %ecx,%ecx
 L226:
 	movb (%rax),%dl
-	movslq %ecx,%rcx
 	movb %dl,_arbuf(%rcx)
 	testb %dl,%dl
 	jz L231
@@ -639,7 +635,6 @@ L235:
 	cmpl _namc(%rip),%ebx
 	jge L238
 L236:
-	movslq %ebx,%rbx
 	movq _namv(%rip),%rax
 	movq (%rax,%rbx,8),%rdi
 	testq %rdi,%rdi
@@ -734,7 +729,6 @@ L253:
 	xorl %ebx,%ebx
 	jmp L278
 L279:
-	movslq %ebx,%rbx
 	movq _namv(%rip),%rcx
 	movq (%rcx,%rbx,8),%rax
 	movq %rax,_file(%rip)
@@ -1263,7 +1257,6 @@ L435:
 	call _signal
 	incl %ebx
 L434:
-	movslq %ebx,%rbx
 	movl _signum(,%rbx,4),%edi
 	testl %edi,%edi
 	jnz L435
@@ -1275,7 +1268,6 @@ L437:
 	xorl %ebx,%ebx
 	jmp L438
 L439:
-	movslq %ebx,%rbx
 	movq _namv(%rip),%rcx
 	movq (%rcx,%rbx,8),%rax
 	movq %rax,_file(%rip)
@@ -1321,7 +1313,6 @@ L450:
 	xorl %ebx,%ebx
 	jmp L452
 L453:
-	movslq %ebx,%rbx
 	movq _namv(%rip),%rax
 	movq (%rax,%rbx,8),%rax
 	testq %rax,%rax
@@ -1417,7 +1408,6 @@ L475:
 L477:
 	incl %r13d
 L471:
-	movslq %r13d,%r13
 	movl _signum(,%r13,4),%edi
 	testl %edi,%edi
 	jnz L472

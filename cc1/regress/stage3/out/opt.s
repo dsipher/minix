@@ -152,7 +152,6 @@ L67:
 L73:
 	movq -24(%rbp),%rax
 	movq 16(%rax),%rax
-	movslq %r15d,%r15
 	movq (%rax,%r15,8),%r14
 	testq %r14,%r14
 	jz L75
@@ -169,7 +168,6 @@ L81:
 	movl 16(%r14),%eax
 	andl $1073725440,%eax
 	sarl $14,%eax
-	movslq %eax,%rax
 	movb %dl,(%rcx,%rax)
 	jmp L71
 L82:
@@ -190,7 +188,6 @@ L92:
 	movl -4(%rbp),%eax
 	andl $1073725440,%eax
 	sarl $14,%eax
-	movslq %eax,%rax
 	movsbl (%rcx,%rax),%r13d
 	cmpl $13,%r13d
 	jz L115
@@ -202,7 +199,6 @@ L93:
 L96:
 	movq -24(%rbp),%rax
 	movq 16(%rax),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rbx
 	jmp L98
 L97:
@@ -281,7 +277,6 @@ L135:
 	jge L71
 L139:
 	movq _fixcc_regs+8(%rip),%rax
-	movslq %edx,%rdx
 	movl (%rax,%rdx,4),%eax
 	movl %eax,-4(%rbp)
 	testl %eax,%eax
@@ -290,7 +285,6 @@ L140:
 	movq _fixcc_map+8(%rip),%rcx
 	andl $1073725440,%eax
 	sarl $14,%eax
-	movslq %eax,%rax
 	movb $13,(%rcx,%rax)
 	incl %edx
 	jmp L135
@@ -309,12 +303,10 @@ L85:
 	movl -8(%rbp),%eax
 	andl $1073725440,%eax
 	sarl $14,%eax
-	movslq %eax,%rax
 	movb (%rdx,%rax),%cl
 	movl -4(%rbp),%eax
 	andl $1073725440,%eax
 	sarl $14,%eax
-	movslq %eax,%rax
 	movb %cl,(%rdx,%rax)
 L71:
 	incl %r15d
@@ -455,7 +447,6 @@ L217:
 	jge L223
 L221:
 	movq -16(%rbp),%rax
-	movslq %r14d,%r14
 	movl (%rax,%r14,4),%esi
 	testl %esi,%esi
 	jz L223
@@ -530,7 +521,6 @@ L247:
 	jge L250
 L248:
 	movq 8(%r14),%rax
-	movslq %ebx,%rbx
 	movq (%rax,%rbx,8),%rcx
 	movl 12(%rcx),%eax
 	testl %eax,%eax
@@ -554,7 +544,6 @@ L259:
 	jge L262
 L260:
 	movq 8(%r14),%rax
-	movslq %ebx,%rbx
 	movq (%rax,%rbx,8),%rdi
 	movl 12(%rdi),%esi
 	decl %esi
@@ -579,7 +568,6 @@ L234:
 	ret 
 L236:
 	movq 8(%r14),%rax
-	movslq %ebx,%rbx
 	movq %r13,%rdx
 	movq %r12,%rsi
 	movq (%rax,%rbx,8),%rdi
@@ -613,7 +601,6 @@ L274:
 	jge L277
 L275:
 	movq 40(%r15),%rax
-	movslq %r14d,%r14
 	movq (%rax,%r14,8),%r13
 	cmpl $0,-24(%rbp)
 	jl L282
@@ -642,7 +629,6 @@ L292:
 	jge L295
 L293:
 	movq 40(%r15),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rbx
 	cmpq %rbx,%r13
 	jz L294
@@ -772,7 +758,6 @@ L332:
 L333:
 	xorl %edx,%edx
 L336:
-	movslq %edx,%rdx
 	leaq (%rdx,%rdx,2),%rcx
 	shlq $3,%rcx
 	movl _passes(%rcx),%eax

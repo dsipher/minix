@@ -6,7 +6,7 @@ L2:
 	movslq %edi,%rax
 	movb ___ctype+1(%rax),%al
 	andb $3,%al
-	movsbl %al,%eax
+	movzbl %al,%eax
 L3:
 	ret 
 

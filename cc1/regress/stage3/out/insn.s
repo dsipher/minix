@@ -183,7 +183,6 @@ L62:
 L35:
 	xorl %r8d,%r8d
 L42:
-	movslq %r8d,%r8
 	movsbl _ccops(,%r8,4),%edi
 	cmpl %edi,%eax
 	jnz L48
@@ -243,7 +242,6 @@ L112:
 L85:
 	xorl %r8d,%r8d
 L92:
-	movslq %r8d,%r8
 	movsbl _ccops(,%r8,4),%edi
 	cmpl %edi,%eax
 	jnz L98
@@ -958,7 +956,7 @@ L528:
 	cmpl %r14d,%ebx
 	jle L531
 L529:
-	movslq %r14d,%rax
+	movl %r14d,%eax
 	shlq $5,%rax
 	leaq 8(%rax,%r12),%rsi
 	leaq 8(%r13,%rax),%rdi
@@ -1212,7 +1210,6 @@ L649:
 	testl %r12d,%eax
 	jz L654
 L652:
-	movslq %ebx,%rbx
 	pushq L634(,%rbx,8)
 	pushq $L655
 	call _out
@@ -1342,7 +1339,6 @@ L693:
 	call ___flushbuf
 L691:
 	leal 2(%rbx),%r13d
-	movslq %r13d,%r13
 	shlq $5,%r13
 	xorl %esi,%esi
 	leaq 8(%r12,%r13),%rdi
@@ -1659,7 +1655,6 @@ L833:
 	xorl %ebx,%ebx
 	jmp L834
 L835:
-	movslq %ebx,%rbx
 	movl _iargs(,%rbx,4),%esi
 	movq %r14,%rdi
 	call _add_reg
@@ -1679,7 +1674,6 @@ L838:
 	cmpl %eax,%ebx
 	jae L822
 L839:
-	movslq %ebx,%rbx
 	movl _fargs(,%rbx,4),%esi
 	movq %r14,%rdi
 	call _add_reg
@@ -1758,14 +1752,14 @@ L878:
 	testl $1073741824,%eax
 	jnz L871
 L874:
-	movslq %r13d,%rax
+	movl %r13d,%eax
 	shlq $5,%rax
 	movl 8(%r15,%rax),%eax
 	andl $7,%eax
 	cmpl $1,%eax
 	jz L873
 L871:
-	movslq %r13d,%rbx
+	movl %r13d,%ebx
 	shlq $5,%rbx
 	movl 8(%r15,%rbx),%eax
 	andl $7,%eax
@@ -1902,7 +1896,6 @@ L981:
 L943:
 	xorl %r12d,%r12d
 L945:
-	movslq %r12d,%r12
 	movl _iscratch(,%r12,4),%esi
 	movq %rbx,%rdi
 	call _add_reg
@@ -1912,7 +1905,6 @@ L945:
 L947:
 	xorl %r12d,%r12d
 L949:
-	movslq %r12d,%r12
 	movl _fscratch(,%r12,4),%esi
 	movq %rbx,%rdi
 	call _add_reg
@@ -2003,14 +1995,14 @@ L1014:
 	testl $1073741824,%eax
 	jnz L1005
 L1010:
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	shlq $5,%rax
 	movl 8(%r15,%rax),%eax
 	andl $7,%eax
 	cmpl $1,%eax
 	jz L995
 L1005:
-	movslq %r12d,%rbx
+	movl %r12d,%ebx
 	shlq $5,%rbx
 	movl 8(%r15,%rbx),%edi
 	movl %edi,%eax
@@ -2117,14 +2109,14 @@ L1068:
 	testl $1073741824,%edx
 	jnz L1059
 L1064:
-	movslq %eax,%rdx
+	movl %eax,%edx
 	shlq $5,%rdx
 	movl 8(%r15,%rdx),%edx
 	andl $7,%edx
 	cmpl $1,%edx
 	jz L1053
 L1059:
-	movslq %eax,%rdi
+	movl %eax,%edi
 	shlq $5,%rdi
 	movl 8(%r15,%rdi),%edx
 	movl %edx,%esi
@@ -2182,7 +2174,7 @@ L1106:
 	cmpl $1,%edx
 	jnz L1096
 L1102:
-	movslq %eax,%rdi
+	movl %eax,%edi
 	shlq $5,%rdi
 	movl 8(%r15,%rdi),%edx
 	movl %edx,%esi

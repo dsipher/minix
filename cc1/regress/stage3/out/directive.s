@@ -25,7 +25,6 @@ L2:
 L4:
 	xorl %ebx,%ebx
 L8:
-	movslq %ebx,%rbx
 	testl $1,8(%r12)
 	jz L15
 L14:

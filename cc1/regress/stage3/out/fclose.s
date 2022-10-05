@@ -9,7 +9,6 @@ L2:
 	xorl %ebx,%ebx
 	xorl %eax,%eax
 L5:
-	movslq %eax,%rax
 	cmpq ___iotab(,%rax,8),%r12
 	jz L8
 L10:

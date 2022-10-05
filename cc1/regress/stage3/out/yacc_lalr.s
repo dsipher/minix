@@ -128,7 +128,6 @@ L43:
 	xorl %edx,%edx
 	jmp L45
 L46:
-	movslq %edx,%rdx
 	movw %bx,(%rax,%rdx,2)
 	movq _reduction_table(%rip),%rax
 	movq (%rax,%rdx,8),%rax
@@ -164,7 +163,6 @@ L48:
 	xorl %edi,%edi
 	jmp L52
 L53:
-	movslq %edi,%rdi
 	movq _reduction_table(%rip),%rcx
 	movq (%rcx,%rdi,8),%rsi
 	testq %rsi,%rsi
@@ -176,9 +174,8 @@ L59:
 	cmpl %ecx,%edx
 	jge L58
 L60:
-	movslq %edx,%rdx
 	movw 12(%rsi,%rdx,2),%cx
-	movslq %eax,%rax
+	movl %eax,%eax
 	movq _LAruleno(%rip),%r8
 	movw %cx,(%r8,%rax,2)
 	incl %eax
@@ -531,7 +528,6 @@ L154:
 	xorl %eax,%eax
 	jmp L156
 L157:
-	movslq %eax,%rax
 	movq _INDEX(%rip),%rcx
 	movw $0,(%rcx,%rax,2)
 	incl %eax
@@ -542,7 +538,6 @@ L159:
 	xorl %ebx,%ebx
 	jmp L160
 L161:
-	movslq %ebx,%rbx
 	cmpw $0,(%rdi,%rbx,2)
 	jnz L166
 L167:
@@ -602,7 +597,7 @@ L174:
 	cmpl %r12d,_ngotos(%rip)
 	jle L177
 L175:
-	movslq %r12d,%rcx
+	movl %r12d,%ecx
 	movq _to_state(%rip),%rax
 	movswl (%rax,%rcx,2),%r15d
 	movslq %r15d,%r15
@@ -618,7 +613,6 @@ L181:
 	cmpl %r13d,-28(%rbp)
 	jle L189
 L182:
-	movslq %r13d,%r13
 	movswq 12(%r14,%r13,2),%rcx
 	movq _accessing_symbol(%rip),%rax
 	movswl (%rax,%rcx,2),%ecx
@@ -626,7 +620,7 @@ L182:
 	jl L187
 	jge L189
 L190:
-	movslq %r13d,%rax
+	movl %r13d,%eax
 	movswq 12(%r14,%rax,2),%rax
 	movq _accessing_symbol(%rip),%rcx
 	movswl (%rcx,%rax,2),%esi
@@ -639,7 +633,6 @@ L193:
 	call _map_goto
 	movl %ebx,%edx
 	incl %ebx
-	movslq %edx,%rdx
 	movq -24(%rbp),%rcx
 	movw %ax,(%rcx,%rdx,2)
 L195:
@@ -654,13 +647,12 @@ L196:
 	leal 1(%rbx),%edi
 	shll $1,%edi
 	call _allocate
-	movslq %r12d,%r12
+	movl %r12d,%r12d
 	movq -8(%rbp),%rcx
 	movq %rax,(%rcx,%r12,8)
 	xorl %edx,%edx
 	jmp L199
 L200:
-	movslq %edx,%rdx
 	movq -24(%rbp),%rcx
 	movw (%rcx,%rdx,2),%cx
 	movw %cx,(%rax,%rdx,2)
@@ -669,7 +661,7 @@ L199:
 	cmpl %edx,%ebx
 	jg L200
 L202:
-	movslq %ebx,%rbx
+	movl %ebx,%ebx
 	movw $-1,(%rax,%rbx,2)
 	xorl %ebx,%ebx
 L180:
@@ -696,7 +688,6 @@ L177:
 	xorl %ebx,%ebx
 	jmp L203
 L204:
-	movslq %ebx,%rbx
 	movq -8(%rbp),%rax
 	movq (%rax,%rbx,8),%rdi
 	testq %rdi,%rdi
@@ -806,7 +797,7 @@ L228:
 	jmp L277
 L231:
 	movq -32(%rbp),%rax
-	movslq %eax,%rcx
+	movl %eax,%ecx
 	movq _from_state(%rip),%rax
 	movswl (%rax,%rcx,2),%eax
 	movl %eax,-12(%rbp)
@@ -846,7 +837,6 @@ L242:
 	cmpl %ecx,%edx
 	jle L245
 L243:
-	movslq %ecx,%rcx
 	movswl 12(%rsi,%rcx,2),%eax
 	movl %eax,%edi
 	movslq %eax,%rax
@@ -860,7 +850,6 @@ L248:
 L245:
 	movl %r12d,%ecx
 	incl %r12d
-	movslq %ecx,%rcx
 	movq -40(%rbp),%rax
 	movw %di,(%rax,%rcx,2)
 	addq $2,%r14
@@ -884,7 +873,6 @@ L253:
 	call _map_goto
 	movl %ebx,%edx
 	incl %ebx
-	movslq %edx,%rdx
 	movq -24(%rbp),%rcx
 	movw %ax,(%rcx,%rdx,2)
 	movswq (%r14),%rcx
@@ -908,7 +896,7 @@ L263:
 	shll $1,%edi
 	call _allocate
 	movq -32(%rbp),%rcx
-	movslq %ecx,%rcx
+	movl %ecx,%ecx
 	movq %rcx,-32(%rbp)
 	movq _includes(%rip),%rdx
 	movq -32(%rbp),%rcx
@@ -918,14 +906,13 @@ L266:
 	cmpl %edx,%ebx
 	jle L269
 L267:
-	movslq %edx,%rdx
 	movq -24(%rbp),%rcx
 	movw (%rcx,%rdx,2),%cx
 	movw %cx,(%rax,%rdx,2)
 	incl %edx
 	jmp L266
 L269:
-	movslq %ebx,%rcx
+	movl %ebx,%ecx
 	movw $-1,(%rax,%rcx,2)
 L265:
 	movq -32(%rbp),%rax
@@ -943,7 +930,6 @@ L233:
 	movq %rax,-8(%rbp)
 	jmp L270
 L271:
-	movslq %ebx,%rbx
 	movq (%rdi,%rbx,8),%rdi
 	testq %rdi,%rdi
 	jz L276
@@ -995,7 +981,6 @@ L279:
 	xorl %edx,%edx
 	jmp L281
 L282:
-	movslq %edx,%rdx
 	movq -8(%rbp),%rax
 	movq (%rax,%rdx,8),%rcx
 	testq %rcx,%rcx
@@ -1026,7 +1011,6 @@ L284:
 	xorl %r12d,%r12d
 	jmp L291
 L292:
-	movslq %r12d,%r12
 	movswl (%r14,%r12,2),%ebx
 	cmpl $0,%ebx
 	jle L297
@@ -1050,7 +1034,6 @@ L294:
 	xorl %esi,%esi
 	jmp L298
 L299:
-	movslq %esi,%rsi
 	movq -8(%rbp),%rax
 	movq (%rax,%rsi,8),%rdi
 	testq %rdi,%rdi
@@ -1111,7 +1094,6 @@ L313:
 L316:
 	movslq _tokensetsize(%rip),%rcx
 	leaq (%rax,%rcx,4),%r11
-	movslq %r10d,%r10
 	movq _lookback(%rip),%rcx
 	movq (%rcx,%r10,8),%r9
 L319:
@@ -1150,7 +1132,6 @@ L318:
 	xorl %r13d,%r13d
 	jmp L326
 L327:
-	movslq %r13d,%r13
 	movq (%rdi,%r13,8),%rdi
 L330:
 	testq %rdi,%rdi

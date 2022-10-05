@@ -147,13 +147,12 @@ static int zlq1(struct block *b)
 
    we are not doing proper data-flow analysis here, so the result is too
    conservative. we need a real lattice to carry data around loops. fix!
+   this is not trivial: we can't assume regs whose definitions we haven't
+   seen are undefined, since the definitions may be outside this function.
 
-   by itself, this optimization yields only a modest benefit (we eliminate
-   117 insns, ~0.2%, in the regression suite). ultimately, synergy between
-   this pass and not-yet-written other transformations is the goal, e.g.,
-   we need to rewrite MOVSLQs as MOVZLQs when the value is known to be
-   non-negative. this should yield many more removable MOVZLQ-self insns
-   (such MOVSLQs arise frequently, from array operations with int indices).
+   OPT_LIR_POS does a lot of preparatory work for us, replacing MOVSLQs
+   with MOVZLQs that we try to eliminate here. such opportunities arise
+   often, e.g., when iterating over an array with [signed] int index.
 
    this pass must run last, as we have no means of maintaining a dependency
    on the _size_ of a previous write. if we try to interleave other passes

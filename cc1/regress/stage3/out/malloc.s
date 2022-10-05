@@ -76,7 +76,6 @@ L22:
 	cmpl $26,%ebx
 	jz L39
 L29:
-	movslq %ebx,%rbx
 	cmpq $0,_buckets(,%rbx,8)
 	jnz L33
 L31:

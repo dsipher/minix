@@ -317,7 +317,6 @@ L135:
 	jmp L136
 L137:
 	movq 24(%r12),%rax
-	movslq %ecx,%rcx
 	movq (%rax,%rcx,8),%rax
 	movq %rax,(%rdx,%rcx,8)
 	incl %ecx
@@ -1757,7 +1756,6 @@ L1021:
 	jge L1020
 L1022:
 	movq 24(%rbx),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rdi
 	call _simplify
 	movq 24(%rbx),%rcx
@@ -1834,7 +1832,6 @@ L1046:
 	jge L1045
 L1047:
 	movq 24(%rbx),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rdi
 	call _fold
 	movq 24(%rbx),%rcx
@@ -1910,7 +1907,6 @@ L1078:
 	jge L1090
 L1079:
 	movq 24(%rbx),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rdi
 	call _rewrite_volatiles
 	movq 24(%rbx),%rcx

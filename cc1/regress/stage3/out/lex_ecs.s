@@ -7,12 +7,11 @@ L2:
 	jmp L4
 L5:
 	xorl %esi,%esi
-	movslq %eax,%rax
 	movq _cclmap(%rip),%rcx
 	movl (%rcx,%rax,4),%edx
 	xorl %ecx,%ecx
 L8:
-	movslq %eax,%rax
+	movl %eax,%eax
 	movq _ccllen(%rip),%rdi
 	cmpl (%rdi,%rax,4),%ecx
 	jge L11
@@ -21,7 +20,6 @@ L9:
 	movslq %edi,%rdi
 	movq _ccltbl(%rip),%r8
 	movzbl (%rdi,%r8),%edi
-	movslq %edi,%rdi
 	movl _ecgroup(,%rdi,4),%r10d
 	cmpq $0,_xlation(%rip)
 	jz L13
@@ -84,7 +82,6 @@ L35:
 	movl $1,%r9d
 	jmp L37
 L38:
-	movslq %r9d,%r9
 	cmpl $0,(%rsi,%r9,4)
 	jnz L43
 L41:
@@ -124,7 +121,6 @@ L55:
 	cmpl _csize(%rip),%r9d
 	jge L58
 L56:
-	movslq %r9d,%r9
 	movq _xlation(%rip),%r10
 	movl (%r10,%r9,4),%r8d
 	movl (%r10),%esi
@@ -149,7 +145,6 @@ L54:
 	movl $1,%esi
 	jmp L66
 L67:
-	movslq %esi,%rsi
 	movq _xlation(%rip),%rdx
 	movl (%rdx,%rsi,4),%edx
 	testl %edx,%edx
@@ -207,7 +202,6 @@ L89:
 	cmpl %eax,%esi
 	jle L87
 L90:
-	movslq %eax,%rax
 	movzbl (%rax,%rdi),%r11d
 	testl %r9d,%r9d
 	jz L94
@@ -230,21 +224,21 @@ L108:
 	testl %r9d,%r9d
 	jz L112
 L114:
-	movslq %r13d,%r13
+	movl %r13d,%r13d
 	cmpb $0,(%r13,%rdi)
 	jnz L112
 L111:
 	movl %r9d,%r14d
 	jmp L113
 L112:
-	movslq %r13d,%r13
+	movl %r13d,%r13d
 	movzbl (%r13,%rdi),%r14d
 L113:
 	cmpl %r14d,%r10d
 	jg L124
 	jl L110
 L125:
-	movslq %r13d,%r13
+	movl %r13d,%r13d
 	cmpb $0,L88(%r13)
 	jz L122
 L124:
@@ -291,7 +285,6 @@ L136:
 	movl $0,(%rdx,%r10,4)
 L149:
 	incl %eax
-	movslq %eax,%rax
 	cmpb $0,L88(%rax)
 	jz L89
 L145:

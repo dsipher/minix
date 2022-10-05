@@ -63,7 +63,6 @@ L17:
 	jmp L19
 L20:
 	leaq -280(%rbp),%rsi
-	movslq %eax,%rax
 	movq _hidesets(%rip),%rcx
 	movq (%rcx,%rax,8),%rdx
 L23:

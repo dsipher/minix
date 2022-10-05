@@ -218,7 +218,6 @@ L82:
 	jmp L83
 L87:
 	movq 16(%r13),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rbx
 	testq %rbx,%rbx
 	jz L89
@@ -307,7 +306,6 @@ L139:
 	jge L145
 L143:
 	movq _tmp_regs+8(%rip),%rax
-	movslq %r15d,%r15
 	movl (%rax,%r15,4),%esi
 	testl %esi,%esi
 	jz L145
@@ -342,7 +340,6 @@ L156:
 	jge L129
 L160:
 	movq _tmp_regs+8(%rip),%rax
-	movslq %ebx,%rbx
 	movl (%rax,%rbx,4),%esi
 	testl %esi,%esi
 	jz L129
@@ -424,7 +421,6 @@ L190:
 	jmp L191
 L192:
 	movq 64(%r12),%rcx
-	movslq %r14d,%r14
 	leaq (%r14,%r14,2),%rax
 	shlq $3,%rax
 	movq 16(%rcx,%rax),%r13
@@ -524,7 +520,6 @@ L231:
 	jge L237
 L235:
 	movq 272(%r12),%rax
-	movslq %ebx,%rbx
 	movl (%rax,%rbx,4),%esi
 	testl %esi,%esi
 	jz L237
@@ -558,7 +553,6 @@ L245:
 	jge L244
 L246:
 	movq 296(%rdi),%r9
-	movslq %r8d,%r8
 	leaq (%r8,%r8,2),%rcx
 	shlq $2,%rcx
 	cmpl 8(%r9,%rcx),%edx
@@ -584,7 +578,6 @@ L260:
 	jge L259
 L261:
 	movq 296(%rdi),%r9
-	movslq %r8d,%r8
 	leaq (%r8,%r8,2),%rcx
 	shlq $2,%rcx
 	cmpl (%r9,%rcx),%edx
@@ -906,7 +899,6 @@ L418:
 	jge L400
 L419:
 	movq 64(%rbx),%rdx
-	movslq %esi,%rsi
 	leaq (%rsi,%rsi,2),%rcx
 	shlq $3,%rcx
 	movl (%rdx,%rcx),%ecx

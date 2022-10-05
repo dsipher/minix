@@ -404,7 +404,6 @@ L117:
 	movl -12(%rbp),%ebx
 	andl $520093696,%ebx
 	sarl $24,%ebx
-	movslq %ebx,%rbx
 	shlq $4,%rbx
 	movl _map+12(%rbx),%r15d
 	xorl %esi,%esi

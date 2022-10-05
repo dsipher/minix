@@ -577,7 +577,6 @@ L186:
 	cmpl $15,%eax
 	jge L187
 L283:
-	movslq %eax,%rax
 	movl _modifiers+4(,%rax,8),%ecx
 	testl %ecx,%ecx
 	jz L287
@@ -605,7 +604,6 @@ L302:
 	cmpl $15,%eax
 	jge L187
 L314:
-	movslq %eax,%rax
 	cmpl _modifiers(,%rax,8),%esi
 	jz L325
 L319:
@@ -937,7 +935,6 @@ L462:
 	cmpb (%r15),%dl
 	jnz L465
 L467:
-	movslq %eax,%rax
 	movl _modifiers(,%rax,8),%ecx
 	testl %ecx,%ecx
 	jz L465
@@ -948,7 +945,6 @@ L465:
 	cmpb $61,%dl
 	jnz L346
 L474:
-	movslq %eax,%rax
 	movl _modifiers+4(,%rax,8),%eax
 	testl %eax,%eax
 	jz L346
@@ -1683,7 +1679,7 @@ L763:
 	leaq 8(%r13),%rdi
 	call _vstring_free
 	movl $-2147483587,(%r13)
-	movslq %r12d,%r12
+	movl %r12d,%r12d
 	movq %r12,8(%r13)
 L765:
 	movq 32(%r13),%r13

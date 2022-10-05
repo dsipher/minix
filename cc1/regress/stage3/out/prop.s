@@ -47,7 +47,6 @@ L35:
 	jmp L37
 L41:
 	movq 16(%r13),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rbx
 	testq %rbx,%rbx
 	jz L43
@@ -58,7 +57,7 @@ L45:
 	jge L52
 L46:
 	movq 416(%r13),%rdx
-	movslq %r14d,%rax
+	movl %r14d,%eax
 	shlq $4,%rax
 	movl 8(%rdx,%rax),%esi
 	xorl %r8d,%r8d
@@ -133,7 +132,6 @@ L67:
 	jge L73
 L71:
 	movq _tmp_defs+8(%rip),%rax
-	movslq %r14d,%r14
 	movl (%rax,%r14,4),%eax
 	movl %eax,-28(%rbp)
 	testl %eax,%eax
@@ -234,7 +232,7 @@ L99:
 L103:
 	movl 88(%r13),%edx
 	movq 416(%r13),%rcx
-	movslq %esi,%rax
+	movl %esi,%eax
 	shlq $4,%rax
 	cmpl 8(%rcx,%rax),%edx
 	jnz L108
@@ -290,7 +288,7 @@ L122:
 	movslq _next_u(%rip),%rsi
 	shlq $4,%rsi
 	movq 416(%rbx),%rdx
-	movslq %r8d,%rcx
+	movl %r8d,%ecx
 	shlq $4,%rcx
 	movq (%rdx,%rcx),%rax
 	movq %rax,(%rdi,%rsi)
@@ -345,7 +343,7 @@ L139:
 	jmp L140
 L141:
 	movq _u+8(%rip),%rax
-	movslq %ebx,%r13
+	movl %ebx,%r13d
 	shlq $4,%r13
 	movl 8(%rax,%r13),%esi
 	leaq 432(%r12),%rdi
@@ -366,7 +364,6 @@ L148:
 	movq 488(%r12),%rcx
 	movl %ebx,%eax
 	sarl $6,%eax
-	movslq %eax,%rax
 	orq %rdx,(%rcx,%rax,8)
 L146:
 	incl %ebx
@@ -444,7 +441,6 @@ L176:
 	jmp L181
 L182:
 	movq 488(%rbx),%rax
-	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	notq %rcx
 	movq 536(%rbx),%rax
@@ -459,7 +455,6 @@ L184:
 	jmp L188
 L189:
 	movq 464(%rbx),%rax
-	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq 536(%rbx),%rax
 	orq %rcx,(%rax,%rdx,8)
@@ -487,7 +482,6 @@ L193:
 	jmp L195
 L196:
 	movq 40(%r12),%rax
-	movslq %ebx,%rbx
 	movq (%rax,%rbx,8),%rsi
 	testl %ebx,%ebx
 	jnz L205
@@ -505,7 +499,6 @@ L208:
 	jle L201
 L209:
 	movq 536(%rsi),%rax
-	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq _tmp_bits+8(%rip),%rax
 	andq %rcx,(%rax,%rdx,8)
@@ -524,7 +517,6 @@ L215:
 	jle L218
 L216:
 	movq _tmp_bits+8(%rip),%rax
-	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq 512(%r12),%rax
 	cmpq (%rax,%rdx,8),%rcx
@@ -546,7 +538,6 @@ L219:
 	jmp L233
 L234:
 	movq 488(%r12),%rax
-	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	notq %rcx
 	movq 536(%r12),%rax
@@ -561,7 +552,6 @@ L236:
 	jmp L240
 L241:
 	movq 464(%r12),%rax
-	movslq %edx,%rdx
 	movq (%rax,%rdx,8),%rcx
 	movq 536(%r12),%rax
 	orq %rcx,(%rax,%rdx,8)
@@ -605,7 +595,6 @@ L255:
 	movq 512(%r12),%rcx
 	movl %ebx,%eax
 	sarl $6,%eax
-	movslq %eax,%rax
 	movq (%rcx,%rax,8),%rdx
 	movb %bl,%cl
 	movl $1,%eax
@@ -632,7 +621,7 @@ L266:
 	movslq %esi,%rsi
 	movq _u+8(%rip),%rdx
 	shlq $4,%rsi
-	movslq %ebx,%rcx
+	movl %ebx,%ecx
 	shlq $4,%rcx
 	movq (%rdx,%rcx),%rax
 	movq %rax,(%rdi,%rsi)

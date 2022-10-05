@@ -102,7 +102,6 @@ L34:
 	xorl %r12d,%r12d
 	incl _lineno(%rip)
 L45:
-	movslq %r12d,%r12
 	movq _line(%rip),%rax
 	movb %r13b,(%r12,%rax)
 	cmpl $10,%r13d
@@ -139,7 +138,7 @@ L61:
 	cmpl $-1,%r13d
 	jnz L45
 L62:
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	movq _line(%rip),%rcx
 	movb $10,(%rax,%rcx)
 	movb $1,_saw_eof(%rip)
@@ -1691,7 +1690,6 @@ L752:
 	xorl %ecx,%ecx
 	jmp L753
 L754:
-	movslq %ecx,%rcx
 	movq _cache(%rip),%rax
 	movb (%rcx,%rax),%al
 	movb %al,(%rcx,%r13)
@@ -1709,7 +1707,6 @@ L756:
 	xorl %r12d,%r12d
 	jmp L760
 L761:
-	movslq %r12d,%r12
 	movzbl (%r12,%r13),%ebx
 	cmpl $92,%ebx
 	jz L768
@@ -2020,7 +2017,6 @@ L936:
 	cmpl %eax,%ebx
 	jge L939
 L937:
-	movslq %ebx,%rbx
 	movq _tag_table(%rip),%rax
 	movq (%rax,%rbx,8),%rsi
 	movq _cache(%rip),%rdi
@@ -3675,7 +3671,6 @@ L1694:
 	xorl %ebx,%ebx
 	jmp L1696
 L1697:
-	movslq %ebx,%rbx
 	cmpq $0,(%rdi,%rbx,8)
 	jnz L1702
 L1700:
@@ -3881,8 +3876,8 @@ L1764:
 L1765:
 	movl %edx,%eax
 	incl %edx
-L1841:
 	movslq %eax,%rax
+L1841:
 	movq %rsi,(%rbx,%rax,8)
 	movq 8(%rsi),%rsi
 L1760:
@@ -3903,7 +3898,7 @@ L1769:
 	movl $1,%edx
 	jmp L1775
 L1776:
-	movslq %edx,%rax
+	movl %edx,%eax
 	movq (%rbx,%rax,8),%rax
 	movw %dx,34(%rax)
 	incl %edx
@@ -3924,7 +3919,7 @@ L1779:
 	cmpl %edx,%ecx
 	jle L1781
 L1780:
-	movslq %edx,%rcx
+	movl %edx,%ecx
 	movq (%rbx,%rcx,8),%rcx
 	cmpq %rax,%rcx
 	jz L1779
@@ -3954,7 +3949,6 @@ L1788:
 	movl $1,%edi
 	jmp L1792
 L1793:
-	movslq %edi,%rdi
 	movq (%rbx,%rdi,8),%rcx
 	movswl 32(%rcx),%esi
 	cmpl $256,%esi
@@ -4000,7 +3994,7 @@ L1809:
 	movl $2,%edx
 	jmp L1810
 L1811:
-	movslq %edx,%rcx
+	movl %edx,%ecx
 	movq (%rbx,%rcx,8),%rcx
 	cmpw $-1,32(%rcx)
 	jnz L1816
@@ -4008,7 +4002,7 @@ L1817:
 	cmpl %eax,%esi
 	jge L1822
 L1820:
-	movslq %esi,%rsi
+	movl %esi,%esi
 	movq _symbol_value(%rip),%rcx
 	movswl (%rcx,%rsi,2),%ecx
 	cmpl %ecx,%edi
@@ -4018,7 +4012,7 @@ L1824:
 	cmpl %esi,%eax
 	jle L1829
 L1827:
-	movslq %esi,%rcx
+	movl %esi,%ecx
 	movq _symbol_value(%rip),%r8
 	movswl (%r8,%rcx,2),%ecx
 	cmpl %ecx,%edi
@@ -4027,7 +4021,7 @@ L1829:
 	incl %edi
 	jmp L1817
 L1822:
-	movslq %edx,%rdx
+	movl %edx,%edx
 	movq (%rbx,%rdx,8),%rcx
 	movw %di,32(%rcx)
 	incl %edi
@@ -4050,7 +4044,6 @@ L1813:
 	movl $1,%esi
 	jmp L1832
 L1833:
-	movslq %esi,%rsi
 	movq (%rbx,%rsi,8),%rcx
 	movq 16(%rcx),%rcx
 	movq %rcx,(%rax,%rsi,8)
@@ -4088,7 +4081,6 @@ L1835:
 	movb $0,(%rax,%rcx)
 	jmp L1836
 L1837:
-	movslq %edx,%rdx
 	movq (%rbx,%rdx,8),%rax
 	movswl 34(%rax),%ecx
 	movq 16(%rax),%rax
@@ -4206,7 +4198,6 @@ L1861:
 	xorl %r8d,%r8d
 	xorl %edi,%edi
 L1864:
-	movslq %esi,%rsi
 	movq _pitem(%rip),%rcx
 	movq (%rcx,%rsi,8),%rdx
 	movq _ritem(%rip),%rcx
@@ -4230,7 +4221,7 @@ L1866:
 	negw %dx
 	movw %dx,(%rcx,%rsi,2)
 	incl %esi
-	movslq %eax,%rax
+	movl %eax,%eax
 	movq _rprec(%rip),%rcx
 	cmpw $-1,(%rcx,%rax,2)
 	jnz L1872
@@ -4241,7 +4232,6 @@ L1870:
 L1872:
 	incl %eax
 L1860:
-	movslq %eax,%rax
 	cmpl %eax,_nrules(%rip)
 	jg L1861
 L1863:
@@ -4271,7 +4261,6 @@ L1878:
 	movl $2,%r14d
 	jmp L1880
 L1881:
-	movslq %r14d,%r14
 	movq _rlhs(%rip),%rdx
 	movw (%rdx,%r14,2),%cx
 	movl %r14d,%eax
@@ -4351,7 +4340,7 @@ L1900:
 	movl $124,%edi
 	call ___flushbuf
 L1902:
-	movslq %ebx,%rbx
+	movl %ebx,%ebx
 	movq _ritem(%rip),%rax
 	movw (%rax,%rbx,2),%ax
 	incl %ebx

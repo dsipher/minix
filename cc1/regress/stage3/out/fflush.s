@@ -101,7 +101,6 @@ L72:
 L4:
 	xorl %ebx,%ebx
 L8:
-	movslq %ebx,%rbx
 	movq ___iotab(,%rbx,8),%rdi
 	testq %rdi,%rdi
 	jz L13
@@ -128,7 +127,6 @@ L75:
 L76:
 	xorl %ebx,%ebx
 L79:
-	movslq %ebx,%rbx
 	movq ___iotab(,%rbx,8),%rdi
 	testq %rdi,%rdi
 	jz L84

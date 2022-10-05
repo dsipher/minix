@@ -161,7 +161,6 @@ L42:
 	cltd 
 	idivl %esi
 L41:
-	movslq %ecx,%rcx
 	movb (%rcx,%rdi),%al
 	testb %al,%al
 	jnz L42

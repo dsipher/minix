@@ -594,6 +594,26 @@ struct tnode *unfieldify(struct tnode *type)
     return type;
 }
 
+/* if t is an integral type, return it modified to
+   its simpatico unsigned equivalent (if necessary) */
+
+long t_unsigned(long t)
+{
+    long tu = t & ~T_BASE_MASK;
+
+    switch (T_BASE(t))
+    {
+    case T_CHAR:
+    case T_SCHAR:   return tu | T_UCHAR;
+
+    case T_SHORT:   return tu | T_USHORT;
+    case T_INT:     return tu | T_UINT;
+    case T_LONG:    return tu | T_ULONG;
+    }
+
+    return t;
+}
+
 /* elements of an array must be objects (C89 6.1.2.5) so they can't be:
 
         functions or voids

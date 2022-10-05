@@ -152,7 +152,6 @@ L33:
 	xorl %r12d,%r12d
 	jmp L34
 L35:
-	movslq %r12d,%r12
 	cmpl $0,(%r13,%r12,4)
 	jz L40
 L38:
@@ -180,7 +179,7 @@ L44:
 	cmpl %r12d,_csize(%rip)
 	jle L46
 L47:
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	cmpl $0,(%r13,%rax,4)
 	jnz L44
 L46:

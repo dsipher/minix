@@ -343,7 +343,6 @@ L173:
 L174:
 	movl $1,%eax
 	shll %cl,%eax
-	movslq %eax,%rax
 	testq %rdx,%rax
 	jz L153
 L164:
@@ -483,7 +482,6 @@ L226:
 	xorl %r14d,%r14d
 	jmp L229
 L230:
-	movslq %r14d,%r14
 	movq -296(%rbp,%r14,8),%rax
 	movq 8(%rax),%rdi
 	call _dofree
@@ -669,13 +667,13 @@ L266:
 	cmpl $0,%r14d
 	jg L267
 L268:
-	movslq %r13d,%r13
+	movl %r13d,%r13d
 	leaq (%r13,%r13,2),%rax
 	shlq $3,%rax
 	movq (%r15),%r12
 	subq %rax,%r12
 	movq %r12,(%r15)
-	movslq %ebx,%rbx
+	movl %ebx,%ebx
 	leaq (%rbx,%rbx,2),%rax
 	shlq $3,%rax
 	addq %rax,%r12
@@ -741,7 +739,7 @@ L292:
 	jmp L290
 L275:
 	subq $24,16(%r15)
-	movslq %r13d,%rcx
+	movl %r13d,%ecx
 	leaq (%rcx,%rcx,2),%rcx
 	shlq $3,%rcx
 	subq %rcx,%rax
@@ -755,7 +753,7 @@ L325:
 	jmp L246
 L254:
 	movq %rax,16(%r15)
-	movslq %ebx,%rax
+	movl %ebx,%eax
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
 	subq %rax,(%r15)

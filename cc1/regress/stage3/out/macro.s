@@ -52,7 +52,6 @@ L12:
 	movq $0,48(%r12)
 	movq %rax,56(%r12)
 	movl $0,24(%r12)
-	movslq %ebx,%rbx
 	shlq $4,%rbx
 	leaq _buckets(%rbx),%rdx
 	movq _buckets(%rbx),%rax
@@ -120,7 +119,7 @@ L34:
 L37:
 	leaq -24(%rbp),%rdi
 	call _vstring_clear
-	movslq %r12d,%r13
+	movl %r12d,%r13d
 	shlq $4,%r13
 	movq _predefs(%r13),%rsi
 	leaq -24(%rbp),%rdi
@@ -279,7 +278,7 @@ L94:
 	call _hash
 	movl %eax,%ebx
 	andl $63,%ebx
-	movslq %ebx,%rax
+	movl %ebx,%eax
 	shlq $4,%rax
 	movq _buckets(%rax),%r12
 L96:
@@ -304,14 +303,14 @@ L106:
 	movq %rax,72(%rcx)
 	jmp L108
 L107:
-	movslq %ebx,%rcx
+	movl %ebx,%ecx
 	shlq $4,%rcx
 	movq %rax,_buckets+8(%rcx)
 L108:
 	movq 64(%r12),%rcx
 	movq 72(%r12),%rax
 	movq %rcx,(%rax)
-	movslq %ebx,%rbx
+	movl %ebx,%ebx
 	shlq $4,%rbx
 	leaq _buckets(%rbx),%rcx
 	movq _buckets(%rbx),%rax
@@ -631,7 +630,6 @@ L231:
 	movq %rcx,72(%rdx)
 	jmp L233
 L232:
-	movslq %eax,%rax
 	shlq $4,%rax
 	movq %rcx,_buckets+8(%rax)
 L233:

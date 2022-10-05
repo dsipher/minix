@@ -58,7 +58,7 @@ L43:
 L11:
 	xorl %ecx,%ecx
 L13:
-	movslq %ecx,%rax
+	movl %ecx,%eax
 	shlq $4,%rax
 	cmpb $1,_includelist+1(%rax)
 	jnz L18

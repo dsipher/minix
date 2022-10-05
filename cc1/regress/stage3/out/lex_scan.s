@@ -5259,7 +5259,6 @@ L79:
 	xorl %eax,%eax
 	jmp L81
 L82:
-	movslq %eax,%rax
 	movq _xlation(%rip),%rcx
 	movl $0,(%rcx,%rax,4)
 	incl %eax

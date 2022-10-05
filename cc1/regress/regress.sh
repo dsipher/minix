@@ -103,7 +103,7 @@ do_stage()	# ( $compiler, $cflags, $stage )
 	for i in $TESTS
 	do
 		echo $i
-		$ROOT/$3/lib/cc1 $ROOT/tests/$i.i $ROOT/$3/out/$i.s
+		$ROOT/$3/lib/cc1 -O $ROOT/tests/$i.i $ROOT/$3/out/$i.s
 	done
 }
 
@@ -117,8 +117,8 @@ diff_stages()	# ( $stage1, $stage2)
 }
 
 do_stage gcc "-O2" stage1
-do_stage $ROOT/stage1/bin/cc "" stage2
-do_stage $ROOT/stage2/bin/cc "" stage3
+do_stage $ROOT/stage1/bin/cc "-O" stage2
+do_stage $ROOT/stage2/bin/cc "-O" stage3
 
 diff_stages stage1 stage2
 diff_stages stage2 stage3

@@ -353,7 +353,6 @@ L154:
 	jge L144
 L155:
 	movq 64(%r12),%rcx
-	movslq %ebx,%rbx
 	leaq (%rbx,%rbx,2),%rax
 	shlq $3,%rax
 	movq 16(%rcx,%rax),%rdx
@@ -432,7 +431,6 @@ L169:
 	movq $_func_arena,-8(%rbp)
 	xorl %ebx,%ebx
 L173:
-	movslq %ebx,%rbx
 	movl _iscratch(,%rbx,4),%esi
 	leaq -24(%rbp),%rdi
 	call _add_reg
@@ -442,7 +440,6 @@ L173:
 L175:
 	xorl %ebx,%ebx
 L177:
-	movslq %ebx,%rbx
 	movl _fscratch(,%rbx,4),%esi
 	leaq -24(%rbp),%rdi
 	call _add_reg
@@ -470,7 +467,6 @@ L180:
 	jmp L186
 L190:
 	movq -64(%rbp),%rax
-	movslq %esi,%rsi
 	movl (%rax,%rsi,4),%edx
 	testl %edx,%edx
 	jz L192
@@ -605,7 +601,6 @@ L209:
 	jmp L336
 L340:
 	movq -64(%rbp),%rax
-	movslq %ebx,%rbx
 	movl (%rax,%rbx,4),%ecx
 	testl %ecx,%ecx
 	jz L342
@@ -658,7 +653,6 @@ L342:
 	jmp L377
 L381:
 	movq -64(%rbp),%rax
-	movslq %r12d,%r12
 	movl (%rax,%r12,4),%ebx
 	testl %ebx,%ebx
 	jz L168

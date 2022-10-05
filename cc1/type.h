@@ -151,6 +151,11 @@ struct string;
 
 int t_size(long t);
 
+/* return the simpatico unsigned type of `t'. if `t' is
+   not integral or is already unsigned, returns `t'. */
+
+long t_unsigned(long t);
+
 /* types are represented by sequences of type nodes (tnodes). a proper type
    is a pointer to a tnode in the tnode forest, and following the next links
    of a type is a traversal down a branch to the root of a tree. all tnodes

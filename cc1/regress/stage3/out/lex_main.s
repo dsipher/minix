@@ -865,7 +865,6 @@ L309:
 L311:
 	movl $1,%ebx
 L314:
-	movslq %ebx,%rbx
 	movb (%rbx,%r12),%sil
 	testb %sil,%sil
 	jz L350
@@ -992,7 +991,6 @@ L330:
 	movl $1,%r13d
 L491:
 	incl %ebx
-	movslq %ebx,%rbx
 	movb (%rbx,%r12),%sil
 	testb %sil,%sil
 	jz L350
@@ -1197,7 +1195,6 @@ L455:
 L459:
 	movl %ecx,%eax
 	decl %eax
-	movslq %ecx,%rcx
 	movl %eax,_ecgroup(,%rcx,4)
 	movslq %eax,%rax
 	movl %ecx,_nextecm(,%rax,4)
@@ -1214,7 +1211,6 @@ L456:
 	movl $1,%eax
 	jmp L462
 L463:
-	movslq %eax,%rax
 	movl %eax,_ecgroup(,%rax,4)
 	movl $-32767,_nextecm(,%rax,4)
 	incl %eax

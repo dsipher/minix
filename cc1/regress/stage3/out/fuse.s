@@ -720,7 +720,6 @@ L281:
 	jge L287
 L285:
 	movq 16(%r13),%rax
-	movslq %r12d,%r12
 	movq (%rax,%r12,8),%rbx
 	testq %rbx,%rbx
 	jz L287

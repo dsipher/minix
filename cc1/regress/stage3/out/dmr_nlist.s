@@ -206,7 +206,6 @@ L59:
 L60:
 	movl $1,%edx
 	shll %cl,%edx
-	movslq %edx,%rdx
 	movq 16(%r12),%rax
 	movb (%rax),%al
 	andb $63,%al

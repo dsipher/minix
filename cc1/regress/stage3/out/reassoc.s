@@ -49,7 +49,6 @@ L13:
 	movq (%rax,%r12,8),%rbx
 	xorl %ecx,%ecx
 L18:
-	movslq %ecx,%rcx
 	movl (%r13,%rcx,4),%eax
 	testl %eax,%eax
 	jz L36

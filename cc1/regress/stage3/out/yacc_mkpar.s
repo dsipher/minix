@@ -279,7 +279,6 @@ L91:
 	xorl %eax,%eax
 	jmp L92
 L93:
-	movslq %eax,%rax
 	movq _rules_used(%rip),%rcx
 	movw $0,(%rcx,%rax,2)
 	incl %eax
@@ -290,7 +289,6 @@ L95:
 	xorl %edx,%edx
 	jmp L96
 L97:
-	movslq %edx,%rdx
 	movq _parser(%rip),%rax
 	movq (%rax,%rdx,8),%rcx
 L100:
@@ -319,7 +317,6 @@ L99:
 	movl $3,%eax
 	jmp L111
 L112:
-	movslq %eax,%rax
 	movq _rules_used(%rip),%rcx
 	cmpw $0,(%rcx,%rax,2)
 	jnz L117
@@ -377,7 +374,6 @@ L130:
 	movl $0,_SRcount(%rip)
 	movl $0,_RRcount(%rip)
 	movl $-1,%edi
-	movslq %eax,%rax
 	movq _parser(%rip),%rcx
 	movq (%rcx,%rax,8),%rsi
 L133:
@@ -447,7 +443,7 @@ L136:
 	movl _RRtotal(%rip),%esi
 	addl _RRcount(%rip),%esi
 	movl %esi,_RRtotal(%rip)
-	movslq %eax,%rax
+	movl %eax,%eax
 	movq _SRconflicts(%rip),%rcx
 	movw %dx,(%rcx,%rax,2)
 	movl _RRcount(%rip),%ecx
@@ -586,7 +582,6 @@ L244:
 L247:
 	movl %ebx,%edi
 	call _sole_reduction
-	movslq %ebx,%rbx
 	movq _defred(%rip),%rcx
 	movw %ax,(%rcx,%rbx,2)
 	incl %ebx
@@ -621,7 +616,6 @@ L257:
 	xorl %ebx,%ebx
 	jmp L259
 L260:
-	movslq %ebx,%rbx
 	movq (%rdi,%rbx,8),%rdi
 	call _free_action_row
 	incl %ebx
@@ -650,7 +644,6 @@ L264:
 L267:
 	movl %ebx,%edi
 	call _parse_actions
-	movslq %ebx,%rbx
 	movq _parser(%rip),%rcx
 	movq %rax,(%rcx,%rbx,8)
 	incl %ebx

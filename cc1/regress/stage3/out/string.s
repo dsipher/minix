@@ -299,7 +299,6 @@ L9:
 	xorl _crctab(,%rax,4),%r15d
 	incl %ecx
 L8:
-	movslq %ecx,%rcx
 	cmpq %rcx,-40(%rbp)
 	ja L9
 L11:
@@ -314,10 +313,10 @@ L11:
 	andl $63,%eax
 	movl %eax,-44(%rbp)
 	xorl %r14d,%r14d
-	movslq %ebx,%rcx
+	movl %ebx,%ecx
 	movq %rcx,-32(%rbp)
 	shlq $6,%rcx
-	movslq %r12d,%rax
+	movl %r12d,%eax
 	movq _filters(%rcx,%rax,8),%rax
 	movq %rax,-16(%rbp)
 	movl -44(%rbp),%ecx
@@ -385,9 +384,9 @@ L43:
 	movl -44(%rbp),%ecx
 	movl $1,%edx
 	shlq %cl,%rdx
-	movslq %ebx,%rax
+	movl %ebx,%eax
 	shlq $6,%rax
-	movslq %r12d,%r12
+	movl %r12d,%r12d
 	orq %rdx,_filters(%rax,%r12,8)
 	cmpl $0,-4(%rbp)
 	jz L40
@@ -395,7 +394,7 @@ L47:
 	movq _string_arena+8(%rip),%rax
 	movq %rax,_string_arena(%rip)
 L40:
-	movslq %ebx,%rbx
+	movl %ebx,%ebx
 	movq _buckets(,%rbx,8),%rax
 	movq %rax,24(%r14)
 	movq %r14,_buckets(,%rbx,8)
@@ -427,7 +426,6 @@ L55:
 	jge L59
 L58:
 	movq 8(%r14),%rax
-	movslq %r12d,%r12
 	movsbl (%rax,%r12),%ebx
 	jmp L60
 L59:
@@ -514,7 +512,6 @@ L78:
 L79:
 	xorl %r12d,%r12d
 L82:
-	movslq %r12d,%r12
 	movq _buckets(,%r12,8),%rbx
 	jmp L85
 L86:

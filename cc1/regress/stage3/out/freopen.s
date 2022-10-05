@@ -102,7 +102,6 @@ L46:
 L44:
 	xorl %eax,%eax
 L48:
-	movslq %eax,%rax
 	cmpq ___iotab(,%rax,8),%r14
 	jz L51
 L53:

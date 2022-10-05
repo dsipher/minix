@@ -233,10 +233,10 @@ L143:
 	jz L145
 L144:
 	movl $1,%eax
-	jmp L163
+	jmp L165
 L145:
 	xorl %eax,%eax
-	jmp L163
+	jmp L165
 L136:
 	movq -8(%rbp),%rax
 	cmpq $0,8(%rax)
@@ -247,9 +247,10 @@ L137:
 	jz L139
 L138:
 	movl $1,%eax
-	jmp L163
+	jmp L165
 L139:
 	xorl %eax,%eax
+L165:
 	jmp L163
 L83:
 	movq -8(%rbp),%rax
@@ -351,8 +352,8 @@ L119:
 	setg %al
 L164:
 	movzbl %al,%eax
-L163:
 	movslq %eax,%rax
+L163:
 	movq %rax,8(%rbx)
 	movl $-2147483589,(%rbx)
 	jmp L149
@@ -491,12 +492,12 @@ L48:
 
 
 _ternary:
-L165:
+L166:
 	pushq %rbp
 	movq %rsp,%rbp
 	subq $24,%rsp
 	pushq %rbx
-L166:
+L167:
 	movq %rdi,%rbx
 	movq %rbx,%rsi
 	movl $2560,%edi
@@ -507,8 +508,8 @@ L166:
 	movq %rbx,%rdi
 	call _list_next_is
 	testl %eax,%eax
-	jz L167
-L168:
+	jz L168
+L169:
 	leaq -8(%rbp),%rsi
 	movq %rbx,%rdi
 	call _list_pop
@@ -522,15 +523,15 @@ L168:
 	call _list_pop
 	movq (%rbx),%rax
 	testq %rax,%rax
-	jz L176
-L174:
+	jz L177
+L175:
 	cmpl $536870956,(%rax)
-	jz L173
-L176:
-	pushq $L178
+	jz L174
+L177:
+	pushq $L179
 	call _error
 	addq $8,%rsp
-L173:
+L174:
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _list_pop
@@ -543,51 +544,51 @@ L173:
 	movq 8(%rax),%rax
 	movq (%rbx),%rcx
 	testq %rax,%rax
-	jz L188
-L182:
+	jz L189
+L183:
 	movq -16(%rbp),%rax
 	movq %rcx,32(%rax)
 	movq -16(%rbp),%rax
 	addq $32,%rax
 	testq %rcx,%rcx
-	jz L186
-L185:
+	jz L187
+L186:
 	movq (%rbx),%rcx
 	movq %rax,40(%rcx)
-	jmp L187
-L186:
-	movq %rax,8(%rbx)
+	jmp L188
 L187:
+	movq %rax,8(%rbx)
+L188:
 	movq -16(%rbp),%rax
 	movq %rax,(%rbx)
 	movq -16(%rbp),%rax
 	movq %rbx,40(%rax)
 	movq -24(%rbp),%rdi
-	jmp L194
-L188:
+	jmp L195
+L189:
 	movq -24(%rbp),%rax
 	movq %rcx,32(%rax)
 	movq -24(%rbp),%rax
 	addq $32,%rax
 	testq %rcx,%rcx
-	jz L192
-L191:
+	jz L193
+L192:
 	movq (%rbx),%rcx
 	movq %rax,40(%rcx)
-	jmp L193
-L192:
-	movq %rax,8(%rbx)
+	jmp L194
 L193:
+	movq %rax,8(%rbx)
+L194:
 	movq -24(%rbp),%rax
 	movq %rax,(%rbx)
 	movq -24(%rbp),%rax
 	movq %rbx,40(%rax)
 	movq -16(%rbp),%rdi
-L194:
+L195:
 	call _token_free
 	movq -8(%rbp),%rdi
 	call _token_free
-L167:
+L168:
 	popq %rbx
 	movq %rbp,%rsp
 	popq %rbp
@@ -595,19 +596,19 @@ L167:
 
 
 _expression:
-L195:
-	pushq %rbx
 L196:
+	pushq %rbx
+L197:
 	movq %rdi,%rbx
-	jmp L198
-L202:
+	jmp L199
+L203:
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _list_pop
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _list_pop
-L198:
+L199:
 	movq %rbx,%rdi
 	call _ternary
 	movl $536870959,%edx
@@ -615,26 +616,26 @@ L198:
 	movq %rbx,%rdi
 	call _list_next_is
 	testl %eax,%eax
-	jnz L202
-L197:
+	jnz L203
+L198:
 	popq %rbx
 	ret 
 
 
 _undefined:
-L206:
+L207:
 	pushq %rbx
 	pushq %r12
-L207:
+L208:
 	movq %rdi,%r12
 	movq (%r12),%rbx
-L209:
-	testq %rbx,%rbx
-	jz L208
 L210:
+	testq %rbx,%rbx
+	jz L209
+L211:
 	cmpl $52,(%rbx)
-	jnz L213
-L212:
+	jnz L214
+L213:
 	movq %rbx,%rsi
 	movq %r12,%rdi
 	call _list_drop
@@ -645,81 +646,81 @@ L212:
 	movq %rbx,%rsi
 	movq %r12,%rdi
 	call _list_insert
-	jmp L209
-L213:
+	jmp L210
+L214:
 	movq 32(%rbx),%rbx
-	jmp L209
-L208:
+	jmp L210
+L209:
 	popq %r12
 	popq %rbx
 	ret 
 
 
 _defined:
-L215:
+L216:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L216:
+L217:
 	movq %rdi,%r13
 	movq (%r13),%r12
-L218:
-	testq %r12,%r12
-	jz L217
 L219:
+	testq %r12,%r12
+	jz L218
+L220:
 	cmpl $52,(%r12)
-	jnz L222
-L228:
+	jnz L223
+L229:
 	leaq 8(%r12),%rdi
 	call _macro_lookup
 	testq %rax,%rax
-	jz L222
-L224:
+	jz L223
+L225:
 	testl $1,24(%rax)
-	jz L222
-L221:
+	jz L223
+L222:
 	movq %r12,%rsi
 	movq %r13,%rdi
 	call _list_drop
 	movq %rax,%rsi
 	movq %rsi,%r12
 	testq %rsi,%rsi
-	jz L233
-L235:
+	jz L234
+L236:
 	cmpl $536870927,(%rsi)
-	jnz L233
-L232:
+	jnz L234
+L233:
 	movq %r13,%rdi
 	call _list_drop
 	movq %rax,%r12
 	movl $1,%ebx
-	jmp L234
-L233:
-	xorl %ebx,%ebx
+	jmp L235
 L234:
+	xorl %ebx,%ebx
+L235:
 	testq %r12,%r12
-	jz L239
-L242:
+	jz L240
+L243:
 	cmpl $52,(%r12)
-	jz L241
-L239:
-	pushq $L246
+	jz L242
+L240:
+	pushq $L247
 	call _error
 	addq $8,%rsp
-L241:
+L242:
 	leaq 8(%r12),%rdi
 	call _macro_lookup
 	testq %rax,%rax
-	jz L248
-L250:
+	jz L249
+L251:
 	testl $1,24(%rax)
-	jnz L248
-L247:
-	movl $1,%edi
-	jmp L266
+	jnz L249
 L248:
+	movl $1,%edi
+	jmp L267
+L249:
 	xorl %edi,%edi
-L266:
+L267:
 	call _token_int
 	movq %rax,%rdx
 	movq %r12,%rsi
@@ -730,27 +731,27 @@ L266:
 	call _list_drop
 	movq %rax,%r12
 	testl %ebx,%ebx
-	jz L218
-L254:
+	jz L219
+L255:
 	testq %r12,%r12
-	jz L257
-L260:
+	jz L258
+L261:
 	cmpl $536870928,(%r12)
-	jz L259
-L257:
-	pushq $L264
+	jz L260
+L258:
+	pushq $L265
 	call _error
 	addq $8,%rsp
-L259:
+L260:
 	movq %r12,%rsi
 	movq %r13,%rdi
 	call _list_drop
 	movq %rax,%r12
-	jmp L218
-L222:
+	jmp L219
+L223:
 	movq 32(%r12),%r12
-	jmp L218
-L217:
+	jmp L219
+L218:
 	popq %r13
 	popq %r12
 	popq %rbx
@@ -758,10 +759,10 @@ L217:
 
 
 _evaluate:
-L267:
+L268:
 	pushq %rbx
 	pushq %r12
-L268:
+L269:
 	movq %rdi,%r12
 	movq %r12,%rdi
 	call _list_strip_all
@@ -777,21 +778,21 @@ L268:
 	call _expression
 	movq (%r12),%rax
 	testq %rax,%rax
-	jz L273
-L277:
+	jz L274
+L278:
 	cmpl $2147483707,(%rax)
-	jz L272
-L273:
+	jz L273
+L274:
 	testq %rax,%rax
-	jz L270
-L281:
+	jz L271
+L282:
 	cmpl $2147483708,(%rax)
-	jz L272
-L270:
-	pushq $L285
+	jz L273
+L271:
+	pushq $L286
 	call _error
 	addq $8,%rsp
-L272:
+L273:
 	movq (%r12),%rsi
 	cmpq $0,8(%rsi)
 	setnz %al
@@ -799,12 +800,12 @@ L272:
 	movq %r12,%rdi
 	call _list_drop
 	movl %ebx,%eax
-L269:
+L270:
 	popq %r12
 	popq %rbx
 	ret 
 
-L264:
+L265:
 	.byte 109,105,115,115,105,110,103,32
 	.byte 99,108,111,115,105,110,103,32
 	.byte 112,97,114,101,110,116,104,101
@@ -819,7 +820,7 @@ L34:
 	.byte 109,97,108,102,111,114,109,101
 	.byte 100,32,101,120,112,114,101,115
 	.byte 115,105,111,110,0
-L285:
+L286:
 	.byte 67,80,80,32,73,78,84,69
 	.byte 82,78,65,76,58,32,98,111
 	.byte 116,99,104,101,100,32,101,120
@@ -832,7 +833,7 @@ L148:
 	.byte 107,110,111,119,110,32,98,105
 	.byte 110,97,114,121,32,111,112,101
 	.byte 114,97,116,111,114,0
-L178:
+L179:
 	.byte 109,105,115,115,105,110,103,32
 	.byte 39,58,39,32,97,102,116,101
 	.byte 114,32,39,63,39,0
@@ -845,7 +846,7 @@ L26:
 L98:
 	.byte 109,111,100,117,108,117,115,32
 	.byte 122,101,114,111,0
-L246:
+L247:
 	.byte 109,105,115,115,105,110,103,32
 	.byte 105,100,101,110,116,105,102,105
 	.byte 101,114,32,97,102,116,101,114

@@ -115,10 +115,9 @@ L64:
 	cmpl %ecx,%esi
 	jle L67
 L65:
-	movslq %ecx,%r8
+	movl %ecx,%r8d
 	movl (%rdi,%r8,4),%edx
 	incl %ecx
-	movslq %ecx,%rcx
 	movl (%rdi,%rcx,4),%eax
 	cmpl %eax,%edx
 	jle L64
@@ -686,7 +685,6 @@ L296:
 L294:
 	incl %r13d
 L293:
-	movslq %r13d,%r13
 	movb (%r13,%rbx),%r12b
 	cmpb $128,%r12b
 	jb L296
@@ -730,7 +728,6 @@ L305:
 L303:
 	incl %r13d
 L302:
-	movslq %r13d,%r13
 	movb (%r13,%rbx),%dil
 	cmpb $128,%dil
 	jb L305

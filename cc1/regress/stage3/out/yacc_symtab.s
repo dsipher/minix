@@ -146,7 +146,6 @@ L48:
 L50:
 	xorl %eax,%eax
 L52:
-	movslq %eax,%rax
 	movq _symbol_table(%rip),%rcx
 	movq $0,(%rcx,%rax,8)
 	incl %eax

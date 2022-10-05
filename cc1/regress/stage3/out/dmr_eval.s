@@ -1037,7 +1037,6 @@ L466:
 	xorl %ecx,%ecx
 L477:
 	movzbl 1(%r13),%edx
-	movslq %ecx,%rcx
 	movsbl L475(%rcx),%eax
 	cmpl %eax,%edx
 	jz L480
@@ -1048,7 +1047,6 @@ L482:
 	jge L479
 L480:
 	leal 1(%rcx),%eax
-	movslq %eax,%rax
 	movsbq L475(%rax),%rbx
 L479:
 	leaq 2(%r13),%r12
@@ -1135,7 +1133,7 @@ L404:
 	call _error
 	addq $24,%rsp
 L406:
-	movslq %r13d,%r13
+	movl %r13d,%r13d
 	imulq %r13,%r12
 	movslq %ebx,%rbx
 	addq %rbx,%r12

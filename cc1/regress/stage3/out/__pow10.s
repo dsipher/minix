@@ -79,7 +79,6 @@ L8:
 L11:
 	movl %edi,%ecx
 	andl $15,%ecx
-	movslq %ecx,%rcx
 	sarl $4,%edi
 	decl %edi
 	movslq %edi,%rax
@@ -102,7 +101,6 @@ L17:
 L20:
 	movl %edi,%eax
 	andl $15,%eax
-	movslq %eax,%rax
 	movsd _powtab1(,%rax,8),%xmm1
 	sarl $4,%edi
 	decl %edi

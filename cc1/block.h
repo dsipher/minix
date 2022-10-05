@@ -44,6 +44,7 @@
 #include "insn.h"
 #include "reach.h"
 #include "lower.h"
+#include "pos.h"
 
 /* the intermediate representation is a control flow graph: a collection of
    basic blocks (struct block) and directed edges (struct succ). all blocks
@@ -132,6 +133,7 @@ struct block
     struct dvn dvn;                 /* value numbering data (dvn.c) */
     struct lower lower;             /* lowering data (lower.c) */
     struct insn *cmp;               /* last I_LIR_CMP on path (cmp.c) */
+    struct pos pos;                 /* must-be-positive data (pos.c) */
 
     VECTOR(dep) deps;               /* insn dependencies (dep.c) */
 };

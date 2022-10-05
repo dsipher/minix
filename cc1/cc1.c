@@ -51,6 +51,7 @@
 
 int last_asmlab;                /* last assigned asmlab */
 char w_flag;                    /* -w: enable warnings */
+char O_flag;                    /* -O: enable `modern' optimizations */
 FILE *out_f;                    /* output file handle ... */
 static char *out_path;          /* ... and the path to it */
 
@@ -240,9 +241,10 @@ int main(int argc, char **argv)
 {
     int opt;
 
-    while ((opt = getopt(argc, argv, "gkw")) != -1) {
+    while ((opt = getopt(argc, argv, "Ow")) != -1) {
         switch (opt)
         {
+        case 'O':   O_flag = 1; break;
         case 'w':   w_flag = 1; break;
         case '?':   goto usage;
         }
@@ -270,7 +272,7 @@ int main(int argc, char **argv)
     return 0;
 
 usage:
-    fprintf(stderr, "usage: cc1 [ -w ] input output\n");
+    fprintf(stderr, "usage: cc1 [ -Ow ] input output\n");
     return -1;
 }
 

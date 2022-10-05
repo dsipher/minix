@@ -200,7 +200,6 @@ L67:
 	xorl %edx,%edx
 	jmp L71
 L72:
-	movslq %edx,%rdx
 	movq _dfaacc(%rip),%rax
 	movl (%rax,%rdx,8),%ecx
 	movq _base(%rip),%rax
@@ -227,7 +226,6 @@ L74:
 	xorl %ebx,%ebx
 	jmp L75
 L76:
-	movslq %ebx,%rbx
 	movl (%rax,%rbx,4),%edi
 	cmpl $-1,%edi
 	jnz L80
@@ -306,7 +304,6 @@ L78:
 	xorl %ebx,%ebx
 	jmp L95
 L96:
-	movslq %ebx,%rbx
 	movq _base(%rip),%rax
 	movl (%rax,%rbx,4),%eax
 	pushq %rax
@@ -377,10 +374,9 @@ L119:
 	call _clower
 	movzbq %al,%rax
 	movl _ecgroup(,%rax,4),%ecx
-	movslq %ebx,%rax
+	movl %ebx,%eax
 	movl %ecx,_ecgroup(,%rax,4)
 L121:
-	movslq %ebx,%rbx
 	movl _ecgroup(,%rbx,4),%edi
 	call _abs
 	movl %eax,_ecgroup(,%rbx,4)
@@ -617,7 +613,6 @@ L195:
 	movl $1,%r12d
 	jmp L198
 L199:
-	movslq %r12d,%r12
 	movq _dfaacc(%rip),%rax
 	movl (%rax,%r12,8),%ebx
 	movl %ebx,%edi
@@ -1226,7 +1221,6 @@ L450:
 	cmpl %r12d,%r14d
 	jl L445
 L451:
-	movslq %r12d,%r12
 	movl (%r13,%r12,4),%edi
 	incl %r15d
 	cmpl $0,_variable_trailing_context_rules(%rip)
@@ -1284,7 +1278,6 @@ L475:
 L445:
 	incl %ebx
 L439:
-	movslq %ebx,%rbx
 	cmpl _lastdfa(%rip),%ebx
 	jle L440
 L442:
@@ -1305,7 +1298,6 @@ L485:
 	movl %edx,(%rax,%rcx,4)
 	incl %ecx
 L484:
-	movslq %ecx,%rcx
 	cmpl _lastdfa(%rip),%ecx
 	jle L485
 L487:
@@ -1349,7 +1341,6 @@ L497:
 	incl %ebx
 L491:
 	movl _lastdfa(%rip),%ecx
-	movslq %ebx,%rbx
 	movq -32(%rbp),%rax
 	movl (%rax,%rbx,4),%edi
 	cmpl %ecx,%ebx
@@ -1392,7 +1383,7 @@ L521:
 	cmpl $0,_trace(%rip)
 	jz L526
 L524:
-	movslq %ebx,%rax
+	movl %ebx,%eax
 	movl _tecbck(,%rax,4),%edi
 	call _abs
 	pushq %rax
@@ -1402,7 +1393,6 @@ L524:
 	call _fprintf
 	addq $32,%rsp
 L526:
-	movslq %ebx,%rbx
 	movl _tecbck(,%rbx,4),%edi
 	call _abs
 	movl %eax,%edi
@@ -1463,7 +1453,7 @@ L541:
 	incl %ebx
 L532:
 	movl _lastdfa(%rip),%edx
-	movslq %ebx,%rcx
+	movl %ebx,%ecx
 	movq _base(%rip),%rax
 	cmpl %edx,%ebx
 	jle L533
@@ -1472,7 +1462,6 @@ L535:
 	call _mkdata
 	jmp L583
 L546:
-	movslq %ebx,%rbx
 	movq _base(%rip),%rax
 	movl (%rax,%rbx,4),%edi
 	call _mkdata
@@ -1499,7 +1488,6 @@ L548:
 	movl $1,%ebx
 	jmp L553
 L554:
-	movslq %ebx,%rbx
 	movq _def(%rip),%rax
 	movl (%rax,%rbx,4),%edi
 	call _mkdata
@@ -1523,7 +1511,6 @@ L556:
 	movl $1,%ebx
 	jmp L561
 L562:
-	movslq %ebx,%rbx
 	movq _nxt(%rip),%rcx
 	cmpl $0,(%rcx,%rbx,4)
 	jz L569
@@ -1558,7 +1545,6 @@ L564:
 	movl $1,%ebx
 	jmp L576
 L577:
-	movslq %ebx,%rbx
 	movq _chk(%rip),%rax
 	cmpl $0,(%rax,%rbx,4)
 	jnz L582
@@ -1727,7 +1713,6 @@ L636:
 	testq %rax,%rax
 	jz L640
 L639:
-	movslq %ebx,%rbx
 	movq _base(%rip),%rax
 	movl (%rax,%rbx,4),%eax
 	pushq %rax
@@ -1741,7 +1726,7 @@ L640:
 	addq $8,%rsp
 	jmp L638
 L637:
-	movslq %ebx,%rcx
+	movl %ebx,%ecx
 	movl (%rax,%rcx,4),%edi
 	call _mkdata
 L638:
@@ -1768,7 +1753,6 @@ L643:
 	movl $1,%ebx
 	jmp L649
 L650:
-	movslq %ebx,%rbx
 	movq _rule_linenum(%rip),%rax
 	movl (%rax,%rbx,4),%edi
 	call _mkdata
@@ -1985,7 +1969,6 @@ L717:
 	movl $1,%ebx
 	jmp L730
 L731:
-	movslq %ebx,%rbx
 	movq _sceof(%rip),%rax
 	cmpl $0,(%rax,%rbx,4)
 	jnz L736

@@ -79,18 +79,13 @@ struct string;
 
 #define CTZ(i)      ({                                                      \
                         int _n;                                             \
-                        int _i = (i);                                       \
+                        long _i = (i);                                      \
                                                                             \
-                        for (_n = 0; ((1 << _n) & _i) == 0; ++_n)           \
+                        for (_n = 0; ((1L << _n) & _i) == 0; ++_n)          \
                             ;                                               \
                                                                             \
                         (_n);                                               \
                     })
-
-/* technically, floor(log2(n)). works for signed or unsigned
-   integers, but of course produces nonsense if n <= 0 */
-
-#define LOG2L(n)    ((sizeof(long) * BITS_PER_BYTE) - 1 - __builtin_clzl(n))
 
 /* true if n is an integral power of two */
 

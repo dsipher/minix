@@ -68,7 +68,7 @@ struct insn *pow2(struct insn *insn, int op)
 {
     insn->op = op;
     I_OPERAND(&insn->operand[2], 0, T_CHAR,
-              LOG2L(insn->operand[2].con.u));
+              CTZ(insn->operand[2].con.u));
 
     return insn;
 }

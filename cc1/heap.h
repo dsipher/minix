@@ -82,14 +82,14 @@ extern struct arena string_arena;
 
 void init_arenas(void);
 
-/* allocate n (unaligned) bytes from the arena
-   and return a pointer to the storage */
+/* allocate a byte from the arena
+   and return a pointer to it */
 
-#define ARENA_ALLOC(a, n)                                                   \
+#define ARENA_STASH(a)                                                      \
     ({                                                                      \
         struct arena *_a = (a);                                             \
-        void *_p = _a->top;                                                 \
-        _a->top = (char *) _p + (n);                                        \
+        char *_p = _a->top;                                                 \
+        _a->top = _p + 1;                                                   \
         (_p);                                                               \
     })
 

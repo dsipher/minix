@@ -64,7 +64,7 @@ struct string
    use STRING_STASH() to build a string one character at a time, then call
    either STRING_PRESERVE() or STRING_DISCARD() to keep it or toss it. */
 
-#define STRING_STASH(c)     (* (char *) ARENA_ALLOC(&string_arena, 1) = (c))
+#define STRING_STASH(c)     (*ARENA_STASH(&string_arena) = (c))
 #define STRING_DISCARD()    ARENA_FREE(&string_arena)
 
 /* return the string entry for the most recently stashed string */

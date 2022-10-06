@@ -162,13 +162,13 @@ void dup_vector(struct vector *dst, struct vector *src, int elem_size)
 
 void *arena_alloc(struct arena *a, size_t n, int zero)
 {
-    void *p;
+    char *p;
 
-    a->top = (char *) ROUND_UP((unsigned long) a->top,
-                                UNIVERSAL_ALIGN);
+    p = (char *) ROUND_UP((unsigned long) a->top,
+                            UNIVERSAL_ALIGN);
 
     n = ROUND_UP(n, UNIVERSAL_ALIGN);
-    p = ARENA_ALLOC(a, n);
+    a->top = p + n;
     if (zero) memset(p, 0, n);
 
     return p;

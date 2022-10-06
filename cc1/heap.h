@@ -93,16 +93,6 @@ void init_arenas(void);
         (_p);                                                               \
     })
 
-/* align an arena to a modulo n boundary */
-
-#define ARENA_ALIGN(a, n)                                                   \
-    do {                                                                    \
-        struct arena *_a = (a);                                             \
-        size_t _n = (n);                                                    \
-        unsigned long _p = (unsigned long) _a->top;                         \
-        if (_p % _n) { _p += _n - (_p % _n); _a->top = (void *) _p; }       \
-    } while (0)
-
 /* release all objects allocated in the arena */
 
 #define ARENA_FREE(a)                                                       \

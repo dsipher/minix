@@ -164,8 +164,10 @@ void *arena_alloc(struct arena *a, size_t n, int zero)
 {
     void *p;
 
-    ARENA_ALIGN(a, UNIVERSAL_ALIGN);
-    ROUND_UP(n, UNIVERSAL_ALIGN);
+    a->top = (char *) ROUND_UP((unsigned long) a->top,
+                                UNIVERSAL_ALIGN);
+
+    n = ROUND_UP(n, UNIVERSAL_ALIGN);
     p = ARENA_ALLOC(a, n);
     if (zero) memset(p, 0, n);
 

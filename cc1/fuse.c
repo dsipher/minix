@@ -544,7 +544,9 @@ static int fuse0(struct block *b)
             /* we invalidate load if anyone DEFs memory, a register used in
                the address computation, or the loaded register itself. we
                must also invalidate when reg is USEd, not because the load
-               itself is no longer valid, but because it can't be fused. */
+               itself is no longer valid but because it can't be fused; and
+               finally, if both load and insn are volatile, we invalidate
+               because we must preserve the order of volatile accesses. */
 
             if (INSN_DEFS_MEM(insn)) goto invalidate;
 
@@ -558,6 +560,9 @@ static int fuse0(struct block *b)
             insn_uses(insn, &tmp_regs, 0);
 
             if (contains_reg(&tmp_regs, reg))
+                goto invalidate;
+
+            if ((*load)->is_volatile && insn->is_volatile)
                 goto invalidate;
         }
 

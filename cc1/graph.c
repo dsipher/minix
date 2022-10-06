@@ -98,16 +98,16 @@ static struct node *stack;          /* top of disconnected node stack */
 
 #define GRAPH(reg)  VECTOR_ELEM(graph, REG_INDEX(reg))
 
-/* our aim is to have a K-colorable graph. (actually,
-   we're really coloring two disjoint graphs at the
-   same time, one for general-purpose regs and the
-   other for floating-point regs, with different Ks). */
+/* our aim is to have a K-colorable graph.
+   (technically, we're really coloring two
+   disjoint graphs at the same time, one
+   for general-purpose regs and the other
+   for floating-point regs; K is the same) */
 
 static VECTOR(reg) gp_colors;
 static VECTOR(reg) xmm_colors;
 
-#define GP_K    NR_GP_REGS
-#define XMM_K   NR_XMM_REGS
+#define K   16      /*  == NR_GP_REGS == NR_XMM_REGS */
 
 /* attach node n to the graph */
 
@@ -294,7 +294,6 @@ static int merge0(int r1, int r2)
     struct node *n2 = find(r2, 0);
     int nr_sigs;
     int m;
-    int k = REG_GP(r1) ? GP_K : XMM_K;
 
     if (!n1 || !n2) return 0;   /* can't merge any disconnected nodes */
     if (n1 == n2) return 0;     /* can't merge any node with itself */
@@ -329,10 +328,10 @@ static int merge0(int r1, int r2)
         add_half(&dummy, EDGE(n2, m));
 
     for (nr_sigs = 0, m = 0; m < NR_EDGES(&dummy); ++m)
-        if (NR_EDGES(EDGE(&dummy, m)) > k)
+        if (NR_EDGES(EDGE(&dummy, m)) > K)
             ++nr_sigs;
 
-    if (nr_sigs >= k) return 0;     /* too many for Briggs */
+    if (nr_sigs >= K) return 0;     /* too many for Briggs */
 
     /* looks good, let's merge the nodes.
        move the neighbors from n2 to n1. */
@@ -730,7 +729,7 @@ static int simplify0(void)
             for (n = VECTOR_ELEM(graph, i); n; n = next) {
                 next = n->link;
 
-                if (NR_EDGES(n) < (REG_GP(n->reg) ? GP_K : XMM_K)) {
+                if (NR_EDGES(n) < K) {
                     push(n);
                     ++success;
                 } else

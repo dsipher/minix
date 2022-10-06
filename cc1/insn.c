@@ -685,12 +685,12 @@ void insn_uses(struct insn *insn, VECTOR(reg) *set, int flags)
     switch (insn->op)
     {
     case I_ASM:         regmap_regs(&((struct asm_insn *) insn)->uses, set);
-                        return;
+                        break;
 
     case I_LIR_RETURN:  if (!VOID_TYPE(func_ret_type))
                             add_reg(set, symbol_to_reg(func_ret_sym));
 
-                        return;
+                        break;
 
     case I_MCH_CALL:    for (i = 0; i < insn->nr_iargs; ++i)
                             add_reg(set, iargs[i]);
@@ -700,13 +700,13 @@ void insn_uses(struct insn *insn, VECTOR(reg) *set, int flags)
 
                         break;
 
-    case I_MCH_RET:     add_reg(set, REG_RBP); return;
+    case I_MCH_RET:     add_reg(set, REG_RBP); break;
 
     case I_MCH_RETF:    add_reg(set, REG_XMM0);
-                        add_reg(set, REG_RBP); return;
+                        add_reg(set, REG_RBP); break;
 
     case I_MCH_RETI:    add_reg(set, REG_RAX);
-                        add_reg(set, REG_RBP); return;
+                        add_reg(set, REG_RBP); break;
 
     case I_MCH_DIVB:
     case I_MCH_IMULB:
@@ -723,16 +723,16 @@ void insn_uses(struct insn *insn, VECTOR(reg) *set, int flags)
 
     case I_MCH_MOVSB:   add_reg(set, REG_RSI);
                         add_reg(set, REG_RDI);
-                        add_reg(set, REG_RCX); return;
+                        add_reg(set, REG_RCX); break;
 
     case I_MCH_STOSB:   add_reg(set, REG_RDI);
                         add_reg(set, REG_RCX);
-                        add_reg(set, REG_RAX); return;
+                        add_reg(set, REG_RAX); break;
 
     case I_MCH_CBTW:
     case I_MCH_CWTD:
     case I_MCH_CLTD:
-    case I_MCH_CQTO:    add_reg(set, REG_RAX); return;
+    case I_MCH_CQTO:    add_reg(set, REG_RAX); break;
     }
 
     n = I_OPERANDS(insn->op) + insn->nr_args;
@@ -788,16 +788,16 @@ void insn_defs(struct insn *insn, VECTOR(reg) *set, int flags)
 
     case I_MCH_MOVSB:   add_reg(set, REG_RSI);
     case I_MCH_STOSB:   add_reg(set, REG_RDI);
-                        add_reg(set, REG_RCX); return;
+                        add_reg(set, REG_RCX); break;
 
     case I_MCH_CWTD:
     case I_MCH_CLTD:
     case I_MCH_CQTO:    add_reg(set, REG_RDX);
-    case I_MCH_CBTW:    add_reg(set, REG_RAX); return;
-
-    default:        if (OPERAND_DEFS_REGS(insn, 0))
-                        add_reg(set, insn->operand[0].reg);
+    case I_MCH_CBTW:    add_reg(set, REG_RAX); break;
     }
+
+    if (OPERAND_DEFS_REGS(insn, 0))
+        add_reg(set, insn->operand[0].reg);
 }
 
 int insn_substitute_con(struct insn *insn, int reg,

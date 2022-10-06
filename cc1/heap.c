@@ -85,8 +85,7 @@ struct slab_obj *refill_slab(struct slab *s)
     char *p;
     int i;
 
-    ARENA_ALIGN(&global_arena, UNIVERSAL_ALIGN);
-    p = ARENA_ALLOC(&global_arena, per_obj * per_slab);
+    p = arena_alloc(&global_arena, per_obj * per_slab, 0);
 
     for (i = 0; i < (per_slab - 1); ++i, p += per_obj) {
         SLAB_OBJ(p)->next = s->free;
@@ -116,8 +115,7 @@ void vector_insert(struct vector *v, int i, int n, int elem_size)
         v->cap = MAX(v->cap, MIN_VECTOR_CAP);
         while (v->cap < new_size) v->cap <<= 1;
 
-        ARENA_ALIGN(v->arena, UNIVERSAL_ALIGN);
-        new_elements = ARENA_ALLOC(v->arena, v->cap * elem_size);
+        new_elements = arena_alloc(v->arena, v->cap * elem_size, 0);
         memcpy(new_elements, v->elements, i * elem_size);
         memcpy(new_elements + (i + n) * elem_size,
                ((char *) v->elements) + i * elem_size,
@@ -155,6 +153,23 @@ void dup_vector(struct vector *dst, struct vector *src, int elem_size)
         dst->size = src->size;
 
     memcpy(dst->elements, src->elements, elem_size * src->size);
+}
+
+/* we round up the allocation size to a quadword
+   boundary as well, because memset() will do an
+   excellent job with a quadword-aligned region
+   whose length is a multiple of quadword. */
+
+void *arena_alloc(struct arena *a, size_t n, int zero)
+{
+    void *p;
+
+    ARENA_ALIGN(a, UNIVERSAL_ALIGN);
+    ROUND_UP(n, UNIVERSAL_ALIGN);
+    p = ARENA_ALLOC(a, n);
+    if (zero) memset(p, 0, n);
+
+    return p;
 }
 
 /* vi: set ts=4 expandtab: */

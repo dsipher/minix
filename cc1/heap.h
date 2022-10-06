@@ -111,6 +111,12 @@ void init_arenas(void);
         _a->top = _a->bottom;                                               \
     } while (0)
 
+/* allocate a universally-aligned block of `n'
+   bytes from arena `a' and, if `zero', zero it.
+   returns pointer to the block. never fails. */
+
+void *arena_alloc(struct arena *a, size_t n, int zero);
+
 /* freeze the contents of an arena. all objects currently allocated
    will live forever, unaffected by future calls to free_arena(). */
 

@@ -82,9 +82,7 @@ struct block *new_block(void)
 {
     struct block *b;
 
-    ARENA_ALIGN(&func_arena, UNIVERSAL_ALIGN);
-    b = ARENA_ALLOC(&func_arena, sizeof(struct block));
-    memset(b, 0, sizeof(struct block));
+    b = arena_alloc(&func_arena, sizeof(struct block), 1);
 
     b->asmlab = ++last_asmlab;
     INIT_VECTOR(b->insns, &func_arena);

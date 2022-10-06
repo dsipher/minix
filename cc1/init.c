@@ -76,8 +76,7 @@ static void push(struct symbol *sym)
 {
     struct init_state *new;
 
-    ARENA_ALIGN(&stmt_arena, UNIVERSAL_ALIGN);
-    new = ARENA_ALLOC(&stmt_arena, sizeof(struct init_state));
+    new = arena_alloc(&stmt_arena, sizeof(struct init_state), 0);
     new->sym = sym;
     new->tree = 0;
     new->prev = state;

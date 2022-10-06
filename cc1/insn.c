@@ -221,20 +221,17 @@ struct insn *new_insn(int op, int nr_args)
 {
     struct insn *insn;
 
-    ARENA_ALIGN(&func_arena, UNIVERSAL_ALIGN);
-
     switch (op)
     {
     case I_ASM:
         {
             struct asm_insn *asm_insn;
 
-            asm_insn = ARENA_ALLOC(&func_arena, sizeof(struct asm_insn));
-            memset(asm_insn, 0, sizeof(struct asm_insn));
+            asm_insn = arena_alloc(&func_arena, sizeof(struct asm_insn), 1);
             INIT_VECTOR(asm_insn->uses, &func_arena);
             INIT_VECTOR(asm_insn->defs, &func_arena);
-
             insn = (struct insn *) asm_insn;
+
             break;
         }
 
@@ -243,8 +240,7 @@ struct insn *new_insn(int op, int nr_args)
             int i = I_OPERANDS(op) + nr_args;
             size_t size = sizeof(struct insn) + i * sizeof(struct operand);
 
-            insn = ARENA_ALLOC(&func_arena, size);
-            memset(insn, 0, size);
+            insn = arena_alloc(&func_arena, size, 1);
             insn->nr_args = nr_args;
 
             for (i = I_OPERANDS(op); i--; )

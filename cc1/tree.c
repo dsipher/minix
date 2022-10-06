@@ -45,8 +45,8 @@ struct tree void_tree = { E_NONE, 0, &void_type };
 #define NEW_TREE(_op, _type)                                                \
     ({                                                                      \
         struct tree *_new;                                                  \
-        ARENA_ALIGN(&stmt_arena, UNIVERSAL_ALIGN);                          \
-        _new = ARENA_ALLOC(&stmt_arena, sizeof(struct tree));               \
+                                                                            \
+        _new = arena_alloc(&stmt_arena, sizeof(struct tree), 0);            \
         _new->op = (_op);                                                   \
         _new->nr_args = 0;                                                  \
         _new->type = (_type);                                               \
@@ -196,10 +196,8 @@ void actual(struct tree *call, struct tree *arg)
         new_nr_args = call->nr_args ? (call->nr_args << 1)
                                     : MIN_ARGS_ALLOC;
 
-        ARENA_ALIGN(&stmt_arena, UNIVERSAL_ALIGN);
-
-        new_args = ARENA_ALLOC(&stmt_arena,
-                               new_nr_args * sizeof(struct tree *));
+        new_args = arena_alloc(&stmt_arena,
+                               new_nr_args * sizeof(struct tree *), 0);
 
         for (i = 0; i < call->nr_args; ++i)
             new_args[i] = call->args[i];

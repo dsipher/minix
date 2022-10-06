@@ -433,6 +433,7 @@ static int inc0(struct block *b, int i)
 
     new = new_insn(op, 0);
     MCH_OPERAND(&new->operand[0], dst);
+    PRESERVE_INSN(new, insn);
     INSN(b, i) = new;
     return 1;
 }

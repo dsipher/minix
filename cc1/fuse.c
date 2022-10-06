@@ -349,8 +349,9 @@ static int write0(struct block *b, int i)
     if ((mem->reg == reg) || (mem->index == reg))   /* address can't */
         return 0;                                   /* depend on reg */
 
-    insn->operand[0] = *mem;        /* replace operand */
-    INSN(b, i + 1) = &nop_insn;     /* kill following store */
+    insn->operand[0] = *mem;        /* replace operand, */
+    PRESERVE_INSN(insn, store);     /* preserve store properties, */
+    INSN(b, i + 1) = &nop_insn;     /* then kill following store. */
 
     return 1;  /* fused */
 }
@@ -390,8 +391,9 @@ static int read0(struct block *b, int i)
       && (insn->operand[0].reg == reg)          /* is reg, and the */
       && T_SIMPATICO(t, insn->operand[0].t))    /* size is right ... */
     {
-        insn->operand[0] = *mem;            /* substitute, and */
-        *load = &nop_insn;                  /* kill the load */
+        insn->operand[0] = *mem;            /* substitute, preserve */
+        PRESERVE_INSN(insn, *load);         /* the load properties, */
+        *load = &nop_insn;                  /* then kill the load. */
         return 1;                           /* restart at top of block */
     }
 
@@ -432,9 +434,10 @@ static int read1(struct block *b, int i)
       && (insn->operand[1].reg == reg)          /* from our register */
       && T_SIMPATICO(t, insn->operand[1].t))    /* of the same size */
     {
-        insn->operand[1] = *mem;            /* substitute, and */
-        *load = &nop_insn;                  /* kill the load */
-        return 1;                           /* tell main loop to restart */
+        insn->operand[1] = *mem;            /* substitute, preserve */
+        PRESERVE_INSN(insn, *load);         /* the load properties, */
+        *load = &nop_insn;                  /* then kill the load. */
+        return 1;                           /* restart at top of block */
     }
 
     return 0;
@@ -501,8 +504,10 @@ static int update0(struct block *b, int i)
       && T_SIMPATICO(t, insn->operand[0].t))    /* has the same size ... */
     {
         insn->operand[0] = *mem;        /* substitute memory operand, */
+        PRESERVE_INSN(insn, *load);     /* inherit properties from */
+        PRESERVE_INSN(insn, store);     /* both the load and store, */
         *load = &nop_insn;              /* kill the load, */
-        INSN(b, i + 1) = &nop_insn;     /* and the store. */
+        INSN(b, i + 1) = &nop_insn;     /* then the store. */
         return 1;                       /* tell main loop to start over */
     }
 

@@ -1552,6 +1552,14 @@ struct asm_insn
     VECTOR(regmap) defs;
 };
 
+/* we're replacing insn `old' with `new'. make sure
+   `new' inherits the important properties of `old'. */
+
+#define PRESERVE_INSN(new, old)                                             \
+    do {                                                                    \
+        (new)->is_volatile |= (old)->is_volatile;                           \
+    } while(0)
+
 /* when we wish to kill an insn without screwing up the insn indices
    in a block (so we don't disturb, e.g., live data) we point it here */
 

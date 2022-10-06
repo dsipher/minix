@@ -604,10 +604,11 @@ void out_insn(struct insn *insn)
         out_regs(&regs);
 
         if (insn->is_variadic) OUTS(" is_variadic");
-        if (insn->is_volatile) OUTS(" is_volatile");
     }
 
 #endif /* DEBUG */
+
+    if (insn->is_volatile) OUTS(" # volatile");
 
     OUTC('\n');
 }

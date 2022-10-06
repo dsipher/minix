@@ -1544,6 +1544,8 @@ static int lower_mem(struct block *b, int i,
         new = move(t, &addr, &insn->operand[n ^ 1]);
 
     insert_insn(new, b, i);
+    new->is_volatile = insn->is_volatile;
+
     return 1;
 }
 

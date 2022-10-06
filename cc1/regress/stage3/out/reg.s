@@ -133,12 +133,12 @@ L83:
 	pushq %r13
 	pushq %r14
 L84:
-	movq %rdi,%r14
-	movl %esi,%r12d
-	movl $3,%ebx
-	movl %r12d,%r13d
-	andl $3221225472,%r13d
-	cmpl $2147483648,%r13d
+	movq %rdi,%r12
+	movl %esi,%r14d
+	movl $3,%r13d
+	movl %r14d,%ebx
+	andl $3221225472,%ebx
+	cmpl $2147483648,%ebx
 	jnz L88
 L86:
 	andl $131071,%edx
@@ -166,69 +166,69 @@ L126:
 	jz L98
 	jnz L88
 L94:
-	movl $2,%ebx
+	movl $2,%r13d
 L96:
-	decl %ebx
+	decl %r13d
 L98:
-	decl %ebx
+	decl %r13d
 L88:
-	movl %r12d,%edx
+	movl %r14d,%edx
 	andl $1073725440,%edx
 	sarl $14,%edx
 	cmpl $34,%edx
 	jge L100
 L99:
-	cmpl $2147483648,%r13d
+	cmpl $2147483648,%ebx
 	jnz L103
 L102:
-	leal (%rbx,%rdx,4),%eax
+	leal (%r13,%rdx,4),%eax
 	movslq %eax,%rax
-	movq %r14,%rsi
+	movq %r12,%rsi
 	movq _gp_names(,%rax,8),%rdi
 	jmp L129
 L103:
 	subl $16,%edx
 	movslq %edx,%rdx
-	movq %r14,%rsi
+	movq %r12,%rsi
 	movq _other_names(,%rdx,8),%rdi
 L129:
 	call _fputs
 	jmp L85
 L100:
-	cmpl $2147483648,%r13d
+	cmpl $2147483648,%ebx
 	movl $102,%eax
 	movl $105,%ecx
 	cmovnzl %eax,%ecx
 	pushq %rdx
 	pushq %rcx
 	pushq $L105
-	pushq %r14
+	pushq %r12
 	call _fprintf
 	addq $32,%rsp
-	cmpl $2147483648,%r13d
+	cmpl $2147483648,%ebx
 	jnz L111
 L109:
-	decl (%r14)
-	movslq %ebx,%rbx
+	decl (%r12)
+	movslq %r13d,%r13
 	js L114
 L113:
-	movb L112(%rbx),%dl
-	movq 24(%r14),%rcx
+	movb L112(%r13),%dl
+	movq 24(%r12),%rcx
 	leaq 1(%rcx),%rax
-	movq %rax,24(%r14)
+	movq %rax,24(%r12)
 	movb %dl,(%rcx)
 	jmp L111
 L114:
-	movsbl L112(%rbx),%edi
-	movq %r14,%rsi
+	movsbl L112(%r13),%edi
+	movq %r12,%rsi
 	call ___flushbuf
 L111:
-	andl $16383,%r12d
+	andl $16383,%r14d
 	jz L85
 L116:
-	pushq %r12
-	pushq $L119
 	pushq %r14
+	pushq $L119
+	pushq %r12
 	call _fprintf
 	addq $24,%rsp
 L85:
@@ -478,7 +478,7 @@ L243:
 	pushq %r12
 L244:
 	movq _out_f(%rip),%rcx
-	movq %rdi,%r12
+	movq %rdi,%rbx
 	decl (%rcx)
 	movq _out_f(%rip),%rsi
 	js L247
@@ -492,10 +492,10 @@ L247:
 	movl $91,%edi
 	call ___flushbuf
 L248:
-	xorl %ebx,%ebx
+	xorl %r12d,%r12d
 	jmp L249
 L250:
-	testl %ebx,%ebx
+	testl %r12d,%r12d
 	jz L255
 L253:
 	movq _out_f(%rip),%rcx
@@ -512,8 +512,8 @@ L257:
 	movl $32,%edi
 	call ___flushbuf
 L255:
-	movq 8(%r12),%rax
-	movl (%rax,%rbx,8),%eax
+	movq 8(%rbx),%rax
+	movl (%rax,%r12,8),%eax
 	testl %eax,%eax
 	jz L261
 L259:
@@ -522,8 +522,8 @@ L259:
 	call _out
 	addq $16,%rsp
 L261:
-	movq 8(%r12),%rax
-	movl 4(%rax,%rbx,8),%eax
+	movq 8(%rbx),%rax
+	movl 4(%rax,%r12,8),%eax
 	testl %eax,%eax
 	jz L265
 L263:
@@ -532,9 +532,9 @@ L263:
 	call _out
 	addq $16,%rsp
 L265:
-	incl %ebx
+	incl %r12d
 L249:
-	cmpl 4(%r12),%ebx
+	cmpl 4(%rbx),%r12d
 	jl L250
 L252:
 	movq _out_f(%rip),%rcx

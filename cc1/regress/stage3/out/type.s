@@ -815,33 +815,33 @@ L317:
 	pushq %r15
 L318:
 	movq %rdx,-8(%rbp)
-	xorl %r15d,%r15d
-	movq %rdi,%r14
-	movq %rsi,%r13
+	xorl %r13d,%r13d
+	movq %rdi,%r12
+	movq %rsi,%rbx
 	jmp L320
 L332:
-	testq %r13,%r13
+	testq %rbx,%rbx
 	jz L323
 L328:
-	cmpq %r13,%r14
+	cmpq %rbx,%r12
 	jz L323
 L324:
-	movq %r13,%rsi
-	movq %r14,%rdi
+	movq %rbx,%rsi
+	movq %r12,%rdi
 	call _tnode_compat
 	testl %eax,%eax
 	jz L323
 L321:
-	movq (%r14),%rdi
+	movq (%r12),%rdi
 	testq $16384,%rdi
 	jz L337
 L336:
-	movl 16(%r14),%esi
-	movl 16(%r13),%eax
+	movl 16(%r12),%esi
+	movl 16(%rbx),%eax
 	cmpl %eax,%esi
 	cmovlel %eax,%esi
 	movslq %esi,%rsi
-	movq %r15,%rdx
+	movq %r13,%rdx
 	movl $16384,%edi
 	jmp L372
 L337:
@@ -851,56 +851,56 @@ L348:
 	testq $524288,%rdi
 	jz L346
 L345:
-	movq (%r13),%rdi
-	movq %r15,%rdx
-	movq 16(%r13),%rsi
+	movq (%rbx),%rdi
+	movq %r13,%rdx
+	movq 16(%rbx),%rsi
 	jmp L372
 L346:
-	movq (%r13),%rax
+	movq (%rbx),%rax
 	testq $32768,%rax
 	jz L353
 L355:
 	testq $524288,%rax
 	jz L353
 L373:
-	movq %r15,%rdx
-	movq 16(%r14),%rsi
+	movq %r13,%rdx
+	movq 16(%r12),%rsi
 L372:
 	call _new_tnode
-	movq %rax,%r15
+	movq %rax,%r13
 	jmp L338
 L353:
-	movq %r15,%rdx
+	movq %r13,%rdx
 	xorl %esi,%esi
 	call _new_tnode
-	movq %rax,%r15
-	movq 16(%r14),%r12
-	movq 16(%r13),%rbx
+	movq %rax,%r13
+	movq 16(%r12),%r15
+	movq 16(%rbx),%r14
 L359:
-	testq %r12,%r12
+	testq %r15,%r15
 	jz L338
 L363:
-	testq %rbx,%rbx
+	testq %r14,%r14
 	jz L338
 L360:
-	movq (%r12),%rdi
+	movq (%r15),%rdi
 	movq -8(%rbp),%rdx
-	movq (%rbx),%rsi
+	movq (%r14),%rsi
 	call _compose
 	movq %rax,%rsi
-	movq %r15,%rdi
+	movq %r13,%rdi
 	call _new_formal
-	movq 8(%r12),%r12
-	movq 8(%rbx),%rbx
+	movq 8(%r15),%r15
+	movq 8(%r14),%r14
 	jmp L359
 L338:
-	movq 24(%r14),%r14
-	movq 24(%r13),%r13
+	movq 24(%r12),%r12
+	movq 24(%rbx),%rbx
 L320:
-	testq %r14,%r14
+	testq %r12,%r12
 	jnz L332
 L323:
-	cmpq %r13,%r14
+	cmpq %rbx,%r12
 	jz L369
 L367:
 	pushq -8(%rbp)
@@ -911,8 +911,8 @@ L367:
 	call _error
 	addq $32,%rsp
 L369:
-	movq %r14,%rsi
-	movq %r15,%rdi
+	movq %r12,%rsi
+	movq %r13,%rdi
 	call _graft
 L319:
 	popq %r15

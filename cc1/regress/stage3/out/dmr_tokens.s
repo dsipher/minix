@@ -488,24 +488,24 @@ L126:
 	pushq %r12
 	pushq %r13
 L127:
-	movq %rdi,%r13
-	movq %rsi,%r12
-	movq (%r13),%rbx
+	movq %rdi,%r12
+	movq %rsi,%r13
+	movq (%r12),%rbx
 	call _flushout
-	testq %r12,%r12
+	testq %r13,%r13
 	jz L131
 L129:
-	pushq %r12
+	pushq %r13
 	pushq $L132
 	pushq $___stderr
 	call _fprintf
 	addq $24,%rsp
 L131:
-	movq 8(%r13),%rax
+	movq 8(%r12),%rax
 	cmpq %rax,%rbx
 	jb L133
 L136:
-	cmpq 16(%r13),%rbx
+	cmpq 16(%r12),%rbx
 	jbe L135
 L133:
 	subq %rax,%rbx
@@ -519,43 +519,43 @@ L133:
 	call _fprintf
 	addq $24,%rsp
 L135:
-	movq 8(%r13),%r12
+	movq 8(%r12),%rbx
 	jmp L141
 L145:
-	movq 8(%r13),%rax
+	movq 8(%r12),%rax
 	addq $768,%rax
-	cmpq %rax,%r12
+	cmpq %rax,%rbx
 	jae L144
 L142:
-	cmpb $6,(%r12)
+	cmpb $6,(%rbx)
 	jz L151
 L149:
-	movq 16(%r12),%rcx
-	movl 8(%r12),%eax
-	movzbl (%rcx,%rax),%ebx
+	movq 16(%rbx),%rcx
+	movl 8(%rbx),%eax
+	movzbl (%rcx,%rax),%r13d
 	movb $0,(%rcx,%rax)
-	pushq 16(%r12)
+	pushq 16(%rbx)
 	pushq $L152
 	pushq $___stderr
 	call _fprintf
 	addq $24,%rsp
-	movq 16(%r12),%rcx
-	movl 8(%r12),%eax
-	movb %bl,(%rcx,%rax)
+	movq 16(%rbx),%rcx
+	movl 8(%rbx),%eax
+	movb %r13b,(%rcx,%rax)
 L151:
-	movb (%r12),%cl
-	movq (%r13),%rax
+	movb (%rbx),%cl
+	movq (%r12),%rax
 	cmpb $2,%cl
 	jnz L154
 L153:
-	cmpq %rax,%r12
+	cmpq %rax,%rbx
 	movl $L157,%eax
 	movl $L156,%ecx
 	cmovnzq %rax,%rcx
 	pushq %rcx
 	pushq $___stderr
 	call _fprintf
-	movzwl 2(%r12),%edi
+	movzwl 2(%rbx),%edi
 	call _prhideset
 	pushq $L161
 	pushq $___stderr
@@ -563,7 +563,7 @@ L153:
 	addq $32,%rsp
 	jmp L155
 L154:
-	cmpq %rax,%r12
+	cmpq %rax,%rbx
 	movl $L163,%eax
 	movl $L162,%edx
 	cmovnzq %rax,%rdx
@@ -574,9 +574,9 @@ L154:
 	call _fprintf
 	addq $24,%rsp
 L155:
-	addq $24,%r12
+	addq $24,%rbx
 L141:
-	cmpq 16(%r13),%r12
+	cmpq 16(%r12),%rbx
 	jb L145
 L144:
 	pushq $L167

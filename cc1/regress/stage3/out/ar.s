@@ -397,65 +397,65 @@ L155:
 	pushq %r15
 L156:
 	movl %edi,-4100(%rbp)
-	movl %esi,%r15d
-	movl %edx,%r14d
-	testl $8,%r14d
+	movl %esi,%r13d
+	movl %edx,%r12d
+	testl $8,%r12d
 	jz L160
 L158:
 	movl $56,%edx
 	movl $_arbuf,%esi
-	movl %r15d,%edi
+	movl %r13d,%edi
 	call _write
 	cmpq $56,%rax
 	jz L160
 L161:
 	call _wrerr
 L160:
-	xorl %r13d,%r13d
+	xorl %ebx,%ebx
 	jmp L164
 L165:
-	movl $4096,%ebx
-	movl $4096,%r12d
+	movl $4096,%r14d
+	movl $4096,%r15d
 	cmpq $4096,%rdx
 	jge L169
 L167:
-	movl %edx,%ebx
-	movl %edx,%r12d
+	movl %edx,%r14d
+	movl %edx,%r15d
 	movl %edx,%ecx
 	andl $7,%ecx
 	jz L169
 L170:
 	movl $8,%eax
 	subl %ecx,%eax
-	testl $2,%r14d
+	testl $2,%r12d
 	jz L175
 L173:
-	leal (%rdx,%rax),%r12d
+	leal (%rdx,%rax),%r15d
 L175:
-	testl $4,%r14d
+	testl $4,%r12d
 	jz L169
 L176:
-	leal (%rdx,%rax),%ebx
+	leal (%rdx,%rax),%r14d
 L169:
-	movslq %r12d,%r12
-	movq %r12,%rdx
+	movslq %r15d,%r15
+	movq %r15,%rdx
 	leaq -4096(%rbp),%rsi
 	movl -4100(%rbp),%edi
 	call _read
-	cmpq %rax,%r12
+	cmpq %rax,%r15
 	jz L181
 L179:
-	incl %r13d
+	incl %ebx
 L181:
-	testl $1,%r14d
+	testl $1,%r12d
 	jnz L184
 L182:
-	movslq %ebx,%rbx
-	movq %rbx,%rdx
+	movslq %r14d,%r14
+	movq %r14,%rdx
 	leaq -4096(%rbp),%rsi
-	movl %r15d,%edi
+	movl %r13d,%edi
 	call _write
-	cmpq %rax,%rbx
+	cmpq %rax,%r14
 	jz L184
 L185:
 	call _wrerr
@@ -466,7 +466,7 @@ L164:
 	cmpq $0,%rdx
 	jg L165
 L166:
-	testl %r13d,%r13d
+	testl %ebx,%ebx
 	jz L157
 L188:
 	pushq _file(%rip)

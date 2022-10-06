@@ -400,71 +400,71 @@ L116:
 	pushq %r15
 L117:
 	movl %edi,-12(%rbp)
-	movq %rsi,%r13
+	movq %rsi,%r14
 	movl -12(%rbp),%ebx
 	andl $520093696,%ebx
 	sarl $24,%ebx
 	shlq $4,%rbx
-	movl _map+12(%rbx),%r15d
+	movl _map+12(%rbx),%r13d
 	xorl %esi,%esi
 	movq %rdx,%rdi
 	call _promote
 	movq %rax,%r12
-	testl $1,%r15d
+	testl $1,%r13d
 	jz L121
 L119:
 	xorl %esi,%esi
-	movq %r13,%rdi
+	movq %r14,%rdi
 	call _promote
-	movq %rax,%r13
+	movq %rax,%r14
 L121:
-	testl $2,%r15d
+	testl $2,%r13d
 	jz L124
 L122:
 	movq %r12,%rsi
-	movq %r13,%rdi
+	movq %r14,%rdi
 	call _null0
-	movq %rax,%r13
+	movq %rax,%r14
 L124:
-	testl $4,%r15d
+	testl $4,%r13d
 	jz L127
 L125:
-	movq %r13,%rsi
+	movq %r14,%rsi
 	movq %r12,%rdi
 	call _null0
 	movq %rax,%r12
 L127:
 	movq %r12,%rcx
-	movq %r13,%rdx
+	movq %r14,%rdx
 	xorl %esi,%esi
 	movl _map(%rbx),%edi
 	call _binary_tree
-	movq %rax,%r14
-	cmpl $536870938,(%r14)
+	movq %rax,%r12
+	cmpl $536870938,(%r12)
 	jnz L133
 L134:
-	movq 24(%r14),%rcx
+	movq 24(%r12),%rcx
 	movq 8(%rcx),%rax
 	testq $65536,(%rax)
 	jz L133
 L135:
-	movq 16(%r14),%rax
-	movq %rcx,16(%r14)
-	movq %rax,24(%r14)
+	movq 16(%r12),%rax
+	movq %rcx,16(%r12)
+	movq %rax,24(%r12)
 L133:
-	testl $8,%r15d
+	testl $8,%r13d
 	jz L142
 L141:
 	movl -12(%rbp),%edx
 	movl $426770485,%esi
-	movq 24(%r14),%rdi
+	movq 24(%r12),%rdi
 	call _test
-	movq %rax,24(%r14)
+	movq %rax,24(%r12)
 	movl -12(%rbp),%edx
 	movl $426770485,%esi
-	movq 16(%r14),%rdi
+	movq 16(%r12),%rdi
 	call _test
-	movq %rax,16(%r14)
+	movq %rax,16(%r12)
 	jmp L143
 L142:
 	movl _map+8(%rbx),%edi
@@ -472,7 +472,7 @@ L142:
 	xorl %edx,%edx
 	jmp L144
 L145:
-	movq 16(%r14),%rax
+	movq 16(%r12),%rax
 	movq 8(%rax),%rax
 	movq (%rax),%rax
 	andl $131071,%eax
@@ -482,7 +482,7 @@ L145:
 	testq %rax,_operands(%rcx)
 	jz L153
 L151:
-	movq 24(%r14),%rax
+	movq 24(%r12),%rax
 	movq 8(%rax),%rax
 	movq (%rax),%rax
 	andl $131071,%eax
@@ -497,31 +497,31 @@ L147:
 	cmpl %edx,%edi
 	jz L159
 L143:
-	movq 16(%r14),%rax
+	movq 16(%r12),%rax
 	movq 8(%rax),%rdx
 	testq $65536,(%rdx)
 	jz L163
 L164:
-	movq 24(%r14),%rax
+	movq 24(%r12),%rax
 	movq 8(%rax),%rcx
 	testq $65536,(%rcx)
 	jz L163
 L165:
 	movq 24(%rdx),%rax
-	movq (%rax),%r13
-	andl $393216,%r13d
-	movq 24(%rcx),%rax
 	movq (%rax),%rbx
 	andl $393216,%ebx
-	cmpl $11,(%r14)
+	movq 24(%rcx),%rax
+	movq (%rax),%r14
+	andl $393216,%r14d
+	cmpl $11,(%r12)
 	jnz L176
 L171:
-	movq %r13,%rax
-	andq %rbx,%rax
-	cmpq %rax,%rbx
+	movq %rbx,%rax
+	andq %r14,%rax
+	cmpq %rax,%r14
 	jz L176
 L172:
-	xorq %rbx,%rax
+	xorq %r14,%rax
 	pushq %rax
 	movl -12(%rbp),%eax
 	pushq %rax
@@ -531,7 +531,7 @@ L172:
 	call _error
 	addq $40,%rsp
 L176:
-	movq 16(%r14),%rcx
+	movq 16(%r12),%rcx
 	movq 8(%rcx),%rax
 	testq $65536,(%rax)
 	jz L181
@@ -540,28 +540,28 @@ L182:
 	testq $1,(%rax)
 	jz L181
 L183:
-	testl $128,%r15d
+	testl $128,%r13d
 	jz L187
 L186:
-	movq 24(%r14),%rax
+	movq 24(%r12),%rax
 	movq 8(%rax),%rax
 	jmp L252
 L187:
-	testl $1024,%r15d
+	testl $1024,%r13d
 	jz L181
 L189:
-	movq %rbx,%rsi
+	movq %r14,%rsi
 	movl $_void_type,%edi
 	call _qualify
 	movq %rax,%rdx
 	xorl %esi,%esi
 	movl $65536,%edi
 	call _get_tnode
-	movq 24(%r14),%rcx
+	movq 24(%r12),%rcx
 L252:
 	movq %rax,8(%rcx)
 L181:
-	movq 24(%r14),%rcx
+	movq 24(%r12),%rcx
 	movq 8(%rcx),%rax
 	testq $65536,(%rax)
 	jz L197
@@ -570,78 +570,78 @@ L198:
 	testq $1,(%rax)
 	jz L197
 L199:
-	testl $256,%r15d
+	testl $256,%r13d
 	jz L203
 L202:
-	movq 16(%r14),%rax
+	movq 16(%r12),%rax
 	movq 8(%rax),%rax
 	jmp L251
 L203:
-	testl $512,%r15d
+	testl $512,%r13d
 	jz L197
 L205:
-	movq %r13,%rsi
+	movq %rbx,%rsi
 	movl $_void_type,%edi
 	call _qualify
 	movq %rax,%rdx
 	xorl %esi,%esi
 	movl $65536,%edi
 	call _get_tnode
-	movq 16(%r14),%rcx
+	movq 16(%r12),%rcx
 L251:
 	movq %rax,8(%rcx)
 L197:
-	movq 16(%r14),%rax
+	movq 16(%r12),%rax
 	movq 8(%rax),%rax
 	movq 24(%rax),%rdi
 	call _unqualify
-	movq %rax,%r12
-	movq 24(%r14),%rax
+	movq %rax,%r15
+	movq 24(%r12),%rax
 	movq 8(%rax),%rax
 	movq 24(%rax),%rdi
 	call _unqualify
 	movq %rax,%rsi
-	movq %r12,%rdi
+	movq %r15,%rdi
 	call _compat
 	testl %eax,%eax
 	jz L159
 L210:
-	cmpl $42,(%r14)
+	cmpl $42,(%r12)
 	jnz L163
 L212:
-	movq 16(%r14),%rax
+	movq 16(%r12),%rax
 	movq 8(%rax),%rax
 	movq 24(%rax),%rdi
 	call _unqualify
-	movq %rax,%r12
-	movq 24(%r14),%rax
+	movq %rax,%r15
+	movq 24(%r12),%rax
 	movq 8(%rax),%rax
 	movq 24(%rax),%rdi
 	call _unqualify
 	xorl %edx,%edx
 	movq %rax,%rsi
-	movq %r12,%rdi
+	movq %r15,%rdi
 	call _compose
-	orq %r13,%rbx
-	movq %rbx,%rsi
+	orq %rbx,%r14
+	movq %r14,%rsi
 	movq %rax,%rdi
 	call _qualify
 	movq %rax,%rdx
 	xorl %esi,%esi
 	movl $65536,%edi
 	call _get_tnode
-	movq 16(%r14),%rcx
+	movq 16(%r12),%rcx
 	movq %rax,8(%rcx)
-	movq 24(%r14),%rcx
+	movq 24(%r12),%rcx
 	movq %rax,8(%rcx)
 L163:
-	movq 16(%r14),%rax
+	movq 16(%r12),%rax
 	movq 8(%rax),%rsi
 	movq (%rsi),%rdx
 	testq $8192,%rdx
 	jz L220
 L222:
-	movq 24(%r14),%rax
+	movq 24(%r12),%rax
 	movq 8(%rax),%rcx
 	testq $8192,(%rcx)
 	jz L220
@@ -662,56 +662,56 @@ L220:
 	testq $8190,%rdx
 	jz L229
 L230:
-	movq 24(%r14),%rax
+	movq 24(%r12),%rax
 	movq 8(%rax),%rax
 	testq $8190,(%rax)
 	jz L229
 L231:
-	testl $96,%r15d
+	testl $96,%r13d
 	jz L236
 L234:
-	movl %r15d,%esi
-	movq %r14,%rdi
+	movl %r13d,%esi
+	movq %r12,%rdi
 	call _usuals
 L236:
-	testl $16,%r15d
+	testl $16,%r13d
 	jz L229
 L237:
-	movq 16(%r14),%rax
+	movq 16(%r12),%rax
 	movq 8(%rax),%rsi
-	movq 24(%r14),%rdx
+	movq 24(%r12),%rdx
 	movl $1073741830,%edi
 	call _unary_tree
-	movq %rax,24(%r14)
+	movq %rax,24(%r12)
 L229:
-	testl $2048,%r15d
+	testl $2048,%r13d
 	jz L242
 L240:
-	movq 24(%r14),%rdx
+	movq 24(%r12),%rdx
 	movl $_char_type,%esi
 	movl $1073741830,%edi
 	call _unary_tree
-	movq %rax,24(%r14)
+	movq %rax,24(%r12)
 L242:
-	testl $8192,%r15d
+	testl $8192,%r13d
 	jz L244
 L243:
-	movq $_int_type,8(%r14)
+	movq $_int_type,8(%r12)
 	jmp L245
 L244:
-	testl $4096,%r15d
+	testl $4096,%r13d
 	jz L247
 L246:
-	movq %r14,%rdi
+	movq %r12,%rdi
 	call _scale
-	movq %rax,%r14
+	movq %rax,%r12
 	jmp L245
 L247:
-	movq 16(%r14),%rax
+	movq 16(%r12),%rax
 	movq 8(%rax),%rax
-	movq %rax,8(%r14)
+	movq %rax,8(%r12)
 L245:
-	movq %r14,-8(%rbp)
+	movq %r12,-8(%rbp)
 L118:
 	movq -8(%rbp),%rax
 	popq %r15

@@ -466,13 +466,13 @@ L201:
 	pushq %r12
 	pushq %r13
 L202:
-	movl %edi,%r13d
-	movq %rsi,%rbx
+	movl %edi,%r12d
+	movq %rsi,%r13
 	call _macro_predef
 L204:
 	movl $L207,%edx
-	movq %rbx,%rsi
-	movl %r13d,%edi
+	movq %r13,%rsi
+	movl %r12d,%edi
 	call _getopt
 	cmpl $-1,%eax
 	jz L206
@@ -498,13 +498,13 @@ L211:
 	jmp L204
 L206:
 	movl _optind(%rip),%eax
-	subl %eax,%r13d
-	cmpl $2,%r13d
+	subl %eax,%r12d
+	cmpl $2,%r12d
 	jnz L219
 L221:
 	incl %eax
 	movslq %eax,%rax
-	movq (%rbx,%rax,8),%rdi
+	movq (%r13,%rax,8),%rdi
 	movq %rdi,_out_path(%rip)
 	movl $L224,%esi
 	call _fopen
@@ -519,12 +519,12 @@ L225:
 L227:
 	movslq _optind(%rip),%rax
 	xorl %esi,%esi
-	movq (%rbx,%rax,8),%rdi
+	movq (%r13,%rax,8),%rdi
 	call _input_open
 	call _loop
 	movq _out_fp(%rip),%rdi
 	call _fclose
-	xorl %r12d,%r12d
+	xorl %ebx,%ebx
 	jmp L203
 L219:
 	pushq $L222
@@ -539,7 +539,7 @@ L217:
 	movl $1,%edi
 	call _exit
 L203:
-	movl %r12d,%eax
+	movl %ebx,%eax
 	popq %r13
 	popq %r12
 	popq %rbx

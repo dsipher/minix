@@ -566,38 +566,38 @@ L165:
 	jge L340
 L166:
 	movq %rdx,_op(%rip)
-	movl -4(%rcx),%edx
-	movslq %edx,%rax
-	leaq (%rax,%rax,2),%rcx
-	cmpb $2,_priority+1(%rcx)
+	movl -4(%rcx),%ecx
+	movslq %ecx,%rax
+	leaq (%rax,%rax,2),%rsi
+	cmpb $2,_priority+1(%rsi)
 	jnz L170
 L168:
-	movq _vp(%rip),%rsi
-	leaq -16(%rsi),%rax
+	movq _vp(%rip),%rdx
+	leaq -16(%rdx),%rax
 	movq %rax,_vp(%rip)
-	movq -16(%rsi),%rax
+	movq -16(%rdx),%rax
 	movq %rax,-16(%rbp)
-	movq -8(%rsi),%rax
+	movq -8(%rdx),%rax
 	movq %rax,-8(%rbp)
 	movq -16(%rbp),%r13
 L170:
-	movq _vp(%rip),%rsi
-	leaq -16(%rsi),%rax
+	movq _vp(%rip),%rdx
+	leaq -16(%rdx),%rax
 	movq %rax,_vp(%rip)
-	movq -16(%rsi),%rax
+	movq -16(%rdx),%rax
 	movq %rax,-32(%rbp)
-	movq -8(%rsi),%rax
+	movq -8(%rdx),%rax
 	movq %rax,-24(%rbp)
 	movq -32(%rbp),%rax
 	movq %rax,%rbx
-	movb _priority+2(%rcx),%cl
-	cmpb $0,%cl
+	movb _priority+2(%rsi),%dl
+	cmpb $0,%dl
 	jl L171
 L343:
-	cmpb $6,%cl
+	cmpb $6,%dl
 	jg L171
 L341:
-	movzbl %cl,%esi
+	movzbl %dl,%esi
 	movzwl L358(,%rsi,2),%esi
 	addl $_evalop,%esi
 	jmp *%rsi
@@ -618,7 +618,7 @@ L203:
 	cmpl $1,%r12d
 	jnz L172
 L209:
-	orl $4096,%edx
+	orl $4096,%ecx
 	jmp L172
 L178:
 	movl -24(%rbp),%esi
@@ -641,23 +641,23 @@ L189:
 L186:
 	movl $2,%r12d
 L188:
-	cmpb $1,%cl
+	cmpb $1,%dl
 	jnz L172
 L196:
 	cmpl $1,%r12d
 	jnz L172
 L193:
-	orl $4096,%edx
+	orl $4096,%ecx
 	xorl %r12d,%r12d
 L172:
-	cmpl $9,%edx
+	cmpl $9,%ecx
 	jl L345
 L347:
-	cmpl $38,%edx
+	cmpl $38,%ecx
 	jg L345
 L344:
-	addl $-9,%edx
-	movzwl L360(,%rdx,2),%ecx
+	addl $-9,%ecx
+	movzwl L360(,%rcx,2),%ecx
 	addl $_evalop,%ecx
 	jmp *%rcx
 L319:
@@ -807,14 +807,14 @@ L227:
 	setge %al
 	jmp L364
 L345:
-	cmpl $4105,%edx
+	cmpl $4105,%ecx
 	jl L349
 L351:
-	cmpl $4110,%edx
+	cmpl $4110,%ecx
 	jg L349
 L348:
-	addl $-4105,%edx
-	movzwl L359(,%rdx,2),%ecx
+	addl $-4105,%ecx
+	movzwl L359(,%rcx,2),%ecx
 	addl $_evalop,%ecx
 	jmp *%rcx
 L249:
@@ -843,16 +843,16 @@ L222:
 	setz %al
 	jmp L364
 L349:
-	cmpl $58,%edx
+	cmpl $58,%ecx
 	jz L219
 L353:
-	cmpl $59,%edx
+	cmpl $59,%ecx
 	jz L285
 L354:
-	cmpl $4129,%edx
+	cmpl $4129,%ecx
 	jz L239
 L355:
-	cmpl $4130,%edx
+	cmpl $4130,%ecx
 	jnz L218
 L241:
 	cmpq %rax,%r13
@@ -933,10 +933,10 @@ L368:
 	pushq %r15
 L369:
 	movq %rdi,-32(%rbp)
-	movq %rsi,%r15
+	movq %rsi,%r14
 	movl $0,-8(%rbp)
 	movq $0,-16(%rbp)
-	movb (%r15),%al
+	movb (%r14),%al
 	cmpb $2,%al
 	jz L374
 L506:
@@ -953,7 +953,7 @@ L509:
 	jnz L370
 L376:
 	xorl %esi,%esi
-	movq %r15,%rdi
+	movq %r14,%rdi
 	call _lookup
 	testq %rax,%rax
 	jz L370
@@ -965,7 +965,7 @@ L377:
 	jmp L370
 L436:
 	xorl %ebx,%ebx
-	movq 16(%r15),%r13
+	movq 16(%r14),%r13
 	cmpb $76,(%r13)
 	jnz L439
 L437:
@@ -1094,61 +1094,61 @@ L501:
 	addq $16,%rsp
 	jmp L370
 L385:
-	xorl %r12d,%r12d
-	movl $10,%r13d
-	movq 16(%r15),%r14
-	movl 8(%r15),%ecx
-	movzbl (%r14,%rcx),%eax
+	xorl %ebx,%ebx
+	movl $10,%r12d
+	movq 16(%r14),%r13
+	movl 8(%r14),%ecx
+	movzbl (%r13,%rcx),%eax
 	movl %eax,-20(%rbp)
-	movb $0,(%r14,%rcx)
-	cmpb $48,(%r14)
+	movb $0,(%r13,%rcx)
+	cmpb $48,(%r13)
 	jnz L396
 L386:
-	movl $8,%r13d
-	leaq 1(%r14),%rcx
-	movb 1(%r14),%al
+	movl $8,%r12d
+	leaq 1(%r13),%rcx
+	movb 1(%r13),%al
 	cmpb $120,%al
 	jz L389
 L392:
 	cmpb $88,%al
 	jnz L514
 L389:
-	movl $16,%r13d
-	movq %rcx,%r14
+	movl $16,%r12d
+	movq %rcx,%r13
 L514:
-	incq %r14
+	incq %r13
 L396:
-	movzbl (%r14),%edi
+	movzbl (%r13),%edi
 	call _digit
-	movl %eax,%ebx
-	cmpl $0,%ebx
+	movl %eax,%r15d
+	cmpl $0,%r15d
 	jl L400
 L402:
-	cmpl %ebx,%r13d
+	cmpl %r15d,%r12d
 	jg L406
 L404:
-	pushq %r15
+	pushq %r14
 	pushq $L407
 	pushq $0
 	call _error
 	addq $24,%rsp
 L406:
-	movl %r13d,%r13d
-	imulq %r13,%r12
-	movslq %ebx,%rbx
-	addq %rbx,%r12
+	movl %r12d,%r12d
+	imulq %r12,%rbx
+	movslq %r15d,%r15
+	addq %r15,%rbx
 	jmp L514
 L400:
 	movl $2147483648,%eax
-	cmpq %rax,%r12
+	cmpq %rax,%rbx
 	jb L415
 L411:
-	cmpl $10,%r13d
+	cmpl $10,%r12d
 	jz L415
 L408:
 	movl $1,-8(%rbp)
 L415:
-	movb (%r14),%al
+	movb (%r13),%al
 	testb %al,%al
 	jz L418
 L416:
@@ -1167,18 +1167,18 @@ L429:
 	cmpb $76,%al
 	jnz L427
 L421:
-	incq %r14
+	incq %r13
 	jmp L415
 L427:
-	pushq %r15
+	pushq %r14
 	pushq $L433
 	pushq $1
 	call _error
 	addq $24,%rsp
 L418:
-	movq %r12,-16(%rbp)
-	movq 16(%r15),%rdx
-	movl 8(%r15),%ecx
+	movq %rbx,-16(%rbp)
+	movq 16(%r14),%rdx
+	movl 8(%r14),%ecx
 	movl -20(%rbp),%eax
 	movb %al,(%rdx,%rcx)
 	jmp L370

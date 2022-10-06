@@ -265,7 +265,7 @@ L134:
 	movsd (%rsi),%xmm1
 	movl %edx,%r14d
 	movl %ecx,%r13d
-	movl %r8d,%r12d
+	movl %r8d,%ebx
 	movsd %xmm1,-8(%rbp)
 	testl %r13d,%r13d
 	jnz L137
@@ -319,12 +319,12 @@ L169:
 	cmpl %eax,%r13d
 	jg L155
 L154:
-	movl $1,%ebx
+	movl $1,%r12d
 	jmp L156
 L155:
-	xorl %ebx,%ebx
+	xorl %r12d,%r12d
 L156:
-	testl %ebx,%ebx
+	testl %r12d,%r12d
 	jz L174
 L173:
 	xorl %ecx,%ecx
@@ -332,15 +332,15 @@ L173:
 L174:
 	movl -12(%rbp),%ecx
 L175:
-	movl %r12d,%r9d
+	movl %ebx,%r9d
 	movl %r14d,%r8d
 	movl %r13d,%edx
 	leaq -28(%rbp),%rsi
 	movq %r15,%rdi
 	call _dtof
-	movq %rax,%r12
-	movq %r12,%rax
-	testl %ebx,%ebx
+	movq %rax,%rbx
+	movq %rbx,%rax
+	testl %r12d,%r12d
 	jz L135
 L176:
 	cmpl $69,%r14d
@@ -354,8 +354,8 @@ L179:
 L180:
 	movl $101,%eax
 L181:
-	movb %al,(%r12)
-	leaq 1(%r12),%rax
+	movb %al,(%rbx)
+	leaq 1(%rbx),%rax
 	movl -12(%rbp),%ecx
 	pushq %rcx
 	pushq $L186
@@ -363,7 +363,7 @@ L181:
 	call _sprintf
 	addq $24,%rsp
 	movslq %eax,%rax
-	leaq 1(%r12,%rax),%rax
+	leaq 1(%rbx,%rax),%rax
 L135:
 	popq %r15
 	popq %r14

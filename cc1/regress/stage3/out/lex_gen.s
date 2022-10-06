@@ -1614,7 +1614,7 @@ L594:
 	pushq %rbx
 	pushq %r12
 L595:
-	xorl %r12d,%r12d
+	xorl %ebx,%ebx
 	call _skelout
 	movl $2,_indent_level(%rip)
 	cmpl $0,_yymore_used(%rip)
@@ -1644,8 +1644,8 @@ L604:
 	leal 1(%rcx,%rax),%eax
 	cmpl $32766,%eax
 	movl $L114,%eax
-	movl $L607,%ebx
-	cmovleq %rax,%rbx
+	movl $L607,%r12d
+	cmovleq %rax,%r12
 	movl $0,_indent_level(%rip)
 	movl $L611,%edi
 	call _indent_puts
@@ -1654,7 +1654,7 @@ L604:
 	call _indent_puts
 	movl $L612,%edi
 	call _indent_puts
-	movq %rbx,%rsi
+	movq %r12,%rsi
 	movl $L613,%edi
 	call _indent_put2s
 	movl $L614,%edi
@@ -1698,7 +1698,7 @@ L628:
 	pushq $_C_state_decl
 	call _printf
 	addq $24,%rsp
-	movl $1,%ebx
+	movl $1,%r12d
 	jmp L632
 L633:
 	movl _fullspd(%rip),%ecx
@@ -1710,7 +1710,7 @@ L636:
 	jz L640
 L639:
 	movq _base(%rip),%rax
-	movl (%rax,%rbx,4),%eax
+	movl (%rax,%r12,4),%eax
 	pushq %rax
 	pushq $L99
 	call _printf
@@ -1722,13 +1722,13 @@ L640:
 	addq $8,%rsp
 	jmp L638
 L637:
-	movl %ebx,%ecx
+	movl %r12d,%ecx
 	movl (%rax,%rcx,4),%edi
 	call _mkdata
 L638:
-	incl %ebx
+	incl %r12d
 L632:
-	cmpl %ebx,_lastdfa(%rip)
+	cmpl %r12d,_lastdfa(%rip)
 	jge L633
 L635:
 	call _dataend
@@ -1746,15 +1746,15 @@ L643:
 	pushq $_C_short_decl
 	call _printf
 	addq $24,%rsp
-	movl $1,%ebx
+	movl $1,%r12d
 	jmp L649
 L650:
 	movq _rule_linenum(%rip),%rax
-	movl (%rax,%rbx,4),%edi
+	movl (%rax,%r12,4),%edi
 	call _mkdata
-	incl %ebx
+	incl %r12d
 L649:
-	cmpl %ebx,_num_rules(%rip)
+	cmpl %r12d,_num_rules(%rip)
 	jg L650
 L652:
 	call _dataend
@@ -1958,27 +1958,27 @@ L717:
 	incl _indent_level(%rip)
 	call _gen_bt_action
 	call _action_out
-	movl $1,%ebx
+	movl $1,%r12d
 	jmp L730
 L731:
 	movq _sceof(%rip),%rax
-	cmpl $0,(%rax,%rbx,4)
+	cmpl $0,(%rax,%r12,4)
 	jnz L736
 L734:
 	call _do_indent
 	movq _scname(%rip),%rax
-	pushq (%rax,%rbx,8)
+	pushq (%rax,%r12,8)
 	pushq $L737
 	call _printf
 	addq $16,%rsp
-	movl $1,%r12d
+	movl $1,%ebx
 L736:
-	incl %ebx
+	incl %r12d
 L730:
-	cmpl _lastsc(%rip),%ebx
+	cmpl _lastsc(%rip),%r12d
 	jle L731
 L733:
-	testl %r12d,%r12d
+	testl %ebx,%ebx
 	jz L740
 L738:
 	incl _indent_level(%rip)

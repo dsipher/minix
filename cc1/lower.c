@@ -1963,7 +1963,6 @@ static int lower_call(struct block *b, int i,
     adj = new_insn(I_MCH_ADDQ, 0);
     REG_OPERAND(&adj->operand[0], 0, 0, REG_RSP);
     /* operand[1] is filled in at end of func */
-    adj->is_volatile = 1;
     insert_insn(adj, b, i++);
     ++count;
 
@@ -2062,7 +2061,6 @@ static int lower_call(struct block *b, int i,
         new = new_insn(I_MCH_SUBQ, 0);
         REG_OPERAND(&new->operand[0], 0, 0, REG_RSP);
         I_OPERAND(&new->operand[1], 0, T_LONG, offset);
-        new->is_volatile = 1;
         insert_insn(new, b, arg_i); /* before arguments */
         ++count;
     }

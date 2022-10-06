@@ -328,8 +328,8 @@ L124:
 	pushq %r13
 L125:
 	movq _state(%rip),%rax
-	movq %rdi,%r12
-	movq %rdx,%rbx
+	movq %rdi,%rbx
+	movq %rdx,%r13
 	movq (%rax),%rdi
 	testq %rdi,%rdi
 	jz L128
@@ -338,23 +338,23 @@ L127:
 	testq $73726,(%rax)
 	jnz L131
 L130:
-	movq %r12,%rdi
+	movq %rbx,%rdi
 	call _ref
 	movq %rax,%rdx
-	movq %r12,%rsi
+	movq %rbx,%rsi
 	movl $1342177283,%edi
 	call _unary_tree
-	movq %rax,%r13
-	movq %r12,%rdi
+	movq %rax,%r12
+	movq %rbx,%rdi
 	call _unfieldify
-	movq %rax,8(%r13)
+	movq %rax,8(%r12)
 	jmp L132
 L131:
 	call _sym_tree
-	movq %rax,%r13
+	movq %rax,%r12
 L132:
-	movq %rbx,%rdx
-	movq %r13,%rsi
+	movq %r13,%rdx
+	movq %r12,%rsi
 	movl $1048634,%edi
 	call _build_tree
 	movq _state(%rip),%rcx
@@ -366,21 +366,21 @@ L132:
 	jmp L126
 L128:
 	movl $1048634,%edx
-	movq %r12,%rsi
-	movq %rbx,%rdi
+	movq %rbx,%rsi
+	movq %r13,%rdi
 	call _fake
 	movq %rax,%rdi
 	call _fold
-	movq %rax,%rbx
-	movq (%r12),%rcx
+	movq %rax,%r12
+	movq (%rbx),%rcx
 	movq $549755813888,%rax
 	testq %rcx,%rax
 	jz L134
 L133:
-	cmpl $2147483650,(%rbx)
+	cmpl $2147483650,(%r12)
 	jnz L136
 L139:
-	cmpq $0,24(%rbx)
+	cmpq $0,24(%r12)
 	jz L138
 L136:
 	pushq $L143
@@ -390,17 +390,17 @@ L136:
 	addq $24,%rsp
 L138:
 	movq $545460846592,%rsi
-	andq (%r12),%rsi
+	andq (%rbx),%rsi
 	sarq $32,%rsi
-	movq 16(%rbx),%rdi
+	movq 16(%r12),%rdi
 	call _out_bits
 	jmp L126
 L134:
-	movq 8(%rbx),%rax
+	movq 8(%r12),%rax
 	movq (%rax),%rdi
-	movq 24(%rbx),%rsi
+	movq 24(%r12),%rsi
 	subq $8,%rsp
-	movq 16(%rbx),%rax
+	movq 16(%r12),%rax
 	movq %rax,(%rsp)
 	call _out_word
 	addq $8,%rsp

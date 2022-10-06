@@ -106,7 +106,7 @@ static struct node *stack;          /* top of disconnected node stack */
 static VECTOR(reg) gp_colors;
 static VECTOR(reg) xmm_colors;
 
-#define GP_K    (NR_GP_REGS - 1)        /* exclude %rsp */
+#define GP_K    NR_GP_REGS
 #define XMM_K   NR_XMM_REGS
 
 /* attach node n to the graph */

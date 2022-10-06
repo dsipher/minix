@@ -22,12 +22,12 @@ L9:
 	pushq %r12
 	pushq %r13
 L10:
-	movq %rdi,%r12
-	xorl %ebx,%ebx
-	cmpq $0,(%r12)
+	movq %rdi,%r13
+	xorl %r12d,%r12d
+	cmpq $0,(%r13)
 	jnz L14
 L15:
-	testl $1048576,12(%r12)
+	testl $1048576,12(%r13)
 	jnz L14
 L16:
 	pushq $L19
@@ -36,22 +36,22 @@ L16:
 	call _error
 	addq $24,%rsp
 L14:
-	cmpq $0,32(%r12)
+	cmpq $0,32(%r13)
 	jnz L22
 L20:
-	movq $_int_type,32(%r12)
+	movq $_int_type,32(%r13)
 L22:
-	movq 32(%r12),%rdi
-	movq (%r12),%rsi
+	movq 32(%r13),%rdi
+	movq (%r13),%rsi
 	call _size_of
-	movl %eax,%r13d
-	testl $16777216,12(%r12)
+	movl %eax,%ebx
+	testl $16777216,12(%r13)
 	jz L25
 L23:
-	movq %r12,%rbx
+	movq %r13,%r12
 	movl $_double_type,%edi
 	call _temp
-	movq %rax,%r12
+	movq %rax,%r13
 L25:
 	movq _current_func(%rip),%rax
 	movq 32(%rax),%rax
@@ -62,7 +62,7 @@ L41:
 	testq $1048576,%rax
 	jnz L30
 L43:
-	movq 32(%r12),%rax
+	movq 32(%r13),%rax
 	movq (%rax),%rax
 	testq $8192,%rax
 	jnz L30
@@ -80,15 +80,15 @@ L49:
 	jnz L51
 L30:
 	movl _next_stack_arg(%rip),%eax
-	movl %eax,48(%r12)
+	movl %eax,48(%r13)
 	movl _next_stack_arg(%rip),%eax
 	movl $8,%ecx
-	leal 7(%rax,%r13),%eax
+	leal 7(%rax,%rbx),%eax
 	cltd 
 	idivl %ecx
 	shll $3,%eax
 	movl %eax,_next_stack_arg(%rip)
-	movq 32(%r12),%rax
+	movq 32(%r13),%rax
 	movq (%rax),%rax
 	testq $8192,%rax
 	jnz L11
@@ -98,7 +98,7 @@ L56:
 L58:
 	movq _current_block(%rip),%rdx
 	movl 12(%rdx),%ecx
-	movq %r12,%rsi
+	movq %r13,%rsi
 	movl $-1577058300,%edi
 	call _loadstore
 	jmp L28
@@ -106,30 +106,30 @@ L51:
 	xorl %esi,%esi
 	movl $-1870659577,%edi
 	call _new_insn
-	movq %rax,%r13
-	movl 8(%r13),%eax
+	movq %rax,%rbx
+	movl 8(%rbx),%eax
 	andl $4294967288,%eax
 	orl $1,%eax
-	movl %eax,8(%r13)
-	movq %r12,%rdi
+	movl %eax,8(%rbx)
+	movq %r13,%rdi
 	call _symbol_to_reg
-	movl %eax,16(%r13)
-	movq 32(%r12),%rax
+	movl %eax,16(%rbx)
+	movq 32(%r13),%rax
 	testq %rax,%rax
 	jz L75
 L67:
 	movq (%rax),%rcx
 	andl $131071,%ecx
 	shll $5,%ecx
-	movl 8(%r13),%eax
+	movl 8(%rbx),%eax
 	andl $4290773023,%eax
 	orl %ecx,%eax
-	movl %eax,8(%r13)
+	movl %eax,8(%rbx)
 L75:
 	movq _current_block(%rip),%rsi
-	movq %r13,%rdi
+	movq %rbx,%rdi
 	call _append_insn
-	movq 32(%r12),%rax
+	movq 32(%r13),%rax
 	testq $66558,(%rax)
 	jz L77
 L76:
@@ -138,63 +138,63 @@ L76:
 L77:
 	incl _nr_fargs(%rip)
 L28:
-	testq %rbx,%rbx
+	testq %r12,%r12
 	jz L81
 L79:
 	xorl %esi,%esi
 	movl $-1610612726,%edi
 	call _new_insn
-	movq %rax,%r13
-	movl 8(%r13),%eax
+	movq %rax,%rbx
+	movl 8(%rbx),%eax
 	andl $4294967288,%eax
 	orl $1,%eax
-	movl %eax,8(%r13)
-	movq %rbx,%rdi
+	movl %eax,8(%rbx)
+	movq %r12,%rdi
 	call _symbol_to_reg
-	movl %eax,16(%r13)
-	movq 32(%rbx),%rax
+	movl %eax,16(%rbx)
+	movq 32(%r12),%rax
 	testq %rax,%rax
 	jz L96
 L88:
 	movq (%rax),%rcx
 	andl $131071,%ecx
 	shll $5,%ecx
-	movl 8(%r13),%eax
+	movl 8(%rbx),%eax
 	andl $4290773023,%eax
 	orl %ecx,%eax
-	movl %eax,8(%r13)
+	movl %eax,8(%rbx)
 L96:
-	movl 40(%r13),%eax
+	movl 40(%rbx),%eax
 	andl $4294967288,%eax
 	orl $1,%eax
-	movl %eax,40(%r13)
-	movq %r12,%rdi
+	movl %eax,40(%rbx)
+	movq %r13,%rdi
 	call _symbol_to_reg
-	movl %eax,48(%r13)
-	movq 32(%r12),%rax
+	movl %eax,48(%rbx)
+	movq 32(%r13),%rax
 	testq %rax,%rax
 	jz L111
 L103:
 	movq (%rax),%rcx
 	andl $131071,%ecx
 	shll $5,%ecx
-	movl 40(%r13),%eax
+	movl 40(%rbx),%eax
 	andl $4290773023,%eax
 	orl %ecx,%eax
-	movl %eax,40(%r13)
+	movl %eax,40(%rbx)
 L111:
 	movq _current_block(%rip),%rsi
-	movq %r13,%rdi
+	movq %rbx,%rdi
 	call _append_insn
-	movq %rbx,%r12
+	movq %r12,%r13
 L81:
-	movq 32(%r12),%rax
+	movq 32(%r13),%rax
 	testq $262144,(%rax)
 	jz L11
 L112:
 	movq _current_block(%rip),%rdx
 	movl 12(%rdx),%ecx
-	movq %r12,%rsi
+	movq %r13,%rsi
 	movl $553648133,%edi
 	call _loadstore
 L11:

@@ -138,52 +138,52 @@ L83:
 	pushq %r14
 	pushq %r15
 L84:
-	movl %edi,%r15d
-	movq %rsi,%r14
+	movl %edi,-16(%rbp)
+	movq %rsi,%r13
 	movq %rdx,-8(%rbp)
-	movl %ecx,-16(%rbp)
+	movl %ecx,%r12d
 	movl $1,-12(%rbp)
 	xorl %esi,%esi
-	movl %r15d,%edi
+	movl -16(%rbp),%edi
 	call _new_insn
-	movq %rax,%r13
-	leaq 8(%r13),%rax
-	movq %rax,%r12
-	leaq 40(%r13),%rbx
-	cmpl $553648133,%r15d
+	movq %rax,%rbx
+	leaq 8(%rbx),%rax
+	movq %rax,%r14
+	leaq 40(%rbx),%r15
+	cmpl $553648133,-16(%rbp)
 	jnz L92
 L89:
-	movq %rbx,%r12
-	movq %rax,%rbx
+	movq %r15,%r14
+	movq %rax,%r15
 L92:
-	movl (%r12),%eax
+	movl (%r14),%eax
 	andl $4294967288,%eax
 	orl $1,%eax
-	movl %eax,(%r12)
-	movq %r14,%rdi
+	movl %eax,(%r14)
+	movq %r13,%rdi
 	call _symbol_to_reg
-	movl %eax,8(%r12)
-	movq 32(%r14),%rax
+	movl %eax,8(%r14)
+	movq 32(%r13),%rax
 	testq %rax,%rax
 	jz L106
 L98:
 	movq (%rax),%rcx
 	andl $131071,%ecx
 	shll $5,%ecx
-	movl (%r12),%eax
+	movl (%r14),%eax
 	andl $4290773023,%eax
 	orl %ecx,%eax
-	movl %eax,(%r12)
+	movl %eax,(%r14)
 L106:
-	testl $448,12(%r14)
+	testl $448,12(%r13)
 	jnz L107
 L125:
-	movl (%rbx),%ecx
+	movl (%r15),%ecx
 	andl $4294967288,%ecx
 	orl $2,%ecx
-	movl %ecx,(%rbx)
-	movq $0,16(%rbx)
-	movq %r14,24(%rbx)
+	movl %ecx,(%r15)
+	movq $0,16(%r15)
+	movq %r13,24(%r15)
 	movl $_ulong_type,%eax
 	testq %rax,%rax
 	jz L109
@@ -193,50 +193,48 @@ L131:
 	shll $5,%eax
 	andl $4290773023,%ecx
 	orl %eax,%ecx
-	movl %ecx,(%rbx)
+	movl %ecx,(%r15)
 	jmp L109
 L107:
-	movq %r14,%rdi
+	movq %r13,%rdi
 	call _symbol_offset
-	movl -16(%rbp),%edx
-	movl %edx,%ecx
-	incl %edx
-	movl %edx,-16(%rbp)
+	movl %r12d,%ecx
+	incl %r12d
 	movq -8(%rbp),%rdx
 	movl %eax,%esi
 	movl $_ulong_type,%edi
 	call _frame_addr
-	movq %rax,%r12
-	movl (%rbx),%eax
+	movq %rax,%r14
+	movl (%r15),%eax
 	andl $4294967288,%eax
 	orl $1,%eax
-	movl %eax,(%rbx)
-	movq %r12,%rdi
+	movl %eax,(%r15)
+	movq %r14,%rdi
 	call _symbol_to_reg
-	movl %eax,8(%rbx)
-	movq 32(%r12),%rax
+	movl %eax,8(%r15)
+	movq 32(%r14),%rax
 	testq %rax,%rax
 	jz L124
 L116:
 	movq (%rax),%rcx
 	andl $131071,%ecx
 	shll $5,%ecx
-	movl (%rbx),%eax
+	movl (%r15),%eax
 	andl $4290773023,%eax
 	orl %ecx,%eax
-	movl %eax,(%rbx)
+	movl %eax,(%r15)
 L124:
 	movl $2,-12(%rbp)
 L109:
-	movq 32(%r14),%rax
+	movq 32(%r13),%rax
 	testq $262144,(%rax)
 	jz L136
 L134:
-	orl $1,4(%r13)
+	orl $1,4(%rbx)
 L136:
-	movl -16(%rbp),%edx
+	movl %r12d,%edx
 	movq -8(%rbp),%rsi
-	movq %r13,%rdi
+	movq %rbx,%rdi
 	call _insert_insn
 	movl -12(%rbp),%eax
 L85:

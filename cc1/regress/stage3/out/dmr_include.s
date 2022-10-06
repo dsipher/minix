@@ -11,11 +11,11 @@ L1:
 	pushq %r14
 	pushq %r15
 L2:
-	movq %rdi,%r15
-	movq (%r15),%rcx
+	movq %rdi,%r14
+	movq (%r14),%rcx
 	leaq 24(%rcx),%rax
-	movq %rax,(%r15)
-	cmpq 16(%r15),%rax
+	movq %rax,(%r14)
+	cmpq 16(%r14),%rax
 	jae L7
 L6:
 	movb 24(%rcx),%cl
@@ -25,22 +25,22 @@ L12:
 	cmpb $33,%cl
 	jz L11
 L9:
-	subq 8(%r15),%rax
+	subq 8(%r14),%rax
 	movl $24,%ecx
 	cqto 
 	idivq %rcx
 	movl %eax,%ebx
 	movl $L16,%esi
-	movq %r15,%rdi
+	movq %r14,%rdi
 	call _expandrow
-	movq 8(%r15),%rcx
+	movq 8(%r14),%rcx
 	movslq %ebx,%rbx
 	leaq (%rbx,%rbx,2),%rax
 	shlq $3,%rax
 	addq %rax,%rcx
-	movq %rcx,(%r15)
+	movq %rcx,(%r14)
 L11:
-	movq (%r15),%rcx
+	movq (%r14),%rcx
 	movb (%rcx),%al
 	cmpb $4,%al
 	jnz L18
@@ -63,10 +63,10 @@ L18:
 L23:
 	xorl %ebx,%ebx
 	addq $24,%rcx
-	movq %rcx,(%r15)
+	movq %rcx,(%r14)
 	jmp L26
 L27:
-	cmpq 16(%r15),%rcx
+	cmpq 16(%r14),%rcx
 	ja L7
 L32:
 	movl 8(%rcx),%edx
@@ -78,21 +78,21 @@ L31:
 	movq 16(%rcx),%rsi
 	leaq -256(%rbp,%rbx),%rdi
 	call _strncpy
-	movq (%r15),%rax
+	movq (%r14),%rax
 	addl 8(%rax),%ebx
 	addq $24,%rax
-	movq %rax,(%r15)
+	movq %rax,(%r14)
 L26:
-	movq (%r15),%rcx
+	movq (%r14),%rcx
 	cmpb $34,(%rcx)
 	jnz L27
 L28:
 	movl $1,-516(%rbp)
 L19:
-	movq (%r15),%rax
+	movq (%r14),%rax
 	addq $48,%rax
-	movq %rax,(%r15)
-	cmpq 16(%r15),%rax
+	movq %rax,(%r14)
+	cmpq 16(%r14),%rax
 	jb L7
 L41:
 	testl %ebx,%ebx
@@ -112,39 +112,39 @@ L46:
 	movl $L49,%esi
 	leaq -256(%rbp),%rdi
 	call _fopen
-	movq %rax,%r14
+	movq %rax,%r13
 	leaq -256(%rbp),%rsi
 	leaq -512(%rbp),%rdi
 	call _strcpy
 	jmp L48
 L47:
-	xorl %r14d,%r14d
-	movl $31,%r13d
+	xorl %r13d,%r13d
+	movl $31,%r12d
 L51:
-	movslq %r13d,%r12
-	shlq $4,%r12
-	cmpq $0,_includelist+8(%r12)
+	movslq %r12d,%rbx
+	shlq $4,%rbx
+	cmpq $0,_includelist+8(%rbx)
 	jz L52
 L61:
-	cmpb $0,_includelist(%r12)
+	cmpb $0,_includelist(%rbx)
 	jnz L52
 L57:
 	cmpl $0,-516(%rbp)
 	jz L56
 L65:
-	cmpb $0,_includelist+1(%r12)
+	cmpb $0,_includelist+1(%rbx)
 	jz L52
 L56:
 	leaq -256(%rbp),%rdi
 	call _strlen
-	movq %rax,%rbx
-	movq _includelist+8(%r12),%rdi
+	movq %rax,%r15
+	movq _includelist+8(%rbx),%rdi
 	call _strlen
-	leaq 2(%rbx,%rax),%rax
+	leaq 2(%r15,%rax),%rax
 	cmpq $256,%rax
 	ja L52
 L72:
-	movq _includelist+8(%r12),%rsi
+	movq _includelist+8(%rbx),%rsi
 	leaq -512(%rbp),%rdi
 	call _strcpy
 	movl $L74,%esi
@@ -156,11 +156,11 @@ L72:
 	movl $L49,%esi
 	leaq -512(%rbp),%rdi
 	call _fopen
-	movq %rax,%r14
+	movq %rax,%r13
 	testq %rax,%rax
 	jnz L48
 L52:
-	decl %r13d
+	decl %r12d
 	jns L51
 L48:
 	movl _Mflag(%rip),%eax
@@ -193,7 +193,7 @@ L79:
 	movl $L90,%edi
 	call _fwrite
 L81:
-	testq %r14,%r14
+	testq %r13,%r13
 	jz L92
 L91:
 	movl _incdepth(%rip),%eax
@@ -214,16 +214,16 @@ L96:
 	leaq -512(%rbp),%rdi
 	call _newstring
 	xorl %edx,%edx
-	movq %r14,%rsi
+	movq %r13,%rsi
 	movq %rax,%rdi
 	call _setsource
 	call _genline
 	jmp L3
 L92:
-	movq 8(%r15),%rax
+	movq 8(%r14),%rax
 	addq $48,%rax
-	movq %rax,(%r15)
-	pushq %r15
+	movq %rax,(%r14)
+	pushq %r14
 	pushq $L98
 	pushq $1
 	call _error

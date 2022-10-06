@@ -260,7 +260,7 @@ L130:
 	movl $1,%ebx
 	shlq %cl,%rbx
 	movq _ineligible+8(%rip),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-16(%rbp)
 	movl $64,%edi
 	call ___builtin_clz
 	movb $31,%cl
@@ -268,7 +268,7 @@ L130:
 	movl %r14d,%edx
 	sarl %cl,%edx
 	movslq %edx,%rdx
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rax
 	orq %rbx,(%rax,%rdx,8)
 	leaq 40(%r13),%rax
 	movq %rax,-32(%rbp)
@@ -312,7 +312,7 @@ L153:
 	testl %esi,%esi
 	setz %al
 	movzbl %al,%eax
-	movl %eax,-12(%rbp)
+	movl %eax,-20(%rbp)
 	leal 1(%rsi),%eax
 	cmpl _terms(%rip),%eax
 	jge L159
@@ -331,7 +331,7 @@ L160:
 	movslq %ecx,%rcx
 	movq -32(%rbp),%rax
 	movq %rax,(%rdx,%rcx,8)
-	cmpl $0,-12(%rbp)
+	cmpl $0,-20(%rbp)
 	jz L138
 L161:
 	movl %r15d,_minuend(%rip)

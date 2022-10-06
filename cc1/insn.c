@@ -698,14 +698,18 @@ void insn_uses(struct insn *insn, VECTOR(reg) *set, int flags)
                         for (i = 0; i < insn->nr_fargs; ++i)
                             add_reg(set, fargs[i]);
 
+                        add_reg(set, REG_RSP);
                         break;
 
-    case I_MCH_RET:     add_reg(set, REG_RBP); break;
-
-    case I_MCH_RETF:    add_reg(set, REG_XMM0);
+    case I_MCH_RET:     add_reg(set, REG_RSP);
                         add_reg(set, REG_RBP); break;
 
-    case I_MCH_RETI:    add_reg(set, REG_RAX);
+    case I_MCH_RETF:    add_reg(set, REG_RSP);
+                        add_reg(set, REG_XMM0);
+                        add_reg(set, REG_RBP); break;
+
+    case I_MCH_RETI:    add_reg(set, REG_RSP);
+                        add_reg(set, REG_RAX);
                         add_reg(set, REG_RBP); break;
 
     case I_MCH_DIVB:
@@ -733,6 +737,9 @@ void insn_uses(struct insn *insn, VECTOR(reg) *set, int flags)
     case I_MCH_CWTD:
     case I_MCH_CLTD:
     case I_MCH_CQTO:    add_reg(set, REG_RAX); break;
+
+    case I_MCH_POPQ:
+    case I_MCH_PUSHQ:   add_reg(set, REG_RSP); break;
     }
 
     n = I_OPERANDS(insn->op) + insn->nr_args;
@@ -789,6 +796,9 @@ void insn_defs(struct insn *insn, VECTOR(reg) *set, int flags)
     case I_MCH_MOVSB:   add_reg(set, REG_RSI);
     case I_MCH_STOSB:   add_reg(set, REG_RDI);
                         add_reg(set, REG_RCX); break;
+
+    case I_MCH_POPQ:
+    case I_MCH_PUSHQ:   add_reg(set, REG_RSP); break;
 
     case I_MCH_CWTD:
     case I_MCH_CLTD:

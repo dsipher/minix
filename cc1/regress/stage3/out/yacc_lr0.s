@@ -586,47 +586,47 @@ L161:
 	pushq %r14
 	pushq %r15
 L162:
-	xorl %r15d,%r15d
-	movq _first_state(%rip),%r14
+	xorl %r14d,%r14d
+	movq _first_state(%rip),%r13
 	jmp L164
 L165:
-	testl %r15d,%r15d
+	testl %r14d,%r14d
 	jz L170
 L168:
 	pushq $L171
 	call _printf
 	addq $8,%rsp
 L170:
-	movswl 16(%r14),%edx
-	movswq 18(%r14),%rcx
+	movswl 16(%r13),%edx
+	movswq 18(%r13),%rcx
 	movq _symbol_name(%rip),%rax
 	pushq (%rax,%rcx,8)
 	pushq %rdx
-	pushq %r15
+	pushq %r14
 	pushq $L172
 	call _printf
 	addq $32,%rsp
-	movswl 20(%r14),%eax
+	movswl 20(%r13),%eax
 	movl %eax,-4(%rbp)
-	xorl %r13d,%r13d
+	xorl %r12d,%r12d
 L173:
-	cmpl %r13d,-4(%rbp)
+	cmpl %r12d,-4(%rbp)
 	jle L176
 L174:
-	movswl 22(%r14,%r13,2),%r12d
-	pushq %r12
+	movswl 22(%r13,%r12,2),%ebx
+	pushq %rbx
 	pushq $L177
 	call _printf
 	addq $16,%rsp
-	movl %r12d,%ebx
+	movl %ebx,%r15d
 L178:
-	movslq %ebx,%rbx
+	movslq %r15d,%r15
 	movq _ritem(%rip),%rax
-	movw (%rax,%rbx,2),%cx
+	movw (%rax,%r15,2),%cx
 	cmpw $0,%cx
 	jl L180
 L179:
-	incl %ebx
+	incl %r15d
 	jmp L178
 L180:
 	movswl %cx,%ecx
@@ -640,17 +640,17 @@ L180:
 	call _printf
 	addq $16,%rsp
 	movq _ritem(%rip),%rax
-	movswl (%rax,%rbx,2),%ecx
+	movswl (%rax,%r15,2),%ecx
 	negl %ecx
 	movslq %ecx,%rcx
 	movq _rrhs(%rip),%rax
-	movswl (%rax,%rcx,2),%ebx
+	movswl (%rax,%rcx,2),%r15d
 L182:
-	cmpl %ebx,%r12d
+	cmpl %r15d,%ebx
 	jle L184
 L183:
-	movl %ebx,%eax
-	incl %ebx
+	movl %r15d,%eax
+	incl %r15d
 	movslq %eax,%rax
 	movq _ritem(%rip),%rcx
 	movswq (%rcx,%rax,2),%rax
@@ -665,13 +665,13 @@ L184:
 	call _printf
 	addq $8,%rsp
 L187:
-	movslq %ebx,%rbx
+	movslq %r15d,%r15
 	movq _ritem(%rip),%rax
-	movw (%rax,%rbx,2),%ax
+	movw (%rax,%r15,2),%ax
 	cmpw $0,%ax
 	jl L189
 L188:
-	incl %ebx
+	incl %r15d
 	movswq %ax,%rax
 	movq _symbol_name(%rip),%rcx
 	pushq (%rcx,%rax,8)
@@ -685,13 +685,13 @@ L189:
 	addq $8,%rsp
 	movl $___stdout,%edi
 	call _fflush
-	incl %r13d
+	incl %r12d
 	jmp L173
 L176:
-	incl %r15d
-	movq (%r14),%r14
+	incl %r14d
+	movq (%r13),%r13
 L164:
-	testq %r14,%r14
+	testq %r13,%r13
 	jnz L165
 L163:
 	popq %r15
@@ -757,43 +757,43 @@ L206:
 	pushq %r13
 	pushq %r14
 L207:
-	xorl %r14d,%r14d
-	movq _first_shift(%rip),%r13
+	xorl %r12d,%r12d
+	movq _first_shift(%rip),%rbx
 	jmp L209
 L210:
-	testl %r14d,%r14d
+	testl %r12d,%r12d
 	jz L215
 L213:
 	pushq $L171
 	call _printf
 	addq $8,%rsp
 L215:
-	movswl 8(%r13),%ecx
-	movswl 10(%r13),%eax
+	movswl 8(%rbx),%ecx
+	movswl 10(%rbx),%eax
 	pushq %rax
 	pushq %rcx
-	pushq %r14
+	pushq %r12
 	pushq $L216
 	call _printf
 	addq $32,%rsp
-	movswl 10(%r13),%r12d
-	xorl %ebx,%ebx
+	movswl 10(%rbx),%r14d
+	xorl %r13d,%r13d
 L217:
-	cmpl %ebx,%r12d
+	cmpl %r13d,%r14d
 	jle L220
 L218:
-	movswl 12(%r13,%rbx,2),%eax
+	movswl 12(%rbx,%r13,2),%eax
 	pushq %rax
 	pushq $L221
 	call _printf
 	addq $16,%rsp
-	incl %ebx
+	incl %r13d
 	jmp L217
 L220:
-	incl %r14d
-	movq (%r13),%r13
+	incl %r12d
+	movq (%rbx),%rbx
 L209:
-	testq %r13,%r13
+	testq %rbx,%rbx
 	jnz L210
 L208:
 	popq %r14

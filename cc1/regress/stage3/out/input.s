@@ -379,41 +379,41 @@ L158:
 	pushq %r12
 	pushq %r13
 L159:
-	movq %rdi,%rbx
-	movl %esi,%r13d
+	movq %rdi,%r13
+	movl %esi,%r12d
 	leaq -24(%rbp),%rdi
 	call _vstring_init
-	movq _system_dirs(%rip),%r12
+	movq _system_dirs(%rip),%rbx
 L161:
 	leaq -24(%rbp),%rdi
 	call _vstring_clear
-	testl %r13d,%r13d
+	testl %r12d,%r12d
 	jz L168
 L208:
-	cmpl $2,%r13d
+	cmpl $2,%r12d
 	jz L171
 L209:
-	cmpl $1,%r13d
+	cmpl $1,%r12d
 	jnz L166
 L183:
-	testq %r12,%r12
+	testq %rbx,%rbx
 	jnz L186
 L184:
-	pushq %rbx
+	pushq %r13
 	pushq $L187
 	call _error
 	addq $16,%rsp
 L186:
-	movq %r12,%rsi
+	movq %rbx,%rsi
 	leaq -24(%rbp),%rdi
 	call _vstring_concat
 	movb $47,%sil
 	leaq -24(%rbp),%rdi
 	call _vstring_putc
-	movq %rbx,%rsi
+	movq %r13,%rsi
 	leaq -24(%rbp),%rdi
 	call _vstring_puts
-	movq 24(%r12),%r12
+	movq 24(%rbx),%rbx
 	jmp L166
 L171:
 	movq _input_stack(%rip),%rsi
@@ -444,10 +444,10 @@ L173:
 	call _vstring_rubout
 	jmp L172
 L174:
-	movq %rbx,%rsi
+	movq %r13,%rsi
 	leaq -24(%rbp),%rdi
 	call _vstring_puts
-	movl $1,%r13d
+	movl $1,%r12d
 L166:
 	testl $1,-24(%rbp)
 	jz L193
@@ -463,7 +463,7 @@ L194:
 	jnz L161
 	jz L169
 L168:
-	movq %rbx,%rsi
+	movq %r13,%rsi
 	leaq -24(%rbp),%rdi
 	call _vstring_puts
 L169:
@@ -477,11 +477,11 @@ L198:
 L199:
 	movl $L196,%esi
 	call _fopen
-	movq %rax,%r12
-	testq %r12,%r12
+	movq %rax,%rbx
+	testq %rbx,%rbx
 	jnz L202
 L200:
-	pushq %rbx
+	pushq %r13
 	pushq $L203
 	call _error
 	addq $16,%rsp
@@ -494,7 +494,7 @@ L204:
 L205:
 	movq -8(%rbp),%rsi
 L206:
-	movq %r12,%rdi
+	movq %rbx,%rdi
 	call _input_push
 	leaq -24(%rbp),%rdi
 	call _vstring_free

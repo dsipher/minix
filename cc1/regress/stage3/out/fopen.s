@@ -12,16 +12,16 @@ L1:
 	pushq %r15
 L2:
 	movq %rdi,-8(%rbp)
-	xorl %r13d,%r13d
-	xorl %r14d,%r14d
+	xorl %r15d,%r15d
+	xorl %r12d,%r12d
 	jmp L4
 L5:
-	cmpl $19,%r14d
+	cmpl $19,%r12d
 	jge L64
 L10:
-	incl %r14d
+	incl %r12d
 L4:
-	cmpq $0,___iotab(,%r14,8)
+	cmpq $0,___iotab(,%r12,8)
 	jnz L5
 L7:
 	movb (%rsi),%al
@@ -35,18 +35,18 @@ L67:
 	cmpb $97,%al
 	jnz L64
 L19:
-	movl $770,%ebx
-	movl $1,%r15d
-	movl $1088,%r13d
+	movl $770,%r14d
+	movl $1,%r13d
+	movl $1088,%r15d
 	jmp L22
 L17:
-	movl $258,%ebx
-	movl $1,%r15d
-	movl $576,%r13d
+	movl $258,%r14d
+	movl $1,%r13d
+	movl $576,%r15d
 	jmp L22
 L15:
-	movl $129,%ebx
-	xorl %r15d,%r15d
+	movl $129,%r14d
+	xorl %r13d,%r13d
 L22:
 	movb (%rsi),%al
 	testb %al,%al
@@ -59,44 +59,44 @@ L71:
 	cmpb $43,%al
 	jnz L24
 L30:
-	movl $2,%r15d
-	orl $3,%ebx
+	movl $2,%r13d
+	orl $3,%r14d
 	jmp L22
 L24:
-	testl $512,%r13d
+	testl $512,%r15d
 	jnz L38
 L37:
-	pushq %r15
+	pushq %r13
 	pushq -8(%rbp)
 	call _open
 	addq $16,%rsp
-	movl %eax,%r12d
+	movl %eax,%ebx
 	cmpl $0,%eax
 	jge L36
 L41:
-	testl $64,%r13d
+	testl $64,%r15d
 	jz L36
 L38:
 	movl $438,%esi
 	movq -8(%rbp),%rdi
 	call _creat
 	movl %eax,%edi
-	movl %edi,%r12d
+	movl %edi,%ebx
 	cmpl $0,%edi
 	jle L36
 L48:
-	movl %ebx,%eax
+	movl %r14d,%eax
 	orl $1,%eax
 	jz L36
 L49:
 	call _close
-	pushq %r15
+	pushq %r13
 	pushq -8(%rbp)
 	call _open
 	addq $16,%rsp
-	movl %eax,%r12d
+	movl %eax,%ebx
 L36:
-	cmpl $0,%r12d
+	cmpl $0,%ebx
 	jl L64
 L54:
 	movl $32,%edi
@@ -104,22 +104,22 @@ L54:
 	testq %rax,%rax
 	jz L56
 L58:
-	movl %ebx,%ecx
+	movl %r14d,%ecx
 	andl $3,%ecx
 	cmpl $3,%ecx
 	jnz L62
 L60:
-	andl $-385,%ebx
+	andl $-385,%r14d
 L62:
 	movl $0,(%rax)
-	movl %r12d,4(%rax)
-	movl %ebx,8(%rax)
+	movl %ebx,4(%rax)
+	movl %r14d,8(%rax)
 	movq $0,16(%rax)
-	movl %r14d,%ecx
+	movl %r12d,%ecx
 	movq %rax,___iotab(,%rcx,8)
 	jmp L3
 L56:
-	movl %r12d,%edi
+	movl %ebx,%edi
 	call _close
 L64:
 	xorl %eax,%eax

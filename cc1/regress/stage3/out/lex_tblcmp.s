@@ -14,28 +14,28 @@ L2:
 	movl _numecs(%rip),%eax
 	movq %rdi,-2088(%rbp)
 	movl %esi,-2076(%rbp)
-	movl %edx,-2092(%rbp)
-	movl %ecx,-2080(%rbp)
+	movl %edx,-2096(%rbp)
+	movl %ecx,-2092(%rbp)
 	movl %r8d,-2060(%rbp)
 	xorl %r12d,%r12d
-	imull $100,-2092(%rbp),%edx
+	imull $100,-2096(%rbp),%edx
 	imull $15,%eax,%ecx
 	cmpl %ecx,%edx
 	jl L40
 L5:
 	movl _firstprot(%rip),%esi
 	imull $100,-2060(%rbp),%ecx
-	imull $50,-2092(%rbp),%eax
+	imull $50,-2096(%rbp),%eax
 	cmpl %eax,%ecx
 	movl %esi,%ebx
-	movl -2092(%rbp),%r14d
+	movl -2096(%rbp),%r14d
 	jle L8
 L10:
 	testl %esi,%esi
 	jz L9
 L11:
 	movslq %esi,%rsi
-	movl -2080(%rbp),%eax
+	movl -2092(%rbp),%eax
 	cmpl _protcomst(,%rsi,4),%eax
 	jz L14
 L16:
@@ -45,7 +45,7 @@ L14:
 	movl %esi,%ebx
 	jmp L41
 L8:
-	movl $0,-2080(%rbp)
+	movl $0,-2092(%rbp)
 	testl %esi,%esi
 	jz L9
 L41:
@@ -55,7 +55,7 @@ L41:
 	movl %eax,%r14d
 L9:
 	imull $100,%r14d,%ecx
-	imull $10,-2092(%rbp),%eax
+	imull $10,-2096(%rbp),%eax
 	cmpl %eax,%ecx
 	jle L23
 L21:
@@ -85,28 +85,28 @@ L24:
 L23:
 	imull $100,%r14d,%eax
 	movl %eax,-2064(%rbp)
-	imull $50,-2092(%rbp),%eax
+	imull $50,-2096(%rbp),%eax
 	cmpl %eax,-2064(%rbp)
 	jle L32
 L31:
 	imull $100,-2060(%rbp),%ecx
-	imull $60,-2092(%rbp),%eax
+	imull $60,-2096(%rbp),%eax
 	cmpl %eax,%ecx
 	jl L35
 L34:
-	movl -2080(%rbp),%edx
+	movl -2092(%rbp),%edx
 	movl -2076(%rbp),%esi
 	movq -2088(%rbp),%rdi
 	call _mktemplate
 	jmp L3
 L35:
-	movl -2080(%rbp),%edx
+	movl -2092(%rbp),%edx
 	movl -2076(%rbp),%esi
 	movq -2088(%rbp),%rdi
 	call _mkprot
 	movl _numecs(%rip),%eax
 L40:
-	movl -2092(%rbp),%r8d
+	movl -2096(%rbp),%r8d
 	movl $-32766,%ecx
 	movl -2076(%rbp),%edx
 	movl %eax,%esi
@@ -125,11 +125,11 @@ L32:
 	movq -2072(%rbp),%rax
 	leaq -2056(%rbp,%rax),%rdi
 	call _mkentry
-	imull $20,-2092(%rbp),%eax
+	imull $20,-2096(%rbp),%eax
 	cmpl %eax,-2064(%rbp)
 	jl L39
 L37:
-	movl -2080(%rbp),%edx
+	movl -2092(%rbp),%edx
 	movl -2076(%rbp),%esi
 	movq -2088(%rbp),%rdi
 	call _mkprot

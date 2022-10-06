@@ -588,10 +588,10 @@ L172:
 	incl %edi
 	shll $1,%edi
 	call _allocate
-	movq %rax,-24(%rbp)
+	movq %rax,-16(%rbp)
 	xorl %ebx,%ebx
 	movq _F(%rip),%rax
-	movq %rax,-16(%rbp)
+	movq %rax,-24(%rbp)
 	xorl %r12d,%r12d
 L174:
 	cmpl %r12d,_ngotos(%rip)
@@ -633,7 +633,7 @@ L193:
 	call _map_goto
 	movl %ebx,%edx
 	incl %ebx
-	movq -24(%rbp),%rcx
+	movq -16(%rbp),%rcx
 	movw %ax,(%rcx,%rdx,2)
 L195:
 	incl %r13d
@@ -653,7 +653,7 @@ L196:
 	xorl %edx,%edx
 	jmp L199
 L200:
-	movq -24(%rbp),%rcx
+	movq -16(%rbp),%rcx
 	movw (%rcx,%rdx,2),%cx
 	movw %cx,(%rax,%rdx,2)
 	incl %edx
@@ -666,9 +666,9 @@ L202:
 	xorl %ebx,%ebx
 L180:
 	movslq _tokensetsize(%rip),%rcx
-	movq -16(%rbp),%rax
+	movq -24(%rbp),%rax
 	leaq (%rax,%rcx,4),%rax
-	movq %rax,-16(%rbp)
+	movq %rax,-24(%rbp)
 	incl %r12d
 	jmp L174
 L187:
@@ -676,7 +676,7 @@ L187:
 	shll %cl,%edx
 	sarl $5,%ecx
 	movslq %ecx,%rcx
-	movq -16(%rbp),%rax
+	movq -24(%rbp),%rax
 	orl %edx,(%rax,%rcx,4)
 	incl %r13d
 	jmp L181
@@ -702,7 +702,7 @@ L203:
 L206:
 	movq -8(%rbp),%rdi
 	call _free
-	movq -24(%rbp),%rdi
+	movq -16(%rbp),%rdi
 	call _free
 L173:
 	popq %r15
@@ -972,7 +972,7 @@ L278:
 	pushq %r14
 	pushq %r15
 L279:
-	movq %rdi,-8(%rbp)
+	movq %rdi,-16(%rbp)
 	movl %esi,%r15d
 	movl %r15d,%edi
 	shll $1,%edi
@@ -981,7 +981,7 @@ L279:
 	xorl %edx,%edx
 	jmp L281
 L282:
-	movq -8(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq (%rax,%rdx,8),%rcx
 	testq %rcx,%rcx
 	jz L287
@@ -1004,7 +1004,7 @@ L284:
 	shll $3,%ebx
 	movq %rbx,%rdi
 	call _allocate
-	movq %rax,-16(%rbp)
+	movq %rax,-8(%rbp)
 	movq %rbx,%rdi
 	call _allocate
 	movq %rax,%r13
@@ -1018,7 +1018,7 @@ L295:
 	leal 1(%rbx),%edi
 	shll $1,%edi
 	call _allocate
-	movq -16(%rbp),%rcx
+	movq -8(%rbp),%rcx
 	movq %rax,(%rcx,%r12,8)
 	movq %rax,(%r13,%r12,8)
 	movslq %ebx,%rbx
@@ -1034,7 +1034,7 @@ L294:
 	xorl %esi,%esi
 	jmp L298
 L299:
-	movq -8(%rbp),%rax
+	movq -16(%rbp),%rax
 	movq (%rax,%rsi,8),%rdi
 	testq %rdi,%rdi
 	jz L304
@@ -1058,7 +1058,7 @@ L298:
 L301:
 	movq %r13,%rdi
 	call _free
-	movq -16(%rbp),%rax
+	movq -8(%rbp),%rax
 L280:
 	popq %r15
 	popq %r14

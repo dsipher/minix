@@ -134,10 +134,10 @@ L44:
 	pushq %r14
 	pushq %r15
 L45:
-	movq %rdi,%r15
-	movq %rsi,%r14
-	movq %rdx,%r13
-	movl (%r15),%eax
+	movq %rdi,%r13
+	movq %rsi,%r12
+	movq %rdx,%rbx
+	movl (%r13),%eax
 	testl $1,%eax
 	jz L48
 L47:
@@ -146,108 +146,108 @@ L47:
 	movslq %eax,%rax
 	jmp L49
 L48:
-	movq 8(%r15),%rax
+	movq 8(%r13),%rax
 L49:
-	leaq 1(%r13,%rax),%r12
-	cmpq %r12,%r13
+	leaq 1(%rbx,%rax),%r14
+	cmpq %r14,%rbx
 	jbe L52
 L50:
 	pushq $L53
 	call _error
 	addq $8,%rsp
 L52:
-	testl $1,(%r15)
+	testl $1,(%r13)
 	jz L58
 L57:
 	movl $23,%eax
 	jmp L59
 L58:
-	movq (%r15),%rax
+	movq (%r13),%rax
 L59:
-	cmpq %rax,%r12
+	cmpq %rax,%r14
 	jbe L56
 L54:
-	movl $32,%ebx
+	movl $32,%r15d
 L63:
-	cmpq %rbx,%r12
+	cmpq %r15,%r14
 	jbe L62
 L61:
-	shlq $1,%rbx
+	shlq $1,%r15
 	jnz L63
 L62:
-	testq %rbx,%rbx
+	testq %r15,%r15
 	jnz L69
 L67:
 	pushq $L53
 	call _error
 	addq $8,%rsp
 L69:
-	movq %rbx,%rdi
+	movq %r15,%rdi
 	call _safe_malloc
-	movq %rax,%r12
-	movl (%r15),%edx
+	movq %rax,%r14
+	movl (%r13),%edx
 	testl $1,%edx
 	jz L71
 L70:
 	shll $24,%edx
 	sarl $25,%edx
 	movslq %edx,%rdx
-	leaq 1(%r15),%rsi
-	movq %r12,%rdi
+	leaq 1(%r13),%rsi
+	movq %r14,%rdi
 	call _memcpy
-	movl (%r15),%eax
+	movl (%r13),%eax
 	shll $24,%eax
 	sarl $25,%eax
 	movslq %eax,%rax
-	movq %rax,8(%r15)
+	movq %rax,8(%r13)
 	jmp L72
 L71:
-	movq 16(%r15),%rsi
-	movq 8(%r15),%rdx
-	movq %r12,%rdi
+	movq 16(%r13),%rsi
+	movq 8(%r13),%rdx
+	movq %r14,%rdi
 	call _memcpy
-	movq 16(%r15),%rdi
+	movq 16(%r13),%rdi
 	call _free
 L72:
-	movq %rbx,(%r15)
-	movq %r12,16(%r15)
+	movq %r15,(%r13)
+	movq %r14,16(%r13)
 L56:
-	movl (%r15),%eax
+	movl (%r13),%eax
 	testl $1,%eax
 	jz L74
 L73:
 	shll $24,%eax
 	sarl $25,%eax
 	movslq %eax,%rax
-	movq %r13,%rdx
-	movq %r14,%rsi
-	leaq 1(%r15,%rax),%rdi
+	movq %rbx,%rdx
+	movq %r12,%rsi
+	leaq 1(%r13,%rax),%rdi
 	call _memcpy
-	movl (%r15),%eax
+	movl (%r13),%eax
 	movl %eax,%ecx
 	shll $24,%ecx
 	sarl $25,%ecx
-	addl %ecx,%r13d
-	andl $127,%r13d
-	shll $1,%r13d
+	addl %ecx,%ebx
+	andl $127,%ebx
+	shll $1,%ebx
 	andl $-255,%eax
-	orl %r13d,%eax
-	movl %eax,(%r15)
+	orl %ebx,%eax
+	movl %eax,(%r13)
 	shll $24,%eax
 	sarl $25,%eax
 	movslq %eax,%rax
-	movb $0,1(%r15,%rax)
+	movb $0,1(%r13,%rax)
 	jmp L46
 L74:
-	movq 16(%r15),%rdi
-	movq %r13,%rdx
-	movq %r14,%rsi
-	addq 8(%r15),%rdi
+	movq 16(%r13),%rdi
+	movq %rbx,%rdx
+	movq %r12,%rsi
+	addq 8(%r13),%rdi
 	call _memcpy
-	movq 8(%r15),%rcx
-	addq %r13,%rcx
-	movq %rcx,8(%r15)
-	movq 16(%r15),%rax
+	movq 8(%r13),%rcx
+	addq %rbx,%rcx
+	movq %rcx,8(%r13)
+	movq 16(%r13),%rax
 	movb $0,(%rcx,%rax)
 L46:
 	popq %r15

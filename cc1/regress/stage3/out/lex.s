@@ -730,8 +730,8 @@ L241:
 L242:
 	movq _text(%rip),%rax
 	movq %rax,_token+8(%rip)
-	xorl %r12d,%r12d
 	xorl %ebx,%ebx
+	xorl %r13d,%r13d
 	incq _pos(%rip)
 	jmp L244
 L245:
@@ -745,10 +745,10 @@ L248:
 	movq %rax,_pos(%rip)
 	movzbl (%rcx),%eax
 L249:
-	shlq $8,%rbx
+	shlq $8,%r13
 	movslq %eax,%rax
-	addq %rax,%rbx
-	incl %r12d
+	addq %rax,%r13
+	incl %ebx
 L244:
 	movq _pos(%rip),%rcx
 	movzbq (%rcx),%rax
@@ -764,26 +764,26 @@ L250:
 	call _error
 	addq $24,%rsp
 L252:
-	cmpl $1,%r12d
+	cmpl $1,%ebx
 	jl L254
 L272:
-	cmpl $8,%r12d
+	cmpl $8,%ebx
 	jg L254
 L270:
-	decl %r12d
-	movzwl L273(,%r12,2),%eax
+	decl %ebx
+	movzwl L273(,%rbx,2),%eax
 	addl $_ccon,%eax
 	jmp *%rax
 L266:
-	movl $1073741829,%r13d
+	movl $1073741829,%r12d
 	jmp L255
 L261:
-	movl $1073741827,%r13d
-	movslq %ebx,%rbx
+	movl $1073741827,%r12d
+	movslq %r13d,%r13
 	jmp L255
 L257:
-	movl $1073741827,%r13d
-	movsbq %bl,%rbx
+	movl $1073741827,%r12d
+	movsbq %r13b,%r13
 	jmp L255
 L254:
 	pushq $L268
@@ -797,8 +797,8 @@ L255:
 	movq %rax,_pos(%rip)
 	subq _text(%rip),%rax
 	movl %eax,_token+16(%rip)
-	movq %rbx,_token+24(%rip)
-	movl %r13d,%eax
+	movq %r13,_token+24(%rip)
+	movl %r12d,%eax
 L243:
 	popq %r13
 	popq %r12

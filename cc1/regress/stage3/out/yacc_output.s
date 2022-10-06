@@ -632,7 +632,7 @@ _save_column:
 L185:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $24,%rsp
+	subq $32,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -646,7 +646,7 @@ L186:
 	leal 1(%rdi),%eax
 	movslq %eax,%rax
 	movswl (%rcx,%rax,2),%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-20(%rbp)
 	xorl %r15d,%r15d
 	movl %r12d,%ecx
 	jmp L188
@@ -661,7 +661,7 @@ L192:
 L194:
 	incl %ecx
 L188:
-	cmpl %ecx,-8(%rbp)
+	cmpl %ecx,-20(%rbp)
 	jg L189
 L191:
 	testl %r15d,%r15d
@@ -679,15 +679,15 @@ L197:
 	movq %rax,%r13
 	movq %rax,-16(%rbp)
 	movslq %ebx,%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-32(%rbp)
 	movq _froms(%rip),%rdx
 	movq -16(%rbp),%rcx
-	movq -24(%rbp),%rax
+	movq -32(%rbp),%rax
 	movq %rcx,(%rdx,%rax,8)
 	movq %r14,%rdi
 	call _allocate
 	movq _tos(%rip),%rdx
-	movq -24(%rbp),%rcx
+	movq -32(%rbp),%rcx
 	movq %rax,(%rdx,%rcx,8)
 	jmp L199
 L200:
@@ -708,7 +708,7 @@ L203:
 L205:
 	incl %r12d
 L199:
-	cmpl %r12d,-8(%rbp)
+	cmpl %r12d,-20(%rbp)
 	jg L200
 L202:
 	movslq %ebx,%rbx
@@ -1403,11 +1403,11 @@ L437:
 	call _fprintf
 	addq $32,%rsp
 	movl _nstates(%rip),%eax
-	movl $10,%ebx
-	leal 1(,%rax,2),%r12d
+	movl $10,%r12d
+	leal 1(,%rax,2),%ebx
 	jmp L439
 L440:
-	cmpl $10,%ebx
+	cmpl $10,%r12d
 	jl L444
 L443:
 	cmpb $0,_rflag(%rip)
@@ -1429,24 +1429,24 @@ L450:
 	movl $10,%edi
 	call ___flushbuf
 L451:
-	movl $1,%ebx
+	movl $1,%r12d
 	jmp L445
 L444:
-	incl %ebx
+	incl %r12d
 L445:
-	movslq %r12d,%r12
+	movslq %ebx,%rbx
 	movq _base(%rip),%rax
-	movswl (%rax,%r12,2),%eax
+	movswl (%rax,%rbx,2),%eax
 	pushq %rax
 	pushq $L50
 	pushq _output_file(%rip)
 	call _fprintf
 	addq $24,%rsp
-	incl %r12d
+	incl %ebx
 L439:
 	movl _nvectors(%rip),%eax
 	decl %eax
-	cmpl %eax,%r12d
+	cmpl %eax,%ebx
 	jl L440
 L442:
 	cmpb $0,_rflag(%rip)
@@ -2107,8 +2107,8 @@ L677:
 	shll $3,%eax
 	movq %rax,%rdi
 	call _malloc
-	movq %rax,%r14
-	testq %r14,%r14
+	movq %rax,%r13
+	testq %r13,%r13
 	jnz L684
 L682:
 	call _no_space
@@ -2116,7 +2116,7 @@ L684:
 	xorl %eax,%eax
 	jmp L685
 L686:
-	movq $0,(%r14,%rax,8)
+	movq $0,(%r13,%rax,8)
 	incl %eax
 L685:
 	cmpl %eax,-4(%rbp)
@@ -2131,13 +2131,13 @@ L690:
 	movq (%rax,%rdx,8),%rcx
 	movq _symbol_value(%rip),%rax
 	movswq (%rax,%rdx,2),%rax
-	movq %rcx,(%r14,%rax,8)
+	movq %rcx,(%r13,%rax,8)
 	decl %edx
 L689:
 	cmpl $2,%edx
 	jge L690
 L692:
-	movq $L693,(%r14)
+	movq $L693,(%r13)
 	cmpb $0,_rflag(%rip)
 	jnz L696
 L694:
@@ -2148,13 +2148,13 @@ L696:
 	pushq _output_file(%rip)
 	call _fprintf
 	addq $24,%rsp
-	movl $80,%r13d
-	xorl %r15d,%r15d
+	movl $80,%r12d
+	xorl %r14d,%r14d
 	jmp L698
 L699:
-	movl %r15d,%eax
-	movq (%r14,%rax,8),%rcx
-	movq %rcx,%r12
+	movl %r14d,%eax
+	movq (%r13,%rax,8),%rcx
+	movq %rcx,%rbx
 	testq %rcx,%rcx
 	jz L703
 L702:
@@ -2162,32 +2162,31 @@ L702:
 	cmpb $34,%al
 	jnz L706
 L705:
-	movl $7,%ebx
+	movl $7,%r15d
 L708:
-	leaq 1(%r12),%rdx
-	movb 1(%r12),%al
-	movq %rdx,%r12
+	leaq 1(%rbx),%rdx
+	movb 1(%rbx),%al
+	movq %rdx,%rbx
 	cmpb $34,%al
 	jz L710
 L709:
-	leal 1(%rbx),%ecx
-	movl %ecx,%ebx
+	leal 1(%r15),%ecx
+	movl %ecx,%r15d
 	cmpb $92,%al
 	jnz L708
 L711:
-	leal 2(%rcx),%eax
-	movl %eax,%ebx
+	leal 2(%rcx),%r15d
 	leaq 1(%rdx),%rax
-	movq %rax,%r12
+	movq %rax,%rbx
 	cmpb $92,1(%rdx)
 	jnz L708
 L714:
 	addl $3,%ecx
-	movl %ecx,%ebx
+	movl %ecx,%r15d
 	jmp L708
 L710:
-	leal (%rbx,%r13),%eax
-	movl %eax,%r13d
+	leal (%r15,%r12),%eax
+	movl %eax,%r12d
 	cmpl $80,%eax
 	jle L719
 L717:
@@ -2211,18 +2210,18 @@ L724:
 	movl $10,%edi
 	call ___flushbuf
 L725:
-	movl %ebx,%r13d
+	movl %r15d,%r12d
 L719:
 	pushq $L726
 	pushq _output_file(%rip)
 	call _fprintf
 	addq $16,%rsp
-	movl %r15d,%eax
-	movq (%r14,%rax,8),%r12
+	movl %r14d,%eax
+	movq (%r13,%rax,8),%r15
 L727:
-	leaq 1(%r12),%rbx
-	movb 1(%r12),%cl
-	movq %rbx,%r12
+	leaq 1(%r15),%rbx
+	movb 1(%r15),%cl
+	movq %rbx,%r15
 	movq _output_file(%rip),%rax
 	cmpb $34,%cl
 	jz L729
@@ -2234,9 +2233,8 @@ L730:
 	pushq %rax
 	call _fprintf
 	addq $16,%rsp
-	leaq 1(%rbx),%rax
+	leaq 1(%rbx),%r15
 	movb 1(%rbx),%cl
-	movq %rax,%r12
 	movq _output_file(%rip),%rax
 	cmpb $92,%cl
 	jnz L735
@@ -2285,8 +2283,8 @@ L744:
 	cmpb $34,1(%rcx)
 	jnz L748
 L747:
-	leal 7(%r13),%eax
-	movl %eax,%r13d
+	leal 7(%r12),%eax
+	movl %eax,%r12d
 	cmpl $80,%eax
 	jle L752
 L750:
@@ -2310,38 +2308,37 @@ L757:
 	movl $10,%edi
 	call ___flushbuf
 L758:
-	movl $7,%r13d
+	movl $7,%r12d
 L752:
 	movq _output_file(%rip),%rax
 	pushq $L759
 	jmp L902
 L748:
-	movl $5,%ebx
+	movl $5,%r15d
 L760:
-	leaq 1(%r12),%rdx
-	movb 1(%r12),%al
-	movq %rdx,%r12
+	leaq 1(%rbx),%rdx
+	movb 1(%rbx),%al
+	movq %rdx,%rbx
 	cmpb $39,%al
 	jz L762
 L761:
-	leal 1(%rbx),%ecx
-	movl %ecx,%ebx
+	leal 1(%r15),%ecx
+	movl %ecx,%r15d
 	cmpb $92,%al
 	jnz L760
 L763:
-	leal 2(%rcx),%eax
-	movl %eax,%ebx
+	leal 2(%rcx),%r15d
 	leaq 1(%rdx),%rax
-	movq %rax,%r12
+	movq %rax,%rbx
 	cmpb $92,1(%rdx)
 	jnz L760
 L766:
 	addl $3,%ecx
-	movl %ecx,%ebx
+	movl %ecx,%r15d
 	jmp L760
 L762:
-	leal (%rbx,%r13),%eax
-	movl %eax,%r13d
+	leal (%r15,%r12),%eax
+	movl %eax,%r12d
 	cmpl $80,%eax
 	jle L771
 L769:
@@ -2365,18 +2362,18 @@ L776:
 	movl $10,%edi
 	call ___flushbuf
 L777:
-	movl %ebx,%r13d
+	movl %r15d,%r12d
 L771:
 	pushq $L778
 	pushq _output_file(%rip)
 	call _fprintf
 	addq $16,%rsp
-	movl %r15d,%eax
-	movq (%r14,%rax,8),%r12
+	movl %r14d,%eax
+	movq (%r13,%rax,8),%r15
 L779:
-	leaq 1(%r12),%rbx
-	movb 1(%r12),%cl
-	movq %rbx,%r12
+	leaq 1(%r15),%rbx
+	movb 1(%r15),%cl
+	movq %rbx,%r15
 	movq _output_file(%rip),%rax
 	cmpb $39,%cl
 	jz L781
@@ -2388,9 +2385,8 @@ L782:
 	pushq %rax
 	call _fprintf
 	addq $16,%rsp
-	leaq 1(%rbx),%rax
+	leaq 1(%rbx),%r15
 	movb 1(%rbx),%cl
-	movq %rax,%r12
 	movq _output_file(%rip),%rax
 	cmpb $92,%cl
 	jnz L786
@@ -2435,9 +2431,9 @@ L781:
 L745:
 	movq %rcx,%rdi
 	call _strlen
-	leal 3(%rax),%ebx
-	leal 3(%rax,%r13),%eax
-	movl %eax,%r13d
+	leal 3(%rax),%r15d
+	leal 3(%rax,%r12),%eax
+	movl %eax,%r12d
 	cmpl $80,%eax
 	jle L797
 L795:
@@ -2461,7 +2457,7 @@ L802:
 	movl $10,%edi
 	call ___flushbuf
 L803:
-	movl %ebx,%r13d
+	movl %r15d,%r12d
 L797:
 	movq _output_file(%rip),%rax
 	decl (%rax)
@@ -2483,21 +2479,21 @@ L807:
 	movq _output_file(%rip),%rax
 	js L811
 L810:
-	movb (%r12),%sil
+	movb (%rbx),%sil
 	movq 24(%rax),%rdx
 	leaq 1(%rdx),%rcx
 	movq %rcx,24(%rax)
 	movb %sil,(%rdx)
 	jmp L812
 L811:
-	movsbl (%r12),%ecx
+	movsbl (%rbx),%ecx
 	movq %rax,%rsi
 	movl %ecx,%edi
 	call ___flushbuf
 L812:
-	leaq 1(%r12),%rcx
-	movb 1(%r12),%al
-	movq %rcx,%r12
+	leaq 1(%rbx),%rcx
+	movb 1(%rbx),%al
+	movq %rcx,%rbx
 	testb %al,%al
 	jnz L807
 L808:
@@ -2505,8 +2501,8 @@ L808:
 	pushq $L813
 	jmp L902
 L703:
-	leal 2(%r13),%eax
-	movl %eax,%r13d
+	leal 2(%r12),%eax
+	movl %eax,%r12d
 	cmpl $80,%eax
 	jle L816
 L814:
@@ -2530,7 +2526,7 @@ L821:
 	movl $10,%edi
 	call ___flushbuf
 L822:
-	movl $2,%r13d
+	movl $2,%r12d
 L816:
 	movq _output_file(%rip),%rax
 	pushq $L823
@@ -2538,10 +2534,10 @@ L902:
 	pushq %rax
 	call _fprintf
 	addq $16,%rsp
-	leal 1(%r15),%eax
-	movl %eax,%r15d
+	leal 1(%r14),%eax
+	movl %eax,%r14d
 L698:
-	cmpl %r15d,-4(%rbp)
+	cmpl %r14d,-4(%rbp)
 	jge L699
 L701:
 	cmpb $0,_rflag(%rip)
@@ -2553,7 +2549,7 @@ L826:
 	pushq _output_file(%rip)
 	call _fprintf
 	addq $16,%rsp
-	movq %r14,%rdi
+	movq %r13,%rdi
 	call _free
 	cmpb $0,_rflag(%rip)
 	jnz L829
@@ -2800,28 +2796,28 @@ L919:
 	cmpq $0,_line(%rip)
 	jz L920
 L923:
-	movq _input_file(%rip),%r12
-	movq _code_file(%rip),%rbx
+	movq _input_file(%rip),%r14
+	movq _code_file(%rip),%r13
 	movq _cptr(%rip),%rax
-	movsbl (%rax),%r13d
-	cmpl $10,%r13d
+	movsbl (%rax),%ebx
+	cmpl $10,%ebx
 	jnz L926
 L925:
 	incl _lineno(%rip)
-	decl (%r12)
+	decl (%r14)
 	js L932
 L931:
-	movq 24(%r12),%rcx
+	movq 24(%r14),%rcx
 	leaq 1(%rcx),%rax
-	movq %rax,24(%r12)
-	movzbl (%rcx),%r14d
+	movq %rax,24(%r14)
+	movzbl (%rcx),%r12d
 	jmp L933
 L932:
-	movq %r12,%rdi
+	movq %r14,%rdi
 	call ___fillbuf
-	movl %eax,%r14d
+	movl %eax,%r12d
 L933:
-	cmpl $-1,%r14d
+	cmpl $-1,%r12d
 	jz L920
 L930:
 	cmpb $0,_lflag(%rip)
@@ -2832,26 +2828,26 @@ L935:
 	pushq _input_file_name(%rip)
 	pushq %rax
 	pushq $_line_format
-	pushq %rbx
+	pushq %r13
 	call _fprintf
 	addq $32,%rsp
 L937:
-	cmpl $10,%r14d
+	cmpl $10,%r12d
 	jnz L940
 L938:
 	incl _outline(%rip)
 L940:
-	decl (%rbx)
+	decl (%r13)
 	js L942
 L941:
-	movq 24(%rbx),%rcx
+	movq 24(%r13),%rcx
 	leaq 1(%rcx),%rax
-	movq %rax,24(%rbx)
-	movb %r14b,(%rcx)
+	movq %rax,24(%r13)
+	movb %r12b,(%rcx)
 	jmp L956
 L942:
-	movq %rbx,%rsi
-	movl %r14d,%edi
+	movq %r13,%rsi
+	movl %r12d,%edi
 	call ___flushbuf
 	jmp L956
 L926:
@@ -2863,97 +2859,97 @@ L944:
 	pushq _input_file_name(%rip)
 	pushq %rax
 	pushq $_line_format
-	pushq %rbx
+	pushq %r13
 	call _fprintf
 	addq $32,%rsp
 L947:
-	decl (%rbx)
+	decl (%r13)
 	js L951
 L950:
-	movq 24(%rbx),%rcx
+	movq 24(%r13),%rcx
 	leaq 1(%rcx),%rax
-	movq %rax,24(%rbx)
-	movb %r13b,(%rcx)
+	movq %rax,24(%r13)
+	movb %bl,(%rcx)
 	jmp L952
 L951:
-	movq %rbx,%rsi
-	movl %r13d,%edi
+	movq %r13,%rsi
+	movl %ebx,%edi
 	call ___flushbuf
 L952:
 	movq _cptr(%rip),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,_cptr(%rip)
-	movsbl 1(%rcx),%r13d
-	cmpl $10,%r13d
+	movsbl 1(%rcx),%ebx
+	cmpl $10,%ebx
 	jnz L947
 L948:
 	incl _outline(%rip)
-	decl (%rbx)
+	decl (%r13)
 	js L954
 L953:
-	movq 24(%rbx),%rcx
+	movq 24(%r13),%rcx
 	leaq 1(%rcx),%rax
-	movq %rax,24(%rbx)
+	movq %rax,24(%r13)
 	movb $10,(%rcx)
 	jmp L955
 L954:
-	movq %rbx,%rsi
+	movq %r13,%rsi
 	movl $10,%edi
 	call ___flushbuf
 L955:
-	movl $10,%r14d
+	movl $10,%r12d
 L956:
-	decl (%r12)
+	decl (%r14)
 	js L960
 L959:
-	movq 24(%r12),%rcx
+	movq 24(%r14),%rcx
 	leaq 1(%rcx),%rax
-	movq %rax,24(%r12)
-	movzbl (%rcx),%r13d
+	movq %rax,24(%r14)
+	movzbl (%rcx),%ebx
 	jmp L961
 L960:
-	movq %r12,%rdi
+	movq %r14,%rdi
 	call ___fillbuf
-	movl %eax,%r13d
+	movl %eax,%ebx
 L961:
-	cmpl $-1,%r13d
+	cmpl $-1,%ebx
 	jz L958
 L957:
-	cmpl $10,%r13d
+	cmpl $10,%ebx
 	jnz L964
 L962:
 	incl _outline(%rip)
 L964:
-	decl (%rbx)
+	decl (%r13)
 	js L966
 L965:
-	movq 24(%rbx),%rcx
+	movq 24(%r13),%rcx
 	leaq 1(%rcx),%rax
-	movq %rax,24(%rbx)
-	movb %r13b,(%rcx)
+	movq %rax,24(%r13)
+	movb %bl,(%rcx)
 	jmp L967
 L966:
-	movq %rbx,%rsi
-	movl %r13d,%edi
+	movq %r13,%rsi
+	movl %ebx,%edi
 	call ___flushbuf
 L967:
-	movl %r13d,%r14d
+	movl %ebx,%r12d
 	jmp L956
 L958:
-	cmpl $10,%r14d
+	cmpl $10,%r12d
 	jz L970
 L968:
 	incl _outline(%rip)
-	decl (%rbx)
+	decl (%r13)
 	js L972
 L971:
-	movq 24(%rbx),%rcx
+	movq 24(%r13),%rcx
 	leaq 1(%rcx),%rax
-	movq %rax,24(%rbx)
+	movq %rax,24(%r13)
 	movb $10,(%rcx)
 	jmp L970
 L972:
-	movq %rbx,%rsi
+	movq %r13,%rsi
 	movl $10,%edi
 	call ___flushbuf
 L970:
@@ -2967,7 +2963,7 @@ L974:
 	pushq _code_file_name(%rip)
 	pushq %rcx
 	pushq $_line_format
-	pushq %rbx
+	pushq %r13
 	call _fprintf
 	addq $32,%rsp
 L920:

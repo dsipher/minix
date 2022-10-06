@@ -1420,10 +1420,9 @@ L665:
 	pushq 8(%r12)
 	pushq $L666
 	call _out
-	addq $16,%rsp
 	pushq $L667
 	call _out
-	addq $8,%rsp
+	addq $24,%rsp
 L663:
 	movq _out_f(%rip),%rcx
 	decl (%rcx)

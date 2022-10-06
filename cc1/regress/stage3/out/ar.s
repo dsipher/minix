@@ -1084,18 +1084,16 @@ L367:
 	pushq %rcx
 	pushq $L378
 	call _printf
-	addq $24,%rsp
 	movl _arbuf+28(%rip),%ecx
 	movl _arbuf+32(%rip),%eax
 	pushq %rax
 	pushq %rcx
 	pushq $L379
 	call _printf
-	addq $24,%rsp
 	pushq _arbuf+48(%rip)
 	pushq $L380
 	call _printf
-	addq $16,%rsp
+	addq $64,%rsp
 L363:
 	popq %rbx
 	ret 

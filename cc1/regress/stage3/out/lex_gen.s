@@ -164,10 +164,9 @@ L67:
 	pushq %rax
 	pushq $L69
 	call _printf
-	addq $16,%rsp
 	pushq $L70
 	call _printf
-	addq $8,%rsp
+	addq $24,%rsp
 	movl _tblend(%rip),%edx
 	movl _lastdfa(%rip),%ecx
 	addl $2,%edx
@@ -288,19 +287,16 @@ L78:
 	call _transition_struct_out
 	pushq $L92
 	call _printf
-	addq $8,%rsp
 	pushq $L93
 	call _printf
-	addq $8,%rsp
 	movl _lastsc(%rip),%eax
 	leal 1(,%rax,2),%eax
 	pushq %rax
 	pushq $L94
 	call _printf
-	addq $16,%rsp
 	pushq $L70
 	call _printf
-	addq $8,%rsp
+	addq $40,%rsp
 	xorl %ebx,%ebx
 	jmp L95
 L96:
@@ -1784,11 +1780,10 @@ L659:
 	pushq $8192
 	pushq $L665
 	call _printf
-	addq $16,%rsp
 	pushq $16384
 	pushq $L666
 	call _printf
-	addq $16,%rsp
+	addq $32,%rsp
 L661:
 	movl $L667,%edi
 	call _puts
@@ -1920,7 +1915,6 @@ L715:
 	pushq %rax
 	pushq $L721
 	call _printf
-	addq $16,%rsp
 	incl _indent_level(%rip)
 	movl $L722,%edi
 	call _indent_puts
@@ -1932,7 +1926,6 @@ L715:
 	pushq %rax
 	pushq $L724
 	call _printf
-	addq $16,%rsp
 	incl _indent_level(%rip)
 	movl $L725,%edi
 	call _indent_puts
@@ -1945,7 +1938,6 @@ L715:
 	pushq %rax
 	pushq $L724
 	call _printf
-	addq $16,%rsp
 	incl _indent_level(%rip)
 	movl $L727,%edi
 	call _indent_puts
@@ -1953,7 +1945,7 @@ L715:
 	call _do_indent
 	pushq $L728
 	call _printf
-	addq $8,%rsp
+	addq $56,%rsp
 	incl _indent_level(%rip)
 	movl $L729,%edi
 	call _indent_puts

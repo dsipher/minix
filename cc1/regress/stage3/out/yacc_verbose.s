@@ -784,7 +784,6 @@ L298:
 	pushq $L303
 	pushq %rdx
 	call _fprintf
-	addq $32,%rsp
 	movl _nrules(%rip),%eax
 	movq _verbose_file(%rip),%rdx
 	movl _nstates(%rip),%ecx
@@ -794,7 +793,7 @@ L298:
 	pushq $L304
 	pushq %rdx
 	call _fprintf
-	addq $32,%rsp
+	addq $64,%rsp
 L280:
 	popq %rbx
 	ret 

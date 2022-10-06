@@ -1172,14 +1172,13 @@ L441:
 	pushq %rax
 	pushq $L444
 	call _out
-	addq $16,%rsp
 	subq $8,%rsp
 	movq (%r12),%rax
 	movq %rax,(%rsp)
 	xorl %esi,%esi
 	movq %r13,%rdi
 	call _out_word
-	addq $8,%rsp
+	addq $24,%rsp
 L443:
 	cmpq $1024,%r13
 	movl $_double_type,%eax

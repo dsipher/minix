@@ -15,145 +15,122 @@ L5:
 	pushq $L8
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L9
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L10
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L11
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L12
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L13
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L14
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L15
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L16
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L17
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L18
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L19
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L20
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L21
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L22
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L23
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L24
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L25
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L26
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L27
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L28
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L29
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L30
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
 	pushq $L31
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
+	addq $576,%rsp
 L6:
 	incl _outline(%rip)
 	pushq _symbol_prefix(%rip)
@@ -233,13 +210,12 @@ L53:
 	pushq $L54
 	pushq _output_file(%rip)
 	call _fprintf
-	addq $16,%rsp
 	pushq $2
 	pushq _symbol_prefix(%rip)
 	pushq $L55
 	pushq _output_file(%rip)
 	call _fprintf
-	addq $32,%rsp
+	addq $48,%rsp
 	movl $10,%r12d
 	movl $3,%r13d
 	jmp L56
@@ -1502,7 +1478,6 @@ L457:
 	pushq $L459
 	pushq %rcx
 	call _fprintf
-	addq $24,%rsp
 	movq _table(%rip),%rax
 	movswl (%rax),%eax
 	pushq %rax
@@ -1510,7 +1485,7 @@ L457:
 	pushq $L460
 	pushq _output_file(%rip)
 	call _fprintf
-	addq $32,%rsp
+	addq $56,%rsp
 	movl $10,%r12d
 	movl $1,%ebx
 	jmp L461
@@ -2088,14 +2063,13 @@ L667:
 	pushq $L669
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	addl $3,_outline(%rip)
 	movsbl _tflag(%rip),%eax
 	pushq %rax
 	pushq $L670
 	pushq _code_file(%rip)
 	call _fprintf
-	addq $24,%rsp
+	addq $48,%rsp
 	cmpb $0,_rflag(%rip)
 	jz L673
 L671:

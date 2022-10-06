@@ -62,8 +62,9 @@ extern int opt_prohibit;            /* passes prohibited globally */
 #define OPT_MCH_CMP         0x00004000
 #define OPT_MCH_FUSE        0x00008000
 #define OPT_MCH_CMOV        0x00010000
-#define OPT_MCH_LATE        0x00020000
-#define OPT_MCH_ZLQ         0x00040000
+#define OPT_MCH_RSP         0x00020000
+#define OPT_MCH_LATE        0x00040000
+#define OPT_MCH_ZLQ         0x00080000
 
 #define OPT_ANY_PASSES      (   OPT_DEAD            \
                             |   OPT_PRUNE           \
@@ -80,11 +81,12 @@ extern int opt_prohibit;            /* passes prohibited globally */
                             |   OPT_LIR_CMP         \
                             |   OPT_LIR_POS         )
 
-/* passes that can be run on the MCH code
-   only before register allocation is done
-   (because they must allocate temporaries) */
+/* passes that are run on the MCH code only before register allocation
+   is done, either because they must allocate temporaries (OPT_MCH_CMOV)
+   or because running them multiple times is pointless (OPT_MCH_RSP). */
 
-#define OPT_MCH_PRECOLOR    (   OPT_MCH_CMOV        )
+#define OPT_MCH_PRECOLOR    (   OPT_MCH_CMOV        \
+                            |   OPT_MCH_RSP         )
 
 /* passes that can be run on the MCH code
    before, during, or after allocation */

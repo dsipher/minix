@@ -49,6 +49,7 @@
 #include "zlq.h"
 #include "cmov.h"
 #include "pos.h"
+#include "rsp.h"
 #include "opt.h"
 
 /* OPT_PRUNE. prune the CFG to 'minimal' form.
@@ -394,6 +395,7 @@ static struct { int bit; void (*pass)(void); char *name; } passes[] =
             OPT_MCH_CMP,        opt_mch_cmp,        "mch_cmp",
             OPT_MCH_FUSE,       opt_mch_fuse,       "mch_fuse",
             OPT_MCH_CMOV,       opt_mch_cmov,       "mch_cmov",
+            OPT_MCH_RSP,        opt_mch_rsp,        "mch_rsp",
             OPT_MCH_LATE,       opt_mch_late,       "mch_late",
             OPT_MCH_ZLQ,        opt_mch_zlq,        "mch_zlq"
 };

@@ -25,7 +25,7 @@ OBJS=	cc1.o block.o cmov.o cmp.o dealias.o decl.o			\
 	delay.o dep.o dom.o dvn.o expr.o fold.o func.o 			\
 	fuse.o gen.o graph.o heap.o hoist.o init.o 			\
 	insn.o lex.o live.o lower.o norm.o opt.o peep.o			\
-	pos.o prop.o reach.o reassoc.o reg.o stmt.o 			\
+	pos.o prop.o reach.o reassoc.o reg.o rsp.o stmt.o 		\
 	string.o switch.o symbol.o tree.o type.o zlq.o
 
 cc1.o: 		cc1.c $(HDRS)
@@ -59,6 +59,7 @@ prop.o:		prop.c $(HDRS)
 reach.o:	reach.c $(HDRS)
 reassoc.o:	reassoc.c $(HDRS)
 reg.o:		reg.c $(HDRS)
+rsp.o:		rsp.c $(HDRS)
 stmt.o:		stmt.c $(HDRS)
 string.o:	string.c $(HDRS)
 switch.o:	switch.c $(HDRS)

@@ -232,11 +232,10 @@ L75:
 	pushq %rcx
 	pushq $___stderr
 	call _fprintf
-	addq $24,%rsp
 	pushq $L78
 	pushq $___stderr
 	call _fprintf
-	addq $16,%rsp
+	addq $40,%rsp
 	addq $8,%rbx
 L74:
 	movq (%rbx),%rax

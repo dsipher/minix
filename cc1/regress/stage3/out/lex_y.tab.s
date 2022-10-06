@@ -1585,11 +1585,10 @@ L272:
 	pushq $L248
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
 	pushq $L249
 	pushq $___stderr
 	call _fprintf
-	addq $16,%rsp
+	addq $48,%rsp
 L270:
 	movl $1,_varlength(%rip)
 	movl $0,_headcnt(%rip)
@@ -1656,11 +1655,10 @@ L245:
 	pushq $L248
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
 	pushq $L249
 	pushq $___stderr
 	call _fprintf
-	addq $16,%rsp
+	addq $48,%rsp
 L243:
 	movl $1,_varlength(%rip)
 	movl $0,_headcnt(%rip)

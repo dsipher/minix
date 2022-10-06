@@ -555,13 +555,12 @@ L153:
 	pushq %rcx
 	pushq $___stderr
 	call _fprintf
-	addq $16,%rsp
 	movzwl 2(%r12),%edi
 	call _prhideset
 	pushq $L161
 	pushq $___stderr
 	call _fprintf
-	addq $16,%rsp
+	addq $32,%rsp
 	jmp L155
 L154:
 	cmpq %rax,%r12

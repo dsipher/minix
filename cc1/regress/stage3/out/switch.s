@@ -907,11 +907,10 @@ L282:
 	pushq %rcx
 	pushq $L286
 	call _out
-	addq $16,%rsp
 	pushq -16(%rbp)
 	pushq $L290
 	call _out
-	addq $16,%rsp
+	addq $32,%rsp
 	movl $1,%r14d
 	movq 64(%r12),%rax
 	movq 32(%rax),%r15
@@ -1179,11 +1178,10 @@ L543:
 	pushq %rax
 	pushq $L286
 	call _out
-	addq $16,%rsp
 	pushq -32(%rbp)
 	pushq $L290
 	call _out
-	addq $16,%rsp
+	addq $32,%rsp
 	movl $1,%r14d
 	jmp L546
 L547:
@@ -1218,11 +1216,10 @@ L549:
 	pushq %rcx
 	pushq $L286
 	call _out
-	addq $16,%rsp
 	pushq -40(%rbp)
 	pushq $L290
 	call _out
-	addq $16,%rsp
+	addq $32,%rsp
 	movl $1,%r14d
 	jmp L553
 L554:

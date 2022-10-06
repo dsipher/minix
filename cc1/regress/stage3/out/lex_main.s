@@ -268,17 +268,15 @@ L138:
 	pushq $L141
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
 	pushq _endtime(%rip)
 	pushq _starttime(%rip)
 	pushq $L142
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
 	pushq $L143
 	pushq $___stderr
 	call _fprintf
-	addq $16,%rsp
+	addq $80,%rsp
 	cmpl $0,_backtrack_report(%rip)
 	jz L146
 L144:
@@ -555,7 +553,6 @@ L242:
 	pushq $L243
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
 	movl _lastdfa(%rip),%edx
 	movl _current_max_dfas(%rip),%ecx
 	movl _totnst(%rip),%eax
@@ -565,14 +562,13 @@ L242:
 	pushq $L244
 	pushq $___stderr
 	call _fprintf
-	addq $40,%rsp
 	movl _num_rules(%rip),%eax
 	decl %eax
 	pushq %rax
 	pushq $L245
 	pushq $___stderr
 	call _fprintf
-	addq $24,%rsp
+	addq $96,%rsp
 	movl _num_backtracking(%rip),%eax
 	testl %eax,%eax
 	jnz L247
@@ -614,7 +610,6 @@ L261:
 	pushq $L263
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
 	movl _numeps(%rip),%ecx
 	movl _eps2(%rip),%eax
 	pushq %rax
@@ -622,7 +617,7 @@ L261:
 	pushq $L264
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
+	addq $64,%rsp
 	movl _lastccl(%rip),%edi
 	testl %edi,%edi
 	jnz L266
@@ -657,7 +652,6 @@ L267:
 	pushq $L270
 	pushq $___stderr
 	call _fprintf
-	addq $24,%rsp
 	movl _numuniq(%rip),%ecx
 	movl _numdup(%rip),%eax
 	pushq %rax
@@ -665,7 +659,7 @@ L267:
 	pushq $L271
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
+	addq $56,%rsp
 	movl _fulltbl(%rip),%ecx
 	movl _lastdfa(%rip),%eax
 	testl %ecx,%ecx
@@ -693,7 +687,6 @@ L273:
 	pushq $L276
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
 	movl _tblend(%rip),%edx
 	movl _current_max_xpairs(%rip),%ecx
 	movl _peakpairs(%rip),%eax
@@ -703,7 +696,6 @@ L273:
 	pushq $L277
 	pushq $___stderr
 	call _fprintf
-	addq $40,%rsp
 	movl _numtemps(%rip),%esi
 	movl _nummecs(%rip),%edx
 	movl _numecs(%rip),%eax
@@ -716,19 +708,16 @@ L273:
 	pushq $L278
 	pushq $___stderr
 	call _fprintf
-	addq $40,%rsp
 	movl _nummt(%rip),%eax
 	pushq %rax
 	pushq $L279
 	pushq $___stderr
 	call _fprintf
-	addq $24,%rsp
 	movl _numprots(%rip),%eax
 	pushq %rax
 	pushq $L280
 	pushq $___stderr
 	call _fprintf
-	addq $24,%rsp
 	movl _numtemps(%rip),%ecx
 	movl _tmpuses(%rip),%eax
 	pushq %rax
@@ -736,7 +725,7 @@ L273:
 	pushq $L281
 	pushq $___stderr
 	call _fprintf
-	addq $32,%rsp
+	addq $192,%rsp
 L274:
 	cmpl $0,_useecs(%rip)
 	jz L284
@@ -774,18 +763,16 @@ L288:
 	pushq $L290
 	pushq $___stderr
 	call _fprintf
-	addq $40,%rsp
 	movl _num_reallocs(%rip),%eax
 	pushq %rax
 	pushq $L291
 	pushq $___stderr
 	call _fprintf
-	addq $24,%rsp
 	pushq %rbx
 	pushq $L292
 	pushq $___stderr
 	call _fprintf
-	addq $24,%rsp
+	addq $88,%rsp
 L140:
 	movl %r12d,%edi
 	call _exit

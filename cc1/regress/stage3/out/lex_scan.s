@@ -5049,11 +5049,10 @@ L194:
 	pushq $L195
 	pushq _temp_action_file(%rip)
 	call _fprintf
-	addq $24,%rsp
 	pushq $L196
 	pushq _temp_action_file(%rip)
 	call _fprintf
-	addq $16,%rsp
+	addq $40,%rsp
 L500:
 	movl $3,_yy_start(%rip)
 	jmp L21

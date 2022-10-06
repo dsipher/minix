@@ -1,20 +1,21 @@
 # 1 "heap.c"
 
-# 15 "/home/charles/xcc/include/sys/jewel.h"
-typedef long            __blkcnt_t;
-typedef long            __blksize_t;
-typedef unsigned long   __dev_t;
+# 39 "/home/charles/xcc/jewel/include/sys/jewel.h"
+typedef unsigned long   __caddr_t;
+typedef unsigned        __daddr_t;
+typedef unsigned        __dev_t;
 typedef unsigned        __gid_t;
-typedef unsigned long   __ino_t;
+typedef unsigned        __ino_t;
 typedef unsigned        __mode_t;
-typedef unsigned long   __nlink_t;
+typedef unsigned        __nlink_t;
 typedef long            __off_t;
 typedef int             __pid_t;
 typedef unsigned long   __size_t;
 typedef long            __ssize_t;
+typedef long            __time_t;
 typedef unsigned        __uid_t;
 typedef char            *__va_list;
-# 19 "/home/charles/xcc/include/stdlib.h"
+# 43 "/home/charles/xcc/jewel/include/stdlib.h"
 typedef __size_t size_t;
 
 
@@ -40,12 +41,18 @@ extern void *bsearch(const void *, const void *, size_t, size_t,
 
 
 
-extern void __exit(int);
+extern void abort(void);
+extern void _exit(int);
 extern void exit(int);
 
+extern int abs(int);
+extern long labs(long);
+extern void *calloc(size_t, size_t);
 extern void free(void *);
 extern char *getenv(const char *);
 extern void *malloc(size_t);
+extern char *mktemp(char *);
+extern void *realloc(void *, size_t);
 extern float strtof(const char *, char **);
 extern double strtod(const char *, char **);
 extern long strtol(const char *, char **, int);
@@ -58,12 +65,65 @@ extern void qsort(void *, size_t, size_t,
 
 extern int rand(void);
 extern void srand(unsigned);
-# 20 "/home/charles/xcc/include/string.h"
+# 48 "/home/charles/xcc/jewel/include/unistd.h"
+typedef __ssize_t ssize_t;
+
+
+
+
+typedef __pid_t pid_t;
+
+
+
+
+
+
+
+
+
+
+
+extern int access(const char *, int);
+
+
+
+
+
+extern void *__brk(void *);
+
+extern int brk(void *);
+extern void *sbrk(__ssize_t);
+
+extern int close(int);
+extern int execve(const char *, char *const [], char *const []);
+extern int execvp(const char *, char *const []);
+extern int execvpe(const char *, char *const [], char *const []);
+extern pid_t fork(void);
+extern pid_t getpid(void);
+extern int isatty(int);
+
+
+
+
+
+extern __off_t lseek(int, __off_t, int);
+
+extern __ssize_t read(int, void *, __size_t);
+extern int unlink(const char *);
+extern __ssize_t write(int, const void *, __size_t);
+
+extern char *optarg;
+extern int optind;
+extern int opterr;
+extern int optopt;
+
+extern int getopt(int, char *const[], const char *);
+# 44 "/home/charles/xcc/jewel/include/string.h"
+extern void *memmove(void *, const void *, size_t);
+extern void *memset(void *, int, size_t);
 extern void *memchr(const void *, int, size_t);
 extern int memcmp(const void *, const void *, size_t);
 extern void *memcpy(void *, const void *, size_t);
-extern void *memmove(void *, const void *, size_t);
-extern void *memset(void *, int, size_t);
 extern char *strcat(char *, const char *);
 extern char *strchr(const char *, int);
 extern int strcmp(const char *, const char *);
@@ -74,10 +134,7 @@ extern char *strncat(char *, const char *, size_t);
 extern int strncmp(const char *, const char *, size_t);
 extern char *strncpy(char *, const char *, size_t);
 extern char *strrchr(const char *, int);
-# 15 "/home/charles/xcc/include/sys/mman.h"
-extern void *mmap(void *addr, __size_t length, int prot,
-                  int flags, int fd, __off_t offset);
-# 18 "/home/charles/xcc/include/stdio.h"
+# 48 "/home/charles/xcc/jewel/include/stdio.h"
 typedef __off_t fpos_t;
 
 
@@ -142,11 +199,13 @@ extern int fputc(int, FILE *);
 extern int fputs(const char *, FILE *);
 extern FILE *fopen(const char *, const char *);
 extern size_t fread(void *, size_t, size_t, FILE *);
+extern FILE *freopen(const char *, const char *, FILE *);
 extern int fscanf(FILE *, const char *, ...);
 extern int fseek(FILE *, long, int);
 extern long ftell(FILE *);
 extern size_t fwrite(const void *, size_t, size_t, FILE *);
 extern char *gets(char *);
+extern void perror(const char *s);
 extern int printf(const char *, ...);
 extern int puts(const char *);
 extern int remove(const char *);
@@ -161,11 +220,30 @@ extern int ungetc(int, FILE *);
 extern int vfprintf(FILE *, const char *, __va_list);
 extern int vfscanf(FILE *, const char *, __va_list);
 extern int vsprintf(char *, const char *, __va_list);
-# 15 "cc1.h"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+extern char *tmpnam(char *);
+# 40 "cc1.h"
 struct string;
-# 100 "cc1.h"
-extern char g_flag;
+# 134 "cc1.h"
 extern char w_flag;
+extern char O_flag;
 
 
 
@@ -209,9 +287,9 @@ extern void error(int level, struct string *id, char *fmt, ...);
 extern void out(char *fmt, ...);
 
 extern FILE *out_f;
-# 22 "/home/charles/xcc/include/stddef.h"
+# 46 "/home/charles/xcc/jewel/include/stddef.h"
 typedef long ptrdiff_t;
-# 49 "heap.h"
+# 73 "heap.h"
 struct arena { void *bottom; void *top; };
 
 extern struct arena global_arena;
@@ -220,13 +298,24 @@ extern struct arena stmt_arena;
 extern struct arena local_arena;
 extern struct arena string_arena;
 
+
+
 void init_arenas(void);
+# 118 "heap.h"
+void *arena_alloc(struct arena *a, size_t n, int zero);
 
 
 
 
-void init_arena(struct arena *a, size_t size);
-# 105 "heap.h"
+
+
+
+
+
+
+
+
+
 struct slab
 {
     int per_obj;
@@ -236,7 +325,7 @@ struct slab
 };
 
 struct slab_obj *refill_slab(struct slab *s);
-# 160 "heap.h"
+# 187 "heap.h"
 struct vector
 {
     int cap;
@@ -244,8 +333,12 @@ struct vector
     void *elements;
     struct arena *arena;
 };
-# 190 "heap.h"
+# 217 "heap.h"
 struct int_vector { int cap; int size; int *elements; struct arena *arena; };
+struct long_vector { int cap; int size; long *elements; struct arena *arena; };
+
+
+
 
 
 
@@ -272,9 +365,9 @@ void vector_delete(struct vector *v, int i, int n, int elem_size);
 
 
 void dup_vector(struct vector *dst, struct vector *src, int elem_size);
-# 286 "heap.h"
+# 317 "heap.h"
 struct bitvec_vector { int cap; int size; long *elements; struct arena *arena; };
-# 16 "heap.c"
+# 40 "heap.c"
 struct arena global_arena;
 struct arena func_arena;
 struct arena local_arena;
@@ -283,24 +376,33 @@ struct arena string_arena;
 
 void init_arenas(void)
 {
-    init_arena(&global_arena, (1L << 29));
-    init_arena(&func_arena, (1L << 29));
-    init_arena(&stmt_arena, (1L << 29));
-    init_arena(&local_arena, (1L << 29));
-    init_arena(&string_arena, (1L << 29));
-}
+    unsigned long adj;
+    char *p;
 
-void init_arena(struct arena *a, size_t size)
-{
-    void *p;
+    p = sbrk(0);
+    adj = (unsigned long) p;
 
-    if (a->bottom == 0) {
-        p = mmap(0, size, 0x00000001 | 0x00000002,
-                 0x00000020 | 0x00000002, -1, 0);
+    if (adj % 8) {
+        adj = 8 - (adj % 8);
+        p = sbrk(adj);
 
-        if (p == ((void *) -1L)) error(2, 0, "init_arena: mmap failed");
-        a->bottom = a->top = p;
+
+
     }
+
+    p = sbrk(   (1L << 27)
+              + (1L << 27)
+              + (1L << 27)
+              + (1L << 27)
+              + (1L << 27) );
+
+    if (p == (void *) -1) error(2, 0, "arena allocations failed");
+
+    global_arena.top = global_arena.bottom = p;     p += (1L << 27);
+    func_arena.top   = func_arena.bottom   = p;     p += (1L << 27);
+    stmt_arena.top   = stmt_arena.bottom   = p;     p += (1L << 27);
+    local_arena.top  = local_arena.bottom  = p;     p += (1L << 27);
+    string_arena.top = string_arena.bottom = p;
 }
 
 
@@ -314,8 +416,7 @@ struct slab_obj *refill_slab(struct slab *s)
     char *p;
     int i;
 
-    do { struct arena *_a = (&global_arena); size_t _n = (8); unsigned long _p = (unsigned long) _a->top; if (_p % _n) { _p += _n - (_p % _n); _a->top = (void *) _p; } } while (0);
-    p = ({ struct arena *_a = (&global_arena); void *_p = _a->top; _a->top = (char *) _p + (per_obj * per_slab); (_p); });
+    p = arena_alloc(&global_arena, per_obj * per_slab, 0);
 
     for (i = 0; i < (per_slab - 1); ++i, p += per_obj) {
         ((struct slab_obj *) (p))->next = s->free;
@@ -338,12 +439,14 @@ void vector_insert(struct vector *v, int i, int n, int elem_size)
     if (v->cap < new_size) {
         char *new_elements;
 
-        v->cap = 1 << ((sizeof(int) * 8) - 1 - __builtin_clz(new_size));
-        if (v->cap < new_size) v->cap <<= 1;
-        v->cap = (((v->cap) > (4)) ? (v->cap) : (4));
 
-        do { struct arena *_a = (v->arena); size_t _n = (8); unsigned long _p = (unsigned long) _a->top; if (_p % _n) { _p += _n - (_p % _n); _a->top = (void *) _p; } } while (0);
-        new_elements = ({ struct arena *_a = (v->arena); void *_p = _a->top; _a->top = (char *) _p + (v->cap * elem_size); (_p); });
+
+
+
+        v->cap = (((v->cap) > (8)) ? (v->cap) : (8));
+        while (v->cap < new_size) v->cap <<= 1;
+
+        new_elements = arena_alloc(v->arena, v->cap * elem_size, 0);
         memcpy(new_elements, v->elements, i * elem_size);
         memcpy(new_elements + (i + n) * elem_size,
                ((char *) v->elements) + i * elem_size,
@@ -380,5 +483,22 @@ void dup_vector(struct vector *dst, struct vector *src, int elem_size)
     } else
         dst->size = src->size;
 
-    __builtin_memcpy(dst->elements, src->elements, elem_size * src->size);
+    memcpy(dst->elements, src->elements, elem_size * src->size);
+}
+
+
+
+
+
+
+void *arena_alloc(struct arena *a, size_t n, int zero)
+{
+    void *p;
+
+    do { struct arena *_a = (a); size_t _n = (8); unsigned long _p = (unsigned long) _a->top; if (_p % _n) { _p += _n - (_p % _n); _a->top = (void *) _p; } } while (0);
+    ((((n) + ((8) - 1)) / (8)) * (8));
+    p = ({ struct arena *_a = (a); void *_p = _a->top; _a->top = (char *) _p + (n); (_p); });
+    if (zero) memset(p, 0, n);
+
+    return p;
 }

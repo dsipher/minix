@@ -2,197 +2,168 @@
 
 _init_arenas:
 L1:
-L2:
-	movl $536870912,%esi
-	movl $_global_arena,%edi
-	call _init_arena
-	movl $536870912,%esi
-	movl $_func_arena,%edi
-	call _init_arena
-	movl $536870912,%esi
-	movl $_stmt_arena,%edi
-	call _init_arena
-	movl $536870912,%esi
-	movl $_local_arena,%edi
-	call _init_arena
-	movl $536870912,%esi
-	movl $_string_arena,%edi
-	call _init_arena
-L3:
-	ret 
-
-
-_init_arena:
-L4:
 	pushq %rbx
-	pushq %r12
-L5:
-	movq %rdi,%r12
-	cmpq $0,(%r12)
-	jnz L6
-L7:
-	xorl %r9d,%r9d
-	movl $-1,%r8d
-	movl $34,%ecx
-	movl $3,%edx
+L2:
 	xorl %edi,%edi
-	call _mmap
+	call _sbrk
+	andl $7,%eax
+	jz L6
+L4:
+	movl $8,%edi
+	subq %rax,%rdi
+	call _sbrk
+L6:
+	movl $671088640,%edi
+	call _sbrk
 	movq %rax,%rbx
 	cmpq $-1,%rbx
-	jnz L12
-L10:
-	pushq $L13
+	jnz L9
+L7:
+	pushq $L10
 	pushq $0
 	pushq $2
 	call _error
 	addq $24,%rsp
-L12:
-	movq %rbx,8(%r12)
-	movq %rbx,(%r12)
-L6:
-	popq %r12
+L9:
+	movq %rbx,_global_arena(%rip)
+	movq %rbx,_global_arena+8(%rip)
+	leaq 134217728(%rbx),%rax
+	movq %rax,_func_arena(%rip)
+	movq %rax,_func_arena+8(%rip)
+	leaq 268435456(%rbx),%rax
+	movq %rax,_stmt_arena(%rip)
+	movq %rax,_stmt_arena+8(%rip)
+	leaq 402653184(%rbx),%rax
+	movq %rax,_local_arena(%rip)
+	movq %rax,_local_arena+8(%rip)
+	addq $536870912,%rbx
+	movq %rbx,_string_arena(%rip)
+	movq %rbx,_string_arena+8(%rip)
+L3:
 	popq %rbx
 	ret 
 
 
 _refill_slab:
-L14:
+L11:
+	pushq %rbx
+	pushq %r12
+	pushq %r13
+L12:
+	movq %rdi,%r12
+	movl (%r12),%r13d
+	movl 4(%r12),%ebx
+	movl %r13d,%esi
+	imull %ebx,%esi
+	movslq %esi,%rsi
+	xorl %edx,%edx
+	movl $_global_arena,%edi
+	call _arena_alloc
+	xorl %edx,%edx
+	jmp L14
 L15:
-	movl (%rdi),%ecx
-	movl 4(%rdi),%r8d
-	movq _global_arena+8(%rip),%rsi
-	movq %rsi,%rdx
-	andl $7,%edx
-	jz L22
-L20:
-	movl $8,%eax
-	subq %rdx,%rax
-	addq %rax,%rsi
-	movq %rsi,_global_arena+8(%rip)
-L22:
-	movq _global_arena+8(%rip),%rax
-	movl %ecx,%edx
-	imull %r8d,%edx
-	movslq %edx,%rdx
-	addq %rax,%rdx
-	movq %rdx,_global_arena+8(%rip)
-	xorl %esi,%esi
-	jmp L23
-L24:
-	movq 8(%rdi),%rdx
-	movq %rdx,(%rax)
-	movq %rax,8(%rdi)
-	incl %esi
-	movslq %ecx,%rcx
-	addq %rcx,%rax
-L23:
-	movl %r8d,%edx
-	decl %edx
-	cmpl %edx,%esi
-	jl L24
-L26:
-	addl %r8d,16(%rdi)
-	addl 20(%rdi),%r8d
-	movl %r8d,20(%rdi)
-L16:
+	movq 8(%r12),%rcx
+	movq %rcx,(%rax)
+	movq %rax,8(%r12)
+	incl %edx
+	movslq %r13d,%r13
+	addq %r13,%rax
+L14:
+	movl %ebx,%ecx
+	decl %ecx
+	cmpl %ecx,%edx
+	jl L15
+L17:
+	addl %ebx,16(%r12)
+	addl 20(%r12),%ebx
+	movl %ebx,20(%r12)
+L13:
+	popq %r13
+	popq %r12
+	popq %rbx
 	ret 
 
 
 _vector_insert:
-L28:
+L19:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $8,%rsp
+	subq $16,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
-L29:
+L20:
 	movq %rdi,%r13
-	movl %esi,-8(%rbp)
+	movl %esi,%r12d
 	movl %edx,%r14d
-	movl %ecx,%r12d
-	movl 4(%r13),%edi
-	leal (%rdi,%r14),%eax
-	cmpl (%r13),%eax
-	movl %eax,-4(%rbp)
-	jle L32
-L31:
-	addl %r14d,%edi
-	call ___builtin_clz
-	movb $31,%cl
-	subb %al,%cl
-	movl $1,%eax
-	shll %cl,%eax
-	movl %eax,(%r13)
-	cmpl %eax,-4(%rbp)
-	jle L36
-L34:
-	shll $1,%eax
-	movl %eax,(%r13)
-L36:
+	movl %ecx,%ebx
+	movl 4(%r13),%edx
+	leal (%rdx,%r14),%eax
+	movl %eax,-12(%rbp)
 	movl (%r13),%ecx
-	cmpl $4,%ecx
-	movl $4,%eax
+	cmpl %ecx,-12(%rbp)
+	jle L23
+L22:
+	cmpl $8,%ecx
+	movl $8,%eax
 	cmovgl %ecx,%eax
 	movl %eax,(%r13)
-	movq 16(%r13),%rsi
-	movq 8(%rsi),%rdx
-	movq %rdx,%rcx
-	andl $7,%ecx
-	jz L45
-L43:
-	movl $8,%eax
-	subq %rcx,%rax
-	addq %rax,%rdx
-	movq %rdx,8(%rsi)
-L45:
-	movq 16(%r13),%rcx
-	movq 8(%rcx),%rbx
-	movl (%r13),%eax
-	imull %r12d,%eax
-	movslq %eax,%rax
-	addq %rbx,%rax
-	movq %rax,8(%rcx)
-	movl %r12d,%r15d
-	imull -8(%rbp),%r15d
+	jmp L28
+L29:
+	shll $1,%esi
+	movl %esi,(%r13)
+L28:
+	movl (%r13),%esi
+	cmpl %esi,-12(%rbp)
+	jg L29
+L30:
+	imull %ebx,%esi
+	movslq %esi,%rsi
+	xorl %edx,%edx
+	movq 16(%r13),%rdi
+	call _arena_alloc
+	movq %rax,-8(%rbp)
+	movl %ebx,%r15d
+	imull %r12d,%r15d
 	movslq %r15d,%r15
 	movq %r15,%rdx
 	movq 8(%r13),%rsi
-	movq %rbx,%rdi
+	movq -8(%rbp),%rdi
 	call _memcpy
-	addl -8(%rbp),%r14d
-	imull %r12d,%r14d
+	addl %r12d,%r14d
+	imull %ebx,%r14d
 	movslq %r14d,%rdi
 	movq 8(%r13),%rsi
 	movl 4(%r13),%edx
-	subl -8(%rbp),%edx
-	imull %r12d,%edx
+	subl %r12d,%edx
+	imull %ebx,%edx
 	movslq %edx,%rdx
 	addq %r15,%rsi
-	addq %rbx,%rdi
+	addq -8(%rbp),%rdi
 	call _memcpy
-	movq %rbx,8(%r13)
-	jmp L33
-L32:
-	movq 8(%r13),%rax
-	addl -8(%rbp),%r14d
-	imull %r12d,%r14d
+	movq -8(%rbp),%rax
+	movq %rax,8(%r13)
+	jmp L24
+L23:
+	movq 8(%r13),%rdi
+	addl %r12d,%r14d
+	imull %ebx,%r14d
 	movslq %r14d,%r14
-	movl -8(%rbp),%esi
-	imull %r12d,%esi
+	movl %r12d,%esi
+	imull %ebx,%esi
 	movslq %esi,%rsi
-	subl -8(%rbp),%edi
-	imull %r12d,%edi
-	movslq %edi,%rdx
-	addq %rax,%rsi
-	leaq (%rax,%r14),%rdi
+	subl %r12d,%edx
+	imull %ebx,%edx
+	movslq %edx,%rdx
+	addq %rdi,%rsi
+	addq %r14,%rdi
 	call _memmove
-L33:
-	movl -4(%rbp),%eax
+L24:
+	movl -12(%rbp),%eax
 	movl %eax,4(%r13)
-L30:
+L21:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -204,10 +175,10 @@ L30:
 
 
 _vector_delete:
-L46:
+L31:
 	pushq %rbx
 	pushq %r12
-L47:
+L32:
 	movq %rdi,%r12
 	movl %edx,%ebx
 	movq 8(%r12),%rdi
@@ -226,50 +197,82 @@ L47:
 	addq %r8,%rdi
 	call _memmove
 	subl %ebx,4(%r12)
-L48:
+L33:
 	popq %r12
 	popq %rbx
 	ret 
 
 
 _dup_vector:
-L49:
+L34:
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-L50:
+L35:
 	movq %rdi,%r13
 	movq %rsi,%r12
 	movl %edx,%ebx
 	movl 4(%r12),%eax
 	cmpl (%r13),%eax
-	jle L53
-L52:
+	jle L38
+L37:
 	movl $0,4(%r13)
 	movl %ebx,%ecx
 	movl 4(%r12),%edx
 	xorl %esi,%esi
 	movq %r13,%rdi
 	call _vector_insert
-	jmp L54
-L53:
+	jmp L39
+L38:
 	movl %eax,4(%r13)
-L54:
+L39:
 	movq 8(%r13),%rdi
 	imull 4(%r12),%ebx
-	movl %ebx,%edx
+	movslq %ebx,%rdx
 	movq 8(%r12),%rsi
-	call ___builtin_memcpy
-L51:
+	call _memcpy
+L36:
 	popq %r13
 	popq %r12
 	popq %rbx
 	ret 
 
-L13:
-	.byte 105,110,105,116,95,97,114,101
-	.byte 110,97,58,32,109,109,97,112
-	.byte 32,102,97,105,108,101,100,0
+
+_arena_alloc:
+L40:
+	pushq %rbx
+L41:
+	movq 8(%rdi),%r8
+	movq %r8,%rcx
+	andl $7,%ecx
+	jz L48
+L46:
+	movl $8,%eax
+	subq %rcx,%rax
+	addq %rax,%r8
+	movq %r8,8(%rdi)
+L48:
+	movq 8(%rdi),%rbx
+	leaq (%rbx,%rsi),%rax
+	movq %rax,8(%rdi)
+	testl %edx,%edx
+	jz L51
+L49:
+	movq %rsi,%rdx
+	xorl %esi,%esi
+	movq %rbx,%rdi
+	call _memset
+L51:
+	movq %rbx,%rax
+L42:
+	popq %rbx
+	ret 
+
+L10:
+	.byte 97,114,101,110,97,32,97,108
+	.byte 108,111,99,97,116,105,111,110
+	.byte 115,32,102,97,105,108,101,100
+	.byte 0
 .globl _global_arena
 .comm _global_arena, 16, 8
 .globl _func_arena
@@ -286,13 +289,12 @@ L13:
 .globl _error
 .globl _refill_slab
 .globl _string_arena
-.globl _mmap
-.globl ___builtin_clz
-.globl ___builtin_memcpy
+.globl _sbrk
+.globl _arena_alloc
 .globl _local_arena
-.globl _init_arena
 .globl _vector_insert
 .globl _func_arena
+.globl _memset
 .globl _vector_delete
 .globl _memmove
 .globl _dup_vector

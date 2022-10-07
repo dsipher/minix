@@ -4,6 +4,7 @@
 
 ******************************************************************************
 
+   Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
    derived from COHERENT, Copyright (c) 1977-1995 by Robert Swartz.
 
    Redistribution and use in source and binary forms, with or without
@@ -39,6 +40,58 @@
 #include <ctype.h>
 #include <limits.h>
 #include <errno.h>
+
+static unsigned long ulquot[] =
+{
+                    ULONG_MAX / 2,  ULONG_MAX / 3,  ULONG_MAX / 4,
+    ULONG_MAX / 5,  ULONG_MAX / 6,  ULONG_MAX / 7,  ULONG_MAX / 8,
+    ULONG_MAX / 9,  ULONG_MAX / 10, ULONG_MAX / 11, ULONG_MAX / 12,
+    ULONG_MAX / 13, ULONG_MAX / 14, ULONG_MAX / 15, ULONG_MAX / 16,
+    ULONG_MAX / 17, ULONG_MAX / 18, ULONG_MAX / 19, ULONG_MAX / 20,
+    ULONG_MAX / 21, ULONG_MAX / 22, ULONG_MAX / 23, ULONG_MAX / 24,
+    ULONG_MAX / 25, ULONG_MAX / 26, ULONG_MAX / 27, ULONG_MAX / 28,
+    ULONG_MAX / 29, ULONG_MAX / 30, ULONG_MAX / 31, ULONG_MAX / 32,
+    ULONG_MAX / 33, ULONG_MAX / 34, ULONG_MAX / 35, ULONG_MAX / 36
+};
+
+static unsigned char ulrem[] =
+{
+                    ULONG_MAX % 2,  ULONG_MAX % 3,  ULONG_MAX % 4,
+    ULONG_MAX % 5,  ULONG_MAX % 6,  ULONG_MAX % 7,  ULONG_MAX % 8,
+    ULONG_MAX % 9,  ULONG_MAX % 10, ULONG_MAX % 11, ULONG_MAX % 12,
+    ULONG_MAX % 13, ULONG_MAX % 14, ULONG_MAX % 15, ULONG_MAX % 16,
+    ULONG_MAX % 17, ULONG_MAX % 18, ULONG_MAX % 19, ULONG_MAX % 20,
+    ULONG_MAX % 21, ULONG_MAX % 22, ULONG_MAX % 23, ULONG_MAX % 24,
+    ULONG_MAX % 25, ULONG_MAX % 26, ULONG_MAX % 27, ULONG_MAX % 28,
+    ULONG_MAX % 29, ULONG_MAX % 30, ULONG_MAX % 31, ULONG_MAX % 32,
+    ULONG_MAX % 33, ULONG_MAX % 34, ULONG_MAX % 35, ULONG_MAX % 36
+};
+
+static unsigned long lquot[] =
+{
+                    LONG_MAX / 2,   LONG_MAX / 3,   LONG_MAX / 4,
+    LONG_MAX / 5,   LONG_MAX / 6,   LONG_MAX / 7,   LONG_MAX / 8,
+    LONG_MAX / 9,   LONG_MAX / 10,  LONG_MAX / 11,  LONG_MAX / 12,
+    LONG_MAX / 13,  LONG_MAX / 14,  LONG_MAX / 15,  LONG_MAX / 16,
+    LONG_MAX / 17,  LONG_MAX / 18,  LONG_MAX / 19,  LONG_MAX / 20,
+    LONG_MAX / 21,  LONG_MAX / 22,  LONG_MAX / 23,  LONG_MAX / 24,
+    LONG_MAX / 25,  LONG_MAX / 26,  LONG_MAX / 27,  LONG_MAX / 28,
+    LONG_MAX / 29,  LONG_MAX / 30,  LONG_MAX / 31,  LONG_MAX / 32,
+    LONG_MAX / 33,  LONG_MAX / 34,  LONG_MAX / 35,  LONG_MAX / 36
+};
+
+static unsigned char lrem[] =
+{
+                    LONG_MAX % 2,   LONG_MAX % 3,   LONG_MAX % 4,
+    LONG_MAX % 5,   LONG_MAX % 6,   LONG_MAX % 7,   LONG_MAX % 8,
+    LONG_MAX % 9,   LONG_MAX % 10,  LONG_MAX % 11,  LONG_MAX % 12,
+    LONG_MAX % 13,  LONG_MAX % 14,  LONG_MAX % 15,  LONG_MAX % 16,
+    LONG_MAX % 17,  LONG_MAX % 18,  LONG_MAX % 19,  LONG_MAX % 20,
+    LONG_MAX % 21,  LONG_MAX % 22,  LONG_MAX % 23,  LONG_MAX % 24,
+    LONG_MAX % 25,  LONG_MAX % 26,  LONG_MAX % 27,  LONG_MAX % 28,
+    LONG_MAX % 29,  LONG_MAX % 30,  LONG_MAX % 31,  LONG_MAX % 32,
+    LONG_MAX % 33,  LONG_MAX % 34,  LONG_MAX % 35,  LONG_MAX % 36
+};
 
 static unsigned long __strtoul(const char *nptr, char **endptr,
                                int base, int uflag)
@@ -103,15 +156,15 @@ static unsigned long __strtoul(const char *nptr, char **endptr,
         goto done;
     }
 
-    /* determine limits for overflow computation. */
-    /* this would use ldiv() if it worked for unsigned long */
+    /* determine limits for overflow computation. use */
+    /* a table to avoid costly divisions on every call. */
 
     if (uflag) {
-        quot = ULONG_MAX / base;
-        rem = ULONG_MAX % base;
+        quot = ulquot[base - 2];
+        rem = ulrem[base - 2];
     } else {
-        quot = LONG_MAX / base;
-        rem = LONG_MAX % base;
+        quot = lquot[base - 2];
+        rem = lrem[base - 2];
     }
 
     /* process digit string */

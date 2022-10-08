@@ -361,7 +361,7 @@ L87:
 	movq -8(%rbp),%rax
 	movq 8(%rax),%rax
 	movq -24(%rbp),%rcx
-	movq 8(%rcx),%rcx
+	movb 8(%rcx),%cl
 	shlq %cl,%rax
 	jmp L161
 L89:
@@ -372,12 +372,12 @@ L89:
 	jnz L91
 L90:
 	movq 8(%rcx),%rdx
-	movq 8(%rax),%rcx
+	movb 8(%rax),%cl
 	shrq %cl,%rdx
 	jmp L162
 L91:
 	movq 8(%rcx),%rdx
-	movq 8(%rax),%rcx
+	movb 8(%rax),%cl
 	sarq %cl,%rdx
 	jmp L162
 L77:

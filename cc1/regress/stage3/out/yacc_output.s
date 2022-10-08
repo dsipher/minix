@@ -1102,8 +1102,7 @@ L324:
 	xorl %ecx,%ecx
 	jmp L352
 L356:
-	movq -16(%rbp),%rax
-	cmpl %ecx,%eax
+	cmpl %ecx,-16(%rbp)
 	jle L355
 L353:
 	movq _pos(%rip),%rax

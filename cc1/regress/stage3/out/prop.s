@@ -302,7 +302,7 @@ L122:
 	movq %rax,(%rdi,%rsi)
 	movq 8(%rdx,%rcx),%rax
 	movq %rax,8(%rdi,%rsi)
-	movl _next_u(%rip),%ecx
+	movb _next_u(%rip),%cl
 	movl $1,%r14d
 	shlq %cl,%r14
 	movq 464(%r12),%r13

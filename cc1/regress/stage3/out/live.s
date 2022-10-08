@@ -901,7 +901,7 @@ L419:
 	movq 64(%rbx),%rdx
 	leaq (%rsi,%rsi,2),%rcx
 	shlq $3,%rcx
-	movl (%rdx,%rcx),%ecx
+	movb (%rdx,%rcx),%cl
 	movl $1,%edx
 	shll %cl,%edx
 	orl %edx,%r12d

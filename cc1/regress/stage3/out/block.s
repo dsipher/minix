@@ -694,7 +694,7 @@ L275:
 	movq 64(%rbx),%r9
 	leaq (%r8,%r8,2),%rdi
 	shlq $3,%rdi
-	movl (%r9,%rdi),%ecx
+	movb (%r9,%rdi),%cl
 	movl $1,%eax
 	shll %cl,%eax
 	testl %esi,%eax

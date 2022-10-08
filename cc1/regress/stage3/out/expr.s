@@ -2070,7 +2070,7 @@ L737:
 	call _error
 	addq $24,%rsp
 L739:
-	movq 16(%rbx),%rax
+	movl 16(%rbx),%eax
 L736:
 	popq %rbx
 	ret 

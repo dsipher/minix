@@ -98,9 +98,9 @@ L27:
 	movl $1,%esi
 	leaq -24(%rbp),%rdi
 	call _lookup
-	movl 12(%rbx),%ecx
+	movb 12(%rbx),%cl
 	movb %cl,41(%rax)
-	movl 8(%rbx),%ecx
+	movb 8(%rbx),%cl
 	movb %cl,40(%rax)
 	cmpb $12,%cl
 	jnz L32

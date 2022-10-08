@@ -121,8 +121,7 @@ L49:
 L47:
 	movl (%rbx),%esi
 	addq $16,%rbx
-	movq -8(%rbx),%rax
-	movslq %eax,%rdx
+	movslq -8(%rbx),%rdx
 L67:
 	call _print_reg
 	jmp L9

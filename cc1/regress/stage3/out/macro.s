@@ -918,7 +918,7 @@ L349:
 	call _error
 	addq $8,%rsp
 L351:
-	movq 8(%r12),%rsi
+	movl 8(%r12),%esi
 	movq %r13,%rdi
 	call _arg_i
 	movq %rax,%rbx
@@ -969,7 +969,7 @@ L362:
 	cmpl $2147483709,(%rbx)
 	jnz L365
 L364:
-	movq 8(%rbx),%rsi
+	movl 8(%rbx),%esi
 	movq %r12,%rdi
 	call _arg_i
 	movq %rax,%rsi

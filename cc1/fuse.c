@@ -356,6 +356,39 @@ static int write0(struct block *b, int i)
     return 1;  /* fused */
 }
 
+/* try to fuse the current `load' into the read-only
+   operand `i' of `insn'. returns true if successful.
+
+   if the operand only needs part of the loaded value,
+   we can still make the substitution, provided we're
+   not dealing with floating-point or volatile values */
+
+static int fuse(struct insn *insn, int i)
+{
+    struct operand *o = &insn->operand[i];
+
+    if (!OPERAND_REG(o)) return 0;
+    if (o->reg != reg) return 0;
+
+    if ((t & T_FLOATING) || (*load)->is_volatile)
+    {
+        /* we must limit floating-point to same-size types only, since a
+           single-precision value is not merely a truncated double; also
+           volatiles, since we can't shrink the size of the memory-access. */
+
+        if (t_size(o->t) != t_size(t))
+            return 0;
+    } else
+        if (t_size(o->t) > t_size(t))
+            return 0;
+
+    *o = *mem;                      /* substitute memory reference */
+    PRESERVE_INSN(insn, *load);     /* preserve the load properties, */
+    *load = &nop_insn;              /* then kill the load. */
+
+    return 1;
+}
+
 /* to try replace the read-only operand[0] of an insn if the
    operand is a reg that is loaded solely for this insn:
 
@@ -387,17 +420,7 @@ static int read0(struct block *b, int i)
             return 0;
     }
 
-    if (OPERAND_REG(&insn->operand[0])          /* if the operand */
-      && (insn->operand[0].reg == reg)          /* is reg, and the */
-      && T_SIMPATICO(t, insn->operand[0].t))    /* size is right ... */
-    {
-        insn->operand[0] = *mem;            /* substitute, preserve */
-        PRESERVE_INSN(insn, *load);         /* the load properties, */
-        *load = &nop_insn;                  /* then kill the load. */
-        return 1;                           /* restart at top of block */
-    }
-
-    return 0;
+    return fuse(insn, 0);
 }
 
 /* to try replace the read-only operand[1] of an insn if the
@@ -430,17 +453,7 @@ static int read1(struct block *b, int i)
           && (insn->operand[0].reg == reg))     /* if reg is USEd */
             return 0;                           /* in the other operand */
 
-    if (OPERAND_REG(&insn->operand[1])          /* operand[1] is a read */
-      && (insn->operand[1].reg == reg)          /* from our register */
-      && T_SIMPATICO(t, insn->operand[1].t))    /* of the same size */
-    {
-        insn->operand[1] = *mem;            /* substitute, preserve */
-        PRESERVE_INSN(insn, *load);         /* the load properties, */
-        *load = &nop_insn;                  /* then kill the load. */
-        return 1;                           /* restart at top of block */
-    }
-
-    return 0;
+    return fuse(insn, 1);
 }
 
 /* try to replace the update (read/write) operand[0] of an insn

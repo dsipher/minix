@@ -812,7 +812,7 @@ L564:
 	jmp L549
 L395:
 	movq 16(%rax),%rdx
-	movq 16(%rdi),%rcx
+	movb 16(%rdi),%cl
 	shlq %cl,%rdx
 	movq %rdx,16(%rax)
 	jmp L546
@@ -822,12 +822,12 @@ L406:
 	jz L410
 L409:
 	movq 16(%rax),%rdx
-	movq 16(%rdi),%rcx
+	movb 16(%rdi),%cl
 	sarq %cl,%rdx
 	jmp L558
 L410:
 	movq 16(%rax),%rdx
-	movq 16(%rdi),%rcx
+	movb 16(%rdi),%cl
 	shrq %cl,%rdx
 L558:
 	movq %rdx,16(%rax)

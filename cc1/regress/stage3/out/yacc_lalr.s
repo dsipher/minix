@@ -276,10 +276,10 @@ L86:
 	cmpl %ecx,%edx
 	jl L87
 L89:
-	movl _ngotos(%rip),%edx
+	movw _ngotos(%rip),%dx
 	movslq %ecx,%rcx
 	movw %dx,(%rax,%rcx,2)
-	movl _ngotos(%rip),%ecx
+	movw _ngotos(%rip),%cx
 	movslq _nsyms(%rip),%rax
 	movw %cx,(%r13,%rax,2)
 	movl _ngotos(%rip),%edi
@@ -401,10 +401,10 @@ L122:
 	movw %bx,(%rax,%rcx,2)
 	movl _top(%rip),%eax
 	movl %eax,-4(%rbp)
-	movl -4(%rbp),%eax
+	movw -4(%rbp),%cx
 	movslq %ebx,%rdx
-	movq _INDEX(%rip),%rcx
-	movw %ax,(%rcx,%rdx,2)
+	movq _INDEX(%rip),%rax
+	movw %cx,(%rax,%rdx,2)
 	movl _tokensetsize(%rip),%r14d
 	movl %ebx,%ecx
 	imull %r14d,%ecx
@@ -472,7 +472,7 @@ L142:
 	movslq %eax,%rax
 	movq _VERTICES(%rip),%rcx
 	movswl (%rcx,%rax,2),%ecx
-	movl _infinity(%rip),%eax
+	movw _infinity(%rip),%ax
 	movslq %ecx,%rcx
 	movq _INDEX(%rip),%rdx
 	movw %ax,(%rdx,%rcx,2)
@@ -796,8 +796,7 @@ L228:
 	xorl %eax,%eax
 	jmp L277
 L231:
-	movq -32(%rbp),%rax
-	movl %eax,%ecx
+	movl -32(%rbp),%ecx
 	movq _from_state(%rip),%rax
 	movswl (%rax,%rcx,2),%eax
 	movl %eax,-12(%rbp)
@@ -856,7 +855,7 @@ L245:
 	jmp L238
 L241:
 	movswl (%r15),%esi
-	movq -32(%rbp),%rdx
+	movl -32(%rbp),%edx
 	call _add_lookback_edge
 	decl %r12d
 L251:
@@ -895,8 +894,7 @@ L263:
 	leal 1(%rbx),%edi
 	shll $1,%edi
 	call _allocate
-	movq -32(%rbp),%rcx
-	movl %ecx,%ecx
+	movl -32(%rbp),%ecx
 	movq %rcx,-32(%rbp)
 	movq _includes(%rip),%rdx
 	movq -32(%rbp),%rcx
@@ -921,8 +919,7 @@ L277:
 	movq %rax,-32(%rbp)
 	movl _ngotos(%rip),%esi
 	xorl %ebx,%ebx
-	movq -32(%rbp),%rax
-	cmpl %eax,%esi
+	cmpl -32(%rbp),%esi
 	jg L231
 L233:
 	movq _includes(%rip),%rdi

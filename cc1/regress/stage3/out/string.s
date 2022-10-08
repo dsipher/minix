@@ -319,7 +319,7 @@ L11:
 	movl %r12d,%eax
 	movq _filters(%rcx,%rax,8),%rax
 	movq %rax,-16(%rbp)
-	movl -44(%rbp),%ecx
+	movb -44(%rbp),%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movq -16(%rbp),%rax
@@ -381,7 +381,7 @@ L43:
 	movq %rax,8(%r14)
 	movl $0,16(%r14)
 	movl $0,20(%r14)
-	movl -44(%rbp),%ecx
+	movb -44(%rbp),%cl
 	movl $1,%edx
 	shlq %cl,%rdx
 	movl %ebx,%eax

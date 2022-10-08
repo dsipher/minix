@@ -555,8 +555,7 @@ L437:
 	cmpl $108,-188(%rbp)
 	jnz L439
 L438:
-	movq -200(%rbp),%rax
-	movslq %eax,%rax
+	movslq -200(%rbp),%rax
 	movq %rax,-200(%rbp)
 	movq %rdx,-176(%rbp)
 	movq -200(%rbp),%rax
@@ -627,10 +626,8 @@ L296:
 	testl %eax,%eax
 	jz L213
 L303:
-	movq -200(%rbp),%rcx
-	addl %ecx,%eax
-	movl %eax,%ecx
-	movq %rcx,-200(%rbp)
+	addl -200(%rbp),%eax
+	movq %rax,-200(%rbp)
 	cmpl $0,-152(%rbp)
 	jnz L210
 L307:
@@ -676,10 +673,8 @@ L326:
 	testl %eax,%eax
 	jz L213
 L333:
-	movq -200(%rbp),%rcx
-	addl %ecx,%eax
-	movl %eax,%ecx
-	movq %rcx,-200(%rbp)
+	addl -200(%rbp),%eax
+	movq %rax,-200(%rbp)
 	cmpl $0,-152(%rbp)
 	jnz L210
 L337:

@@ -118,7 +118,7 @@ L51:
 	testq %rax,%rax
 	jz L75
 L67:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -156,7 +156,7 @@ L79:
 	testq %rax,%rax
 	jz L96
 L88:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -175,7 +175,7 @@ L96:
 	testq %rax,%rax
 	jz L111
 L103:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax

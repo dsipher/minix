@@ -761,7 +761,7 @@ L336:
 	movl $0,-24(%rbp)
 	movl 48(%r13),%ecx
 	movl %ecx,-20(%rbp)
-	movq 88(%r13),%rcx
+	movl 88(%r13),%ecx
 	andl $3,%ecx
 	shll $3,%ecx
 	andl $4294967271,%eax
@@ -3474,7 +3474,7 @@ L990:
 	testq %rax,%rax
 	jz L1007
 L999:
-	movq (%rax),%rax
+	movl (%rax),%eax
 	andl $131071,%eax
 	shll $5,%eax
 	orl $1,%eax
@@ -3488,7 +3488,7 @@ L1007:
 	testq %rdx,%rdx
 	jz L1022
 L1014:
-	movq (%rdx),%rcx
+	movl (%rdx),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl -64(%rbp),%eax
@@ -3755,7 +3755,7 @@ L1123:
 	testq %rcx,%rcx
 	jz L1106
 L1098:
-	movq (%rcx),%rcx
+	movl (%rcx),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	andl $4290773023,%eax
@@ -3771,7 +3771,7 @@ L1106:
 	testq %rcx,%rcx
 	jz L1121
 L1113:
-	movq (%rcx),%rcx
+	movl (%rcx),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	andl $4290773023,%eax
@@ -4161,7 +4161,7 @@ L1217:
 	rep 
 	movsb 
 	movq -216(%rbp),%rax
-	movq 16(%rax),%r13
+	movl 16(%rax),%ebx
 	movl -96(%rbp),%eax
 	andl $4294967288,%eax
 	orl $1,%eax
@@ -4173,43 +4173,43 @@ L1217:
 	andl $4290773023,%eax
 	orl $8192,%eax
 	movl %eax,-96(%rbp)
-	movl %r13d,%edx
+	movl %ebx,%edx
 	leaq -64(%rbp),%rsi
 	movq %r15,%rdi
 	call _blkaddr
-	movl %r13d,%edx
+	movl %ebx,%edx
 	leaq -32(%rbp),%rsi
 	movq %r15,%rdi
 	call _blkaddr
 	jmp L1235
 L1236:
-	cmpl $8,%r13d
+	cmpl $8,%ebx
 	jl L1239
 L1238:
-	movl $256,%r12d
-	movl $8,%ebx
+	movl $256,%r13d
+	movl $8,%r12d
 	jmp L1240
 L1239:
-	cmpl $4,%r13d
+	cmpl $4,%ebx
 	jl L1242
 L1241:
-	movl $64,%r12d
-	movl $4,%ebx
+	movl $64,%r13d
+	movl $4,%r12d
 	jmp L1240
 L1242:
-	cmpl $2,%r13d
+	cmpl $2,%ebx
 	jl L1245
 L1244:
-	movl $16,%r12d
-	movl $2,%ebx
+	movl $16,%r13d
+	movl $2,%r12d
 	jmp L1240
 L1245:
-	movl $2,%r12d
-	movl $1,%ebx
+	movl $2,%r13d
+	movl $1,%r12d
 L1240:
 	leaq -32(%rbp),%rdx
 	leaq -96(%rbp),%rsi
-	movq %r12,%rdi
+	movq %r13,%rdi
 	call _move
 	leal 1(%r14),%ecx
 	movl %ecx,-220(%rbp)
@@ -4219,21 +4219,21 @@ L1240:
 	call _insert_insn
 	leaq -96(%rbp),%rdx
 	leaq -64(%rbp),%rsi
-	movq %r12,%rdi
+	movq %r13,%rdi
 	call _move
 	addl $2,%r14d
 	movl -220(%rbp),%edx
 	movq %r15,%rsi
 	movq %rax,%rdi
 	call _insert_insn
-	movl %ebx,%eax
+	movl %r12d,%eax
 	addq %rax,-48(%rbp)
 	addq -16(%rbp),%rax
 	movq %rax,-16(%rbp)
-	subl %ebx,%r13d
+	subl %r12d,%ebx
 	addl $2,-224(%rbp)
 L1235:
-	testl %r13d,%r13d
+	testl %ebx,%ebx
 	jnz L1236
 L1219:
 	movl -224(%rbp),%eax
@@ -4277,32 +4277,32 @@ L1298:
 	movl %esi,%r12d
 	movq 16(%r13),%rax
 	movslq %r12d,%r12
-	movq (%rax,%r12,8),%r14
+	movq (%rax,%r12,8),%r15
 	xorl %ebx,%ebx
-	leaq 72(%r14),%rdi
+	leaq 72(%r15),%rdi
 	call _words
 	cmpl $7,%eax
 	movl %eax,-172(%rbp)
 	jg L1305
 L1303:
-	movl 40(%r14),%eax
+	movl 40(%r15),%eax
 	andl $7,%eax
 	cmpl $2,%eax
 	jnz L1305
 L1311:
-	cmpq $0,64(%r14)
+	cmpq $0,64(%r15)
 	jnz L1305
 L1312:
-	cmpq $0,56(%r14)
+	cmpq $0,56(%r15)
 	jnz L1305
 L1308:
-	movq 88(%r14),%r15
+	movl 88(%r15),%r14d
 	movl $32,%ecx
-	leaq 8(%r14),%rsi
+	leaq 8(%r15),%rsi
 	leaq -32(%rbp),%rdi
 	rep 
 	movsb 
-	movl %r15d,%edx
+	movl %r14d,%edx
 	leaq -32(%rbp),%rsi
 	movq %r13,%rdi
 	call _blkaddr
@@ -4319,7 +4319,7 @@ L1308:
 L1333:
 	movl $256,%edi
 	call _temp_reg
-	movl %eax,%r14d
+	movl %eax,%r15d
 	xorl %esi,%esi
 	movl $-1610545081,%edi
 	call _new_insn
@@ -4327,7 +4327,7 @@ L1333:
 	andl $4294967288,%ecx
 	orl $1,%ecx
 	movl %ecx,8(%rax)
-	movl %r14d,16(%rax)
+	movl %r15d,16(%rax)
 	movl 40(%rax),%edx
 	shll $10,%edx
 	shrl $15,%edx
@@ -4352,34 +4352,34 @@ L1333:
 	andl $4294967288,%eax
 	orl $1,%eax
 	movl %eax,-72(%rbp)
-	movl %r14d,-64(%rbp)
+	movl %r15d,-64(%rbp)
 L1369:
-	testl %r15d,%r15d
+	testl %r14d,%r14d
 	jz L1302
 L1370:
-	cmpl $8,%r15d
+	cmpl $8,%r14d
 	jl L1373
 L1372:
 	movl $256,%edi
-	movl $8,%r14d
+	movl $8,%r15d
 	jmp L1374
 L1373:
-	cmpl $4,%r15d
+	cmpl $4,%r14d
 	jl L1376
 L1375:
 	movl $64,%edi
-	movl $4,%r14d
+	movl $4,%r15d
 	jmp L1374
 L1376:
-	cmpl $2,%r15d
+	cmpl $2,%r14d
 	jl L1379
 L1378:
 	movl $16,%edi
-	movl $2,%r14d
+	movl $2,%r15d
 	jmp L1374
 L1379:
 	movl $2,%edi
-	movl $1,%r14d
+	movl $1,%r15d
 L1374:
 	leaq -72(%rbp),%rdx
 	leaq -32(%rbp),%rsi
@@ -4389,10 +4389,10 @@ L1374:
 	movq %r13,%rsi
 	movq %rax,%rdi
 	call _insert_insn
-	movl %r14d,%eax
+	movl %r15d,%eax
 	addq -16(%rbp),%rax
 	movq %rax,-16(%rbp)
-	subl %r14d,%r15d
+	subl %r15d,%r14d
 	incl %ebx
 	jmp L1369
 L1305:
@@ -4411,7 +4411,7 @@ L1305:
 	orl $1,%eax
 	movl %eax,-168(%rbp)
 	movl $-2147483648,-160(%rbp)
-	leaq 72(%r14),%rdx
+	leaq 72(%r15),%rdx
 	leaq -104(%rbp),%rsi
 	movl $256,%edi
 	call _move
@@ -4419,7 +4419,7 @@ L1305:
 	movq %r13,%rsi
 	movq %rax,%rdi
 	call _insert_insn
-	leaq 8(%r14),%rdx
+	leaq 8(%r15),%rdx
 	leaq -136(%rbp),%rsi
 	movl $256,%edi
 	call _move
@@ -4427,7 +4427,7 @@ L1305:
 	movq %r13,%rsi
 	movq %rax,%rdi
 	call _insert_insn
-	leaq 40(%r14),%rdx
+	leaq 40(%r15),%rdx
 	leaq -168(%rbp),%rsi
 	movl $2,%edi
 	call _move
@@ -5010,8 +5010,7 @@ L1701:
 	testq %rax,%rax
 	jz L1703
 L1702:
-	movl (%rax),%eax
-	movzbq %al,%rcx
+	movzbq (%rax),%rcx
 	shlq $4,%rcx
 	movq _sel+8(%rcx),%rax
 	testq %rax,%rax

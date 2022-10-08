@@ -20,7 +20,7 @@ L2:
 	testq %rcx,%rcx
 	jz L3
 L13:
-	movq _char_type(%rip),%rdx
+	movl _char_type(%rip),%edx
 	andl $131071,%edx
 	shll $5,%edx
 	movl 72(%rax),%ecx
@@ -69,7 +69,7 @@ L28:
 	testq %rax,%rax
 	jz L47
 L39:
-	movq _char_type(%rip),%rcx
+	movl _char_type(%rip),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%rbx),%eax

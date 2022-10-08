@@ -666,7 +666,7 @@ L270:
 L275:
 	xorl %esi,%esi
 	call _find
-	movl 184(%r14),%ecx
+	movb 184(%r14),%cl
 	movl $64,%edx
 	shll %cl,%edx
 	addl 8(%rax),%edx
@@ -709,7 +709,7 @@ L291:
 L296:
 	xorl %esi,%esi
 	call _find
-	movl 184(%r14),%ecx
+	movb 184(%r14),%cl
 	movl $64,%edx
 	shll %cl,%edx
 	addl 8(%rax),%edx

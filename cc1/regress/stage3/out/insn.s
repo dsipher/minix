@@ -1018,8 +1018,7 @@ L575:
 	testl $6144,(%rbx)
 	jz L581
 L579:
-	movq 16(%rbx),%rax
-	movslq %eax,%rax
+	movslq 16(%rbx),%rax
 	movq %rax,16(%rbx)
 L581:
 	movq 24(%rbx),%rax

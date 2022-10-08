@@ -376,8 +376,7 @@ L121:
 	jmp L160
 L124:
 	movq 8(%rcx,%r12),%rdx
-	movq -32(%rbp),%rax
-	movl %eax,%eax
+	movl -32(%rbp),%eax
 	leaq (%rax,%rax,2),%rcx
 	shlq $3,%rcx
 	movq %rax,-32(%rbp)
@@ -404,8 +403,7 @@ L160:
 L126:
 	movq _webs+8(%rip),%rdi
 	movl 4(%r12,%rdi),%esi
-	movq -32(%rbp),%rax
-	cmpl %esi,%eax
+	cmpl %esi,-32(%rbp)
 	jnz L132
 L134:
 	leal 1(%rsi),%eax
@@ -423,8 +421,7 @@ L139:
 	movq _webs+8(%rip),%rax
 	movq 8(%r12,%rax),%rax
 	movq %rax,-24(%rbp)
-	movq -32(%rbp),%rax
-	movl %eax,%eax
+	movl -32(%rbp),%eax
 	leaq (%rax,%rax,2),%rdi
 	shlq $3,%rdi
 	movq -24(%rbp),%rax
@@ -447,8 +444,7 @@ L139:
 	jmp L133
 L132:
 	movq 8(%r12,%rdi),%rdx
-	movq -32(%rbp),%rax
-	movl %eax,%eax
+	movl -32(%rbp),%eax
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
 	addq %rax,%rdx
@@ -479,8 +475,7 @@ L150:
 L153:
 	movq _webs+8(%rip),%rax
 	movq 8(%r14,%rax),%rsi
-	movq -32(%rbp),%rax
-	movl %eax,%eax
+	movl -32(%rbp),%eax
 	leaq (%rax,%rax,2),%r12
 	shlq $3,%r12
 	leaq (%r13,%rsi),%rdx
@@ -518,8 +513,7 @@ L133:
 	leaq (%rbx,%rbx,2),%rax
 	shlq $3,%rax
 	movq 8(%rcx,%rax),%rcx
-	movq -32(%rbp),%rax
-	movl %eax,%eax
+	movl -32(%rbp),%eax
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
 	movq 8(%rcx,%rax),%rax

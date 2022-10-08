@@ -356,7 +356,7 @@ L168:
 	testq %rax,%rax
 	jz L185
 L177:
-	movq _long_type(%rip),%rax
+	movl _long_type(%rip),%eax
 	andl $131071,%eax
 	shll $5,%eax
 	andl $4290773023,%ecx
@@ -374,7 +374,7 @@ L185:
 	testq %rax,%rax
 	jz L200
 L192:
-	movq _long_type(%rip),%rcx
+	movl _long_type(%rip),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rdi),%eax

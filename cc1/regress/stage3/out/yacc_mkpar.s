@@ -368,28 +368,28 @@ L127:
 	shll $1,%edi
 	call _allocate
 	movq %rax,_RRconflicts(%rip)
-	xorl %eax,%eax
+	xorl %ecx,%ecx
 	jmp L129
 L130:
 	movl $0,_SRcount(%rip)
 	movl $0,_RRcount(%rip)
 	movl $-1,%edi
-	movq _parser(%rip),%rcx
-	movq (%rcx,%rax,8),%rsi
+	movq _parser(%rip),%rax
+	movq (%rax,%rcx,8),%rsi
 L133:
 	testq %rsi,%rsi
 	jz L136
 L134:
-	movswl 8(%rsi),%ecx
-	cmpl %ecx,%edi
+	movswl 8(%rsi),%eax
+	cmpl %eax,%edi
 	jz L138
 L137:
 	movq %rsi,%rbx
-	movl %ecx,%edi
+	movl %eax,%edi
 	jmp L139
 L138:
-	movswl _final_state(%rip),%ecx
-	cmpl %ecx,%eax
+	movswl _final_state(%rip),%eax
+	cmpl %eax,%ecx
 	jnz L145
 L143:
 	testl %edi,%edi
@@ -402,26 +402,26 @@ L147:
 	cmpw $0,%dx
 	jle L174
 L153:
-	movw 12(%rsi),%cx
-	cmpw $0,%cx
+	movw 12(%rsi),%ax
+	cmpw $0,%ax
 	jg L154
 L174:
 	incl _SRcount(%rip)
 	jmp L171
 L154:
-	cmpw %cx,%dx
+	cmpw %ax,%dx
 	jl L173
 	jg L172
 L161:
-	movb 15(%rbx),%cl
-	cmpb $1,%cl
+	movb 15(%rbx),%al
+	cmpb $1,%al
 	jnz L164
 L173:
 	movb $2,16(%rbx)
 	movq %rsi,%rbx
 	jmp L139
 L164:
-	cmpb $2,%cl
+	cmpb $2,%al
 	jz L172
 L167:
 	movb $2,16(%rbx)
@@ -436,22 +436,22 @@ L139:
 	movq (%rsi),%rsi
 	jmp L133
 L136:
-	movl _SRtotal(%rip),%ecx
+	movl _SRtotal(%rip),%eax
 	movl _SRcount(%rip),%edx
-	addl %edx,%ecx
-	movl %ecx,_SRtotal(%rip)
+	addl %edx,%eax
+	movl %eax,_SRtotal(%rip)
 	movl _RRtotal(%rip),%esi
 	addl _RRcount(%rip),%esi
 	movl %esi,_RRtotal(%rip)
-	movl %eax,%eax
-	movq _SRconflicts(%rip),%rcx
-	movw %dx,(%rcx,%rax,2)
-	movl _RRcount(%rip),%ecx
+	movl %ecx,%ecx
+	movq _SRconflicts(%rip),%rax
+	movw %dx,(%rax,%rcx,2)
+	movw _RRcount(%rip),%ax
 	movq _RRconflicts(%rip),%rdx
-	movw %cx,(%rdx,%rax,2)
-	incl %eax
+	movw %ax,(%rdx,%rcx,2)
+	incl %ecx
 L129:
-	cmpl %eax,_nstates(%rip)
+	cmpl %ecx,_nstates(%rip)
 	jg L130
 L128:
 	popq %rbx

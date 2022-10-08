@@ -266,24 +266,22 @@ L22:
 	pushq %r14
 	pushq %r15
 L23:
-	movq %rdi,-16(%rbp)
-	movl %esi,%r15d
-	movq -16(%rbp),%rax
-	movq 16(%rax),%rdx
-	movslq %r15d,%r15
-	movq (%rdx,%r15,8),%r14
-	leal 1(%r15),%r12d
-	movq -16(%rbp),%rax
-	cmpl 12(%rax),%r12d
+	movq %rdi,%r15
+	movl %esi,%r14d
+	movq 16(%r15),%rdx
+	movslq %r14d,%r14
+	movq (%rdx,%r14,8),%r13
+	leal 1(%r14),%r12d
+	cmpl 12(%r15),%r12d
 	jz L105
 L27:
-	movl (%r14),%eax
+	movl (%r13),%eax
 	andl $805306368,%eax
 	sarl $28,%eax
 	cmpl $2,%eax
 	jnz L31
 L29:
-	movl 40(%r14),%eax
+	movl 40(%r13),%eax
 	movl %eax,%ecx
 	andl $7,%ecx
 	cmpl $3,%ecx
@@ -295,26 +293,26 @@ L43:
 	testl $2121728,%eax
 	jz L31
 L39:
-	movq 56(%r14),%rax
+	movq 56(%r13),%rax
 	cmpq $-2147483648,%rax
 	jl L105
 L47:
 	cmpq $2147483647,%rax
 	jg L105
 L31:
-	movl 8(%r14),%edi
+	movl 8(%r13),%edi
 	movl %edi,%eax
 	andl $7,%eax
 	cmpl $1,%eax
 	jnz L105
 L54:
-	movl 16(%r14),%r13d
+	movl 16(%r13),%eax
+	movl %eax,-12(%rbp)
 	shll $10,%edi
 	shrl $15,%edi
 	movslq %r12d,%r12
 	movq (%rdx,%r12,8),%rbx
-	movl (%rbx),%eax
-	movzbq %al,%rax
+	movzbq (%rbx),%rax
 	testb $1,_flags(%rax)
 	jz L105
 L71:
@@ -323,7 +321,8 @@ L71:
 	cmpl $1,%eax
 	jnz L105
 L67:
-	cmpl 48(%rbx),%r13d
+	movl -12(%rbp),%eax
+	cmpl 48(%rbx),%eax
 	jnz L105
 L63:
 	movl 8(%rbx),%ecx
@@ -363,22 +362,24 @@ L87:
 	cmpl %eax,-4(%rbp)
 	jnz L105
 L58:
-	movl %r15d,%edx
-	movl %r13d,%esi
-	movq -16(%rbp),%rdi
+	movl %r14d,%edx
+	movl -12(%rbp),%esi
+	movq %r15,%rdi
 	call _range_by_def
 	movl %eax,%esi
-	movq -16(%rbp),%rdi
+	movq %r15,%rdi
 	call _range_span
 	cmpl %eax,%r12d
 	jnz L105
 L94:
 	leaq 8(%rbx),%rdi
 	call _normalize_operand
-	cmpl 16(%rbx),%r13d
+	movl -12(%rbp),%eax
+	cmpl 16(%rbx),%eax
 	jz L105
 L99:
-	cmpl 20(%rbx),%r13d
+	movl -12(%rbp),%eax
+	cmpl 20(%rbx),%eax
 	jnz L98
 L105:
 	xorl %eax,%eax
@@ -386,11 +387,10 @@ L105:
 L98:
 	movl $32,%ecx
 	leaq 8(%rbx),%rsi
-	leaq 8(%r14),%rdi
+	leaq 8(%r13),%rdi
 	rep 
 	movsb 
-	movq -16(%rbp),%rax
-	movq 16(%rax),%rax
+	movq 16(%r15),%rax
 	movq $_nop_insn,(%rax,%r12,8)
 	movl $1,%eax
 L24:
@@ -723,8 +723,7 @@ L285:
 	testq %rbx,%rbx
 	jz L287
 L286:
-	movl (%rbx),%eax
-	movzbq %al,%rax
+	movzbq (%rbx),%rax
 	movsbl _flags(%rax),%r14d
 	testl $1,%r14d
 	jz L294

@@ -38,7 +38,7 @@ L8:
 	testq %rax,%rax
 	jz L3
 L45:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl (%r12),%eax
@@ -82,7 +82,7 @@ L47:
 	testq %rax,%rax
 	jz L63
 L55:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -103,7 +103,7 @@ L63:
 	testq %rax,%rax
 	jz L81
 L73:
-	movq _long_type(%rip),%rcx
+	movl _long_type(%rip),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
@@ -167,7 +167,7 @@ L92:
 	testq %rax,%rax
 	jz L106
 L98:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl (%r14),%eax
@@ -188,7 +188,7 @@ L125:
 	testq %rax,%rax
 	jz L109
 L131:
-	movq _ulong_type(%rip),%rax
+	movl _ulong_type(%rip),%eax
 	andl $131071,%eax
 	shll $5,%eax
 	andl $4290773023,%ecx
@@ -216,7 +216,7 @@ L107:
 	testq %rax,%rax
 	jz L124
 L116:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl (%r15),%eax
@@ -280,7 +280,7 @@ L139:
 	testq %rax,%rax
 	jz L158
 L150:
-	movq _int_type(%rip),%rcx
+	movl _int_type(%rip),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
@@ -341,7 +341,7 @@ L160:
 	testq %rax,%rax
 	jz L176
 L168:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -396,7 +396,7 @@ L179:
 	testq %rax,%rax
 	jz L195
 L187:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -474,7 +474,7 @@ L204:
 	testq %rax,%rax
 	jz L221
 L213:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r15),%eax
@@ -495,7 +495,7 @@ L221:
 	testq %rax,%rax
 	jz L239
 L231:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r15),%eax
@@ -524,7 +524,7 @@ L239:
 	testq %rax,%rax
 	jz L254
 L246:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r15),%eax
@@ -586,7 +586,7 @@ L254:
 	testq %rax,%rax
 	jz L284
 L276:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r14),%eax
@@ -608,7 +608,7 @@ L284:
 	testq %rax,%rax
 	jz L299
 L291:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r14),%eax
@@ -645,7 +645,7 @@ L299:
 	testq %rax,%rax
 	jz L329
 L321:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r12),%eax
@@ -769,7 +769,7 @@ L382:
 	testq %rax,%rax
 	jz L417
 L409:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
@@ -958,7 +958,7 @@ L417:
 	testq %rax,%rax
 	jz L558
 L550:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r12),%eax
@@ -995,7 +995,7 @@ L558:
 	testq %rax,%rax
 	jz L588
 L580:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r12),%eax
@@ -1046,7 +1046,7 @@ L590:
 	testq %rax,%rax
 	jz L607
 L599:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
@@ -1158,7 +1158,7 @@ L625:
 	testq %rax,%rax
 	jz L642
 L634:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
@@ -1177,7 +1177,7 @@ L642:
 	testq %rax,%rax
 	jz L657
 L649:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r13),%eax
@@ -1201,7 +1201,7 @@ L657:
 	testq %rax,%rax
 	jz L675
 L667:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r13),%eax
@@ -1233,7 +1233,7 @@ L626:
 	testq %rax,%rax
 	jz L690
 L682:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -1252,7 +1252,7 @@ L690:
 	testq %rax,%rax
 	jz L705
 L697:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
@@ -1273,7 +1273,7 @@ L705:
 	testq %rax,%rax
 	jz L723
 L715:
-	movq _char_type(%rip),%rcx
+	movl _char_type(%rip),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%rbx),%eax
@@ -1299,7 +1299,7 @@ L723:
 	jz L738
 L730:
 	movq -40(%rbp),%rax
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -1318,7 +1318,7 @@ L738:
 	jz L753
 L745:
 	movq -40(%rbp),%rax
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
@@ -1339,7 +1339,7 @@ L753:
 	testq %rax,%rax
 	jz L771
 L763:
-	movq _char_type(%rip),%rcx
+	movl _char_type(%rip),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%rbx),%eax
@@ -1410,7 +1410,7 @@ L775:
 	testq %rax,%rax
 	jz L791
 L783:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r15),%eax
@@ -1437,7 +1437,7 @@ L791:
 	testq %rax,%rax
 	jz L809
 L801:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r15),%eax
@@ -1463,7 +1463,7 @@ L809:
 	testq %rax,%rax
 	jz L824
 L816:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
@@ -1482,7 +1482,7 @@ L824:
 	testq %rax,%rax
 	jz L839
 L831:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r13),%eax
@@ -1503,7 +1503,7 @@ L839:
 	testq %rax,%rax
 	jz L857
 L849:
-	movq _char_type(%rip),%rcx
+	movl _char_type(%rip),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r13),%eax
@@ -1530,7 +1530,7 @@ L857:
 	testq %rax,%rax
 	jz L872
 L864:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
@@ -1550,7 +1550,7 @@ L872:
 	testq %rax,%rax
 	jz L887
 L879:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r13),%eax
@@ -1574,7 +1574,7 @@ L887:
 	testq %rax,%rax
 	jz L905
 L897:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r13),%eax
@@ -1601,7 +1601,7 @@ L905:
 	testq %rax,%rax
 	jz L920
 L912:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r12),%eax
@@ -1621,7 +1621,7 @@ L920:
 	testq %rax,%rax
 	jz L935
 L927:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r12),%eax
@@ -1640,7 +1640,7 @@ L935:
 	testq %rax,%rax
 	jz L950
 L942:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 72(%r12),%eax
@@ -1699,7 +1699,7 @@ L957:
 	testq %rax,%rax
 	jz L973
 L965:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -1797,7 +1797,7 @@ L999:
 	testq %rax,%rax
 	jz L1055
 L1008:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -1883,7 +1883,7 @@ L1037:
 	testq %rax,%rax
 	jz L1052
 L1044:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%rbx),%eax
@@ -1969,7 +1969,7 @@ L1062:
 	testq %rax,%rax
 	jz L1079
 L1071:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r15),%eax
@@ -1988,7 +1988,7 @@ L1079:
 	testq %rax,%rax
 	jz L1094
 L1086:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r15),%eax
@@ -2061,7 +2061,7 @@ L1099:
 	testq %rax,%rax
 	jz L1116
 L1108:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -2091,7 +2091,7 @@ L1100:
 	testq %rax,%rax
 	jz L1131
 L1123:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r15),%eax
@@ -2110,7 +2110,7 @@ L1131:
 	testq %rax,%rax
 	jz L1146
 L1138:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r15),%eax
@@ -2243,7 +2243,7 @@ L1156:
 	testq %rax,%rax
 	jz L1196
 L1188:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%rbx),%eax
@@ -2301,7 +2301,7 @@ L1208:
 	testq %rax,%rax
 	jz L1224
 L1216:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r15),%eax
@@ -2321,7 +2321,7 @@ L1224:
 	testq %rax,%rax
 	jz L1242
 L1234:
-	movq _int_type(%rip),%rcx
+	movl _int_type(%rip),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r15),%eax
@@ -2351,7 +2351,7 @@ L1242:
 	testq %rax,%rax
 	jz L1257
 L1249:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r15),%eax
@@ -2371,7 +2371,7 @@ L1257:
 	testq %rax,%rax
 	jz L1275
 L1267:
-	movq _int_type(%rip),%rcx
+	movl _int_type(%rip),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 40(%r15),%eax
@@ -2481,7 +2481,7 @@ L1290:
 	testq %rax,%rax
 	jz L1307
 L1299:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
@@ -2525,7 +2525,7 @@ L1311:
 	testq %rax,%rax
 	jz L1328
 L1320:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r13),%eax
@@ -2726,7 +2726,7 @@ L1371:
 	testq %rax,%rax
 	jz L1370
 L1377:
-	movq (%rax),%rcx
+	movl (%rax),%ecx
 	andl $131071,%ecx
 	shll $5,%ecx
 	movl 8(%r14),%eax

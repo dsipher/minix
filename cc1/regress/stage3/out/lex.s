@@ -1706,7 +1706,7 @@ L769:
 	cmpl $1073741827,_token(%rip)
 	jnz L774
 L772:
-	movq _token+24(%rip),%rax
+	movl _token+24(%rip),%eax
 	movl %eax,_line_no(%rip)
 	call _lex1
 	cmpl $2,_token(%rip)

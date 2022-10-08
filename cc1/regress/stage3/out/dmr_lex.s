@@ -661,7 +661,7 @@ _gettokens:
 L87:
 	pushq %rbp
 	movq %rsp,%rbp
-	subq $48,%rsp
+	subq $40,%rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
@@ -738,7 +738,7 @@ L184:
 	xorl %r12d,%r12d
 L107:
 	movzbl (%rbx),%r13d
-	movl %r12d,-44(%rbp)
+	movl %r12d,-40(%rbp)
 	movl %r13d,%eax
 	shlq $6,%rax
 	movslq %r12d,%r12
@@ -811,8 +811,8 @@ L122:
 	movb (%rdx),%al
 	andb $63,%al
 	movzbq %al,%rax
-	movq _namebit(,%rax,8),%rax
-	movq %rax,-40(%rbp)
+	movl _namebit(,%rax,8),%eax
+	movl %eax,-36(%rbp)
 	cmpl $1,%ecx
 	jbe L124
 L123:
@@ -821,11 +821,10 @@ L123:
 L124:
 	xorl %ecx,%ecx
 L125:
-	movl $1,%edx
-	shll %cl,%edx
-	movq -40(%rbp),%rax
-	andl %eax,%edx
-	orl %edx,-4(%rbp)
+	movl $1,%eax
+	shll %cl,%eax
+	andl -36(%rbp),%eax
+	orl %eax,-4(%rbp)
 	jmp L193
 L171:
 	pushq $L172
@@ -924,7 +923,7 @@ L133:
 	testl %eax,%eax
 	jz L115
 L185:
-	movl -44(%rbp),%r12d
+	movl -40(%rbp),%r12d
 	jmp L107
 L192:
 	incq %rbx

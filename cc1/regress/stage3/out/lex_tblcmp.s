@@ -595,8 +595,7 @@ L190:
 L232:
 	call _expand_nxt_chk
 L234:
-	movq -24(%rbp),%rax
-	movslq %eax,%rax
+	movslq -24(%rbp),%rax
 	movq %rax,-24(%rbp)
 	movq _base(%rip),%rcx
 	movq -24(%rbp),%rax
@@ -654,12 +653,11 @@ L169:
 	movq -16(%rbp),%rax
 	movl (%rax,%rdx,4),%edx
 	movl %ebx,%esi
-	movq -24(%rbp),%rdi
+	movl -24(%rbp),%edi
 	call _stack1
 	jmp L146
 L147:
-	movq -24(%rbp),%rax
-	movslq %eax,%rcx
+	movslq -24(%rbp),%rcx
 	movq _base(%rip),%rax
 	cmpl $-32766,%r15d
 	jnz L151

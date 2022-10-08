@@ -2178,7 +2178,7 @@ L1015:
 	call _reprec_warning
 L1017:
 	movb %r13b,39(%rbx)
-	movl _prec(%rip),%eax
+	movw _prec(%rip),%ax
 	movw %ax,36(%rbx)
 L1014:
 	call _nextc
@@ -3910,7 +3910,7 @@ L1774:
 	cmpl %edx,_ntokens(%rip)
 	jg L1775
 L1777:
-	movl _start_symbol(%rip),%ecx
+	movw _start_symbol(%rip),%cx
 	movq _goal(%rip),%rax
 	incw %cx
 	movw %cx,34(%rax)
@@ -4179,7 +4179,7 @@ L1858:
 	movw $0,(%rax)
 	movq _rlhs(%rip),%rax
 	movw $0,2(%rax)
-	movl _start_symbol(%rip),%eax
+	movw _start_symbol(%rip),%ax
 	movq _rlhs(%rip),%rcx
 	movw %ax,4(%rcx)
 	movq _rrhs(%rip),%rax

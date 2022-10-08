@@ -265,7 +265,7 @@ L95:
 	movq -8(%rbp),%rdi
 	call _token_convert_number
 	movq -8(%rbp),%rax
-	movq 8(%rax),%rcx
+	movl 8(%rax),%ecx
 	movq _input_stack(%rip),%rax
 	decl %ecx
 	movl %ecx,32(%rax)

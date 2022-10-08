@@ -775,7 +775,7 @@ L343:
 	testq %rcx,%rcx
 	jz L361
 L353:
-	movq _char_type(%rip),%rdx
+	movl _char_type(%rip),%edx
 	andl $131071,%edx
 	shll $5,%edx
 	movl 72(%rax),%ecx
@@ -1149,26 +1149,25 @@ L559:
 	pushq %r15
 L560:
 	movq %rdi,%r15
-	movq %rsi,-56(%rbp)
+	movq %rsi,-64(%rbp)
 	movq 16(%r15),%rcx
-	movq -56(%rbp),%rax
-	movslq %eax,%rax
+	movslq -64(%rbp),%rax
 	movq (%rcx,%rax,8),%rcx
-	movq %rax,-56(%rbp)
+	movq %rax,-64(%rbp)
 	testl $1,4(%rcx)
-	movq %rcx,-40(%rbp)
+	movq %rcx,-48(%rbp)
 	jnz L562
 L564:
 	movl $1,%edx
-	movq -56(%rbp),%rsi
+	movl -64(%rbp),%esi
 	movq %r15,%rdi
 	call _label
 	leaq -32(%rbp),%rdx
-	movq -40(%rbp),%rax
+	movq -48(%rbp),%rax
 	movl 52(%rax),%esi
 	movq %r15,%rdi
 	call _address
-	movq -40(%rbp),%rax
+	movq -48(%rbp),%rax
 	movl 8(%rax),%edx
 	shll $10,%edx
 	shrl $15,%edx
@@ -1185,7 +1184,7 @@ L567:
 	movq _values+8(%rip),%rcx
 	shlq $5,%r12
 	leaq (%r13,%r12),%rax
-	movq %rax,-64(%rbp)
+	movq %rax,-56(%rbp)
 	movl (%r13,%r12),%esi
 	movslq %esi,%rax
 	shlq $5,%rax
@@ -1226,15 +1225,14 @@ L588:
 	testl $7168,8(%rcx,%rax)
 	jnz L568
 L589:
-	movq -64(%rbp),%rax
+	movq -56(%rbp),%rax
 	movq %rax,-72(%rbp)
-	movq -24(%rbp),%rbx
-	movq 8(%r13,%r12),%rax
-	subl %eax,%ebx
+	movl -24(%rbp),%ebx
+	subl 8(%r13,%r12),%ebx
 	shll $3,%ebx
 	jmp L568
 L585:
-	movq -64(%rbp),%rax
+	movq -56(%rbp),%rax
 	movq %rax,-72(%rbp)
 	xorl %ebx,%ebx
 	jmp L586
@@ -1257,7 +1255,7 @@ L593:
 	movl %ebx,%ecx
 	movq -72(%rbp),%rax
 	movl (%rax),%edx
-	movq -56(%rbp),%rsi
+	movl -64(%rbp),%esi
 	movq %r15,%rdi
 	call _replace
 	jmp L561
@@ -1265,13 +1263,13 @@ L594:
 	leaq -32(%rbp),%rsi
 	movq %r15,%rdi
 	call _new_reload
-	movq %rax,-48(%rbp)
+	movq %rax,-40(%rbp)
 	xorl %esi,%esi
 	movq %r15,%rdi
 	call _invalidate
-	movq -40(%rbp),%rax
-	movl 16(%rax),%esi
 	movq -48(%rbp),%rax
+	movl 16(%rax),%esi
+	movq -40(%rbp),%rax
 	movl (%rax),%edx
 	movq %r15,%rdi
 	call _assoc
@@ -1332,9 +1330,8 @@ L605:
 	andl $131071,%edi
 	call _t_size
 	shll $3,%eax
-	movq 8(%r15),%rdi
-	movq 8(%r14),%rcx
-	subl %ecx,%edi
+	movl 8(%r15),%edi
+	subl 8(%r14),%edi
 	shll $3,%edi
 	movb %al,%cl
 	movq $-1,%rsi

@@ -342,7 +342,7 @@ L94:
 	movq _this_state(%rip),%rcx
 	movw 16(%rcx),%cx
 	movw %cx,8(%rax)
-	movl _nshifts(%rip),%ecx
+	movw _nshifts(%rip),%cx
 	movw %cx,10(%rax)
 	movq _shiftset(%rip),%rdi
 	movslq _nshifts(%rip),%rcx
@@ -526,41 +526,41 @@ L150:
 	pushq %r13
 	pushq %r14
 L151:
-	movl %edi,%r13d
+	movl %edi,%r14d
 	cmpl $32767,_nstates(%rip)
 	jl L155
 L153:
 	movl $L156,%edi
 	call _fatal
 L155:
-	movslq %r13d,%r13
+	movslq %r14d,%r14
 	movq _kernel_base(%rip),%rax
-	movq (%rax,%r13,8),%r12
+	movq (%rax,%r14,8),%r13
 	movq _kernel_end(%rip),%rax
-	movq (%rax,%r13,8),%rbx
-	movq %rbx,%rax
-	subq %r12,%rax
+	movq (%rax,%r14,8),%r12
+	movq %r12,%rax
+	subq %r13,%rax
 	movl $2,%ecx
 	cqto 
 	idivq %rcx
-	movl %eax,%r14d
-	movl %r14d,%eax
+	movl %eax,%ebx
+	movl %ebx,%eax
 	decl %eax
 	leal 24(,%rax,2),%edi
 	call _allocate
-	movw %r13w,18(%rax)
-	movl _nstates(%rip),%ecx
+	movw %r14w,18(%rax)
+	movw _nstates(%rip),%cx
 	movw %cx,16(%rax)
-	movw %r14w,20(%rax)
+	movw %bx,20(%rax)
 	leaq 22(%rax),%rdx
 	jmp L157
 L158:
-	movw (%r12),%cx
-	addq $2,%r12
+	movw (%r13),%cx
+	addq $2,%r13
 	movw %cx,(%rdx)
 	addq $2,%rdx
 L157:
-	cmpq %rbx,%r12
+	cmpq %r12,%r13
 	jb L158
 L159:
 	movq _last_state(%rip),%rcx

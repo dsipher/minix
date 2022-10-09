@@ -734,14 +734,14 @@ L332:
 	pushq %r15
 L333:
 	movq %rdi,%r15
-	movq %rdx,-16(%rbp)
+	movq %rdx,-16(%rbp) # spill
 	movq 296(%r15),%rcx
 	movslq %esi,%rax
 	leaq (%rax,%rax,2),%rax
 	shlq $2,%rax
 	movl 4(%rcx,%rax),%r14d
 	movl (%rcx,%rax),%eax
-	movl %eax,-20(%rbp)
+	movl %eax,-20(%rbp) # spill
 	jmp L335
 L342:
 	movq 296(%r15),%r8
@@ -770,7 +770,7 @@ L337:
 	leaq (%rax,%rax,2),%rax
 	shlq $2,%rax
 	movl 8(%rcx,%rax),%eax
-	movl %eax,-24(%rbp)
+	movl %eax,-24(%rbp) # spill
 	jmp L346
 L349:
 	movq 296(%r15),%rcx
@@ -778,7 +778,7 @@ L349:
 	leaq (%r13,%r13,2),%rax
 	shlq $2,%rax
 	movl (%rcx,%rax),%ebx
-	cmpl %ebx,-24(%rbp)
+	cmpl %ebx,-24(%rbp) # spill
 	jle L334
 L347:
 	cmpl 8(%rcx,%rax),%ebx
@@ -813,7 +813,7 @@ L379:
 	cmpl -8(%rbp),%r14d
 	jz L355
 L357:
-	cmpl %ebx,-20(%rbp)
+	cmpl %ebx,-20(%rbp) # spill
 	jz L355
 L386:
 	movl %r14d,%ecx
@@ -824,7 +824,7 @@ L386:
 	jnz L355
 L383:
 	movl %r12d,%esi
-	movq -16(%rbp),%rdi
+	movq -16(%rbp),%rdi # spill
 	call _add_reg
 L355:
 	incl %r13d

@@ -240,10 +240,10 @@ L123:
 	pushq %r14
 	pushq %r15
 L124:
-	movq %rdi,-48(%rbp)
+	movq %rdi,-48(%rbp) # spill
 	movl %esi,%r14d
 	movl %edx,%r15d
-	movq -48(%rbp),%rax
+	movq -48(%rbp),%rax # spill
 	movq 16(%rax),%rax
 	movslq %r14d,%r14
 	movq (%rax,%r14,8),%r13
@@ -260,7 +260,7 @@ L130:
 	movl $1,%ebx
 	shlq %cl,%rbx
 	movq _ineligible+8(%rip),%rax
-	movq %rax,-16(%rbp)
+	movq %rax,-16(%rbp) # spill
 	movl $64,%edi
 	call ___builtin_clz
 	movb $31,%cl
@@ -268,10 +268,10 @@ L130:
 	movl %r14d,%edx
 	sarl %cl,%edx
 	movslq %edx,%rdx
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	orq %rbx,(%rax,%rdx,8)
 	leaq 40(%r13),%rax
-	movq %rax,-32(%rbp)
+	movq %rax,-32(%rbp) # spill
 	movl 40(%r13),%eax
 	movl %eax,%ecx
 	andl $7,%ecx
@@ -304,7 +304,7 @@ L152:
 	movl $_terms,%edi
 	call _vector_insert
 	movq _terms+8(%rip),%rcx
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movq %rax,(%rcx)
 	jmp L161
 L153:
@@ -312,7 +312,7 @@ L153:
 	testl %esi,%esi
 	setz %al
 	movzbl %al,%eax
-	movl %eax,-20(%rbp)
+	movl %eax,-20(%rbp) # spill
 	leal 1(%rsi),%eax
 	cmpl _terms(%rip),%eax
 	jge L159
@@ -329,9 +329,9 @@ L160:
 	movl _terms+4(%rip),%ecx
 	decl %ecx
 	movslq %ecx,%rcx
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movq %rax,(%rdx,%rcx,8)
-	cmpl $0,-20(%rbp)
+	cmpl $0,-20(%rbp) # spill
 	jz L138
 L161:
 	movl %r15d,_minuend(%rip)
@@ -340,18 +340,18 @@ L141:
 	movl $L126,%ecx
 	movl $1,%edx
 	movl %r14d,%esi
-	movq -48(%rbp),%rdi
+	movq -48(%rbp),%rdi # spill
 	call _interior
 	movl %eax,%esi
 	cmpl $-3,%esi
 	jz L138
 L164:
 	movl %r15d,%edx
-	movq -48(%rbp),%rdi
+	movq -48(%rbp),%rdi # spill
 	call _additive0
 L138:
 	leaq 72(%r13),%rax
-	movq %rax,-8(%rbp)
+	movq %rax,-8(%rbp) # spill
 	movl 72(%r13),%eax
 	movl %eax,%ecx
 	andl $7,%ecx
@@ -379,7 +379,7 @@ L179:
 	testl %esi,%esi
 	setz %al
 	movzbl %al,%eax
-	movl %eax,-36(%rbp)
+	movl %eax,-36(%rbp) # spill
 	leal 1(%rsi),%eax
 	cmpl _terms(%rip),%eax
 	jge L193
@@ -396,9 +396,9 @@ L194:
 	movl _terms+4(%rip),%ecx
 	decl %ecx
 	movslq %ecx,%rcx
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movq %rax,(%rdx,%rcx,8)
-	cmpl $0,-36(%rbp)
+	cmpl $0,-36(%rbp) # spill
 	jz L125
 L195:
 	movl %r12d,_minuend(%rip)
@@ -407,14 +407,14 @@ L175:
 	movl $L126,%ecx
 	movl $2,%edx
 	movl %r14d,%esi
-	movq -48(%rbp),%rdi
+	movq -48(%rbp),%rdi # spill
 	call _interior
 	movl %eax,%esi
 	cmpl $-3,%esi
 	jz L125
 L198:
 	movl %r12d,%edx
-	movq -48(%rbp),%rdi
+	movq -48(%rbp),%rdi # spill
 	call _additive0
 L125:
 	popq %r15
@@ -455,7 +455,7 @@ L202:
 	movl $1,%ebx
 	shlq %cl,%rbx
 	movq _ineligible+8(%rip),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
 	movl $64,%edi
 	call ___builtin_clz
 	movb $31,%cl
@@ -463,10 +463,10 @@ L202:
 	movl %r13d,%edx
 	sarl %cl,%edx
 	movslq %edx,%rdx
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	orq %rbx,(%rax,%rdx,8)
 	leaq 40(%r12),%rax
-	movq %rax,-8(%rbp)
+	movq %rax,-8(%rbp) # spill
 	movl 40(%r12),%eax
 	andl $7,%eax
 	cmpl $2,%eax
@@ -492,7 +492,7 @@ L223:
 	movl _terms+4(%rip),%ecx
 	decl %ecx
 	movslq %ecx,%rcx
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movq %rax,(%rdx,%rcx,8)
 	jmp L213
 L216:
@@ -510,7 +510,7 @@ L224:
 	call _commutative0
 L213:
 	leaq 72(%r12),%rax
-	movq %rax,-16(%rbp)
+	movq %rax,-16(%rbp) # spill
 	movl 72(%r12),%eax
 	andl $7,%eax
 	cmpl $2,%eax
@@ -536,7 +536,7 @@ L242:
 	movl _terms+4(%rip),%ecx
 	decl %ecx
 	movslq %ecx,%rcx
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	movq %rax,(%rdx,%rcx,8)
 	jmp L203
 L235:
@@ -582,11 +582,11 @@ L246:
 L247:
 	movq %rdi,%rbx
 	movl %esi,%r15d
-	movl %edx,-12(%rbp)
+	movl %edx,-12(%rbp) # spill
 	movq 16(%rbx),%rax
 	movslq %r15d,%r15
 	movq (%rax,%r15,8),%r14
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	movl %eax,L249(%rip)
 	movb %r15b,%cl
 	movl $1,%r13d
@@ -607,7 +607,7 @@ L247:
 	call _interior
 	movl %eax,%r12d
 	leaq 72(%r14),%rax
-	movq %rax,-8(%rbp)
+	movq %rax,-8(%rbp) # spill
 	movl 72(%r14),%eax
 	andl $7,%eax
 	cmpl $2,%eax
@@ -633,13 +633,13 @@ L265:
 	movl _terms+4(%rip),%ecx
 	decl %ecx
 	movslq %ecx,%rcx
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movq %rax,(%rdx,%rcx,8)
 L255:
 	cmpl $-3,%r12d
 	jz L248
 L266:
-	movl -12(%rbp),%edx
+	movl -12(%rbp),%edx # spill
 	movl %r12d,%esi
 	movq %rbx,%rdi
 	call _shift0

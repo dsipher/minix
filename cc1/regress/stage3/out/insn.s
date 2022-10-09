@@ -1970,8 +1970,8 @@ L986:
 	pushq %r15
 L987:
 	movq %rdi,%r15
-	movl %esi,-4(%rbp)
-	movq %rdx,-16(%rbp)
+	movl %esi,-4(%rbp) # spill
+	movq %rdx,-16(%rbp) # spill
 	xorl %r14d,%r14d
 	movl (%r15),%r13d
 	andl $805306368,%r13d
@@ -2008,7 +2008,7 @@ L1005:
 	cmpl $1,%eax
 	jnz L995
 L1001:
-	movl -4(%rbp),%eax
+	movl -4(%rbp),%eax # spill
 	cmpl 16(%rbx,%r15),%eax
 	jnz L995
 L997:
@@ -2022,7 +2022,7 @@ L997:
 	movl %eax,8(%r15,%rbx)
 	movq 16(%rbp),%rax
 	movq %rax,24(%rbx,%r15)
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	movq %rax,32(%rbx,%r15)
 	incl %r14d
 L995:
@@ -2057,15 +2057,15 @@ L1033:
 	movq %rdi,%r15
 	movl %esi,%r14d
 	movl %edx,%r13d
-	movl %ecx,-12(%rbp)
-	movq %r8,-8(%rbp)
+	movl %ecx,-12(%rbp) # spill
+	movq %r8,-8(%rbp) # spill
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
 	movl (%r15),%ecx
 	cmpl $8388609,%ecx
 	jnz L1036
 L1035:
-	testl $2,-12(%rbp)
+	testl $2,-12(%rbp) # spill
 	jz L1040
 L1038:
 	movl %r13d,%edx
@@ -2074,7 +2074,7 @@ L1038:
 	call _regmap_substitute
 	movl %eax,%r12d
 L1040:
-	testl $1,-12(%rbp)
+	testl $1,-12(%rbp) # spill
 	jz L1037
 L1041:
 	movl %r13d,%edx
@@ -2094,7 +2094,7 @@ L1036:
 	jmp L1044
 L1048:
 	xorl %r8d,%r8d
-	testl $2,-12(%rbp)
+	testl $2,-12(%rbp) # spill
 	jz L1053
 L1054:
 	testl %eax,%eax
@@ -2158,7 +2158,7 @@ L1084:
 	addl %r8d,%r12d
 L1053:
 	xorl %r8d,%r8d
-	testl $1,-12(%rbp)
+	testl $1,-12(%rbp) # spill
 	jz L1096
 L1097:
 	testl %eax,%eax
@@ -2220,10 +2220,10 @@ L1044:
 	cmpl %eax,%ecx
 	jg L1048
 L1037:
-	cmpq $0,-8(%rbp)
+	cmpq $0,-8(%rbp) # spill
 	jz L1132
 L1130:
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movq %rbx,(%rax)
 L1132:
 	movl %r12d,%eax

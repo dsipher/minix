@@ -11,11 +11,11 @@ L1:
 	pushq %r14
 	pushq %r15
 L2:
-	movq %rdi,-8(%rbp)
+	movq %rdi,-8(%rbp) # spill
 	movq %rsi,%r15
 	movq %rdx,%rbx
 	movq %rcx,%r14
-	movq %r8,-16(%rbp)
+	movq %r8,-16(%rbp) # spill
 L4:
 	testq %rbx,%rbx
 	jz L6
@@ -26,8 +26,8 @@ L5:
 	imulq %r14,%rsi
 	leaq (%rsi,%r15),%r12
 	addq %r15,%rsi
-	movq -8(%rbp),%rdi
-	movq -16(%rbp),%rax
+	movq -8(%rbp),%rdi # spill
+	movq -16(%rbp),%rax # spill
 	call *%rax
 	cmpl $0,%eax
 	jl L12

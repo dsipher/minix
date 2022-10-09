@@ -5060,7 +5060,7 @@ L192:
 	jmp L540
 L187:
 	movl _num_xlations(%rip),%ecx
-	cmpl $0,-1032(%rbp)
+	cmpl $0,-1032(%rbp) # spill
 	jnz L190
 L189:
 	negl %ecx
@@ -5072,7 +5072,7 @@ L190:
 	jmp L503
 L182:
 	movl _num_xlations(%rip),%ebx
-	cmpl $0,-1032(%rbp)
+	cmpl $0,-1032(%rbp) # spill
 	jnz L185
 L184:
 	negl %ebx
@@ -5083,14 +5083,14 @@ L185:
 	movq _xlation(%rip),%rcx
 	movl %ebx,(%rcx,%rax,4)
 L503:
-	movl $0,-1032(%rbp)
+	movl $0,-1032(%rbp) # spill
 	jmp L21
 L177:
 	movl $L178,%edi
 	jmp L533
 L175:
 	incl _num_xlations(%rip)
-	movl $1,-1032(%rbp)
+	movl $1,-1032(%rbp) # spill
 	jmp L21
 L173:
 	jmp L542
@@ -5100,7 +5100,7 @@ L166:
 	testl %eax,%eax
 	jz L505
 L167:
-	movl -1028(%rbp),%eax
+	movl -1028(%rbp),%eax # spill
 	movl %eax,_yymore_really_used(%rip)
 	jmp L21
 L160:
@@ -5112,7 +5112,7 @@ L505:
 	movl $L164,%edi
 	jmp L533
 L161:
-	movl -1028(%rbp),%eax
+	movl -1028(%rbp),%eax # spill
 	movl %eax,_reject_really_used(%rip)
 	jmp L21
 L156:
@@ -5274,12 +5274,12 @@ L70:
 	movl $39,_yy_start(%rip)
 	movl $L68,%edi
 	call _pinpoint_message
-	movl $2,-1028(%rbp)
+	movl $2,-1028(%rbp) # spill
 	jmp L506
 L67:
 	movl $L68,%edi
 	call _pinpoint_message
-	movl $1,-1028(%rbp)
+	movl $1,-1028(%rbp) # spill
 L506:
 	movl $39,_yy_start(%rip)
 	jmp L21

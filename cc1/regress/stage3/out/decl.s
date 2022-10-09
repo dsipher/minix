@@ -1427,7 +1427,7 @@ L631:
 	movl %esi,%r14d
 	movq %rdx,%r15
 	movq %rcx,%rbx
-	movl $0,-4(%rbp)
+	movl $0,-4(%rbp) # spill
 	testl %r14d,%r14d
 	jz L638
 L639:
@@ -1488,7 +1488,7 @@ L656:
 	movq %rdi,%rsi
 	movq %rbx,%rdi
 	call _funcdef
-	movl $1,-4(%rbp)
+	movl $1,-4(%rbp) # spill
 	jmp L648
 L650:
 	movl %r14d,%esi
@@ -1509,7 +1509,7 @@ L672:
 	movl $_formal_chain,%edi
 	call _free_symbols
 L669:
-	movl -4(%rbp),%eax
+	movl -4(%rbp),%eax # spill
 L632:
 	popq %r15
 	popq %r14

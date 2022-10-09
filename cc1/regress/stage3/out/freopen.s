@@ -11,7 +11,7 @@ L1:
 	pushq %r14
 	pushq %r15
 L2:
-	movq %rdi,-8(%rbp)
+	movq %rdi,-8(%rbp) # spill
 	movq %rsi,%r14
 	movq %rdx,%r13
 	xorl %r15d,%r15d
@@ -64,7 +64,7 @@ L16:
 	jnz L30
 L29:
 	pushq %r12
-	pushq -8(%rbp)
+	pushq -8(%rbp) # spill
 	call _open
 	addq $16,%rsp
 	cmpl $0,%eax
@@ -74,7 +74,7 @@ L33:
 	jz L28
 L30:
 	movl $438,%esi
-	movq -8(%rbp),%rdi
+	movq -8(%rbp),%rdi # spill
 	call _creat
 	movl %eax,%edi
 	movl %edi,%eax
@@ -87,7 +87,7 @@ L40:
 L41:
 	call _close
 	pushq %r12
-	pushq -8(%rbp)
+	pushq -8(%rbp) # spill
 	call _open
 	addq $16,%rsp
 L28:

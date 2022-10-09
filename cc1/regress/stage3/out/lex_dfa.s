@@ -309,12 +309,12 @@ L100:
 L101:
 	movq %rdi,%rbx
 	movl (%rsi),%eax
-	movl %eax,-36(%rbp)
-	movq %rsi,-8(%rbp)
-	movq %rdx,-32(%rbp)
-	movq %rcx,-16(%rbp)
-	movq %r8,-24(%rbp)
-	movl -36(%rbp),%r13d
+	movl %eax,-36(%rbp) # spill
+	movq %rsi,-8(%rbp) # spill
+	movq %rdx,-32(%rbp) # spill
+	movq %rcx,-16(%rbp) # spill
+	movq %r8,-24(%rbp) # spill
+	movl -36(%rbp),%r13d # spill
 	cmpl $0,L103(%rip)
 	jnz L107
 L105:
@@ -324,9 +324,9 @@ L105:
 	movq %rax,L104(%rip)
 	movl $1,L103(%rip)
 L107:
-	movl $0,-48(%rbp)
+	movl $0,-48(%rbp) # spill
 	xorl %r14d,%r14d
-	movl $0,-52(%rbp)
+	movl $0,-52(%rbp) # spill
 	movl $1,%r15d
 	jmp L108
 L109:
@@ -365,19 +365,19 @@ L114:
 	testl %edx,%edx
 	jz L120
 L118:
-	movl -52(%rbp),%ecx
+	movl -52(%rbp),%ecx # spill
 	incl %ecx
-	movl %ecx,-52(%rbp)
-	movq -32(%rbp),%rax
+	movl %ecx,-52(%rbp) # spill
+	movq -32(%rbp),%rax # spill
 	movl %edx,(%rax,%rcx,4)
 L120:
-	addl %r12d,-48(%rbp)
+	addl %r12d,-48(%rbp) # spill
 	incl %r15d
 L108:
-	cmpl %r15d,-36(%rbp)
+	cmpl %r15d,-36(%rbp) # spill
 	jge L109
 L111:
-	movl $1,-40(%rbp)
+	movl $1,-40(%rbp) # spill
 	jmp L121
 L122:
 	movl -40(%rbp),%eax
@@ -390,7 +390,7 @@ L125:
 	movq _trans1(%rip),%rcx
 	movl (%rcx,%r15,4),%eax
 	leal 32000(%rax),%r12d
-	movl %eax,-44(%rbp)
+	movl %eax,-44(%rbp) # spill
 	testl %r12d,%r12d
 	jz L127
 L128:
@@ -427,10 +427,10 @@ L136:
 	testl %edx,%edx
 	jz L139
 L137:
-	movl -52(%rbp),%ecx
+	movl -52(%rbp),%ecx # spill
 	incl %ecx
-	movl %ecx,-52(%rbp)
-	movq -32(%rbp),%rax
+	movl %ecx,-52(%rbp) # spill
+	movq -32(%rbp),%rax # spill
 	movl %edx,(%rax,%rcx,4)
 L139:
 	testl %edx,%edx
@@ -461,10 +461,10 @@ L147:
 L149:
 	movslq %r13d,%rax
 	movl %r12d,(%rbx,%rax,4)
-	movl -44(%rbp),%ecx
-	movl -48(%rbp),%eax
+	movl -44(%rbp),%ecx # spill
+	movl -48(%rbp),%eax # spill
 	leal 32000(%rcx,%rax),%eax
-	movl %eax,-48(%rbp)
+	movl %eax,-48(%rbp) # spill
 L133:
 	movq _trans2(%rip),%rax
 	movl (%rax,%r15,4),%r12d
@@ -504,10 +504,10 @@ L158:
 	testl %edx,%edx
 	jz L161
 L159:
-	movl -52(%rbp),%ecx
+	movl -52(%rbp),%ecx # spill
 	incl %ecx
-	movl %ecx,-52(%rbp)
-	movq -32(%rbp),%rax
+	movl %ecx,-52(%rbp) # spill
+	movq -32(%rbp),%rax # spill
 	movl %edx,(%rax,%rcx,4)
 L161:
 	testl %edx,%edx
@@ -538,11 +538,11 @@ L169:
 L171:
 	movslq %r13d,%r13
 	movl %r12d,(%rbx,%r13,4)
-	addl %r12d,-48(%rbp)
+	addl %r12d,-48(%rbp) # spill
 L127:
-	incl -40(%rbp)
+	incl -40(%rbp) # spill
 L121:
-	cmpl -40(%rbp),%r14d
+	cmpl -40(%rbp),%r14d # spill
 	jge L122
 L124:
 	movl $1,%r12d
@@ -567,13 +567,13 @@ L172:
 	cmpl %r12d,%r14d
 	jge L173
 L175:
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movl %r13d,(%rax)
-	movq -24(%rbp),%rcx
-	movl -48(%rbp),%eax
+	movq -24(%rbp),%rcx # spill
+	movl -48(%rbp),%eax # spill
 	movl %eax,(%rcx)
-	movq -16(%rbp),%rcx
-	movl -52(%rbp),%eax
+	movq -16(%rbp),%rcx # spill
+	movl -52(%rbp),%eax # spill
 	movl %eax,(%rcx)
 	movq %rbx,%rax
 L102:
@@ -661,13 +661,13 @@ L192:
 	movl $4,%esi
 	incl %edi
 	call _allocate_array
-	movq %rax,-5200(%rbp)
+	movq %rax,-5200(%rbp) # spill
 	movl $4,%esi
 	movl _current_max_dfa_size(%rip),%edi
 	call _allocate_array
 	movq %rax,%rbx
-	movl $0,-5184(%rbp)
-	movl $0,-5168(%rbp)
+	movl $0,-5184(%rbp) # spill
+	movl $0,-5168(%rbp) # spill
 	xorl %eax,%eax
 	jmp L193
 L194:
@@ -681,7 +681,7 @@ L196:
 	xorl %ecx,%ecx
 	jmp L197
 L198:
-	movq -5200(%rbp),%rax
+	movq -5200(%rbp),%rax # spill
 	movl $0,(%rax,%rcx,4)
 	incl %ecx
 L197:
@@ -764,7 +764,7 @@ L241:
 	incl %eax
 L366:
 	pushq %rax
-	movl %eax,-5172(%rbp)
+	movl %eax,-5172(%rbp) # spill
 	pushq $L243
 	call _printf
 	addq $16,%rsp
@@ -775,19 +775,19 @@ L245:
 	call _mk2data
 	incl %r12d
 L244:
-	cmpl -5172(%rbp),%r12d
+	cmpl -5172(%rbp),%r12d # spill
 	jl L245
 L247:
 	movl $10,_datapos(%rip)
 	movl $10,_dataline(%rip)
 L232:
 	movl _lastsc(%rip),%eax
-	movl %eax,-5180(%rbp)
-	movl %eax,-5176(%rbp)
-	movl -5180(%rbp),%eax
+	movl %eax,-5180(%rbp) # spill
+	movl %eax,-5176(%rbp) # spill
+	movl -5180(%rbp),%eax # spill
 	shll $1,%eax
-	movl %eax,-5164(%rbp)
-	movl %eax,-5180(%rbp)
+	movl %eax,-5164(%rbp) # spill
+	movl %eax,-5180(%rbp) # spill
 	movl $1,%r12d
 	jmp L248
 L249:
@@ -820,7 +820,7 @@ L253:
 L254:
 	leaq -3096(%rbp),%r8
 	leaq -3092(%rbp),%rcx
-	movq -5200(%rbp),%rdx
+	movq -5200(%rbp),%rdx # spill
 	leaq -3088(%rbp),%rsi
 	movq %rbx,%rdi
 	call _epsclosure
@@ -829,7 +829,7 @@ L254:
 	movl -3092(%rbp),%ecx
 	leaq -3100(%rbp),%r9
 	movl -3096(%rbp),%r8d
-	movq -5200(%rbp),%rdx
+	movq -5200(%rbp),%rdx # spill
 	movq %rbx,%rdi
 	call _snstods
 	testl %eax,%eax
@@ -839,20 +839,20 @@ L255:
 	addl %ecx,_numas(%rip)
 	movl -3088(%rbp),%esi
 	addl %esi,_totnst(%rip)
-	incl -5184(%rbp)
+	incl -5184(%rbp) # spill
 	cmpl $0,_variable_trailing_context_rules(%rip)
 	jz L257
 L261:
 	cmpl $0,%ecx
 	jle L257
 L262:
-	movq -5200(%rbp),%rdx
+	movq -5200(%rbp),%rdx # spill
 	movq %rbx,%rdi
 	call _check_trailing_context
 L257:
 	incl %r12d
 L248:
-	cmpl -5180(%rbp),%r12d
+	cmpl -5180(%rbp),%r12d # spill
 	jle L249
 L251:
 	cmpl $0,_fullspd(%rip)
@@ -861,7 +861,7 @@ L265:
 	movl $_end_of_buffer_state,%r9d
 	xorl %r8d,%r8d
 	xorl %ecx,%ecx
-	movq -5200(%rbp),%rdx
+	movq -5200(%rbp),%rdx # spill
 	xorl %esi,%esi
 	movq %rbx,%rdi
 	call _snstods
@@ -872,13 +872,13 @@ L268:
 	call _flexfatal
 L270:
 	incl _numas(%rip)
-	movl -5176(%rbp),%eax
+	movl -5176(%rbp),%eax # spill
 	leal 1(,%rax,2),%eax
-	movl %eax,-5164(%rbp)
-	incl -5184(%rbp)
+	movl %eax,-5164(%rbp) # spill
+	incl -5184(%rbp) # spill
 L272:
-	movl -5184(%rbp),%eax
-	cmpl -5168(%rbp),%eax
+	movl -5184(%rbp),%eax # spill
+	cmpl -5168(%rbp),%eax # spill
 	jle L274
 L273:
 	xorl %r15d,%r15d
@@ -892,16 +892,16 @@ L275:
 	cmpl _numecs(%rip),%eax
 	jle L276
 L278:
-	movl -5168(%rbp),%ecx
+	movl -5168(%rbp),%ecx # spill
 	incl %ecx
-	movl %ecx,-5168(%rbp)
+	movl %ecx,-5168(%rbp) # spill
 	movl %ecx,-3100(%rbp)
 	movq _dss(%rip),%rax
 	movq (%rax,%rcx,8),%rax
-	movq %rax,-5192(%rbp)
+	movq %rax,-5192(%rbp) # spill
 	movq _dfasiz(%rip),%rax
 	movl (%rax,%rcx,4),%eax
-	movl %eax,-5204(%rbp)
+	movl %eax,-5204(%rbp) # spill
 	cmpl $0,_trace(%rip)
 	jz L281
 L279:
@@ -913,8 +913,8 @@ L279:
 L281:
 	leaq -1028(%rbp),%rcx
 	leaq -2056(%rbp),%rdx
-	movl -5204(%rbp),%esi
-	movq -5192(%rbp),%rdi
+	movl -5204(%rbp),%esi # spill
+	movq -5192(%rbp),%rdi # spill
 	call _sympartition
 	movl $1,%r13d
 	jmp L283
@@ -929,13 +929,13 @@ L287:
 L290:
 	movq %rbx,%rcx
 	movl %r13d,%edx
-	movl -5204(%rbp),%esi
-	movq -5192(%rbp),%rdi
+	movl -5204(%rbp),%esi # spill
+	movq -5192(%rbp),%rdi # spill
 	call _symfollowset
 	movl %eax,-3088(%rbp)
 	leaq -3096(%rbp),%r8
 	leaq -3092(%rbp),%rcx
-	movq -5200(%rbp),%rdx
+	movq -5200(%rbp),%rdx # spill
 	leaq -3088(%rbp),%rsi
 	movq %rbx,%rdi
 	call _epsclosure
@@ -944,7 +944,7 @@ L290:
 	movl -3092(%rbp),%ecx
 	leaq -3104(%rbp),%r9
 	movl -3096(%rbp),%r8d
-	movq -5200(%rbp),%rdx
+	movq -5200(%rbp),%rdx # spill
 	movq %rbx,%rdi
 	call _snstods
 	testl %eax,%eax
@@ -952,7 +952,7 @@ L290:
 L293:
 	movl -3088(%rbp),%esi
 	addl %esi,_totnst(%rip)
-	incl -5184(%rbp)
+	incl -5184(%rbp) # spill
 	movl -3092(%rbp),%ecx
 	addl %ecx,_numas(%rip)
 	cmpl $0,_variable_trailing_context_rules(%rip)
@@ -961,7 +961,7 @@ L299:
 	cmpl $0,%ecx
 	jle L295
 L300:
-	movq -5200(%rbp),%rdx
+	movq -5200(%rbp),%rdx # spill
 	movq %rbx,%rdi
 	call _check_trailing_context
 L295:
@@ -1035,7 +1035,7 @@ L321:
 	jle L321
 L315:
 	movl -3100(%rbp),%edi
-	cmpl %edi,-5164(%rbp)
+	cmpl %edi,-5164(%rbp) # spill
 	jge L326
 L324:
 	leaq -3084(%rbp),%rsi
@@ -1078,7 +1078,7 @@ L342:
 	call _mk2data
 	incl %r12d
 L336:
-	cmpl -5172(%rbp),%r12d
+	cmpl -5172(%rbp),%r12d # spill
 	jl L337
 L339:
 	movl $10,_datapos(%rip)
@@ -1175,16 +1175,16 @@ L368:
 L369:
 	movq %rdi,%r13
 	movl %esi,%r12d
-	movq %rdx,-24(%rbp)
-	movl %ecx,-28(%rbp)
-	movl %r8d,-12(%rbp)
-	movq %r9,-8(%rbp)
+	movq %rdx,-24(%rbp) # spill
+	movl %ecx,-28(%rbp) # spill
+	movl %r8d,-12(%rbp) # spill
+	movq %r9,-8(%rbp) # spill
 	xorl %ebx,%ebx
 	movl $1,%r15d
 	jmp L371
 L372:
 	movq _dhash(%rip),%rcx
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	cmpl (%rcx,%r15,4),%eax
 	jnz L377
 L375:
@@ -1221,7 +1221,7 @@ L394:
 	jmp L377
 L392:
 	incl _dfaeql(%rip)
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movl %r15d,(%rax)
 	xorl %eax,%eax
 	jmp L370
@@ -1278,10 +1278,10 @@ L409:
 	movq _dfasiz(%rip),%rax
 	movl %r12d,(%rax,%rbx,4)
 	movq _dhash(%rip),%rcx
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	movl %eax,(%rcx,%rbx,4)
 	movl _reject(%rip),%eax
-	cmpl $0,-28(%rbp)
+	cmpl $0,-28(%rbp) # spill
 	jnz L411
 L410:
 	movq _dfaacc(%rip),%rcx
@@ -1300,10 +1300,10 @@ L411:
 	testl %eax,%eax
 	jz L417
 L416:
-	movl -28(%rbp),%esi
-	movq -24(%rbp),%rdi
+	movl -28(%rbp),%esi # spill
+	movq -24(%rbp),%rdi # spill
 	call _bubble
-	movl -28(%rbp),%edi
+	movl -28(%rbp),%edi # spill
 	incl %edi
 	shll $2,%edi
 	call _malloc
@@ -1319,7 +1319,7 @@ L421:
 	movl $1,%edx
 	jmp L422
 L423:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movl (%rax,%rdx,4),%ecx
 	movq _dfaacc(%rip),%rax
 	movq (%rax,%r14,8),%rax
@@ -1327,11 +1327,11 @@ L423:
 	incl %edx
 L422:
 	movslq %r14d,%r14
-	cmpl %edx,-28(%rbp)
+	cmpl %edx,-28(%rbp) # spill
 	jge L423
 L425:
 	movq _accsiz(%rip),%rcx
-	movl -28(%rbp),%eax
+	movl -28(%rbp),%eax # spill
 	movl %eax,(%rcx,%r14,4)
 	jmp L412
 L417:
@@ -1340,20 +1340,20 @@ L417:
 	movl $1,%ecx
 	jmp L426
 L427:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movl (%rax,%rcx,4),%eax
 	cmpl %eax,%edx
 	cmovgl %eax,%edx
 	incl %ecx
 L426:
-	cmpl %ecx,-28(%rbp)
+	cmpl %ecx,-28(%rbp) # spill
 	jge L427
 L429:
 	movslq %r14d,%rax
 	movq _dfaacc(%rip),%rcx
 	movl %edx,(%rcx,%rax,8)
 L412:
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movl %r14d,(%rax)
 	movl $1,%eax
 L370:
@@ -1378,15 +1378,15 @@ L434:
 	pushq %r14
 	pushq %r15
 L435:
-	movq %rdi,-8(%rbp)
-	movl %esi,-12(%rbp)
+	movq %rdi,-8(%rbp) # spill
+	movl %esi,-12(%rbp) # spill
 	movl %edx,%r14d
 	movq %rcx,%r13
 	xorl %r15d,%r15d
 	movl $1,%r12d
 	jmp L437
 L438:
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movslq (%rax,%r12,4),%rcx
 	movq _transchar(%rip),%rax
 	movl (%rax,%rcx,4),%esi
@@ -1476,7 +1476,7 @@ L497:
 L461:
 	incl %r12d
 L437:
-	cmpl %r12d,-12(%rbp)
+	cmpl %r12d,-12(%rbp) # spill
 	jge L438
 L440:
 	movl %r15d,%eax
@@ -1502,17 +1502,17 @@ L498:
 	pushq %r14
 	pushq %r15
 L499:
-	movq %rdi,-1040(%rbp)
-	movl %esi,-1044(%rbp)
+	movq %rdi,-1040(%rbp) # spill
+	movl %esi,-1044(%rbp) # spill
 	movq %rdx,%r15
-	movq %rcx,-1056(%rbp)
+	movq %rcx,-1056(%rbp) # spill
 	movl $1,%esi
 	jmp L501
 L502:
 	movl %esi,%edx
 	decl %edx
 	movl %esi,%ecx
-	movq -1056(%rbp),%rax
+	movq -1056(%rbp),%rax # spill
 	movl %edx,(%rax,%rcx,4)
 	incl %esi
 	movl %esi,-1028(%rbp,%rcx,4)
@@ -1520,16 +1520,16 @@ L501:
 	cmpl _numecs(%rip),%esi
 	jle L502
 L504:
-	movq -1056(%rbp),%rax
+	movq -1056(%rbp),%rax # spill
 	movl $0,4(%rax)
 	movslq _numecs(%rip),%rax
 	movl $0,-1028(%rbp,%rax,4)
 	movl $1,%r14d
 L505:
-	cmpl %r14d,-1044(%rbp)
+	cmpl %r14d,-1044(%rbp) # spill
 	jl L500
 L506:
-	movq -1040(%rbp),%rax
+	movq -1040(%rbp),%rax # spill
 	movslq (%rax,%r14,4),%rcx
 	movq _transchar(%rip),%rax
 	movl (%rax,%rcx,4),%ebx
@@ -1564,7 +1564,7 @@ L528:
 	movl _ecgroup(,%rbx,4),%edi
 	call _abs
 	movl %eax,%ebx
-	movq -1056(%rbp),%rdx
+	movq -1056(%rbp),%rdx # spill
 	leaq -1028(%rbp),%rsi
 	movl %ebx,%edi
 	call _mkechar
@@ -1582,7 +1582,7 @@ L529:
 	movq _ccltbl(%rip),%rax
 	movl _numecs(%rip),%r8d
 	movl _NUL_ec(%rip),%r9d
-	movq -1056(%rbp),%rcx
+	movq -1056(%rbp),%rcx # spill
 	leaq -1028(%rbp),%rdx
 	movl %r12d,%esi
 	addq %rax,%rdi

@@ -15,7 +15,7 @@ L2:
 	movq (%rbx),%r12
 	leaq 24(%r12),%rax
 	cmpq 16(%rbx),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
 	jae L8
 L7:
 	cmpb $2,24(%r12)
@@ -28,7 +28,7 @@ L9:
 	leaq 24(%r12),%rdi
 	call _lookup
 	testb $4,41(%rax)
-	movq %rax,-40(%rbp)
+	movq %rax,-40(%rbp) # spill
 	jnz L13
 L15:
 	leaq 48(%r12),%r15
@@ -127,28 +127,28 @@ L68:
 L70:
 	movq %rbx,%rdi
 	call _normtokenrow
-	movq %rax,-16(%rbp)
-	movq -40(%rbp),%rax
+	movq %rax,-16(%rbp) # spill
+	movq -40(%rbp),%rax # spill
 	testb $1,41(%rax)
 	jz L73
 L71:
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	movq 24(%rax),%rsi
-	movq -16(%rbp),%rdi
+	movq -16(%rbp),%rdi # spill
 	call _comparetokens
 	testl %eax,%eax
 	jnz L78
 L81:
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	movq 32(%rax),%rsi
 	testq %rsi,%rsi
 	setz %al
 	movzbl %al,%eax
-	movl %eax,-28(%rbp)
+	movl %eax,-28(%rbp) # spill
 	testq %r14,%r14
 	setz %al
 	movzbl %al,%eax
-	cmpl %eax,-28(%rbp)
+	cmpl %eax,-28(%rbp) # spill
 	jnz L78
 L83:
 	testq %rsi,%rsi
@@ -172,20 +172,20 @@ L73:
 L90:
 	movq %r14,%rdi
 	call _normtokenrow
-	movq %rax,-8(%rbp)
+	movq %rax,-8(%rbp) # spill
 	movq 8(%r14),%rdi
 	call _dofree
-	movq -8(%rbp),%r14
+	movq -8(%rbp),%r14 # spill
 L92:
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	movq %r14,32(%rax)
-	movq -16(%rbp),%rcx
-	movq -40(%rbp),%rax
+	movq -16(%rbp),%rcx # spill
+	movq -40(%rbp),%rax # spill
 	movq %rcx,24(%rax)
 	orb $1,41(%rax)
 	jmp L3
 L13:
-	pushq -24(%rbp)
+	pushq -24(%rbp) # spill
 	pushq $L16
 	pushq $1
 	call _error
@@ -577,9 +577,9 @@ L244:
 	pushq %r15
 L245:
 	movq %rdi,%r14
-	movq %rsi,-40(%rbp)
+	movq %rsi,-40(%rbp) # spill
 	movl $-1,(%rdx)
-	movq %rdx,-48(%rbp)
+	movq %rdx,-48(%rbp) # spill
 	movl $1,%r13d
 	xorl %r15d,%r15d
 L247:
@@ -608,7 +608,7 @@ L260:
 	jz L247
 	jnz L324
 L258:
-	movq -48(%rbp),%rax
+	movq -48(%rbp),%rax # spill
 	movl $0,(%rax)
 	incl %r15d
 	movl %r15d,%r12d
@@ -708,7 +708,7 @@ L315:
 	cmpb $22,-24(%r14)
 	jz L292
 L304:
-	movq -48(%rbp),%rax
+	movq -48(%rbp),%rax # spill
 	cmpl $31,(%rax)
 	jl L321
 L319:
@@ -722,13 +722,13 @@ L321:
 	movq %r14,-16(%rbp)
 	leaq -32(%rbp),%rdi
 	call _normtokenrow
-	movq -48(%rbp),%rcx
+	movq -48(%rbp),%rcx # spill
 	movl (%rcx),%edx
 	leal 1(%rdx),%esi
-	movq -48(%rbp),%rcx
+	movq -48(%rbp),%rcx # spill
 	movl %esi,(%rcx)
 	movslq %edx,%rdx
-	movq -40(%rbp),%rcx
+	movq -40(%rbp),%rcx # spill
 	movq %rax,(%rcx,%rdx,8)
 	leaq 24(%r14),%rbx
 	jmp L292

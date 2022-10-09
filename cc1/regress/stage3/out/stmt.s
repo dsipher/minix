@@ -418,7 +418,7 @@ L146:
 	pushq %r15
 L147:
 	movq _continue_block(%rip),%rax
-	movq %rax,-8(%rbp)
+	movq %rax,-8(%rbp) # spill
 	movq _break_block(%rip),%rbx
 	call _new_block
 	movq %rax,%r15
@@ -507,7 +507,7 @@ L175:
 	call _add_succ
 	movq _break_block(%rip),%rax
 	movq %rax,_current_block(%rip)
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movq %rax,_continue_block(%rip)
 	movq %rbx,_break_block(%rip)
 L148:

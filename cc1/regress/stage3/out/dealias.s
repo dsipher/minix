@@ -222,17 +222,17 @@ L105:
 	pushq %r14
 	pushq %r15
 L106:
-	movl $0,-12(%rbp)
+	movl $0,-12(%rbp) # spill
 	movq _all_blocks(%rip),%rax
 	jmp L204
 L109:
 	xorl %r14d,%r14d
 L112:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	cmpl 12(%rax),%r14d
 	jge L118
 L116:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movq 16(%rax),%rax
 	movq (%rax,%r14,8),%rbx
 	movq %rbx,%r13
@@ -281,7 +281,7 @@ L142:
 	orl %ecx,%eax
 	movl %eax,72(%r13)
 L144:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movq 16(%rax),%rax
 	movq %r13,(%rax,%r14,8)
 L122:
@@ -314,7 +314,7 @@ L153:
 	call _floateral
 	movq %rax,%r15
 	movl %r14d,%ecx
-	movq -24(%rbp),%rdx
+	movq -24(%rbp),%rdx # spill
 	movq %r15,%rsi
 	movl $-1577058300,%edi
 	call _loadstore
@@ -383,7 +383,7 @@ L192:
 	movl %eax,40(%rdi)
 L200:
 	movl %r14d,%edx
-	movq -24(%rbp),%rsi
+	movq -24(%rbp),%rsi # spill
 	call _insert_insn
 	movl 8(%r13,%rbx),%eax
 	andl $4294967288,%eax
@@ -391,7 +391,7 @@ L200:
 	movl %eax,8(%r13,%rbx)
 	movl %r15d,16(%r13,%rbx)
 L203:
-	incl -12(%rbp)
+	incl -12(%rbp) # spill
 L151:
 	incl %r12d
 	jmp L145
@@ -399,14 +399,14 @@ L148:
 	incl %r14d
 	jmp L112
 L118:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movq 112(%rax),%rax
 L204:
-	movq %rax,-24(%rbp)
-	cmpq $0,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
+	cmpq $0,-24(%rbp) # spill
 	jnz L109
 L111:
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 L107:
 	popq %r15
 	popq %r14

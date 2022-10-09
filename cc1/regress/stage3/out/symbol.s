@@ -631,22 +631,22 @@ L231:
 	pushq %r14
 	pushq %r15
 L232:
-	movq %rdi,-8(%rbp)
-	movq %rsi,-16(%rbp)
+	movq %rdi,-8(%rbp) # spill
+	movq %rsi,-16(%rbp) # spill
 	movq %rdx,%r12
-	movq -8(%rbp),%rcx
+	movq -8(%rbp),%rcx # spill
 	movl _current_scope(%rip),%edx
 	movl $2048,%esi
-	movq -16(%rbp),%rdi
+	movq -16(%rbp),%rdi # spill
 	call _unique
 	movq %r12,%rdi
 	call _align_of
 	movl %eax,%r15d
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movl 36(%rax),%ecx
 	cmpl %ecx,%r15d
 	cmovgel %r15d,%ecx
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movl %ecx,36(%rax)
 	movl 12(%rax),%ecx
 	testl $2,%ecx
@@ -655,7 +655,7 @@ L237:
 	xorl %ebx,%ebx
 	jmp L239
 L238:
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movl 32(%rax),%ebx
 L239:
 	movslq %ebx,%rbx
@@ -663,7 +663,7 @@ L239:
 	jz L242
 L240:
 	pushq $L243
-	pushq -16(%rbp)
+	pushq -16(%rbp) # spill
 	pushq $4
 	call _error
 	addq $24,%rsp
@@ -679,7 +679,7 @@ L251:
 	testl $4194304,12(%rax)
 	jz L246
 L244:
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	orl $4194304,12(%rax)
 L246:
 	testq $16384,(%r12)
@@ -689,14 +689,14 @@ L258:
 	jnz L256
 L255:
 	xorl %r14d,%r14d
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	orl $67108864,12(%rax)
 	movslq _current_scope(%rip),%rax
 	cmpq $0,_chains(,%rax,8)
 	jnz L257
 L262:
 	pushq $L265
-	pushq -16(%rbp)
+	pushq -16(%rbp) # spill
 	pushq $4
 	call _error
 	addq $24,%rsp
@@ -775,34 +775,34 @@ L268:
 	idivq %r15
 	movl %eax,%r14d
 	imull %r15d,%r14d
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	testl $2,12(%rax)
 	jz L277
 L276:
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movl 32(%rax),%ecx
 	cmpl %ecx,%r13d
 	cmovgel %r13d,%ecx
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movl %ecx,32(%rax)
 	jmp L278
 L277:
 	movslq %r13d,%r13
 	addq %r13,%rbx
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movl %ebx,32(%rax)
 L278:
 	cmpq $1073741824,%rbx
 	jle L284
 L282:
-	pushq -8(%rbp)
+	pushq -8(%rbp) # spill
 	pushq $L285
 	pushq $0
 	pushq $1
 	call _error
 	addq $32,%rsp
 L284:
-	cmpq $0,-16(%rbp)
+	cmpq $0,-16(%rbp) # spill
 	jnz L288
 L286:
 	testq $8192,(%r12)
@@ -813,13 +813,13 @@ L292:
 	jnz L233
 L289:
 	movl %r14d,%edx
-	movq -8(%rbp),%rdi
+	movq -8(%rbp),%rdi # spill
 	call _absorb
 L288:
 	movl $2048,%esi
-	movq -16(%rbp),%rdi
+	movq -16(%rbp),%rdi # spill
 	call _new_symbol
-	movq -16(%rbp),%rcx
+	movq -16(%rbp),%rcx # spill
 	movq %rcx,(%rax)
 	movq %r12,32(%rax)
 	movl %r14d,48(%rax)

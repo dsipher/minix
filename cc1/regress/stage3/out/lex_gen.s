@@ -1163,14 +1163,14 @@ L429:
 	movl $4,%esi
 	movl _current_max_dfas(%rip),%edi
 	call _allocate_array
-	movq %rax,-32(%rbp)
+	movq %rax,-32(%rbp) # spill
 	movl $0,_nummt(%rip)
 	incl _num_backtracking(%rip)
 	cmpl $0,_reject(%rip)
 	jz L433
 L432:
 	leaq -8(%rbp),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
 	movl $0,-8(%rbp)
 	movl %ebx,-4(%rbp)
 	movslq _end_of_buffer_state(%rip),%rcx
@@ -1178,7 +1178,7 @@ L432:
 	movl $1,(%rax,%rcx,4)
 	movslq _end_of_buffer_state(%rip),%rdx
 	movq _dfaacc(%rip),%rcx
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movq %rax,(%rcx,%rdx,8)
 	movl _numas(%rip),%ecx
 	cmpl $1,%ecx
@@ -1194,7 +1194,7 @@ L432:
 	movl $1,%ebx
 	jmp L439
 L440:
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movl %r15d,(%rax,%rbx,4)
 	movq _accsiz(%rip),%rax
 	movl (%rax,%rbx,4),%r14d
@@ -1277,7 +1277,7 @@ L439:
 	cmpl _lastdfa(%rip),%ebx
 	jle L440
 L442:
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movl %r15d,(%rax,%rbx,4)
 	call _dataend
 	jmp L434
@@ -1290,14 +1290,14 @@ L433:
 L485:
 	movq _dfaacc(%rip),%rax
 	movl (%rax,%rcx,8),%edx
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movl %edx,(%rax,%rcx,4)
 	incl %ecx
 L484:
 	cmpl _lastdfa(%rip),%ecx
 	jle L485
 L487:
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movl $0,(%rax,%rcx,4)
 L434:
 	movl _lastdfa(%rip),%ecx
@@ -1322,7 +1322,7 @@ L502:
 	cmpl $0,_trace(%rip)
 	jz L497
 L503:
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movl (%rax,%rbx,4),%eax
 	testl %eax,%eax
 	jz L497
@@ -1337,7 +1337,7 @@ L497:
 	incl %ebx
 L491:
 	movl _lastdfa(%rip),%ecx
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movl (%rax,%rbx,4),%edi
 	cmpl %ecx,%ebx
 	jle L492
@@ -1346,7 +1346,7 @@ L494:
 	cmpl $0,_reject(%rip)
 	jz L508
 L506:
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movl (%rax,%rbx,4),%edi
 	call _mkdata
 L508:
@@ -1403,7 +1403,7 @@ L514:
 	movl _lastdfa(%rip),%esi
 	movl _numtemps(%rip),%edx
 	leal (%rsi,%rdx),%eax
-	movl %eax,-12(%rbp)
+	movl %eax,-12(%rbp) # spill
 	cmpl $32766,_tblend(%rip)
 	movl $_C_short_decl,%eax
 	movl $_C_long_decl,%ecx
@@ -1466,7 +1466,7 @@ L546:
 	movl %eax,(%rcx,%rbx,4)
 L583:
 	incl %ebx
-	cmpl -12(%rbp),%ebx
+	cmpl -12(%rbp),%ebx # spill
 	jle L546
 L548:
 	call _dataend
@@ -1474,7 +1474,7 @@ L548:
 	movl $_C_short_decl,%eax
 	movl $_C_long_decl,%ecx
 	cmovleq %rax,%rcx
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	incl %eax
 	pushq %rax
 	pushq $L549
@@ -1489,7 +1489,7 @@ L554:
 	call _mkdata
 	incl %ebx
 L553:
-	cmpl -12(%rbp),%ebx
+	cmpl -12(%rbp),%ebx # spill
 	jle L554
 L556:
 	call _dataend

@@ -607,10 +607,10 @@ L170:
 	call _printf
 	addq $32,%rsp
 	movswl 20(%r13),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	xorl %r12d,%r12d
 L173:
-	cmpl %r12d,-4(%rbp)
+	cmpl %r12d,-4(%rbp) # spill
 	jle L176
 L174:
 	movswl 22(%r13,%r12,2),%ebx

@@ -12,7 +12,7 @@ L1:
 	pushq %r15
 L2:
 	movq %rsi,%r15
-	movq %rdx,-8(%rbp)
+	movq %rdx,-8(%rbp) # spill
 	movq %rcx,%r14
 	movq %rdi,%r13
 	xorl %r12d,%r12d
@@ -45,7 +45,7 @@ L15:
 L11:
 	incq %r12
 L7:
-	cmpq %r12,-8(%rbp)
+	cmpq %r12,-8(%rbp) # spill
 	ja L8
 L21:
 	movq %r12,%rax

@@ -609,6 +609,7 @@ void out_insn(struct insn *insn)
 #endif /* DEBUG */
 
     if (insn->is_volatile) OUTS(" # volatile");
+    if (insn->is_spill) OUTS(" # spill");
 
     OUTC('\n');
 }

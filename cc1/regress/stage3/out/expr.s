@@ -399,9 +399,9 @@ L116:
 	pushq %r14
 	pushq %r15
 L117:
-	movl %edi,-12(%rbp)
+	movl %edi,-12(%rbp) # spill
 	movq %rsi,%r14
-	movl -12(%rbp),%ebx
+	movl -12(%rbp),%ebx # spill
 	andl $520093696,%ebx
 	sarl $24,%ebx
 	shlq $4,%rbx
@@ -455,12 +455,12 @@ L133:
 	testl $8,%r13d
 	jz L142
 L141:
-	movl -12(%rbp),%edx
+	movl -12(%rbp),%edx # spill
 	movl $426770485,%esi
 	movq 24(%r12),%rdi
 	call _test
 	movq %rax,24(%r12)
-	movl -12(%rbp),%edx
+	movl -12(%rbp),%edx # spill
 	movl $426770485,%esi
 	movq 16(%r12),%rdi
 	call _test
@@ -523,7 +523,7 @@ L171:
 L172:
 	xorq %r14,%rax
 	pushq %rax
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	pushq %rax
 	pushq $L175
 	pushq $0
@@ -650,7 +650,7 @@ L223:
 	cmpq 16(%rcx),%rax
 	jz L220
 L159:
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	pushq %rax
 	pushq $L250
 	pushq $0
@@ -711,9 +711,9 @@ L247:
 	movq 8(%rax),%rax
 	movq %rax,8(%r12)
 L245:
-	movq %r12,-8(%rbp)
+	movq %r12,-8(%rbp) # spill
 L118:
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	popq %r15
 	popq %r14
 	popq %r13
@@ -1281,7 +1281,7 @@ L431:
 	movl $1073741829,%edi
 	call _unary_tree
 	movq %rax,%r13
-	movq %r13,-16(%rbp)
+	movq %r13,-16(%rbp) # spill
 	movq 16(%r14),%r12
 	testq $8192,(%rbx)
 	jz L439
@@ -1290,12 +1290,12 @@ L437:
 	call _temp
 	movq %rax,%rdi
 	call _sym_tree
-	movq %rax,-8(%rbp)
+	movq %rax,-8(%rbp) # spill
 	movq %rbx,%rdx
 	xorl %esi,%esi
 	movl $65536,%edi
 	call _get_tnode
-	movq -8(%rbp),%rdx
+	movq -8(%rbp),%rdx # spill
 	movq %rax,%rsi
 	movl $1073741831,%edi
 	call _unary_tree
@@ -1311,7 +1311,7 @@ L437:
 	movq %rbx,%rsi
 	movl $1073741828,%edi
 	call _unary_tree
-	movq %rax,-16(%rbp)
+	movq %rax,-16(%rbp) # spill
 L439:
 	cmpl $13,_token(%rip)
 	jz L473
@@ -1380,7 +1380,7 @@ L476:
 	call _error
 	addq $24,%rsp
 L478:
-	movq -16(%rbp),%rdi
+	movq -16(%rbp),%rdi # spill
 	call _rewrite_builtin
 L425:
 	popq %r15

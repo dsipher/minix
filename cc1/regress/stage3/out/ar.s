@@ -396,7 +396,7 @@ L155:
 	pushq %r14
 	pushq %r15
 L156:
-	movl %edi,-4100(%rbp)
+	movl %edi,-4100(%rbp) # spill
 	movl %esi,%r13d
 	movl %edx,%r12d
 	testl $8,%r12d
@@ -440,7 +440,7 @@ L169:
 	movslq %r15d,%r15
 	movq %r15,%rdx
 	leaq -4096(%rbp),%rsi
-	movl -4100(%rbp),%edi
+	movl -4100(%rbp),%edi # spill
 	call _read
 	cmpq %rax,%r15
 	jz L181

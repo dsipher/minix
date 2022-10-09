@@ -307,7 +307,7 @@ L31:
 	jnz L105
 L54:
 	movl 16(%r13),%eax
-	movl %eax,-12(%rbp)
+	movl %eax,-12(%rbp) # spill
 	shll $10,%edi
 	shrl $15,%edi
 	movslq %r12d,%r12
@@ -321,7 +321,7 @@ L71:
 	cmpl $1,%eax
 	jnz L105
 L67:
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	cmpl 48(%rbx),%eax
 	jnz L105
 L63:
@@ -346,24 +346,24 @@ L83:
 	testq $7168,%rdi
 	setz %al
 	movzbl %al,%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-8(%rbp) # spill
 	testl $229376,%ecx
 	setz %al
 	movzbl %al,%eax
-	cmpl %eax,-8(%rbp)
+	cmpl %eax,-8(%rbp) # spill
 	jnz L105
 L87:
 	call _t_size
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	movl 8(%rbx),%edi
 	shll $10,%edi
 	shrl $15,%edi
 	call _t_size
-	cmpl %eax,-4(%rbp)
+	cmpl %eax,-4(%rbp) # spill
 	jnz L105
 L58:
 	movl %r14d,%edx
-	movl -12(%rbp),%esi
+	movl -12(%rbp),%esi # spill
 	movq %r15,%rdi
 	call _range_by_def
 	movl %eax,%esi
@@ -374,11 +374,11 @@ L58:
 L94:
 	leaq 8(%rbx),%rdi
 	call _normalize_operand
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	cmpl 16(%rbx),%eax
 	jz L105
 L99:
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	cmpl 20(%rbx),%eax
 	jnz L98
 L105:

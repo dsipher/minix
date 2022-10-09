@@ -598,6 +598,17 @@ again:
                                     REG_OPERAND(&reg, 0, t, new);           \
                                 } while (0)
 
+/* when we issue a load or store related to spilling,
+   we want to mark it as such; here's a simple wrapper */
+
+#define SPILL_MOVE(t, dst, src)                                             \
+    ({                                                                      \
+        struct insn *_insn;                                                 \
+        _insn = move((t), (dst), (src));                                    \
+        _insn->is_spill = 1;                                                \
+        (_insn);                                                            \
+    })
+
 /* we try to limit the number of memory operations by eliminating duplicate
    loads and delaying stores as long as possible, without unduly extending
    the live range of the temp (which would defeat the purpose of spilling). */
@@ -609,7 +620,7 @@ again:
 #define SPILL_UNDIRTY()                                                     \
     do {                                                                    \
         if (state == SPILL_DIRTY)                                           \
-            insert_insn(move(t, &addr, &reg), b, i);                        \
+            insert_insn(SPILL_MOVE(t, &addr, &reg), b, i);                  \
                                                                             \
         state = SPILL_NONE;                                                 \
     } while (0)
@@ -670,7 +681,7 @@ static void spill0(void)
                    the temp reg's sub, and load the value */
 
                 NEXT_SPILL_SUB();
-                insert_insn(move(t, &reg, &addr), b, i);
+                insert_insn(SPILL_MOVE(t, &reg, &addr), b, i);
                 ++i; /* we bumped the current insn */
                 state = SPILL_LOADED;
             }

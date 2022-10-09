@@ -275,10 +275,10 @@ L1:
 	pushq %r14
 	pushq %r15
 L2:
-	movq %rdi,-24(%rbp)
-	movq %rsi,-40(%rbp)
-	movl %edx,-4(%rbp)
-	cmpq $2147483646,-40(%rbp)
+	movq %rdi,-24(%rbp) # spill
+	movq %rsi,-40(%rbp) # spill
+	movl %edx,-4(%rbp) # spill
+	cmpq $2147483646,-40(%rbp) # spill
 	jbe L6
 L4:
 	pushq $L7
@@ -291,7 +291,7 @@ L6:
 	xorl %ecx,%ecx
 	jmp L8
 L9:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movb (%rcx,%rax),%al
 	xorb %r15b,%al
 	movzbq %al,%rax
@@ -299,7 +299,7 @@ L9:
 	xorl _crctab(,%rax,4),%r15d
 	incl %ecx
 L8:
-	cmpq %rcx,-40(%rbp)
+	cmpq %rcx,-40(%rbp) # spill
 	ja L9
 L11:
 	xorl $4294967295,%r15d
@@ -311,22 +311,22 @@ L11:
 	movl %r15d,%eax
 	shrl $11,%eax
 	andl $63,%eax
-	movl %eax,-44(%rbp)
+	movl %eax,-44(%rbp) # spill
 	xorl %r14d,%r14d
 	movl %ebx,%ecx
-	movq %rcx,-32(%rbp)
+	movq %rcx,-32(%rbp) # spill
 	shlq $6,%rcx
 	movl %r12d,%eax
 	movq _filters(%rcx,%rax,8),%rax
-	movq %rax,-16(%rbp)
-	movb -44(%rbp),%cl
+	movq %rax,-16(%rbp) # spill
+	movb -44(%rbp),%cl # spill
 	movl $1,%edx
 	shlq %cl,%rdx
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	testq %rax,%rdx
 	jz L14
 L12:
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	leaq _buckets(,%rax,8),%r13
 L15:
 	movq (%r13),%r14
@@ -337,11 +337,11 @@ L16:
 	jnz L17
 L21:
 	movslq 4(%r14),%rax
-	cmpq %rax,-40(%rbp)
+	cmpq %rax,-40(%rbp) # spill
 	jnz L17
 L25:
-	movq -40(%rbp),%rdx
-	movq -24(%rbp),%rsi
+	movq -40(%rbp),%rdx # spill
+	movq -24(%rbp),%rsi # spill
 	movq 8(%r14),%rdi
 	call _memcmp
 	testl %eax,%eax
@@ -352,7 +352,7 @@ L17:
 L29:
 	movq 24(%r14),%rax
 	movq %rax,(%r13)
-	cmpl $0,-4(%rbp)
+	cmpl $0,-4(%rbp) # spill
 	jz L14
 L34:
 	movq _string_arena(%rip),%rax
@@ -375,20 +375,20 @@ L42:
 L43:
 	decl _string_slab+20(%rip)
 	movl %r15d,(%r14)
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	movl %eax,4(%r14)
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movq %rax,8(%r14)
 	movl $0,16(%r14)
 	movl $0,20(%r14)
-	movb -44(%rbp),%cl
+	movb -44(%rbp),%cl # spill
 	movl $1,%edx
 	shlq %cl,%rdx
 	movl %ebx,%eax
 	shlq $6,%rax
 	movl %r12d,%r12d
 	orq %rdx,_filters(%rax,%r12,8)
-	cmpl $0,-4(%rbp)
+	cmpl $0,-4(%rbp) # spill
 	jz L40
 L47:
 	movq _string_arena+8(%rip),%rax

@@ -52,25 +52,25 @@ L13:
 	pushq %r14
 	pushq %r15
 L14:
-	movq %rdi,-16(%rbp)
-	movq %rsi,-8(%rbp)
+	movq %rdi,-16(%rbp) # spill
+	movq %rsi,-8(%rbp) # spill
 	movq %rdx,%r12
 L16:
-	movq -16(%rbp),%rax
-	cmpq -8(%rbp),%rax
+	movq -16(%rbp),%rax # spill
+	cmpq -8(%rbp),%rax # spill
 	jae L15
 L22:
-	movq -16(%rbp),%rbx
-	movq -8(%rbp),%r14
+	movq -16(%rbp),%rbx # spill
+	movq -8(%rbp),%r14 # spill
 	movq %r14,%rax
-	subq -16(%rbp),%rax
+	subq -16(%rbp),%rax # spill
 	movq %r12,%rcx
 	shlq $1,%rcx
 	addq %r12,%rax
 	xorl %edx,%edx
 	divq %rcx
 	imulq %r12,%rax
-	movq -16(%rbp),%r13
+	movq -16(%rbp),%r13 # spill
 	addq %rax,%r13
 	movq %r13,%r15
 L25:
@@ -142,10 +142,10 @@ L48:
 	jmp L25
 L50:
 	movq %r12,%rdx
-	movq -16(%rbp),%rdi
+	movq -16(%rbp),%rdi # spill
 	call _qsort1
 	addq %r12,%r13
-	movq %r13,-16(%rbp)
+	movq %r13,-16(%rbp) # spill
 	jmp L16
 L32:
 	addq %r12,%rbx

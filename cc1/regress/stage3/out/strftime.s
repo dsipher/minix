@@ -166,30 +166,30 @@ L33:
 	pushq %r14
 	pushq %r15
 L34:
-	movq %rdi,-32(%rbp)
-	movq %rsi,-16(%rbp)
-	movq %rdx,-40(%rbp)
+	movq %rdi,-32(%rbp) # spill
+	movq %rsi,-16(%rbp) # spill
+	movq %rdx,-40(%rbp) # spill
 	movq %rcx,%r14
 	xorl %r13d,%r13d
 L36:
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	movb (%rax),%dl
 	incq %rax
-	movq %rax,-40(%rbp)
+	movq %rax,-40(%rbp) # spill
 	leaq -1(%rbp),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
 	movb %dl,-1(%rbp)
 	cmpb $37,%dl
 	jz L41
 L40:
 	incq %r13
-	cmpq %r13,-16(%rbp)
+	cmpq %r13,-16(%rbp) # spill
 	jb L126
 L45:
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movq %rax,%rcx
 	incq %rax
-	movq %rax,-32(%rbp)
+	movq %rax,-32(%rbp) # spill
 	movb %dl,(%rcx)
 	cmpb $0,-1(%rbp)
 	jnz L36
@@ -198,10 +198,10 @@ L47:
 	jmp L35
 L41:
 	xorl %r12d,%r12d
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	movb (%rax),%cl
 	incq %rax
-	movq %rax,-40(%rbp)
+	movq %rax,-40(%rbp) # spill
 	movb %cl,-1(%rbp)
 	cmpb $83,%cl
 	jl L128
@@ -364,7 +364,7 @@ L143:
 	movq %rax,%r15
 	jmp L52
 L51:
-	movq -24(%rbp),%r12
+	movq -24(%rbp),%r12 # spill
 L124:
 	movl $1,%r15d
 L52:
@@ -377,14 +377,14 @@ L116:
 	movq %rax,%r12
 L118:
 	addq %r15,%r13
-	cmpq %r13,-16(%rbp)
+	cmpq %r13,-16(%rbp) # spill
 	jbe L126
 L121:
 	movq %r15,%rdx
 	movq %r12,%rsi
-	movq -32(%rbp),%rdi
+	movq -32(%rbp),%rdi # spill
 	call _strncpy
-	addq %r15,-32(%rbp)
+	addq %r15,-32(%rbp) # spill
 	jmp L36
 L126:
 	xorl %eax,%eax

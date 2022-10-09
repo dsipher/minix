@@ -519,7 +519,7 @@ L165:
 	pushq %r15
 L166:
 	movq %rdi,%r15
-	movl %esi,-4(%rbp)
+	movl %esi,-4(%rbp) # spill
 	movl %edx,%ebx
 	movq 24(%r15),%r14
 	xorl %esi,%esi
@@ -545,7 +545,7 @@ L172:
 L174:
 	movl %r12d,%edx
 	imull %r13d,%edx
-	addl -4(%rbp),%edx
+	addl -4(%rbp),%edx # spill
 	xorl %esi,%esi
 	movq %r14,%rdi
 	call _init
@@ -597,11 +597,11 @@ L204:
 	pushq %r14
 	pushq %r15
 L205:
-	movq %rdi,-8(%rbp)
-	movl %esi,-12(%rbp)
+	movq %rdi,-8(%rbp) # spill
+	movl %esi,-12(%rbp) # spill
 	movl %edx,%ebx
 	xorl %r12d,%r12d
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movq 16(%rax),%r15
 	movq 40(%r15),%r14
 	jmp L210
@@ -653,7 +653,7 @@ L231:
 	addl %r13d,%r12d
 	movq 32(%r14),%rdi
 	movl 48(%r14),%edx
-	addl -12(%rbp),%edx
+	addl -12(%rbp),%edx # spill
 	xorl %esi,%esi
 	call _init
 	movq 32(%r14),%rdi
@@ -696,7 +696,7 @@ L256:
 	jmp L221
 L224:
 	xorl %esi,%esi
-	movq -8(%rbp),%rdi
+	movq -8(%rbp),%rdi # spill
 	call _size_of
 	shll $3,%eax
 	subl %r12d,%eax

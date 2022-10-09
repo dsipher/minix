@@ -718,15 +718,15 @@ L336:
 	pushq %r15
 L337:
 	movq %rdi,%r15
-	movq %rsi,-16(%rbp)
+	movq %rsi,-16(%rbp) # spill
 	movq %rdx,%r14
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	movl 4(%rax),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	movl 4(%r14),%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-8(%rbp) # spill
 	cmpl $0,(%r15)
 	jl L343
 L342:
@@ -740,13 +740,13 @@ L343:
 	movq %r15,%rdi
 	call _vector_insert
 L345:
-	cmpl -4(%rbp),%r12d
+	cmpl -4(%rbp),%r12d # spill
 	jl L349
 L348:
-	cmpl -8(%rbp),%ebx
+	cmpl -8(%rbp),%ebx # spill
 	jge L338
 L349:
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	cmpl 4(%rax),%r12d
 	jnz L353
 L352:
@@ -757,7 +757,7 @@ L352:
 	jmp L364
 L353:
 	movl 4(%r14),%ecx
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	movq 8(%rax),%rax
 	cmpl %ecx,%ebx
 	jnz L356
@@ -832,9 +832,9 @@ L371:
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
 	movl 4(%r14),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	movl 4(%r13),%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-8(%rbp) # spill
 	cmpl $0,(%r15)
 	jl L377
 L376:
@@ -848,10 +848,10 @@ L377:
 	movq %r15,%rdi
 	call _vector_insert
 L379:
-	cmpl -4(%rbp),%r12d
+	cmpl -4(%rbp),%r12d # spill
 	jge L372
 L382:
-	cmpl -8(%rbp),%ebx
+	cmpl -8(%rbp),%ebx # spill
 	jge L372
 L383:
 	movq 8(%r14),%rax
@@ -918,9 +918,9 @@ L400:
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
 	movl 4(%r14),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	movl 4(%r13),%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-8(%rbp) # spill
 	cmpl $0,(%r15)
 	jl L406
 L405:
@@ -934,10 +934,10 @@ L406:
 	movq %r15,%rdi
 	call _vector_insert
 L408:
-	cmpl -4(%rbp),%r12d
+	cmpl -4(%rbp),%r12d # spill
 	jge L401
 L409:
-	cmpl -8(%rbp),%ebx
+	cmpl -8(%rbp),%ebx # spill
 	jz L415
 L414:
 	movq 8(%r14),%rax

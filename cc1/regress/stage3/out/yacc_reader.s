@@ -590,16 +590,16 @@ L311:
 L312:
 	movq _text_file(%rip),%r14
 	movl _lineno(%rip),%eax
-	movl %eax,-28(%rbp)
-	movl $0,-36(%rbp)
-	movl -28(%rbp),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-28(%rbp) # spill
+	movl $0,-36(%rbp) # spill
+	movl -28(%rbp),%eax # spill
+	movl %eax,-4(%rbp) # spill
 	call _dup_line
-	movq %rax,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
 	movq _cptr(%rip),%rcx
 	movq %rcx,%rax
 	subq _line(%rip),%rax
-	movq %rax,-16(%rbp)
+	movq %rax,-16(%rbp) # spill
 	cmpb $10,(%rcx)
 	jnz L316
 L314:
@@ -607,10 +607,10 @@ L314:
 	cmpq $0,_line(%rip)
 	jnz L316
 L317:
-	movq -16(%rbp),%rax
-	movq -24(%rbp),%rsi
+	movq -16(%rbp),%rax # spill
+	movq -24(%rbp),%rsi # spill
 	leaq -2(%rax,%rsi),%rdx
-	movl -28(%rbp),%edi
+	movl -28(%rbp),%edi # spill
 	call _unterminated_text
 L316:
 	cmpb $0,_lflag(%rip)
@@ -663,7 +663,7 @@ L369:
 L370:
 	movq _cptr(%rip),%rax
 	movsbl (%rax),%eax
-	movl $1,-36(%rbp)
+	movl $1,-36(%rbp) # spill
 	cmpl $47,%eax
 	jz L371
 L373:
@@ -671,7 +671,7 @@ L373:
 	jnz L440
 L393:
 	movl _lineno(%rip),%eax
-	movl %eax,-32(%rbp)
+	movl %eax,-32(%rbp) # spill
 	call _dup_line
 	movq %rax,%r13
 	movq _cptr(%rip),%r12
@@ -724,7 +724,7 @@ L417:
 L420:
 	leaq -1(%r12,%r13),%rdx
 	movq %r13,%rsi
-	movl -32(%rbp),%edi
+	movl -32(%rbp),%edi # spill
 	call _unterminated_comment
 	jmp L399
 L406:
@@ -799,7 +799,7 @@ L425:
 	cmpb $125,1(%rcx)
 	jnz L324
 L426:
-	cmpl $0,-36(%rbp)
+	cmpl $0,-36(%rbp) # spill
 	jz L431
 L429:
 	decl (%r14)
@@ -816,7 +816,7 @@ L433:
 	call ___flushbuf
 L431:
 	incq _cptr(%rip)
-	movq -24(%rbp),%rdi
+	movq -24(%rbp),%rdi # spill
 	call _free
 L313:
 	popq %r15
@@ -841,7 +841,7 @@ L437:
 	movl %ebx,%edi
 	call ___flushbuf
 L440:
-	movl $1,-36(%rbp)
+	movl $1,-36(%rbp) # spill
 	jmp L323
 L328:
 	decl (%r14)
@@ -857,19 +857,19 @@ L330:
 	movl $10,%edi
 	call ___flushbuf
 L331:
-	movl $0,-36(%rbp)
+	movl $0,-36(%rbp) # spill
 	call _get_line
 	cmpq $0,_line(%rip)
 	jnz L323
 L334:
-	movq -16(%rbp),%rax
-	movq -24(%rbp),%rsi
+	movq -16(%rbp),%rax # spill
+	movq -24(%rbp),%rsi # spill
 	leaq -2(%rax,%rsi),%rdx
-	movl -4(%rbp),%edi
+	movl -4(%rbp),%edi # spill
 	call _unterminated_text
 L337:
 	movl _lineno(%rip),%eax
-	movl %eax,-40(%rbp)
+	movl %eax,-40(%rbp) # spill
 	call _dup_line
 	movq %rax,%r13
 	movq _cptr(%rip),%r12
@@ -912,7 +912,7 @@ L350:
 L352:
 	leaq -1(%r12,%r13),%rdx
 	movq %r13,%rsi
-	movl -40(%rbp),%edi
+	movl -40(%rbp),%edi # spill
 	call _unterminated_string
 L354:
 	cmpl $92,%r15d
@@ -944,11 +944,11 @@ L361:
 L364:
 	leaq -1(%r12,%r13),%rdx
 	movq %r13,%rsi
-	movl -40(%rbp),%edi
+	movl -40(%rbp),%edi # spill
 	call _unterminated_string
 	jmp L341
 L348:
-	movl $1,-36(%rbp)
+	movl $1,-36(%rbp) # spill
 L451:
 	movq %r13,%rdi
 	call _free
@@ -967,13 +967,13 @@ L452:
 	pushq %r15
 L453:
 	movl _lineno(%rip),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	call _dup_line
-	movq %rax,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
 	movq _cptr(%rip),%rdi
 	movq %rdi,%rax
 	subq _line(%rip),%rax
-	movq %rax,-16(%rbp)
+	movq %rax,-16(%rbp) # spill
 	cmpb $0,_unionized(%rip)
 	jz L457
 L455:
@@ -1004,7 +1004,7 @@ L462:
 	call _fprintf
 	addq $16,%rsp
 L464:
-	movl $0,-28(%rbp)
+	movl $0,-28(%rbp) # spill
 L465:
 	movq _cptr(%rip),%rcx
 	leaq 1(%rcx),%rax
@@ -1061,7 +1061,7 @@ L628:
 	cmpb $123,%r13b
 	jnz L465
 L484:
-	incl -28(%rbp)
+	incl -28(%rbp) # spill
 	jmp L465
 L533:
 	movq _cptr(%rip),%rax
@@ -1411,15 +1411,15 @@ L631:
 	call _free
 	jmp L465
 L486:
-	decl -28(%rbp)
-	cmpl $0,-28(%rbp)
+	decl -28(%rbp) # spill
+	cmpl $0,-28(%rbp) # spill
 	jnz L465
 L487:
 	pushq $L490
 	pushq _text_file(%rip)
 	call _fprintf
 	addq $16,%rsp
-	movq -24(%rbp),%rdi
+	movq -24(%rbp),%rdi # spill
 	call _free
 L454:
 	popq %r15
@@ -1435,10 +1435,10 @@ L479:
 	cmpq $0,_line(%rip)
 	jnz L465
 L480:
-	movq -16(%rbp),%rax
-	movq -24(%rbp),%rsi
+	movq -16(%rbp),%rax # spill
+	movq -24(%rbp),%rsi # spill
 	leaq -6(%rax,%rsi),%rdx
-	movl -4(%rbp),%edi
+	movl -4(%rbp),%edi # spill
 	call _unterminated_union
 	jmp L465
 
@@ -1518,14 +1518,14 @@ L662:
 	leaq 1(%rcx),%rax
 	movq %rax,_cptr(%rip)
 	movsbl (%rcx),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	movl $0,_cinc(%rip)
 L664:
 	movq _cptr(%rip),%rcx
 	leaq 1(%rcx),%rax
 	movq %rax,_cptr(%rip)
 	movsbl (%rcx),%r12d
-	cmpl %r12d,-4(%rbp)
+	cmpl %r12d,-4(%rbp) # spill
 	jz L668
 L670:
 	cmpl $10,%r12d
@@ -2892,12 +2892,12 @@ L1311:
 L1312:
 	movq _action_file(%rip),%r14
 	movl _lineno(%rip),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	call _dup_line
-	movq %rax,-16(%rbp)
+	movq %rax,-16(%rbp) # spill
 	movq _cptr(%rip),%rax
 	subq _line(%rip),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
 	cmpb $0,_last_was_action(%rip)
 	jz L1316
 L1314:
@@ -2929,12 +2929,12 @@ L1321:
 	incq %rax
 	movq %rax,_cptr(%rip)
 L1323:
-	movl $0,-36(%rbp)
+	movl $0,-36(%rbp) # spill
 	movl _nitems(%rip),%ecx
 	decl %ecx
 	jmp L1324
 L1325:
-	incl -36(%rbp)
+	incl -36(%rbp) # spill
 	decl %ecx
 L1324:
 	movslq %ecx,%rcx
@@ -2942,7 +2942,7 @@ L1324:
 	cmpq $0,(%rax,%rcx,8)
 	jnz L1325
 L1327:
-	movl $0,-28(%rbp)
+	movl $0,-28(%rbp) # spill
 L1328:
 	movq _cptr(%rip),%rdx
 	movsbl (%rdx),%eax
@@ -2956,7 +2956,7 @@ L1329:
 	jnz L1333
 L1332:
 	movl _lineno(%rip),%eax
-	movl %eax,-40(%rbp)
+	movl %eax,-40(%rbp) # spill
 	call _dup_line
 	movq %rax,%r15
 	movq _cptr(%rip),%rax
@@ -2986,14 +2986,14 @@ L1336:
 L1340:
 	call _get_number
 	movl %eax,%r12d
-	cmpl %r12d,-36(%rbp)
+	cmpl %r12d,-36(%rbp) # spill
 	jge L1345
 L1343:
 	movl %r12d,%esi
-	movl -40(%rbp),%edi
+	movl -40(%rbp),%edi # spill
 	call _dollar_warning
 L1345:
-	subl -36(%rbp),%r12d
+	subl -36(%rbp),%r12d # spill
 	pushq %rbx
 	pushq %r12
 	jmp L1543
@@ -3009,7 +3009,7 @@ L1352:
 	movq %rcx,_cptr(%rip)
 	call _get_number
 	negl %eax
-	subl -36(%rbp),%eax
+	subl -36(%rbp),%eax # spill
 	pushq %rbx
 	pushq %rax
 L1543:
@@ -3023,7 +3023,7 @@ L1529:
 L1353:
 	leaq (%r12,%r15),%rdx
 	movq %r15,%rsi
-	movl -40(%rbp),%edi
+	movl -40(%rbp),%edi # spill
 	call _dollar_error
 	jmp L1331
 L1333:
@@ -3070,7 +3070,7 @@ L1370:
 	cmpl $0,%ebx
 	jle L1377
 L1376:
-	cmpl %ebx,-36(%rbp)
+	cmpl %ebx,-36(%rbp) # spill
 	jge L1375
 L1377:
 	movl %ebx,%edi
@@ -3078,7 +3078,7 @@ L1377:
 L1375:
 	movl _nitems(%rip),%eax
 	addl %ebx,%eax
-	subl -36(%rbp),%eax
+	subl -36(%rbp),%eax # spill
 	decl %eax
 	movslq %eax,%rax
 	movq _pitem(%rip),%rcx
@@ -3091,7 +3091,7 @@ L1380:
 	movl %ebx,%edi
 	call _untyped_rhs
 L1382:
-	subl -36(%rbp),%ebx
+	subl -36(%rbp),%ebx # spill
 	pushq %r12
 	pushq %rbx
 	pushq $L1346
@@ -3100,7 +3100,7 @@ L1382:
 	addq $32,%rsp
 	jmp L1328
 L1371:
-	cmpl %ebx,-36(%rbp)
+	cmpl %ebx,-36(%rbp) # spill
 	jge L1544
 L1383:
 	movl %ebx,%esi
@@ -3192,7 +3192,7 @@ L1536:
 	cmpb $123,%al
 	jnz L1328
 L1440:
-	incl -28(%rbp)
+	incl -28(%rbp) # spill
 	jmp L1328
 L1476:
 	movsbl 1(%rcx),%eax
@@ -3203,7 +3203,7 @@ L1479:
 	jnz L1328
 L1497:
 	movl _lineno(%rip),%eax
-	movl %eax,-32(%rbp)
+	movl %eax,-32(%rbp) # spill
 	call _dup_line
 	movq %rax,%r13
 	movq _cptr(%rip),%r12
@@ -3273,7 +3273,7 @@ L1521:
 L1524:
 	leaq -1(%r12,%r13),%rdx
 	movq %r13,%rsi
-	movl -32(%rbp),%edi
+	movl -32(%rbp),%edi # spill
 	call _unterminated_comment
 	jmp L1503
 L1477:
@@ -3330,7 +3330,7 @@ L1485:
 	jmp L1428
 L1449:
 	movl _lineno(%rip),%eax
-	movl %eax,-44(%rbp)
+	movl %eax,-44(%rbp) # spill
 	call _dup_line
 	movq %rax,%r12
 	movq _cptr(%rip),%rbx
@@ -3361,7 +3361,7 @@ L1459:
 L1461:
 	leaq -1(%rbx,%r12),%rdx
 	movq %r12,%rsi
-	movl -44(%rbp),%edi
+	movl -44(%rbp),%edi # spill
 	call _unterminated_string
 L1463:
 	cmpl $92,%r15d
@@ -3393,7 +3393,7 @@ L1470:
 L1473:
 	leaq -1(%rbx,%r12),%rdx
 	movq %r12,%rsi
-	movl -44(%rbp),%edi
+	movl -44(%rbp),%edi # spill
 	call _unterminated_string
 	jmp L1450
 L1457:
@@ -3402,9 +3402,9 @@ L1542:
 	call _free
 	jmp L1328
 L1442:
-	movl -28(%rbp),%eax
+	movl -28(%rbp),%eax # spill
 	decl %eax
-	movl %eax,-28(%rbp)
+	movl %eax,-28(%rbp) # spill
 	cmpl $0,%eax
 	jg L1328
 	jle L1539
@@ -3413,14 +3413,14 @@ L1428:
 	cmpq $0,_line(%rip)
 	jnz L1328
 L1431:
-	movq -16(%rbp),%rcx
-	movq -24(%rbp),%rax
+	movq -16(%rbp),%rcx # spill
+	movq -24(%rbp),%rax # spill
 	leaq (%rax,%rcx),%rdx
 	movq %rcx,%rsi
-	movl -4(%rbp),%edi
+	movl -4(%rbp),%edi # spill
 	call _unterminated_action
 L1433:
-	cmpl $0,-28(%rbp)
+	cmpl $0,-28(%rbp) # spill
 	jg L1328
 L1539:
 	pushq $L1438
@@ -3451,7 +3451,7 @@ L1391:
 L1393:
 	negl %ebx
 L1544:
-	subl -36(%rbp),%ebx
+	subl -36(%rbp),%ebx # spill
 	pushq %rbx
 	pushq $L1386
 	pushq %r14

@@ -112,7 +112,7 @@ L62:
 	movl %edi,%r15d
 	movsd (%rsi),%xmm8
 	movl %edx,%ebx
-	movq %rcx,-24(%rbp)
+	movq %rcx,-24(%rbp) # spill
 	movq %r8,%r14
 	movq %r14,%r13
 	ucomisd L129(%rip),%xmm8
@@ -148,7 +148,7 @@ L72:
 	movsd L130(%rip),%xmm1
 	mulsd %xmm0,%xmm1
 L74:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movl %r12d,(%rax)
 	cmpl $101,%r15d
 	jz L75
@@ -171,7 +171,7 @@ L91:
 	ucomisd L127(%rip),%xmm1
 	ja L95
 L67:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movl $0,(%rax)
 	movb $48,(%r14)
 	movb $0,1(%r14)
@@ -229,10 +229,10 @@ L120:
 L122:
 	incq %r13
 L95:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movl (%rax),%ecx
 	incl %ecx
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movl %ecx,(%rax)
 	movb $49,(%r13)
 	movb $0,1(%r13)

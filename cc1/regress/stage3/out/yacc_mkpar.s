@@ -90,7 +90,7 @@ L20:
 	addl $31,%eax
 	cltd 
 	idivl %ecx
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	movslq %r8d,%r8
 	movq _lookaheads(%rip),%rcx
 	movswl (%rcx,%r8,2),%r14d
@@ -103,7 +103,7 @@ L23:
 	movq _LAruleno(%rip),%rax
 	movswl (%rax,%r14,2),%r13d
 	movl %r14d,%ecx
-	imull -4(%rbp),%ecx
+	imull -4(%rbp),%ecx # spill
 	movslq %ecx,%rcx
 	movq _LA(%rip),%rax
 	leaq (%rax,%rcx,4),%r12

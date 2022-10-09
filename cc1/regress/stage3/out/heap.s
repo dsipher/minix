@@ -101,9 +101,9 @@ L20:
 	movl %ecx,%ebx
 	movl 4(%r13),%edx
 	leal (%rdx,%r14),%eax
-	movl %eax,-12(%rbp)
+	movl %eax,-12(%rbp) # spill
 	movl (%r13),%ecx
-	cmpl %ecx,-12(%rbp)
+	cmpl %ecx,-12(%rbp) # spill
 	jle L23
 L22:
 	cmpl $8,%ecx
@@ -116,7 +116,7 @@ L29:
 	movl %esi,(%r13)
 L28:
 	movl (%r13),%esi
-	cmpl %esi,-12(%rbp)
+	cmpl %esi,-12(%rbp) # spill
 	jg L29
 L30:
 	imull %ebx,%esi
@@ -124,13 +124,13 @@ L30:
 	xorl %edx,%edx
 	movq 16(%r13),%rdi
 	call _arena_alloc
-	movq %rax,-8(%rbp)
+	movq %rax,-8(%rbp) # spill
 	movl %ebx,%r15d
 	imull %r12d,%r15d
 	movslq %r15d,%r15
 	movq %r15,%rdx
 	movq 8(%r13),%rsi
-	movq -8(%rbp),%rdi
+	movq -8(%rbp),%rdi # spill
 	call _memcpy
 	addl %r12d,%r14d
 	imull %ebx,%r14d
@@ -141,9 +141,9 @@ L30:
 	imull %ebx,%edx
 	movslq %edx,%rdx
 	addq %r15,%rsi
-	addq -8(%rbp),%rdi
+	addq -8(%rbp),%rdi # spill
 	call _memcpy
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	movq %rax,8(%r13)
 	jmp L24
 L23:
@@ -161,7 +161,7 @@ L23:
 	addq %r14,%rdi
 	call _memmove
 L24:
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 	movl %eax,4(%r13)
 L21:
 	popq %r15

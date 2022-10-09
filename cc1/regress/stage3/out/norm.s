@@ -372,7 +372,7 @@ L109:
 	pushq %r15
 L110:
 	movslq _norm_0s+4(%rip),%rax
-	movq %rdi,-24(%rbp)
+	movq %rdi,-24(%rbp) # spill
 	leaq (,%rax,8),%rdx
 	xorl %esi,%esi
 	movq _norm_0s+8(%rip),%rdi
@@ -382,10 +382,10 @@ L110:
 	xorl %esi,%esi
 	movq _norm_1s+8(%rip),%rdi
 	call ___builtin_memset
-	movl $0,-28(%rbp)
+	movl $0,-28(%rbp) # spill
 	jmp L112
 L116:
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movq 16(%rax),%rcx
 	movl -28(%rbp),%eax
 	movq (%rcx,%rax,8),%r13
@@ -643,7 +643,7 @@ L187:
 	call *%rax
 	movq %rax,%rdx
 	movq %rdx,%r13
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movq 16(%rax),%rcx
 	movl -28(%rbp),%eax
 	movq %rdx,(%rcx,%rax,8)
@@ -925,10 +925,10 @@ L339:
 	sarl %cl,%ebx
 	orq %r13,(%r12,%rbx,8)
 L288:
-	incl -28(%rbp)
+	incl -28(%rbp) # spill
 L112:
-	movq -24(%rbp),%rcx
-	movl -28(%rbp),%eax
+	movq -24(%rbp),%rcx # spill
+	movl -28(%rbp),%eax # spill
 	cmpl 12(%rcx),%eax
 	jl L116
 L111:

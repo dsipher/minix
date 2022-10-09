@@ -16,12 +16,12 @@ L1:
 	pushq %r14
 	pushq %r15
 L2:
-	movq %rdi,-16(%rbp)
-	movq %rsi,-8(%rbp)
-	movq -16(%rbp),%r15
+	movq %rdi,-16(%rbp) # spill
+	movq %rsi,-8(%rbp) # spill
+	movq -16(%rbp),%r15 # spill
 	xorl %edi,%edi
-	movl $0,-20(%rbp)
-	movl $0,-24(%rbp)
+	movl $0,-20(%rbp) # spill
+	movl $0,-24(%rbp) # spill
 	xorl %ebx,%ebx
 	xorl %r13d,%r13d
 	movsd L159(%rip),%xmm8
@@ -80,13 +80,13 @@ L46:
 	cmpl $10,%eax
 	jae L47
 L38:
-	cmpl $0,-20(%rbp)
+	cmpl $0,-20(%rbp) # spill
 	jnz L55
 L54:
 	testl %r12d,%r12d
 	jz L53
 L55:
-	incl -20(%rbp)
+	incl -20(%rbp) # spill
 L53:
 	movq $1844674407370955160,%rax
 	cmpq %rax,%r13
@@ -139,7 +139,7 @@ L60:
 	testl $2,%ebx
 	jz L35
 L70:
-	decl -24(%rbp)
+	decl -24(%rbp) # spill
 	jmp L35
 L47:
 	movq %rcx,%r15
@@ -197,7 +197,7 @@ L93:
 L94:
 	movq %r15,%rax
 	decq %rax
-	movq %rax,-16(%rbp)
+	movq %rax,-16(%rbp) # spill
 	movsbl (%r15),%esi
 	incq %r15
 	cmpl $45,%esi
@@ -249,33 +249,33 @@ L119:
 	testl %eax,%eax
 	jz L125
 L124:
-	subl %ecx,-24(%rbp)
+	subl %ecx,-24(%rbp) # spill
 	jmp L92
 L125:
-	addl %ecx,-24(%rbp)
+	addl %ecx,-24(%rbp) # spill
 L92:
 	decq %r15
-	movq %r15,-16(%rbp)
-	cmpl $-307,-24(%rbp)
+	movq %r15,-16(%rbp) # spill
+	cmpl $-307,-24(%rbp) # spill
 	jg L128
 L127:
 	orl $32,%ebx
 	jmp L27
 L128:
-	movl -20(%rbp),%eax
-	addl -24(%rbp),%eax
+	movl -20(%rbp),%eax # spill
+	addl -24(%rbp),%eax # spill
 	decl %eax
 	cmpl $308,%eax
-	movl %eax,-20(%rbp)
+	movl %eax,-20(%rbp) # spill
 	jl L131
 L130:
 	orl $16,%ebx
 	jmp L27
 L131:
-	cmpl $0,-24(%rbp)
+	cmpl $0,-24(%rbp) # spill
 	jz L27
 L133:
-	movl -24(%rbp),%edi
+	movl -24(%rbp),%edi # spill
 	call ___pow10
 	mulsd %xmm8,%xmm0
 	movsd %xmm0,%xmm8
@@ -288,13 +288,13 @@ L117:
 	orl %ebx,%ecx
 	movl %ecx,%ebx
 	decq %r15
-	movq %r15,-16(%rbp)
+	movq %r15,-16(%rbp) # spill
 L27:
-	cmpq $0,-8(%rbp)
+	cmpq $0,-8(%rbp) # spill
 	jz L138
 L136:
-	movq -8(%rbp),%rcx
-	movq -16(%rbp),%rax
+	movq -8(%rbp),%rcx # spill
+	movq -16(%rbp),%rax # spill
 	movq %rax,(%rcx)
 L138:
 	testl $32,%ebx

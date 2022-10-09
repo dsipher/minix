@@ -1507,6 +1507,7 @@ struct insn
     unsigned is_volatile : 1;               /* volatile memory access */
     unsigned was_hoisted : 1;               /* see hoist.c */
     unsigned force_nac   : 1;               /* see fold.c */
+    unsigned is_spill    : 1;               /* memory access is a spill */
 
     unsigned uses_mem    : 1;               /* for I_ASM insns */
     unsigned defs_mem    : 1;
@@ -1558,6 +1559,7 @@ struct asm_insn
 #define PRESERVE_INSN(new, old)                                             \
     do {                                                                    \
         (new)->is_volatile |= (old)->is_volatile;                           \
+        (new)->is_spill |= (old)->is_spill;                                 \
     } while(0)
 
 /* when we wish to kill an insn without screwing up the insn indices

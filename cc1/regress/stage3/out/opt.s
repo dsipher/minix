@@ -142,15 +142,15 @@ L66:
 	pushq %r15
 L67:
 	movslq _fixcc_map+4(%rip),%rdx
-	movq %rdi,-40(%rbp)
-	movl $0,-12(%rbp)
+	movq %rdi,-40(%rbp) # spill
+	movl $0,-12(%rbp) # spill
 	movl $13,%esi
 	movq _fixcc_map+8(%rip),%rdi
 	call ___builtin_memset
 	xorl %r15d,%r15d
 	jmp L69
 L73:
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	movq 16(%rax),%rax
 	movq (%rax,%r15,8),%r14
 	testq %r14,%r14
@@ -164,12 +164,12 @@ L80:
 	ja L82
 L81:
 	movq _fixcc_map+8(%rip),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
 	subb $24,%dl
 	movl 16(%r14),%ecx
 	andl $1073725440,%ecx
 	sarl $14,%ecx
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movb %dl,(%rax,%rcx)
 	jmp L71
 L82:
@@ -195,14 +195,14 @@ L92:
 	jz L115
 L93:
 	leal 1(%r15),%r12d
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	cmpl 12(%rax),%r12d
 	jge L97
 L96:
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	movq 16(%rax),%rax
-	movq %rax,-32(%rbp)
-	movq -32(%rbp),%rax
+	movq %rax,-32(%rbp) # spill
+	movq -32(%rbp),%rax # spill
 	movq (%rax,%r12,8),%rbx
 	jmp L98
 L97:
@@ -210,10 +210,10 @@ L97:
 L98:
 	movl %r15d,%edx
 	movl $1074266112,%esi
-	movq -40(%rbp),%rdi
+	movq -40(%rbp),%rdi # spill
 	call _range_by_def
 	movl %eax,%esi
-	movq -40(%rbp),%rdi
+	movq -40(%rbp),%rdi # spill
 	call _range_span
 	testq %rbx,%rbx
 	movl $2147483646,%ecx
@@ -239,7 +239,7 @@ L109:
 	jmp L107
 L106:
 	movl %r13d,%esi
-	movq -40(%rbp),%rdi
+	movq -40(%rbp),%rdi # spill
 	call _rewrite_znz_succs
 	testl %eax,%eax
 	jnz L107
@@ -293,13 +293,13 @@ L140:
 	incl %edx
 	jmp L135
 L107:
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	movq 16(%rax),%rax
 	movq $_nop_insn,(%rax,%r15,8)
 	movl %r15d,%esi
-	movq -40(%rbp),%rdi
+	movq -40(%rbp),%rdi # spill
 	call _live_kill_dead
-	orl %eax,-12(%rbp)
+	orl %eax,-12(%rbp) # spill
 	orl $32,_opt_request(%rip)
 	jmp L71
 L85:
@@ -315,11 +315,11 @@ L85:
 L71:
 	incl %r15d
 L69:
-	movq -40(%rbp),%rax
+	movq -40(%rbp),%rax # spill
 	cmpl 12(%rax),%r15d
 	jl L73
 L75:
-	movl -12(%rbp),%eax
+	movl -12(%rbp),%eax # spill
 L68:
 	popq %r15
 	popq %r14

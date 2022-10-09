@@ -932,7 +932,7 @@ L368:
 	pushq %r14
 	pushq %r15
 L369:
-	movq %rdi,-32(%rbp)
+	movq %rdi,-32(%rbp) # spill
 	movq %rsi,%r14
 	movl $0,-8(%rbp)
 	movq $0,-16(%rbp)
@@ -1099,7 +1099,7 @@ L385:
 	movq 16(%r14),%r13
 	movl 8(%r14),%ecx
 	movzbl (%r13,%rcx),%eax
-	movl %eax,-20(%rbp)
+	movl %eax,-20(%rbp) # spill
 	movb $0,(%r13,%rcx)
 	cmpb $48,(%r13)
 	jnz L396
@@ -1179,17 +1179,17 @@ L418:
 	movq %rbx,-16(%rbp)
 	movq 16(%r14),%rdx
 	movl 8(%r14),%ecx
-	movl -20(%rbp),%eax
+	movl -20(%rbp),%eax # spill
 	movb %al,(%rdx,%rcx)
 	jmp L370
 L374:
 	movq $0,-16(%rbp)
 L370:
 	movq -16(%rbp),%rcx
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movq %rcx,(%rax)
 	movq -8(%rbp),%rcx
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	movq %rcx,8(%rax)
 	popq %r15
 	popq %r14

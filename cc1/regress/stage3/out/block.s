@@ -1591,15 +1591,15 @@ L597:
 	pushq %r15
 L598:
 	movq %rdi,%r15
-	movq %rsi,-16(%rbp)
+	movq %rsi,-16(%rbp) # spill
 	movq %rdx,%r14
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	movl 4(%rax),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	movl 4(%r14),%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-8(%rbp) # spill
 	cmpl $0,(%r15)
 	jl L604
 L603:
@@ -1613,13 +1613,13 @@ L604:
 	movq %r15,%rdi
 	call _vector_insert
 L606:
-	cmpl -4(%rbp),%r12d
+	cmpl -4(%rbp),%r12d # spill
 	jl L610
 L609:
-	cmpl -8(%rbp),%ebx
+	cmpl -8(%rbp),%ebx # spill
 	jge L599
 L610:
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	cmpl 4(%rax),%r12d
 	jnz L614
 L613:
@@ -1630,7 +1630,7 @@ L613:
 	jmp L625
 L614:
 	movl 4(%r14),%ecx
-	movq -16(%rbp),%rax
+	movq -16(%rbp),%rax # spill
 	movq 8(%rax),%rax
 	cmpl %ecx,%ebx
 	jnz L617
@@ -1705,9 +1705,9 @@ L632:
 	xorl %r12d,%r12d
 	xorl %ebx,%ebx
 	movl 4(%r14),%eax
-	movl %eax,-4(%rbp)
+	movl %eax,-4(%rbp) # spill
 	movl 4(%r13),%eax
-	movl %eax,-8(%rbp)
+	movl %eax,-8(%rbp) # spill
 	cmpl $0,(%r15)
 	jl L638
 L637:
@@ -1721,10 +1721,10 @@ L638:
 	movq %r15,%rdi
 	call _vector_insert
 L640:
-	cmpl -4(%rbp),%r12d
+	cmpl -4(%rbp),%r12d # spill
 	jge L633
 L643:
-	cmpl -8(%rbp),%ebx
+	cmpl -8(%rbp),%ebx # spill
 	jge L633
 L644:
 	movq 8(%r14),%rax

@@ -814,7 +814,7 @@ L317:
 	pushq %r14
 	pushq %r15
 L318:
-	movq %rdx,-8(%rbp)
+	movq %rdx,-8(%rbp) # spill
 	xorl %r13d,%r13d
 	movq %rdi,%r12
 	movq %rsi,%rbx
@@ -884,7 +884,7 @@ L363:
 	jz L338
 L360:
 	movq (%r15),%rdi
-	movq -8(%rbp),%rdx
+	movq -8(%rbp),%rdx # spill
 	movq (%r14),%rsi
 	call _compose
 	movq %rax,%rsi
@@ -903,9 +903,9 @@ L323:
 	cmpq %rbx,%r12
 	jz L369
 L367:
-	pushq -8(%rbp)
+	pushq -8(%rbp) # spill
 	pushq $L370
-	movq -8(%rbp),%rax
+	movq -8(%rbp),%rax # spill
 	pushq (%rax)
 	pushq $4
 	call _error

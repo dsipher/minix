@@ -370,7 +370,7 @@ L120:
 	pushq %r15
 L121:
 	movq 8(%rdi),%rax
-	movq %rdi,-8(%rbp)
+	movq %rdi,-8(%rbp) # spill
 	movl (%rax),%ebx
 	xorl %eax,%eax
 	jmp L160
@@ -379,31 +379,31 @@ L124:
 	movl -32(%rbp),%eax
 	leaq (%rax,%rax,2),%rcx
 	shlq $3,%rcx
-	movq %rax,-32(%rbp)
+	movq %rax,-32(%rbp) # spill
 	addq %rcx,%rdx
-	movq -8(%rbp),%rsi
+	movq -8(%rbp),%rsi # spill
 	movl $_merge_regs,%edi
 	call _intersect_regs
 	cmpl $0,_merge_regs+4(%rip)
 	jnz L126
 L129:
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	incl %eax
 L160:
-	movq %rax,-32(%rbp)
+	movq %rax,-32(%rbp) # spill
 	movq _webs+8(%rip),%rcx
 	movl %ebx,%eax
 	andl $1073725440,%eax
 	sarl $14,%eax
 	leaq (%rax,%rax,2),%r12
 	shlq $3,%r12
-	movq -32(%rbp),%rax
+	movq -32(%rbp),%rax # spill
 	cmpl 4(%rcx,%r12),%eax
 	jl L124
 L126:
 	movq _webs+8(%rip),%rdi
 	movl 4(%r12,%rdi),%esi
-	cmpl %esi,-32(%rbp)
+	cmpl %esi,-32(%rbp) # spill
 	jnz L132
 L134:
 	leal 1(%rsi),%eax
@@ -420,11 +420,11 @@ L138:
 L139:
 	movq _webs+8(%rip),%rax
 	movq 8(%r12,%rax),%rax
-	movq %rax,-24(%rbp)
+	movq %rax,-24(%rbp) # spill
 	movl -32(%rbp),%eax
 	leaq (%rax,%rax,2),%rdi
 	shlq $3,%rdi
-	movq -24(%rbp),%rax
+	movq -24(%rbp),%rax # spill
 	movl $0,(%rax,%rdi)
 	movq _webs+8(%rip),%rax
 	movq 8(%r12,%rax),%rax
@@ -438,7 +438,7 @@ L139:
 	movq _webs+8(%rip),%rax
 	movq 8(%r12,%rax),%rax
 	movl $4,%edx
-	movq -8(%rbp),%rsi
+	movq -8(%rbp),%rsi # spill
 	addq %rax,%rdi
 	call _dup_vector
 	jmp L133
@@ -448,17 +448,17 @@ L132:
 	leaq (%rax,%rax,2),%rax
 	shlq $3,%rax
 	addq %rax,%rdx
-	movq %rax,-16(%rbp)
-	movq -8(%rbp),%rsi
+	movq %rax,-16(%rbp) # spill
+	movq -8(%rbp),%rsi # spill
 	movl $_merge_regs,%edi
 	call _union_regs
 	movq _webs+8(%rip),%rax
 	movq 8(%r12,%rax),%rdi
 	movl $4,%edx
 	movl $_merge_regs,%esi
-	addq -16(%rbp),%rdi
+	addq -16(%rbp),%rdi # spill
 	call _dup_vector
-	movq -32(%rbp),%r15
+	movq -32(%rbp),%r15 # spill
 	incl %r15d
 	jmp L149
 L150:
@@ -467,7 +467,7 @@ L150:
 	leaq (%r15,%r15,2),%r13
 	shlq $3,%r13
 	addq %r13,%rdx
-	movq -8(%rbp),%rsi
+	movq -8(%rbp),%rsi # spill
 	movl $_merge_regs,%edi
 	call _intersect_regs
 	cmpl $0,_merge_regs+4(%rip)

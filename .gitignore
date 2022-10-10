@@ -31,5 +31,5 @@ mkboot
 mkfs
 nm
 proto/asrock
-proto/qemu
+proto/vbox
 yacc/yacc

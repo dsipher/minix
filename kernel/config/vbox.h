@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   qemu.h                                                  jewel/os kernel
+   config/vbox.h                                           jewel/os kernel
 
 *****************************************************************************/
 
@@ -11,10 +11,12 @@
 #define NBUF        8192
 #define NMBUF       1024
 
-/* QEMU used for development
-   (as configured in qemu.sh) */
+/* virtualbox used for development:
 
-#define CONFIG      "QEMU"
+   2 CPUs, PIIX3 chipset (w/ PIIX3 PCI IDE),
+   PS/2 mouse, bridged AM79C970A Ethernet */
+
+#define CONFIG      "VBOX"
 #define NCPU        2
 
 #define KBD_IRQ     1

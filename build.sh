@@ -21,7 +21,7 @@ make clean
 
 make boot
 
-for i in asrock qemu
+for i in asrock vbox
 do
 	(cd kernel; make clean; make CONFIG=$i)
 	mv kernel/kernel proto/$i

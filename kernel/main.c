@@ -75,10 +75,16 @@ idle(void)
 static void
 init(void)
 {
+    void (**init)(void);
     int count = 0;
 
     release(&sched_lock);
-    printf(".\n\n", CURCPU);
+    printf(".\n\n");
+
+    /* initialize device drivers */
+
+    for (init = inits; *init; ++init)
+        (*init)();
 
     for (;;) {
         sleep(&lbolt, P_STATE_COMA, 0);

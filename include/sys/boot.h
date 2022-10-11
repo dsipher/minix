@@ -98,6 +98,15 @@ extern struct e820 e820_map[];      /* symbols from locore.s */
 
 #define E820_TYPE_FREE  1           /* the only type we care about */
 
+#ifdef _KERNEL
+
+/* configuration-specific device initialization functions. called by
+   init() in main.c after scheduling enabled but before mounting root. */
+
+extern void (*inits[])(void);
+
+#endif /* _KERNEL */
+
 #endif /* _SYS_BOOT_H */
 
 /* vi: set ts=4 expandtab: */

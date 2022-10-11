@@ -29,4 +29,6 @@ void (*isr[NIRQ])(int irq) =
     /* 30 */    tmrisr
 };
 
+void (*inits[])() = { 0 };
+
 /* vi: set ts=4 expandtab: */

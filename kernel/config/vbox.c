@@ -7,6 +7,7 @@
 #include <sys/apic.h>
 #include <sys/clock.h>
 #include <sys/proc.h>
+#include <sys/boot.h>
 #include "config.h"
 
 void (*isr[NIRQ])(int irq) =
@@ -28,5 +29,7 @@ void (*isr[NIRQ])(int irq) =
     /* 28 */    0,              /* 29 */    ipiisr,
     /* 30 */    tmrisr
 };
+
+void (*inits[])() = { 0 };
 
 /* vi: set ts=4 expandtab: */

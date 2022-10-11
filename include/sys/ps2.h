@@ -42,6 +42,13 @@
 #define PS2_PORTB       0x61
 #define PS2_STATUS      0x64
 
+/* the PS/2 controller uses confusing definitions (from the
+   bus devices' point of view), which means they give status
+   bits odd names. we name them according to our perspective. */
+
+#define PS2_STATUS_READY    0x01        /* data is waiting in PS2_DATA */
+#define PS2_STATUS_BUSY     0x02        /* don't write to controller */
+
 /* PORT B is actually not controlled by the 8042 (fake or
    otherwise), but historically it was connected to the
    same 8255 PPI used for the keyboard, so put it here.
@@ -49,6 +56,20 @@
    when set, bits[1:0] connect PIT channel 2 to the speaker. */
 
 #define PS2_PORTB_SPK   0x03
+
+
+#ifdef _KERNEL
+
+/* initialize device(s) on PS/2 port(s) */
+
+extern void ps2init(void);
+
+/* handle IRQs from PS/2 device(s) */
+
+extern void ps2isr(int irq);
+
+#endif /* _KERNEL */
+
 
 #endif /* _SYS_PS2_H */
 

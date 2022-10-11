@@ -7,11 +7,13 @@
 #include <sys/apic.h>
 #include <sys/clock.h>
 #include <sys/proc.h>
+#include <sys/boot.h>
+#include <sys/ps2.h>
 #include "config.h"
 
 void (*isr[NIRQ])(int irq) =
 {
-    /*  0 */    pitisr,         /*  1 */    0,
+    /*  0 */    pitisr,         /*  1 */    ps2isr,
     /*  2 */    0,              /*  3 */    0,
     /*  4 */    0,              /*  5 */    0,
     /*  6 */    0,              /*  7 */    0,
@@ -29,6 +31,6 @@ void (*isr[NIRQ])(int irq) =
     /* 30 */    tmrisr
 };
 
-void (*inits[])() = { 0 };
+void (*inits[])() = { ps2init, 0 };
 
 /* vi: set ts=4 expandtab: */

@@ -70,6 +70,46 @@
 #define CONS_BOLD(a)            ((a) | 0x08)
 #define CONS_UNBOLD(a)          ((a) & ~0x08)
 
+/* all keyboard input is mapped to these `universal'
+   codes. all keys generate a single, possibly 8-bit,
+   code (i.e., no escape sequences like a VT-100). */
+
+    /* 0x00 - 0x1F          ... ASCII control codes
+
+       we map ^@ .. ^_ to 0x00-0x1F per convention.
+       also ^? is synonymous with 0x7F (DEL).
+
+       if `c' is alphabetic. it must be uppercase. */
+
+#define KEY_CTRL(c)     (((c) == '?') ? 0x7F : ((c) - 0x40))
+
+    /* 0x20 - 0x7E          ... standard ASCII characters */
+    /* 0x80 - 0xCA          ... currently unassigned */
+
+#define KEY_HOME        0xCB
+#define KEY_END         0xCC
+#define KEY_INS         0xCD
+#define KEY_PGUP        0xCE
+#define KEY_PGDN        0xCF
+
+    /* 0xD0 - 0xDB          ... function keys F1 - F12 */
+
+#define KEY_F(n)        ((n) + 0xCF)
+
+#define KEY_UP          0xDC
+#define KEY_DOWN        0xDD
+#define KEY_LEFT        0xDE
+#define KEY_RIGHT       0xDF
+
+    /* 0xE0 - 0xFF          ... ALT sequences
+
+       ALT+@ .. ALT+_ are mapped much like ^@ .. ^_ are, except they
+       are mapped to this upper range. note ALT+? is not valid. also
+       like KEY_CTRL, if `c' is alphabetic, it must be uppercase. */
+
+#define KEY_ALT(c)     ((c) + 0x90)
+
+
 #ifdef _KERNEL
 
 extern void cninit(void);           /* early console initialization */

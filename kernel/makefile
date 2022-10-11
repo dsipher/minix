@@ -12,7 +12,7 @@ clean:
 	rm -f *.o *.lst config.[ch] kernel
 
 OBJS= 	locore.o apic.o clock.o config.o cons.o	\
-	log.o main.o page.o proc.o utsname.o
+	log.o main.o page.o proc.o ps2.o utsname.o
 
 config.h config.c:
 	cp config/$(CONFIG).c config.c
@@ -29,6 +29,7 @@ log.o:		log.c 		config.h
 main.o:		main.c 		config.h
 page.o:		page.c 		config.h
 proc.o:		proc.c 		config.h
+ps2.o:		ps2.c		config.h
 utsname.o:	utsname.c 	config.h
 
 kernel: $(OBJS)

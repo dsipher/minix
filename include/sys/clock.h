@@ -34,6 +34,8 @@
 #ifndef _SYS_CLOCK_H
 #define _SYS_CLOCK_H
 
+#include <sys/tailq.h>
+
 /* both the local scheduling clocks and the
    global event clock fire at TICKS_PER_SEC. */
 
@@ -52,6 +54,25 @@
 
 #define PITFREQ         1193182     /* 1.193182 MHz */
 
+/* shamelessly stolen from v7. to paraphrase the comments there:
+
+     the callout structure is for a routine arranging to be
+     called by the the global clock interrupt pitisr() with
+     a specified argument, after a specified amount of ticks.
+
+   unlike v7, we maintain callouts as a linked list rather than
+   a fixed array. the caller is responsible for allocating the
+   callo struct's storage and loaning it to timeout() while it
+   is queued. when the callo expires, the callo is unqueued and
+   c_func is invoked with interrupts disabled. */
+
+struct callo
+{
+    long c_ticks;                   /* incremental time */
+    void *c_arg;                    /* argument to routine */
+    void (*c_func)(void *);         /* routine */
+    TAILQ_ENTRY(callo) links;       /* queue links */
+};
 
 #ifdef _KERNEL
 
@@ -93,6 +114,10 @@ extern void tmrinit(void);
 /* ring the console bell */
 
 extern void bell(void);
+
+/* add the callout to the timeout queue. */
+
+extern void timeout(struct callo *callo);
 
 #endif /* _KERNEL */
 

@@ -32,6 +32,7 @@
 *****************************************************************************/
 
 #include <sys/types.h>
+#include <sys/tailq.h>
 #include <sys/io.h>
 #include <sys/clock.h>
 #include <sys/apic.h>
@@ -53,13 +54,18 @@ volatile time_t time;
 
 /* if the system console bell is ringing, this contains the
    number of ticks remaining before it should be turned off.
-   this is a specialized timeout, protected by callo_lock. */
+   this is a specialized callout, protected by callo_lock. */
 
 static char ringing;
 
-/* protects the timeouts in the callo table (not yet) */
+/* protects callouts (and `ringing' as mentioned above) */
 
 static spinlock_t callo_lock;
+
+/* queued callouts. kept in order of expiration.
+   in queue, c_ticks is a differential count */
+
+static TAILQ_HEAD(, callo) callouts = TAILQ_HEAD_INITIALIZER(callouts);
 
 /* we don't need fine resolution for scheduling,
    so we use the max APIC clock divider (128). */
@@ -279,6 +285,7 @@ void
 pitisr(int irq)
 {
     static unsigned char ticks;
+    struct callo *callo;
 
     /* update time of day. wake
        up lbolt every second. */
@@ -303,6 +310,22 @@ pitisr(int irq)
         OUTB(PS2_PORTB, b);
     }
 
+    /* now decrement callout counter and run expired callouts. we
+       dequeue the callo and release the callo_lock before calling
+       the handler, so the callout may be requeued if desired. */
+
+    callo = TAILQ_FIRST(&callouts);
+    if (callo) --callo->c_ticks;
+
+    while (callo && callo->c_ticks == 0)
+    {
+        TAILQ_REMOVE(&callouts, callo, links);
+        release(&callo_lock);
+        callo->c_func(callo->c_arg);
+        acquire(&callo_lock);
+        callo = TAILQ_FIRST(&callouts);
+    }
+
     release(&callo_lock);
 }
 
@@ -324,6 +347,38 @@ bell(void)
     }
 
     ringing = BEL_TICKS;
+
+    release(&callo_lock);
+}
+
+/* again, to paraphrase v7: a callout is sorted into the
+   queue. c_ticks in each structure is the number of ticks
+   more than the previous entry. in this way, decrementing
+   the first entry has the effect of updating all entries. */
+
+void
+timeout(struct callo *callo)
+{
+    struct callo *before;
+
+    acquire(&callo_lock);
+
+    for (before = TAILQ_FIRST(&callouts);
+         before;
+         before = TAILQ_NEXT(before, links))
+    {
+        if (callo->c_ticks >= before->c_ticks)
+            callo->c_ticks -= before->c_ticks;
+        else {
+            TAILQ_INSERT_BEFORE(before, callo, links);
+            before->c_ticks -= callo->c_ticks;
+            break;
+        }
+    }
+
+    if (before == 0)
+        /* fell off end of queue, tack onto end */
+        TAILQ_INSERT_TAIL(&callouts, callo, links);
 
     release(&callo_lock);
 }

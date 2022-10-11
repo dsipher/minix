@@ -59,7 +59,7 @@
 
 struct vty
 {
-    unsigned char   x, y;       /* cursor position (0, 0 = origin) */
+    char            x, y;       /* cursor position (0, 0 = origin) */
     unsigned char   attr;       /* attribute - see CONS_ATTR_* (cons.h) */
     unsigned char   state;      /* see *_STATE et al. below */
 

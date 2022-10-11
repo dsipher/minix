@@ -82,7 +82,7 @@ init(void)
 
     for (;;) {
         sleep(&lbolt, P_STATE_COMA, 0);
-        printf("init is awake on CPU %d (%d)\n", CURCPU, ++count);
+        printf("\7init is awake on CPU %d (%d)\n", CURCPU, ++count);
     }
 }
 

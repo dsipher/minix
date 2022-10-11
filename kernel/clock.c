@@ -38,6 +38,8 @@
 #include <sys/cmos.h>
 #include <sys/proc.h>
 #include <sys/log.h>
+#include <sys/cons.h>
+#include <sys/ps2.h>
 #include "config.h"
 
 /* the `lightning bolt' sleep channel */
@@ -48,6 +50,16 @@ char lbolt;
    no need to protect it with a lock since it's updated atomically. */
 
 volatile time_t time;
+
+/* if the system console bell is ringing, this contains the
+   number of ticks remaining before it should be turned off.
+   this is a specialized timeout, protected by callo_lock. */
+
+static char ringing;
+
+/* protects the timeouts in the callo table (not yet) */
+
+static spinlock_t callo_lock;
 
 /* we don't need fine resolution for scheduling,
    so we use the max APIC clock divider (128). */
@@ -220,6 +232,12 @@ clkinit(void)
     OUTB(PITCH0, PITFREQ / TICKS_PER_SEC);          /* divider LSB */
     OUTB(PITCH0, (PITFREQ / TICKS_PER_SEC) >> 8);   /* ....... MSB */
 
+    /* and configure channel 2 for the console BEL */
+
+    OUTB(PITCTL, 0xB6);                             /* ch2 sq wave */
+    OUTB(PITCH2, PITFREQ / BEL_FREQ);
+    OUTB(PITCH2, (PITFREQ / BEL_FREQ) >> 8);
+
     enable(PIT_IRQ, 1);
 }
 
@@ -262,11 +280,52 @@ pitisr(int irq)
 {
     static unsigned char ticks;
 
+    /* update time of day. wake
+       up lbolt every second. */
+
     if (++ticks == TICKS_PER_SEC) {
         ticks = 0;
         ++time;
         wakeup(&lbolt);
     }
+
+    acquire(&callo_lock);
+
+    /* if the console `bell' is `ringing', count
+       down a tick and turn it off if it's time */
+
+    if (ringing && --ringing == 0)
+    {
+        unsigned char b;
+
+        b = INB(PS2_PORTB);
+        b &= ~PS2_PORTB_SPK;
+        OUTB(PS2_PORTB, b);
+    }
+
+    release(&callo_lock);
+}
+
+/* ring the console bell. if it's already on,
+   we extend the duration another full period. */
+
+void
+bell(void)
+{
+    unsigned char b;
+
+    acquire(&callo_lock);
+
+    if (ringing == 0)
+    {
+        b = INB(PS2_PORTB);
+        b |= PS2_PORTB_SPK;
+        OUTB(PS2_PORTB, b);
+    }
+
+    ringing = BEL_TICKS;
+
+    release(&callo_lock);
 }
 
 /* vi: set ts=4 expandtab: */

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/clock.h                                   jewel/os standard library
+   sys/ps2.h                                     jewel/os standard library
 
 ******************************************************************************
 
@@ -31,71 +31,25 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_CLOCK_H
-#define _SYS_CLOCK_H
+#ifndef _SYS_PS2_H
+#define _SYS_PS2_H
 
-/* both the local scheduling clocks and the
-   global event clock fire at TICKS_PER_SEC. */
+/* ports assigned to the i8042 keyboard/mouse controller
+   (rather its chipset equivalent, or even faked via SMM).
+   we somewhat inaccurately call this the PS/2 device. */
 
-#define TICKS_PER_SEC   100
+#define PS2_DATA        0x60
+#define PS2_PORTB       0x61
+#define PS2_STATUS      0x64
 
-/* the number of ticks in a scheduling quantum */
+/* PORT B is actually not controlled by the 8042 (fake or
+   otherwise), but historically it was connected to the
+   same 8255 PPI used for the keyboard, so put it here.
 
-#define QUANTUM         10
+   when set, bits[1:0] connect PIT channel 2 to the speaker. */
 
-/* definitions associated with the 8254 PIT */
+#define PS2_PORTB_SPK   0x03
 
-#define PITCH0          0x40        /* I/O registers */
-#define PITCH1          0x41
-#define PITCH2          0x42
-#define PITCTL          0x43
-
-#define PITFREQ         1193182     /* 1.193182 MHz */
-
-
-#ifdef _KERNEL
-
-#include <sys/types.h>
-
-/* a dummy variable whose address is used
-   as the `lightning bolt', a sleep channel
-   which is awakened roughly once a second. */
-
-extern char lbolt;
-
-/* the current time */
-
-extern volatile time_t time;
-
-/* called by the BSP at boot time to
-
-    (a) determine the APIC timer frequency
-    (b) read the CMOS time-of-day clock
-    (c) start the global timer (8254 PIT) */
-
-extern void clkinit(void);
-
-/* called only by the BSP, after clkinit() but
-   before schedclk(), for [rough] usec delays. */
-
-extern void udelay(int usec);
-
-/* the global timer ISR; update time-of-day
-   clock and fire off global events */
-
-extern void pitisr(int irq);
-
-/* called on each CPU to start its local clock (its
-   APIC) firing at TICKS_PER_SEC, for scheduling */
-
-extern void tmrinit(void);
-
-/* ring the console bell */
-
-extern void bell(void);
-
-#endif /* _KERNEL */
-
-#endif /* _SYS_CLOCK_H */
+#endif /* _SYS_PS2_H */
 
 /* vi: set ts=4 expandtab: */

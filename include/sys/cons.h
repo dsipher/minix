@@ -34,6 +34,11 @@
 #ifndef _SYS_CONS_H
 #define _SYS_CONS_H
 
+/* parameters for console BEL */
+
+#define BEL_FREQ            740         /* sound a high F# */
+#define BEL_TICKS           10          /* for 1/10th second */
+
 /* color values in VGA attribute byte */
 
 #define CONS_BLACK          0

@@ -33,6 +33,7 @@
 
 #include <sys/cons.h>
 #include <sys/io.h>
+#include <sys/clock.h>
 #include <sys/spin.h>
 
 /* number of virtual ttys. the minimum is 1, since the first vty
@@ -241,6 +242,9 @@ cnputc(struct vty *vty, int c)
         switch (c)
         {
         case 0:     /* NUL */   break;
+
+        case 7:     /* BEL */   bell();
+                                break;
 
         case 8:     /* BS */    --vty->x;
 

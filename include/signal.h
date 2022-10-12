@@ -47,7 +47,10 @@ typedef __pid_t pid_t;
 #define SIGILL      4
 #define SIGABRT     6
 #define SIGFPE      8
+#define SIGKILL     9
 #define SIGSEGV     11
+#define SIGPIPE     13
+#define SIGALRM     14
 #define SIGTERM     15
 
 extern int kill(pid_t, int);

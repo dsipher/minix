@@ -216,6 +216,13 @@ _creat:         movl $85, %eax              # CREAT
 _unlink:        movl $87, %eax              # UNLINK
                 jmp do_syscall
 
+# int utime(const char *path, const struct utimbuf *times);
+
+.globl _utime
+
+_utime:         movl $132, %eax             # UTIME
+                jmp do_syscall
+
 # time_t time(time_t *timer);
 
 .globl _time

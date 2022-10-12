@@ -18,8 +18,8 @@ clean:
 crt0.o:	crt0.s
 
 OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
-		__flushbuf.o __ieee_val.o __pow10.o abort.o		\
-		abs.o atoi.o atol.o brk.o bsearch.o calloc.o		\
+		__flushbuf.o __ieee_val.o __pow10.o __setjmp.o 		\
+		abort.o abs.o atoi.o atol.o brk.o bsearch.o calloc.o	\
 		clearerr.o ctime.o exit.o execvp.o execvpe.o 		\
 		fclose.o  fflush.o fgetpos.o fgets.o fileno.o 		\
 		fopen.o fprintf.o fputc.o fputs.o fread.o 		\
@@ -44,6 +44,7 @@ libc.a:		$(OBJS)
 	rm -f libc.a
 	$(AR) rc libc.a $(OBJS)
 
+__setjmp.o:		__setjmp.s
 memcpy.o:		memcpy.s
 memmove.o:		memmove.s
 memset.o:		memset.s

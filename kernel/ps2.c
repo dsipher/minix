@@ -167,7 +167,11 @@ int xmit(int b)
 /* the only command we send to/via the 8042 is the
    update-LEDs sequence (0xED, state & STATE_LEDS).
    we don't want to busy-wait, so we use a callout.
-   note: we don't check for ACK. this is intentional */
+
+   note: we don't check for ACK; this is intentional.
+   it's not fatal if update fails, and some legacy
+   SMM implementations (e.g., the asrock ion) reject
+   the update-LED command, responding with RESEND. */
 
 static void update(void *dummy);
 
@@ -211,7 +215,11 @@ start_update(void)  /* held: ps2_lock */
     }
 }
 
-/* XXX */
+/* we assume the BIOS has left the keyboard in a sane state.
+   it's actually dangerous to try to do too much since, modern
+   controllers and keyboards alike tend to implement the bare
+   minimum needed for compatibility. this is especially true
+   when SMM is involved and we're talking to a USB keyboard */
 
 void
 ps2init(void)
@@ -226,7 +234,9 @@ ps2init(void)
     release(&ps2_lock);
 }
 
-/* XXX */
+/* keyboard has data for us. process it, and tell the console we've
+   got a key if appropriate. this is long and tedious but not complex.
+   the order of processing is important, so don't reorder needlessly. */
 
 void ps2isr(int irq)
 {
@@ -300,8 +310,7 @@ void ps2isr(int irq)
         key = keymap[page][code][shift];
         if (key == 0) key = -1; /* ignore */
 
-        /* CAPLCK inverts the sense of the shift
-           key, but only for alphabetic keys */
+        /* CAPLCK inverts the case of alphabetic characters */
 
         if ((state & STATE_CAPLCK) && isalpha(key))
             key ^= 0x20;
@@ -338,8 +347,7 @@ void ps2isr(int irq)
     if (code != 0xE0) state &= ~STATE_PAGE1;
 
     release(&ps2_lock);
-
-    if (key >= 0) printf("%c", key);        /* XXX cnkey() */
+    if (key >= 0) cnkey(key);
 }
 
 /* vi: set ts=4 expandtab: */

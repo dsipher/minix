@@ -35,6 +35,7 @@
 #include <sys/io.h>
 #include <sys/clock.h>
 #include <sys/spin.h>
+#include <sys/log.h>
 
 /* number of virtual ttys. the minimum is 1, since the first vty
    is the console. the maximum is 12, since we use ALT + Fkey to
@@ -389,5 +390,14 @@ cninit(void)
 /* the default putchar for printf(). see log.c */
 
 void cnputchar(int c) { cnputc(&cons_vty, c); }
+
+/* process an incoming key from a keyboard.
+   this is obviously a placeholder for now. */
+
+void
+cnkey(int key)
+{
+    printf("%c", key);
+}
 
 /* vi: set ts=4 expandtab: */

@@ -123,7 +123,8 @@
 #ifdef _KERNEL
 
 extern void cninit(void);           /* early console initialization */
-extern void cnputchar(int);         /* print character to console */
+extern void cnputchar(int c);       /* print character to console */
+extern void cnkey(int key);         /* report a key pressed on keyboard */
 
 #endif /* _KERNEL */
 

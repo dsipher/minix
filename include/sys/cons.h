@@ -74,17 +74,18 @@
    codes. all keys generate a single, possibly 8-bit,
    code (i.e., no escape sequences like a VT-100). */
 
-    /* 0x00 - 0x1F          ... ASCII control codes
+    /* 0x00 - 0x1F ... ASCII control codes
 
        we map ^@ .. ^_ to 0x00-0x1F per convention.
-       also ^? is synonymous with 0x7F (DEL).
+       also ^? is synonymous with 0x7F (KEY_DEL).
 
        if `c' is alphabetic. it must be uppercase. */
 
 #define KEY_CTRL(c)     (((c) == '?') ? 0x7F : ((c) - 0x40))
 
-    /* 0x20 - 0x7E          ... standard ASCII characters */
-    /* 0x80 - 0xCA          ... currently unassigned */
+#define KEY_DEL         0x7F
+
+    /* 0x80 - 0xCA are currently unassigned */
 
 #define KEY_HOME        0xCB
 #define KEY_END         0xCC
@@ -92,16 +93,25 @@
 #define KEY_PGUP        0xCE
 #define KEY_PGDN        0xCF
 
-    /* 0xD0 - 0xDB          ... function keys F1 - F12 */
-
-#define KEY_F(n)        ((n) + 0xCF)
+#define KEY_F1          0xD0
+#define KEY_F2          0xD1
+#define KEY_F3          0xD2
+#define KEY_F4          0xD3
+#define KEY_F5          0xD4
+#define KEY_F6          0xD5
+#define KEY_F7          0xD6
+#define KEY_F8          0xD7
+#define KEY_F9          0xD8
+#define KEY_F10         0xD9
+#define KEY_F11         0xDA
+#define KEY_F12         0xDB
 
 #define KEY_UP          0xDC
-#define KEY_DOWN        0xDD
-#define KEY_LEFT        0xDE
-#define KEY_RIGHT       0xDF
+#define KEY_DN          0xDD
+#define KEY_LT          0xDE
+#define KEY_RT          0xDF
 
-    /* 0xE0 - 0xFF          ... ALT sequences
+    /* 0xE0 - 0xFF ... ALT sequences
 
        ALT+@ .. ALT+_ are mapped much like ^@ .. ^_ are, except they
        are mapped to this upper range. note ALT+? is not valid. also

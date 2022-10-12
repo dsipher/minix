@@ -115,9 +115,10 @@ extern void tmrinit(void);
 
 extern void bell(void);
 
-/* add the callout to the timeout queue. */
+/* add the callout to the timeout queue. `ticks' MUST
+   be greater than 0 or Bad Things(tm) will happen. */
 
-extern void timeout(struct callo *callo);
+extern void timeout(struct callo *callo, long ticks);
 
 #endif /* _KERNEL */
 

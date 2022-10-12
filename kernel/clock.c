@@ -357,10 +357,11 @@ bell(void)
    the first entry has the effect of updating all entries. */
 
 void
-timeout(struct callo *callo)
+timeout(struct callo *callo, long ticks)
 {
     struct callo *before;
 
+    callo->c_ticks = ticks;
     acquire(&callo_lock);
 
     for (before = TAILQ_FIRST(&callouts);

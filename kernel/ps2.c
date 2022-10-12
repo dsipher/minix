@@ -192,8 +192,7 @@ update(void *dummy)
         }
     }
 
-    callo.c_ticks = 1;
-    timeout(&callo);
+    timeout(&callo, 1);
 
 out:
     release(&ps2_lock);
@@ -208,8 +207,7 @@ start_update(void)  /* held: ps2_lock */
     if (!(state & STATE_XMIT))
     {
         state |= STATE_XMIT1;
-        callo.c_ticks = 1;
-        timeout(&callo);
+        timeout(&callo, 1);
     }
 }
 

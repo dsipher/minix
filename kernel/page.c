@@ -433,7 +433,7 @@ pginit(void)
     /* find the highest physical RAM address. the result
        is ram_top, such that all RAM addresses < ram_top. */
 
-    for (ram_top = 0, i = 0, entry = e820_map; i < e820_count; ++i)
+    for (ram_top = 0, i = 0, entry = e820_map; i < e820_count; ++i, ++entry)
         if (entry->type == E820_TYPE_FREE
           && (entry->base + entry->len) > ram_top)
         {
@@ -469,10 +469,17 @@ pginit(void)
 
     /* build the free_pages[] lists from the remaining RAM
        in the e820_map[]. we skip the pages occupied by the
-       kernel image and any pages disqualified by overlap. */
+       kernel image and any pages disqualified by overlap.
 
-    for (i = 0, entry = e820_map; i < e820_count; ++i, ++entry)
+       we scan the e820_map[] backwards so that early calls
+       to pgall() will return pages in the lower 4GB of RAM.
+       this is important, since early kernel allocations are
+       assumed to be 32-bit addressable. */
+
+    for (i = e820_count; --i >= 0; )
     {
+        entry = &e820_map[i];
+
         if (entry->type != E820_TYPE_FREE)
             continue;
 
@@ -504,8 +511,8 @@ pginit(void)
     mapout(KERNEL_STACK, BOOT_MAPPED);
     mapout(0, PAGE_SIZE); pgfree(0);
 
-    printf("%d pages (%d MB) free", nr_free_pages,
-                                    (nr_free_pages * PAGE_SIZE) >> 20);
+    printf("%d pages (%D MB) free", nr_free_pages,
+                                    (nr_free_pages * (long) PAGE_SIZE) >> 20);
 }
 
 /* vi: set ts=4 expandtab: */

@@ -36,7 +36,7 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		stdio.o strcat.o strchr.o strcmp.o strcpy.o 		\
 		strerror.o strftime.o strlen.o strncat.o 		\
 		strncmp.o strncpy.o strrchr.o strtof.o strtod.o 	\
-		strtol.o syscall.o tcgetattr.o tmpnam.o 		\
+		strtol.o syscall.o system.o tcgetattr.o tmpnam.o 	\
 		tolower.o toupper.o ungetc.o vfprintf.o 		\
 		vfscanf.o vsprintf.o wait.o
 
@@ -138,6 +138,7 @@ strrchr.o:		strrchr.c
 strtod.o:		strtod.c
 strtof.o:		strtof.c
 strtol.o:		strtol.c
+system.o:		system.c
 tcgetattr.o:		tcgetattr.c
 tmpnam.o:		tmpnam.c
 tolower.o:		tolower.c

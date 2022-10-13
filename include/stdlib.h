@@ -90,6 +90,10 @@ extern void qsort(void *, size_t, size_t,
 extern int rand(void);
 extern void srand(unsigned);
 
+/* process `command' via the shell */
+
+int system(const char *command);
+
 #endif /* _STDLIB_H */
 
 /* vi: set ts=4 expandtab: */

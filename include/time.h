@@ -41,28 +41,73 @@
 typedef __time_t time_t;
 #endif /* __TIME_T */
 
+#ifndef __SIZE_T
+#define __SIZE_T
+typedef __size_t size_t;
+#endif /* __SIZE_T */
+
 struct tm
 {
-    int tm_sec;
-    int tm_min;
-    int tm_hour;
-    int tm_mday;
-    int tm_mon;
-    int tm_year;
-    int tm_wday;
-    int tm_yday;
-    int tm_isdst;
+    int tm_sec;         /* seconds after the minute [0, 61] */
+    int tm_min;         /* minutes after the hour [0, 59] */
+    int tm_hour;        /* hours since midnight [0, 23] */
+    int tm_mday;        /* day of the month [1, 31] */
+    int tm_mon;         /* months since January [0, 11] */
+    int tm_year;        /* years since 1900 */
+    int tm_wday;        /* days since Sunday [0, 6] */
+    int tm_yday;        /* days since Janaury 1 [0, 365] */
+    int tm_isdst;       /* Daylight Savings Time flag */
 };
 
-extern char *asctime(const struct tm *);
-extern char *ctime(const time_t *);
-extern struct tm *localtime(const time_t *);
-extern struct tm *gmtime(const time_t *);
-extern __size_t strftime(char *, __size_t, const char *, const struct tm *);
-extern time_t time(time_t *);
+/* converts the broken-down time in the structure
+   pointed to by `timeptr' into a string in the form
 
-extern char *tzname[];
-extern long timezone;
+          "Sun Sep 16 01:03:52 1973\n"
+
+   (with the implied NUL terminator) */
+
+extern char *asctime(const struct tm *timeptr);
+
+/* converts the calendar time pointed to by `timer' to
+   local time in the form of a string. equivalent to:
+
+            asctime(localtime(timer))
+
+   (and in fact, implemented in exactly this way) */
+
+extern char *ctime(const time_t *timer);
+
+/* converts the calendar time pointed to by `timer'
+   into a broken-down time, expressed as local time */
+
+extern struct tm *localtime(const time_t *timer);
+
+/* converts the caledar time pointed to by `timer'
+   into a broken-down time, expressed as UTC */
+
+extern struct tm *gmtime(const time_t *timer);
+
+/* a sprintf()-style function to format
+   the data in `timeptr' as a string */
+
+extern size_t strftime(char *s, size_t maxsize, const char *format,
+                       const struct tm *timeptr);
+
+/* determines the current calendar time as
+   seconds since midnight Jan 1 1970 UTC */
+
+extern time_t time(time_t *timer);
+
+/* some variables set by tzset() */
+
+extern char *tzname[];      /* e.g. { "EST", "EDT" } */
+extern long timezone;       /* seconds west of UTC */
+
+/* uses the value of the environment variable `TIMEZONE'
+   to set time-conversion data for local timezone. n.b.
+   this is not-quite-POSIX: POSIX uses a `TZ' variable
+   with a different format. see libc/strftime.c for the
+   format of `TIMEZONE'. */
 
 extern void tzset(void);
 

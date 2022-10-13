@@ -270,7 +270,7 @@ void tzset(void)
 
 /* do conversions from GMT to the tm structure. */
 
-struct tm *gmtime(const time_t *tp)
+struct tm *gmtime(const time_t *timer)
 {
     long xtime;
     unsigned days;
@@ -280,7 +280,7 @@ struct tm *gmtime(const time_t *tp)
     int wday;
     char *mp;
 
-    if ((xtime = *tp) < 0)
+    if ((xtime = *timer) < 0)
         xtime = 0;
 
     days = xtime / (60L * 60L * 24L);
@@ -332,16 +332,16 @@ struct tm *gmtime(const time_t *tp)
 /* do what gmtime does, but for the local
    timezone, and correct for daylight time. */
 
-struct tm *localtime(const time_t *tp)
+struct tm *localtime(const time_t *timer)
 {
     time_t ltime;
 
     tzset();
-    ltime = *tp - timezone;
+    ltime = *timer - timezone;
     gmtime(&ltime);
 
     if (isdaylight()) {
-        ltime = *tp - timezone + dstadjust;
+        ltime = *timer - timezone + dstadjust;
         gmtime(&ltime);
         tm.tm_isdst = 1;
     } else
@@ -355,7 +355,7 @@ struct tm *localtime(const time_t *tp)
 
 #define TODIGIT(c) ((c)+'0')
 
-char *asctime(const struct tm *tmp)
+char *asctime(const struct tm *timeptr)
 {
     char *cp, *xp;
     unsigned i;
@@ -364,7 +364,7 @@ char *asctime(const struct tm *tmp)
 
     /* day of week */
 
-    if ((i = tmp->tm_wday) >= NWDAY)
+    if ((i = timeptr->tm_wday) >= NWDAY)
         i = 0;
 
     xp = &daynames[i * 3];
@@ -375,7 +375,7 @@ char *asctime(const struct tm *tmp)
 
     /* month */
 
-    if ((i = tmp->tm_mon) >= NMON)
+    if ((i = timeptr->tm_mon) >= NMON)
         i = 0;
 
     xp = &months[i * 3];
@@ -386,7 +386,7 @@ char *asctime(const struct tm *tmp)
 
     /* day of month */
 
-    if ((i = tmp->tm_mday) >= 10)
+    if ((i = timeptr->tm_mday) >= 10)
         *cp++ = TODIGIT(i / 10);
     else
         *cp++ = ' ';
@@ -396,19 +396,19 @@ char *asctime(const struct tm *tmp)
 
     /* hours:mins:seconds */
 
-    *cp++ = TODIGIT((i = tmp->tm_hour) / 10);
+    *cp++ = TODIGIT((i = timeptr->tm_hour) / 10);
     *cp++ = TODIGIT(i % 10);
     *cp++ = ':';
-    *cp++ = TODIGIT((i = tmp->tm_min) / 10);
+    *cp++ = TODIGIT((i = timeptr->tm_min) / 10);
     *cp++ = TODIGIT(i % 10);
     *cp++ = ':';
-    *cp++ = TODIGIT((i = tmp->tm_sec) / 10);
+    *cp++ = TODIGIT((i = timeptr->tm_sec) / 10);
     *cp++ = TODIGIT(i % 10);
     *cp++ = ' ';
 
     /* year */
 
-    i = tmp->tm_year + 1900;
+    i = timeptr->tm_year + 1900;
     *cp++ = TODIGIT(i / 1000);
     i = i % 1000;
     *cp++ = TODIGIT(i / 100);
@@ -424,9 +424,9 @@ char *asctime(const struct tm *tmp)
 /* most common interface, returns a static string
    which is a printable version of the time and date. */
 
-char *ctime(const time_t *tp)
+char *ctime(const time_t *timer)
 {
-    return asctime(localtime(tp));
+    return asctime(localtime(timer));
 }
 
 /* vi: set ts=4 expandtab: */

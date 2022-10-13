@@ -59,6 +59,12 @@ struct tm
     int tm_isdst;       /* Daylight Savings Time flag */
 };
 
+struct timespec
+{
+    time_t  tv_sec;         /* seconds */
+    long    tv_nsec;        /* nanoseconds */
+};
+
 /* converts the broken-down time in the structure
    pointed to by `timeptr' into a string in the form
 
@@ -110,6 +116,11 @@ extern long timezone;       /* seconds west of UTC */
    format of `TIMEZONE'. */
 
 extern void tzset(void);
+
+/* suspend the current process until the interval `rqtp'
+   has elapsed (or an unmasked signal is delivered) */
+
+int nanosleep(const struct timespec *rqtp, struct timespec *rtmp);
 
 #endif /* _TIME_H */
 

@@ -149,6 +149,13 @@ _ioctl:         movl $16, %eax              # IOCTL
 _access:        movl $21, %eax              # ACCESS
                 jmp do_syscall
 
+# int nanosleep(const struct timespec *rqtp, struct timespec *rmtp);
+
+.globl _nanosleep
+
+_nanosleep:     movl $35, %eax              # NANOSLEEP
+                jmp do_syscall
+
 # int getpid(void);
 
 .globl _getpid

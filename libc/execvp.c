@@ -34,11 +34,11 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-int execvp(const char *name, char *const argv[])
+int execvp(const char *file, char *const argv[])
 {
     extern char **environ;
 
-    return execvpe(name, argv, environ);
+    return execvpe(file, argv, environ);
 }
 
 /* vi: set ts=4 expandtab: */

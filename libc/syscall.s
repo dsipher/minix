@@ -36,7 +36,7 @@
 
 .text
 
-# ssize_t read(int fd, void *buf, size_t count);
+# ssize_t read(int fildes, void *buf, size_t nbyte);
 
 .globl _read
 
@@ -55,7 +55,7 @@ do_syscall:     syscall
 
 no_error:       ret
 
-# ssize_t write(int fd, const void *buf, size_t count);
+# ssize_t write(int fildes, const void *buf, size_t nbyte);
 
 .globl _write
 
@@ -76,7 +76,7 @@ _open:          movl $2, %eax               # OPEN
                 movq 24(%rsp), %rdx         # mode
                 jmp do_syscall
 
-# int close(int fd);
+# int close(int fildes);
 
 .globl _close
 
@@ -97,7 +97,7 @@ _stat:          movl $4, %eax               # STAT
 _fstat:         movl $5, %eax               # FSTAT
                 jmp do_syscall
 
-# off_t lseek(int fd, off_t offset, int whence);
+# off_t lseek(int fildes, off_t offset, int whence);
 
 .globl _lseek
 
@@ -170,7 +170,7 @@ _getpid:        movl $39, %eax              # GETPID
 _fork:          movl $57, %eax              # FORK
                 jmp do_syscall
 
-# int execve(const char *pathname, char * const *argv, char * const *envp);
+# int execve(const char *path, char *const argv[], char *const envp[]);
 
 .globl _execve
 

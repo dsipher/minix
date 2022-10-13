@@ -34,11 +34,11 @@
 #include <unistd.h>
 #include <termios.h>
 
-int isatty(int fd)
+int isatty(int fildes)
 {
     struct termios dummy;
 
-    return (tcgetattr(fd, &dummy) != -1);
+    return (tcgetattr(fildes, &dummy) != -1);
 }
 
 /* vi: set ts=4 expandtab: */

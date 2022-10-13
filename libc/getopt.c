@@ -47,7 +47,7 @@ int optind = 1;
 int optopt;
 char *optarg;
 
-int getopt(int argc, char *const argv[], const char *opts)
+int getopt(int argc, char * const argv[], const char *optstring)
 {
     static int sp = 1;
     int c;
@@ -64,7 +64,7 @@ int getopt(int argc, char *const argv[], const char *opts)
 
         optopt = c = argv[optind][sp];
 
-        if (c == ':' || (cp=strchr(opts, c)) == 0) {
+        if (c == ':' || (cp=strchr(optstring, c)) == 0) {
             if (opterr)
                 fprintf(stderr, "%s: illegal option -- %c\n", argv[0], c);
 

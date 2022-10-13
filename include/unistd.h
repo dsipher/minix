@@ -48,55 +48,111 @@ typedef __size_t size_t;
 typedef __ssize_t ssize_t;
 #endif /* __SSIZE_T */
 
+#ifndef __GID_T
+#define __GID_T
+typedef __gid_t gid_t;
+#endif /* __GID_T */
+
+#ifndef __UID_T
+#define __UID_T
+typedef __uid_t uid_t;
+#endif /* __UID_T */
+
+#ifndef __OFF_T
+#define __OFF_T
+typedef __off_t off_t;
+#endif /* __OFF_T */
+
 #ifndef __PID_T
 #define __PID_T
 typedef __pid_t pid_t;
 #endif /* __PID_T */
 
+/* posix wants us to name the
+   standard file descriptors */
+
 #define STDIN_FILENO    0
 #define STDOUT_FILENO   1
 #define STDERR_FILENO   2
 
-#define F_OK  0
-#define X_OK  1
-#define W_OK  2
-#define R_OK  4
+/* determine the accessibility of
+   a file (by the current user) */
 
-extern int access(const char *, int);
+#define F_OK  0     /* exists */
+#define X_OK  1     /* executable */
+#define W_OK  2     /* writeable */
+#define R_OK  4     /* readable */
 
-/* the program break is always manipulated with the __brk
-   system call. the brk() and sbrk() library functions are
-   wrappers that provide the posix semantics. */
+extern int access(const char *path, int amode);
 
-extern void *__brk(void *);     /* system call */
+/* __brk() is the actual system call. it sets the new
+   program break to `addr', if possible, and returns
+   the new program break. if impossible, the returned
+   value is the unchanged break.
 
-extern int brk(void *);
-extern void *sbrk(__ssize_t);
+   since 0 is never a valid program break, __brk(0) is
+   used to interrogate the current program break. */
 
-extern int close(int);
-extern int execve(const char *, char *const [], char *const []);
-extern int execvp(const char *, char *const []);
-extern int execvpe(const char *, char *const [], char *const []);
+extern void *__brk(void *addr);     /* system call */
+
+/* wrappers for __brk() which provide more conventional
+   functionality. brk() sets the new break to `addr' and
+   returns 0 on success, or -1 on error. sbrk() attempts
+   to grow the break by `increment' bytes, and returns
+   the base of the new region, or (void *) -1 on error. */
+
+extern int brk(void *addr);
+extern void *sbrk(ssize_t increment);
+
+/* close a file descriptor */
+
+extern int close(int fildes);
+
+/* launch a new executable - replace the current
+   process with that specified. only execve() is
+   actually a system call, the others are wrappers. */
+
+extern int execvp(const char *file, char *const argv[]);
+extern int execvpe(const char *file, char *const argv[], char *const envp[]);
+extern int execve(const char *path, char *const argv[], char *const envp[]);
+
+/* create a new process */
+
 extern pid_t fork(void);
+
+/* get the current process ID */
+
 extern pid_t getpid(void);
-extern int isatty(int);
 
-#define SEEK_SET        __SEEK_SET
-#define SEEK_CUR        __SEEK_CUR
-#define SEEK_END        __SEEK_END
+/* test for a terminal device */
 
-extern __off_t lseek(int, __off_t, int);
+extern int isatty(int fildes);
 
-extern __ssize_t read(int, void *, __size_t);
-extern int unlink(const char *);
-extern __ssize_t write(int, const void *, __size_t);
+/* move the read/write file offset */
 
-extern char *optarg;
-extern int optind;
-extern int opterr;
-extern int optopt;
+#define SEEK_SET    __SEEK_SET      /* offset is absolute */
+#define SEEK_CUR    __SEEK_CUR      /* offset from current position */
+#define SEEK_END    __SEEK_END      /* offset from end of file */
 
-extern int getopt(int, char *const[], const char *);
+extern off_t lseek(int fildes, off_t offset, int whence);
+
+/* read to or write from a file */
+
+extern ssize_t read(int fildes, void *buf, size_t nbyte);
+extern ssize_t write(int fildes, const void *buf, size_t nbyte);
+
+/* remove a directory entry */
+
+extern int unlink(const char *path);
+
+/* command option parsing */
+
+extern int  optopt;         /* this option flag */
+extern char *optarg;        /* this option argument */
+extern int  optind;         /* next index of argv[] to process */
+extern int  opterr;         /* (flag) print option error diagnostics */
+
+extern int getopt(int argc, char * const argv[], const char *optstring);
 
 #endif /* _UNISTD_H */
 

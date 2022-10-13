@@ -49,7 +49,7 @@
 
 #define DEFAULT_PATH ""
 
-int execvpe(const char *name, char *const argv[], char *const envp[])
+int execvpe(const char *file, char *const argv[], char *const envp[])
 {
     char fname[PATH_MAX];
     const char *p1;
@@ -59,11 +59,11 @@ int execvpe(const char *name, char *const argv[], char *const envp[])
     if ((sp = getenv("PATH")) == 0)     /* find PATH */
         sp = DEFAULT_PATH;              /* or use an empty one */
 
-    isabs = (strchr(name, '/') != 0);   /* if pathname is absolute */
+    isabs = (strchr(file, '/') != 0);   /* if pathname is absolute */
 
     for (;;) {
         if (isabs)
-            strcpy(fname, name);
+            strcpy(fname, file);
         else {
             for (p2 = fname; *sp && (*sp != ':'); )
                 *p2++ = *sp++;  /* copy element from PATH */
@@ -71,7 +71,7 @@ int execvpe(const char *name, char *const argv[], char *const envp[])
             if (p2 != fname)            /* append / if not empty */
                 *p2++ = '/';
 
-            for (p1 = name; *p1; )      /* append name */
+            for (p1 = file; *p1; )      /* append name */
                 *p2++ = *p1++;
 
             *p2 = 0;                    /* and NUL terminate */

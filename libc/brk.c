@@ -34,15 +34,15 @@
 #include <unistd.h>
 #include <errno.h>
 
-void *sbrk(ssize_t inc)
+void *sbrk(ssize_t increment)
 {
     char *old;
     char *new;
 
     old = __brk(0);
 
-    if (inc != 0) {
-        new = __brk(old + inc);
+    if (increment != 0) {
+        new = __brk(old + increment);
 
         if (new == old) {
             errno = ENOMEM;

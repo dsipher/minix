@@ -32,7 +32,7 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		memset.o modf.o mktemp.o perror.o printf.o 		\
 		puts.o qsort.o raise.o rand.o remove.o rewind.o 	\
 		scanf.o setbuf.o setvbuf.o sigaction.o 			\
-		sigemptyset.o signal.o sprintf.o sscanf.o 		\
+		sigemptyset.o signal.o sleep.o sprintf.o sscanf.o 	\
 		stdio.o strcat.o strchr.o strcmp.o strcpy.o 		\
 		strerror.o strftime.o strlen.o strncat.o 		\
 		strncmp.o strncpy.o strrchr.o strtof.o strtod.o 	\
@@ -120,6 +120,7 @@ setvbuf.o:		setvbuf.c
 sigaction.o:		sigaction.c
 sigemptyset.o:		sigemptyset.c
 signal.o:		signal.c
+sleep.o:		sleep.c
 sprintf.o:		sprintf.c
 sscanf.o:		sscanf.c
 stdio.o:		stdio.c

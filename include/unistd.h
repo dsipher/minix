@@ -145,6 +145,10 @@ extern ssize_t write(int fildes, const void *buf, size_t nbyte);
 
 extern int unlink(const char *path);
 
+/* sleep for `seconds' or until a signal arrives */
+
+extern unsigned sleep(unsigned seconds);
+
 /* command option parsing */
 
 extern int  optopt;         /* this option flag */

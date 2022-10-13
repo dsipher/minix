@@ -90,6 +90,10 @@ extern void qsort(void *, size_t, size_t,
 extern int rand(void);
 extern void srand(unsigned);
 
+/* change or add an environment variable */
+
+int putenv(char *string);
+
 /* process `command' via the shell */
 
 int system(const char *command);

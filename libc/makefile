@@ -29,7 +29,7 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		isgraph.o islower.o isprint.o ispunct.o 		\
 		isspace.o isupper.o isxdigit.o isatty.o labs.o		\
 		malloc.o memchr.o memcmp.o memcpy.o memmove.o 		\
-		memset.o modf.o mktemp.o perror.o printf.o 		\
+		memset.o modf.o mktemp.o perror.o printf.o putenv.o 	\
 		puts.o qsort.o raise.o rand.o remove.o rewind.o 	\
 		scanf.o setbuf.o setvbuf.o sigaction.o 			\
 		sigemptyset.o signal.o sleep.o sprintf.o sscanf.o 	\
@@ -108,6 +108,7 @@ modf.o:			modf.c
 mktemp.o:		mktemp.c
 perror.o:		perror.c
 printf.o:		printf.c
+putenv.o:		putenv.c
 puts.o:			puts.c
 qsort.o:		qsort.c
 raise.o:		raise.c

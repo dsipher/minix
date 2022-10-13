@@ -138,7 +138,8 @@ struct stat
     unsigned long   __pad[3];
 };
 
-extern int fstat(int fd, struct stat *statbuf);
+extern int stat(const char *path, struct stat *buf);
+extern int fstat(int fildes, struct stat *buf);
 
 #endif /* _SYS_STAT_H */
 

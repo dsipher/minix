@@ -83,7 +83,14 @@ _open:          movl $2, %eax               # OPEN
 _close:         movl $3, %eax               # CLOSE
                 jmp do_syscall
 
-# int fstat(int fd, struct stat *statbuf);
+# int stat(const char *path, struct stat *buf);
+
+.globl _stat
+
+_stat:          movl $4, %eax               # STAT
+                jmp do_syscall
+
+# int fstat(int fildes, struct stat *buf);
 
 .globl _fstat
 

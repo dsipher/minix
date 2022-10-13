@@ -209,6 +209,13 @@ _kill:          movl $62, %eax              # KILL
 _uname:         movl $63, %eax              # UNAME
                 jmp do_syscall
 
+# int getdents(int fildes, struct direct *dirp, int count);
+
+.globl _getdents
+
+_getdents:      movl $78, %eax              # GETDENTS
+                jmp do_syscall
+
 # int rename(const char *old, const char *new);
 
 .globl _rename

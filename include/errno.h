@@ -44,6 +44,7 @@ extern int errno;
 #define EINTR        4      /* interrupted system call */
 #define EAGAIN      11      /* resource temporarily unavailable */
 #define ENOMEM      12      /* out of memory */
+#define EFAULT      14      /* bad address */
 #define EINVAL      22      /* invalid argument */
 #define ENOTTY      25      /* not a typewriter */
 #define EDOM        33      /* math argument out of domain of func */

@@ -44,7 +44,7 @@ static const char * const errors[] =
     /*  6 */    0,
     /*  7 */    0,
     /*  8 */    0,
-    /*  9 */    0,
+    /*  9 */    "bad file descriptor",                      /* EBADF */
     /* 10 */    0,
     /* 11 */    "resource temporarily unavailable",         /* EAGAIN */
     /* 12 */    "not enough space",                         /* ENOMEM */
@@ -55,7 +55,7 @@ static const char * const errors[] =
     /* 17 */    0,
     /* 18 */    0,
     /* 19 */    0,
-    /* 20 */    0,
+    /* 20 */    "not a directory",                          /* ENOTDIR */
     /* 21 */    0,
     /* 22 */    "invalid argument",                         /* EINVAL */
     /* 23 */    0,

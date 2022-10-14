@@ -317,7 +317,7 @@ FILE *fd;
   bool dbl;
 
 
-  if (getline(&str1s, fd))  return;	/*  Read the first line  */
+  if (getlin(&str1s, fd))  return;	/*  Read the first line  */
 
   for(;;) {
 	if (*str1 == TABCHAR)	/*  Rules without targets  */
@@ -351,7 +351,7 @@ FILE *fd;
 
 		setmacro(a, q);
 
-		if (getline(&str1s, fd))
+		if (getlin(&str1s, fd))
 			return;
 		continue;
 	}
@@ -386,7 +386,7 @@ FILE *fd;
 		makefile = old_makefile;
 		lineno = old_lineno;
 
-		if (getline(&str1s, fd))
+		if (getlin(&str1s, fd))
 			return;
 		continue;
 	}
@@ -434,10 +434,10 @@ FILE *fd;
 	*((q = str1) + strlen(str1) + 1) = '\0';
 		/*  Need two nulls for gettok (Remember separation)  */
 
-	if (getline(&str2s, fd) == FALSE) {		/*  Get commands  */
+	if (getlin(&str2s, fd) == FALSE) {		/*  Get commands  */
 		while (*str2 == TABCHAR) {
 			cp = newcmd(&str2[0], cp);
-			if (getline(&str2s, fd))
+			if (getlin(&str2s, fd))
 				break;
 		}
 	}

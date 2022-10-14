@@ -92,12 +92,12 @@ static size_t namelen;			/* Max name length, 14 or 16. */
 
 static archname_t *nametab[HASHSIZE];
 
-_PROTOTYPE( static int hash, (char *name) );
-_PROTOTYPE( static int searchtab, (char *name, time_t *date, int scan) );
-_PROTOTYPE( static void deltab, (void) );
-_PROTOTYPE( static long ar_atol, (char *s, size_t n) );
-_PROTOTYPE( static int read_ascii_archive, (int afd) );
-_PROTOTYPE( static int read_ack_archive, (int afd) );
+static int hash(char *name);
+static int searchtab(char *name, time_t *date, int scan);
+static void deltab(void);
+static long ar_atol(char *s, size_t n);
+static int read_ascii_archive(int afd);
+static int read_ack_archive(int afd);
 
 static char *lpar, *rpar;	/* Leave these at '(' and ')'. */
 

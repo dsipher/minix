@@ -43,7 +43,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-_PROTOTYPE(static void tellstatus, (FILE *out, char *name, int status));
+static void tellstatus(FILE *out, char *name, int status);
 
 static bool  execflag;
 

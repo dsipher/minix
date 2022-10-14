@@ -66,7 +66,7 @@ char *a1;
  *	backslashes alone in shell commands (lines starting with a tab).
  *	This is not what POSIX wants, but what all makes do.  (KJB)
  */
-bool getline(strs, fd)
+bool getlin(strs, fd)
 struct str *strs;
 FILE *fd;
 {

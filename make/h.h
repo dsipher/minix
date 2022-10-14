@@ -274,66 +274,74 @@ EXTERN int _ctypech;
 #define myupper(x)  (isupper(_ctypech=(x)) ? _ctypech :toupper(_ctypech))
 
 /* Prototypes. */
+
 struct sgtbuf;
 
 /* check.c */
-_PROTOTYPE(void prt, (void));
-_PROTOTYPE(void check, (struct name *np ));
-_PROTOTYPE(void circh, (void));
-_PROTOTYPE(void precious, (void));
+
+void prt(void);
+void check(struct name *np);
+void circh(void);
+void precious(void);
 
 /* input.c */
-_PROTOTYPE(void init, (void));
-_PROTOTYPE(void strrealloc, (struct str *strs ));
-_PROTOTYPE(struct name *newname, (char *name ));
-_PROTOTYPE(struct name *testname, (char *name ));
-_PROTOTYPE(struct depend *newdep, (struct name *np, struct depend *dp ));
-_PROTOTYPE(struct cmd *newcmd, (char *str, struct cmd *cp ));
-_PROTOTYPE(void newline, (struct name *np, struct depend *dp, struct cmd *cp,
-								   int flag ));
-_PROTOTYPE(void input, (FILE *fd ));
+
+void init(void);
+void strrealloc(struct str *strs);
+struct name *newname(char *name);
+struct name *testname(char *name);
+struct depend *newdep(struct name *np, struct depend *dp);
+struct cmd *newcmd(char *str, struct cmd *cp);
+void newline(struct name *np, struct depend *dp, struct cmd *cp, int flag);
+void input(FILE *fd);
 
 /* macro.c */
-_PROTOTYPE(struct macro *getmp, (char *name ));
-_PROTOTYPE(char *getmacro, (char *name ));
-_PROTOTYPE(struct macro *setmacro, (char *name, char *val ));
-_PROTOTYPE(void setDFmacro, (char *name, char *val ));
-_PROTOTYPE(void doexp, (struct str *to, char *from ));
-_PROTOTYPE(void expand, (struct str *strs ));
+
+struct macro *getmp(char *name);
+char *getmacro(char *name);
+struct macro *setmacro(char *name, char *val);
+void setDFmacro(char *name, char *val);
+void doexp(struct str *to, char *from);
+void expand(struct str *strs);
 
 /* main.c */
-_PROTOTYPE(void main, (int argc, char **argv ));
-_PROTOTYPE(void setoption, (char option ));
-_PROTOTYPE(void usage, (void));
-_PROTOTYPE(void fatal, (char *msg, char *a1, int a2 ));
+
+void main(int argc, char **argv);
+void setoption(char option);
+void usage(void);
+void fatal(char *msg, char *a1, int a2);
 
 /* make.c */
-_PROTOTYPE(int dosh, (char *string, char *shell ));
-_PROTOTYPE(int makeold, (char *name ));
-_PROTOTYPE(void docmds1, (struct name *np, struct line *lp ));
-_PROTOTYPE(void docmds, (struct name *np ));
-_PROTOTYPE(int Tosexec, (char *string ));
-_PROTOTYPE(time_t mstonix, (unsigned int date, unsigned int time ));
-_PROTOTYPE(void getmdate, (int fd, struct sgtbuf *tbp ));
-_PROTOTYPE(time_t cnvtime, (struct sgtbuf *tbp ));
-_PROTOTYPE(void modtime, (struct name *np ));
-_PROTOTYPE(void touch, (struct name *np ));
-_PROTOTYPE(int make, (struct name *np, int level ));
-_PROTOTYPE(void make1, (struct name *np, struct line *lp, struct depend *qdp,
-					char *basename, char *inputname ));
-_PROTOTYPE(void implmacros, (struct name *np, struct line *lp,
-					char **pbasename, char **pinputname ));
-_PROTOTYPE(void dbgprint, (int level, struct name *np, char *comment ));
+
+int dosh(char *string, char *shell);
+int makeold(char *name);
+void docmds1(struct name *np, struct line *lp);
+void docmds(struct name *np);
+int Tosexec(char *string);
+time_t mstonix(unsigned int date, unsigned int time);
+void getmdate(int fd, struct sgtbuf *tbp);
+time_t cnvtime(struct sgtbuf *tbp);
+void modtime(struct name *np);
+void touch(struct name *np);
+int make(struct name *np, int level);
+void make1(struct name *np, struct line *lp, struct depend *qdp,
+					char *basename, char *inputname);
+void implmacros(struct name *np, struct line *lp,
+					char **pbasename, char **pinputname);
+void dbgprint(int level, struct name *np, char *comment);
 
 /* reader.c */
-_PROTOTYPE(void error, (char *msg, char *a1 ));
-_PROTOTYPE(bool getline, (struct str *strs, FILE *fd ));
-_PROTOTYPE(char *gettok, (char **ptr ));
+
+void error(char *msg, char *a1);
+bool getlin(struct str *strs, FILE *fd);
+char *gettok(char **ptr);
 
 /* rules.c */
-_PROTOTYPE(bool dyndep, (struct name *np, char **pbasename,char **pinputname));
-_PROTOTYPE(void makerules, (void));
+
+bool dyndep(struct name *np, char **pbasename, char **pinputname);
+void makerules(void);
 
 /* archive.c */
-_PROTOTYPE(int is_archive_ref, (char *name));
-_PROTOTYPE(int archive_stat, (char *name, struct stat *stp));
+
+int is_archive_ref(char *name);
+int archive_stat(char *name, struct stat *stp);

@@ -138,8 +138,14 @@ struct stat
     unsigned long   __pad[3];
 };
 
+/* get file status */
+
 extern int stat(const char *path, struct stat *buf);
 extern int fstat(int fildes, struct stat *buf);
+
+/* set and get the file mode creation mask */
+
+extern mode_t umask(mode_t cmask);
 
 #endif /* _SYS_STAT_H */
 

@@ -256,6 +256,13 @@ _creat:         movl $85, %eax              # CREAT
 _unlink:        movl $87, %eax              # UNLINK
                 jmp do_syscall
 
+# mode_t umask(mode_t cmask);
+
+.globl _umask
+
+_umask:         movl $95, %eax              # UMASK
+                jmp do_syscall
+
 # int utime(const char *path, const struct utimbuf *times);
 
 .globl _utime

@@ -48,8 +48,14 @@ typedef __pid_t pid_t;
 #define WSTOPSIG        __WSTOPSIG
 #define WTERMSIG        __WTERMSIG
 
-extern pid_t wait(int *);
-extern pid_t waitpid(pid_t, int *, int);
+/* wait for process state to change */
+
+extern pid_t wait(int *wstatus);
+extern pid_t waitpid(pid_t pid, int *wstatus, int options);
+
+/* options for waitpid() */
+
+#define WNOHANG         1       /* do not block */
 
 #endif /* _SYS_WAIT_H */
 

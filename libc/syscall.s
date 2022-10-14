@@ -71,8 +71,8 @@ _write:         movl $1, %eax               # WRITE
 
 _open:          movl $2, %eax               # OPEN
                 movq 8(%rsp), %rdi          # path
-                movq 16(%rsp), %rsi         # flags
-                movq 24(%rsp), %rdx         # mode
+                movl 16(%rsp), %esi         # flags
+                movl 24(%rsp), %edx         # mode
                 jmp do_syscall
 
 # int close(int fildes);

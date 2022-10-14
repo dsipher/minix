@@ -85,9 +85,6 @@ char **argv;
 
   ptrmakeflags = &makeflags[10];
   myname = (argc-- < 1) ? "make" : *argv++;
-#ifdef tos
-  myname = "Make";
-#endif
 
   targc = argc;
   targv = nargv = argv;

@@ -62,9 +62,6 @@ char *shell;
 #ifdef unix
   return system(string);
 #endif
-#ifdef tos
-  return Tosexec(string);
-#endif
 }
 
 
@@ -122,9 +119,6 @@ struct line *lp;
   if (*(shell = getmacro("SHELL")) == '\0')
 #ifdef unix
 	shell = "/bin/sh";
-#endif
-#ifdef tos
-	shell = "DESKTOP";      /* TOS has no shell */
 #endif
 
   for (cp = lp->l_cmd; cp; cp = cp->c_next) {
@@ -194,131 +188,6 @@ struct name *np;
 	docmds1(np, lp);
 }
 
-#ifdef tos
-/*
- *      execute the command submitted by make,
- *      needed because TOS has no internal shell,
- *      so we use Pexec to do the job
- *        v 1.1 of 10/sep/89 by yeti
- */
-
-#define DELM1 ';'
-#define DELM2 ' '
-#define DELM3 ','
-
-int Tosexec(string)
-char *string;
-{
-  register char *help, *help2, c;
-  register unsigned char l=1;
-  char progname[80], command[255], plain[15];
-  static char **envp,*env;
-  register int error,i;
-
-  /* generate strange TOS environment (RAL) */
-  for ( i = 0, envp = environ; *envp; envp++) i += strlen(*envp) +1;
-  if ((env = malloc(i+1)) == (char *)0)
-     fatal("No memory for TOS environment",(char *)0,0);
-  for ( envp = environ, help = env; *envp; envp++) {
-     strcpy ( help, *envp);
-     while ( *(help++)) ;
-  }
-  *help = '\0';
-
-  help = progname;
-  while((*help++=*string++) != ' '); /* progname is command name */
-  *--help = '\0';
-
-  l = strlen(string);             /* build option list */
-  command[0] = l;                 /* TOS likes it complicated */
-  strcpy(&command[1],string);
-  if ((error = (int) Pexec(0,progname,command,env)) != -33) {
-    free(env);
-    return(error);
-  }
-
-  /* could'nt find program, try to search the PATH */
-  if((help=strrchr(progname,'\\')) != (char *) 0)  /* just the */
-          strcpy(plain,++help);                     /* name     */
-  else if((help=strrchr(progname,'/')) != (char *) 0)
-          strcpy(plain,++help);
-  else if((help=strrchr(progname,':')) != (char *) 0)
-          strcpy(plain,++help);
-  else
-          strcpy(plain,progname);
-
-  if(*(help=getmacro("PATH")) == '\0') {
-    free(env);
-    return(-33);
-  }
-  c = 1;
-  while(c)
-  {       help2 = &progname[-1];
-          i = 0;
-          while((c=*help++) != '\0' && i<80 && c != DELM1
-                 && c != DELM2 && c != DELM3)
-                  *++help2 = c, i++;
-          *++help2 = '\\';
-          strcpy(++help2,plain);
-          if((error=(int) Pexec(0,progname,command,env))!=-33) {
-                  free(env);
-                  return(error);
-          }
-  }
-  free(env);
-  return(-33);
-}
-
-
-/* (stolen from ZOO -- thanks to Rahul Dehsi)
-Function mstonix() accepts an MSDOS format date and time and returns
-a **IX format time.  No adjustment is done for timezone.
-*/
-
-time_t mstonix (date, time)
-unsigned int date, time;
-{
-   int year, month, day, hour, min, sec, daycount;
-   time_t longtime;
-   /* no. of days to beginning of month for each month */
-   static int dsboy[12] = { 0, 31, 59, 90, 120, 151, 181, 212,
-                              243, 273, 304, 334};
-
-   if (date == 0 && time == 0)			/* special case! */
-      return (0L);
-
-   /* part of following code is common to zoolist.c */
-   year  =  (((unsigned int) date >> 9) & 0x7f) + 1980;
-   month =  ((unsigned int) date >> 5) & 0x0f;
-   day   =  date        & 0x1f;
-
-   hour =  ((unsigned int) time >> 11)& 0x1f;
-   min   =  ((unsigned int) time >> 5) & 0x3f;
-   sec   =  ((unsigned int) time & 0x1f) * 2;
-
-/* DEBUG and leap year fixes thanks to Mark Alexander <uunet!amdahl!drivax!alexande>*/
-#ifdef DEBUG
-   printf ("mstonix:  year=%d  month=%d  day=%d  hour=%d  min=%d  sec=%d\n",
-         year, month, day, hour, min, sec);
-#endif
-   /* Calculate days since 1970/01/01 */
-   daycount = 365 * (year - 1970) +    /* days due to whole years */
-               (year - 1969) / 4 +     /* days due to leap years */
-               dsboy[month-1] +        /* days since beginning of this year */
-               day-1;                  /* days since beginning of month */
-
-   if (year % 4 == 0 &&
-       year % 400 != 0 && month >= 3)  /* if this is a leap year and month */
-      daycount++;                      /* is March or later, add a day */
-
-   /* Knowing the days, we can find seconds */
-   longtime = daycount * 24L * 60L * 60L    +
-          hour * 60L * 60L   +   min * 60   +    sec;
-	return (longtime);
-}
-#endif /* tos */
-
-
 /*
  *	Get the modification time of a file.  If the first
  *	doesn't exist, it's modtime is set to 0.
@@ -346,21 +215,6 @@ struct name *np;
 	np->n_flag |= N_EXISTS;
   }
 #endif
-#ifdef tos
-  struct DOSTIME fm;
-  int fd;
-
-  if((fd=Fopen(np->n_name,0)) < 0) {
-        np->n_time = 0L;
-	np->n_flag &= ~N_EXISTS;
-  }
-  else {
-        Fdatime(&fm,fd,0);
-        Fclose(fd);
-        np->n_time = mstonix((unsigned int)fm.date,(unsigned int)fm.time);
-        np->n_flag |= N_EXISTS;
-  }
-#endif
 }
 
 
@@ -383,21 +237,6 @@ struct name *np;
 	if (utime(np->n_name, &a) < 0)
 		printf("%s: '%s' not touched - non-existant\n",
 				myname, np->n_name);
-#endif
-#ifdef tos
-        struct DOSTIME fm;
-        int fd;
-
-        if((fd=Fopen(np->n_name,0)) < 0) {
-                printf("%s: '%s' not touched - non-existant\n",
-                                myname, np->n_name);
-        }
-        else {
-                fm.date = Tgetdate();
-                fm.time = Tgettime();
-                Fdatime(&fm,fd,1);
-                Fclose(fd);
-        }
 #endif
   }
 }

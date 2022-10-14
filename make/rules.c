@@ -167,10 +167,6 @@ void makerules()
   struct depend *dp;
 
 
-#ifdef tos
-#define unix
-#endif
-
 /*
  *	Some of the UNIX implicit rules
  */

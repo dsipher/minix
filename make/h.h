@@ -51,24 +51,6 @@
 #include <limits.h>
 #endif
 
-#ifdef tos
-struct DOSTIME {short time,date; };     /* time structure of TOS */
-
-#ifdef LATTICE
-#include <error.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <osbind.h>
-#endif /* LATTICE */
-
-#ifdef TURBO
-#include <tos.h>
-#include <errno.h>
-#include <string.h>
-#endif /* TURBO */
-
-#endif /* tos */
-
 #include <ctype.h>
 #include <stdio.h>
 #include <assert.h>
@@ -90,10 +72,6 @@ struct DOSTIME {short time,date; };     /* time structure of TOS */
 #ifdef unix
 #define DEFN1   "makefile"
 #define DEFN2   "Makefile"
-#endif
-#ifdef tos
-#define DEFN1   "makefile."
-#define DEFN2   (char *)0
 #endif
 
 #define TABCHAR '\t'
@@ -220,12 +198,6 @@ EXTERN struct macro *macrohead;
 EXTERN bool          expmake; /* TRUE if $(MAKE) has been expanded */
 EXTERN char	    *makefile;     /*  The make file  */
 EXTERN int           lineno;
-
-#ifdef tos
-#ifdef LATTICE
-EXTERN int _mneed INIT(60000);    /* VERY important for TOS with LATTICE C*/
-#endif /* LATTICE */
-#endif /* tos */
 
 #define  suffix(name)   strrchr(name,(int)'.')
 

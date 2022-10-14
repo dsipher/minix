@@ -70,19 +70,6 @@ char *shell;
 	-1:	/* couldn't start the shell */
 	wait(number);	/* return its exit status */
 #endif
-#ifdef os9
-  int	status, pid;
-
-  strcat(string, "\n");
-  if ((number = os9fork(shell, strlen(string), string, 0, 0, 0)) == -1)
-	return -1;		/* Couldn't start a shell */
-  do {
-	if ((pid = wait(&status)) == -1)
-		return -1;	/* child already died!?!? */
-  } while (pid != number);
-
-  return status;
-#endif
 }
 
 
@@ -143,9 +130,6 @@ struct line *lp;
 #endif
 #ifdef unix
 	shell = "/bin/sh";
-#endif
-#ifdef os9
-	shell = "shell";
 #endif
 #ifdef tos
 	shell = "DESKTOP";      /* TOS has no shell */
@@ -342,77 +326,6 @@ unsigned int date, time;
 }
 #endif /* tos */
 
-#ifdef os9
-/*
- *	Some stuffing around to get the modified time of a file
- *	in an os9 file system
- */
-void getmdate(fd, tbp)
-int fd;
-struct sgtbuf *tbp;
-{
-  struct registers     regs;
-  static struct fildes fdbuf;
-
-
-  regs.rg_a = fd;
-  regs.rg_b = SS_FD;
-  regs.rg_x = &fdbuf;
-  regs.rg_y = sizeof (fdbuf);
-
-  if (_os9(I_GETSTT, &regs) == -1) {
-	errno = regs.rg_b & 0xff;
-	return -1;
-  }
-  if (tbp)
-  {
-	_strass(tbp, fdbuf.fd_date, sizeof (fdbuf.fd_date));
-	tbp->t_second = 0;	/* Files are only acurate to mins */
-  }
-  return 0;
-}
-
-
-/*
- *	Kludge routine to return an aproximation of how many
- *	seconds since 1980.  Dates will be in order, but will not
- *	be lineer
- */
-time_t cnvtime(tbp)
-struct sgtbuf *tbp;
-{
-  long acc;
-
-  acc = tbp->t_year - 80;		/* Baseyear is 1980 */
-  acc = acc * 12 + tbp->t_month;
-  acc = acc * 31 + tbp->t_day;
-  acc = acc * 24 + tbp->t_hour;
-  acc = acc * 60 + tbp->t_minute;
-  acc = acc * 60 + tbp->t_second;
-
-  return acc;
-}
-
-
-/*
- *	Get the current time in the internal format
- */
-void time(tp)
-time_t *tp;
-{
-  struct sgtbuf tbuf;
-
-
-  if (getime(&tbuf) < 0)
-	return -1;
-
-  if (tp)
-	*tp = cnvtime(&tbuf);
-
-  return 0;
-}
-#endif
-
 
 /*
  *	Get the modification time of a file.  If the first
@@ -476,26 +389,6 @@ struct name *np;
 
   close(fd);
 #endif
-#ifdef os9
-  struct sgtbuf  info;
-  int            fd;
-
-  if ((fd = open(np->n_name, 0)) < 0) {
-  if (errno != E_PNNF)
-		fatal("Can't open %s: %s", np->n_name, errno);
-
-	np->n_time = 0L;
-	np->n_flag &= ~N_EXISTS;
-  }
-  else if (getmdate(fd, &info) < 0)
-	fatal("Can't getstat %s: %s", np->n_name, errno);
-  else {
-	np->n_time = cnvtime(&info);
-	np->n_flag |= N_EXISTS;
-  }
-
-  close(fd);
-#endif
 }
 
 
@@ -543,16 +436,6 @@ struct name *np;
 		uread(fd, &c, 1, 0);
 		uwrite(fd, &c, 1);
 	}
-	close(fd);
-#endif
-#ifdef os9
-	/*
-	 *	Strange that something almost as totally useless
-	 *	as this is easy to do in os9!
-	 */
-	if ((fd = open(np->n_name, S_IWRITE)) < 0)
-		printf("%s: '%s' not touched - non-existant\n",
-				myname, np->n_name);
 	close(fd);
 #endif
   }

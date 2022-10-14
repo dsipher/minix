@@ -56,14 +56,6 @@
 #include <sys/err.h>
 #endif
 
-#ifdef os9
-#include <time.h>
-#include <os9.h>
-#include <modes.h>
-#include <direct.h>
-#include <errno.h>
-#endif
-
 #ifdef tos
 struct DOSTIME {short time,date; };     /* time structure of TOS */
 
@@ -93,13 +85,7 @@ struct DOSTIME {short time,date; };     /* time structure of TOS */
 #endif
 
 #ifndef uchar
-#ifdef os9
-#define uchar  char
-#define void   int
-#define fputc  putc
-#else
 #define uchar  unsigned char
-#endif
 #endif
 
 #define bool   uchar
@@ -122,17 +108,8 @@ struct DOSTIME {short time,date; };     /* time structure of TOS */
 #define DEFN1   "makefile."
 #define DEFN2   (char *)0
 #endif
-#ifdef os9
-#define DEFN1   "makefile"
-#define DEFN2   (char *)0
-#endif
 
-
-#ifdef os9
-#define TABCHAR ' '
-#else
 #define TABCHAR '\t'
-#endif
 
 #define LZ1	(2048)		/*  Initial input/expand string size  */
 #define LZ2	(256)		/*  Initial input/expand string size  */

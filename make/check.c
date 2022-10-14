@@ -78,11 +78,7 @@ void prt()
 			putchar('\n');
 
 			for (cp = lp->l_cmd; cp; cp = cp->c_next)
-#ifdef os9
-				printf("-   %s\n", cp->c_cmd);
-#else
 				printf("-\t%s\n", cp->c_cmd);
-#endif
 			putchar('\n');
 		}
 		putchar('\n');

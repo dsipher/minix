@@ -41,8 +41,6 @@
 
 #include "h.h"
 
-#ifdef unix
-
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -344,4 +342,3 @@ bail_out:
   *rpar= ')';
   return r;
 }
-#endif

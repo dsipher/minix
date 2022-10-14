@@ -27,9 +27,11 @@ ld
 lex/scan.c
 lex/y.tab.c
 lex/y.tab.h
+make/make
 mkboot
 mkfs
 nm
 proto/asrock
+proto/make
 proto/vbox
 yacc/yacc

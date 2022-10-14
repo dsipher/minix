@@ -27,6 +27,8 @@ do
 	mv kernel/kernel proto/$i
 done
 
+(cd make; make); mv make/make proto
+
 dd if=/dev/zero of=$DEVICE bs=4k count=$BLOCKS
 $MKFS -p proto/proto $DEVICE $BLOCKS
 $MKBOOT -b boot $DEVICE

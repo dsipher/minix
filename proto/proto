@@ -2,7 +2,8 @@ LICENSE				0100644 0 0 LICENSE
 asrock				0100644 0 0 proto/asrock
 vbox   				0100644 0 0 proto/vbox
 
-bin 				0040755 0 0 				$
+bin 				0040755 0 0
+	make			0100555 0 0 proto/make			$
 
 dev 				0040755 0 0 				$
 

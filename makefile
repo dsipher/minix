@@ -10,9 +10,10 @@ clean::
 	(cd as; make clean)
 	(cd cc1; make clean)
 	(cd cpp; make clean)
+	(cd kernel; make clean)
 	(cd lex; make clean)
 	(cd libc; make clean)
-	(cd kernel; make clean)
+	(cd make; make clean)
 	(cd yacc; make clean)
 	rm -f *.lst *.o
 

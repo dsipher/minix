@@ -48,7 +48,7 @@ static const char * const errors[] =
     /* 10 */    0,
     /* 11 */    "resource temporarily unavailable",         /* EAGAIN */
     /* 12 */    "not enough space",                         /* ENOMEM */
-    /* 13 */    0,
+    /* 13 */    "permission denied",                        /* EACCES */
     /* 14 */    "bad address",                              /* EFAULT */
     /* 15 */    0,
     /* 16 */    0,

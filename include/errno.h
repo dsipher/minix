@@ -45,6 +45,7 @@ extern int errno;
 #define EBADF       9       /* bad file descriptor */
 #define EAGAIN      11      /* resource temporarily unavailable */
 #define ENOMEM      12      /* out of memory */
+#define EACCES      13      /* permission denied */
 #define EFAULT      14      /* bad address */
 #define ENOTDIR     20      /* not a directory */
 #define EINVAL      22      /* invalid argument */

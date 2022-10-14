@@ -1,23 +1,43 @@
-/*************************************************************************
- *
- *  m a k e :   m a i n . c
- *
- *========================================================================
- * Edition history
- *
- *  #    Date                         Comments                       By
- * --- -------- ---------------------------------------------------- ---
- *   1    ??                                                         ??
- *   2 01.07.89 strcmp(makefile,..) only if makefile a valid ptr.    RAL
- *   3 23.08.89 initname() added                                     RAL
- *   4 30.08.89 argument parsing impr., indention ch., macro fl. add.PSH,RAL
- *   5 03.09.89 k-option added, initname -> init changed             RAL
- *   6 06.09.89 environment, MAKEFLAGS, e,d,a options added,         RAL
- *   7 09.09.89 tos support added, fatal args added, fopen makefile  PHH,RAL
- *   8 17.09.89 setoptions fixed for __STDC__                        RAL
- * ------------ Version 2.0 released ------------------------------- RAL
- *
- *************************************************************************/
+/*****************************************************************************
+
+   main.c                                            jewel/os make utility
+
+******************************************************************************
+
+   derived from MINIX make, Copyright (c) 1987, 1997 by Prentice Hall,
+   itself derived from Neil Russell's public domain make (USENET 1986)
+
+   Redistribution and use of the MINIX operating system in source and
+   binary forms, with or without modification, are permitted provided
+   that the following conditions are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above
+     copyright notice, this list of conditions and the following
+     disclaimer in the documentation and/or other materials provided
+     with the distribution.
+
+   * Neither the name of Prentice Hall nor the names of the software
+     authors or contributors may be used to endorse or promote
+     products derived from this software without specific prior
+     written permission.
+
+   THIS  SOFTWARE  IS  PROVIDED  BY  THE  COPYRIGHT HOLDERS,  AUTHORS, AND
+   CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED  WARRANTIES, INCLUDING,
+   BUT  NOT LIMITED TO,  THE IMPLIED  WARRANTIES  OF  MERCHANTABILITY  AND
+   FITNESS FOR  A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL
+   PRENTICE HALL  OR ANY AUTHORS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+   INDIRECT,  INCIDENTAL,  SPECIAL,  EXEMPLARY,  OR  CONSEQUENTIAL DAMAGES
+   (INCLUDING,  BUT NOT  LIMITED TO,  PROCUREMENT  OF SUBSTITUTE  GOODS OR
+   SERVICES;  LOSS OF USE,  DATA, OR  PROFITS; OR  BUSINESS  INTERRUPTION)
+   HOWEVER  CAUSED AND  ON ANY THEORY OF  LIABILITY,  WHETHER IN CONTRACT,
+   STRICT LIABILITY, OR TORT  (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING
+   IN ANY WAY  OUT  OF THE  USE OF  THIS SOFTWARE,  EVEN IF ADVISED OF THE
+   POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
 
 /*
  *	make:

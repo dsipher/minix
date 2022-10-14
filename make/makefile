@@ -1,4 +1,8 @@
-# Makefile for make (!)
+##############################################################################
+#
+#                                                       jewel/os make utility
+#
+##############################################################################
 
 CFLAGS = -O -Dunix -D_MINIX -D_POSIX_SOURCE
 
@@ -14,7 +18,7 @@ install:	/usr/bin/make
 
 /usr/bin/make:	make
 	install -cs -o bin make $@
- 
+
 $(OBJ): h.h
 
 clean:

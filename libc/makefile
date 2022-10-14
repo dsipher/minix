@@ -24,13 +24,13 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		execvp.o execvpe.o fclose.o fflush.o fgetpos.o 		\
 		fgets.o fileno.o fopen.o fprintf.o fputc.o fputs.o 	\
 		fread.o freopen.o frexp.o fscanf.o fseek.o fsetpos.o	\
-		ftell.o fwrite.o getenv.o getopt.o gets.o isalnum.o 	\
-		isalpha.o iscntrl.o isdigit.o isgraph.o islower.o 	\
-		isprint.o ispunct.o isspace.o isupper.o isxdigit.o 	\
-		isatty.o labs.o malloc.o memchr.o memcmp.o memcpy.o 	\
-		memmove.o memset.o modf.o mktemp.o opendir.o perror.o 	\
-		printf.o putenv.o puts.o qsort.o raise.o rand.o 	\
-		readdir.o remove.o rewind.o rewinddir.o scanf.o 	\
+		ftell.o fwrite.o getcwd.o getenv.o getopt.o gets.o 	\
+		isalnum.o isalpha.o iscntrl.o isdigit.o isgraph.o 	\
+		islower.o isprint.o ispunct.o isspace.o isupper.o 	\
+		isxdigit.o isatty.o labs.o malloc.o memchr.o memcmp.o 	\
+		memcpy.o memmove.o memset.o modf.o mktemp.o opendir.o 	\
+		perror.o printf.o putenv.o puts.o qsort.o raise.o 	\
+		rand.o readdir.o remove.o rewind.o rewinddir.o scanf.o 	\
 		setbuf.o setvbuf.o sigaction.o sigemptyset.o signal.o 	\
 		sleep.o sprintf.o sscanf.o  stdio.o strcat.o strchr.o 	\
 		strcmp.o strcpy.o strerror.o strftime.o strlen.o 	\
@@ -85,6 +85,7 @@ fseek.o:		fseek.c
 fsetpos.o:		fsetpos.c
 ftell.o:		ftell.c
 fwrite.o:		fwrite.c
+getcwd.o:		getcwd.c
 getenv.o:		getenv.c
 getopt.o:		getopt.c
 gets.o:			gets.c

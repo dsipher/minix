@@ -124,6 +124,10 @@ extern int execve(const char *path, char *const argv[], char *const envp[]);
 
 extern pid_t fork(void);
 
+/* get working directory name */
+
+char *getcwd(char *buf, size_t size);
+
 /* get the current process ID */
 
 extern pid_t getpid(void);

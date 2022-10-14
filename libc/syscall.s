@@ -62,8 +62,7 @@ no_error:       ret
 _write:         movl $1, %eax               # WRITE
                 jmp do_syscall
 
-# int open(const char *path, int flags);
-# int open(const char *path, int flags, mode_t mode);
+# int open(const char *path, int oflag, ...);
 #
 # because of the multiple signtures, open() is declared
 # variadic, so we must grab the arguments from the stack.
@@ -209,6 +208,19 @@ _kill:          movl $62, %eax              # KILL
 _uname:         movl $63, %eax              # UNAME
                 jmp do_syscall
 
+# int fcntl(int fildes, int cmd, ...);
+#
+# like open(), this is variadic, but the third
+# argument (if present) always goes in %rdx.
+
+.globl _fcntl
+
+_fcntl:         movl $72, %eax              # FCNTL
+                movl 8(%rsp), %edi          # fildes
+                movl 16(%rsp), %esi         # cmd
+                movq 24(%rsp), %rdx         # (arg)
+                jmp do_syscall
+
 # int getdents(int fildes, struct direct *dirp, int count);
 
 .globl _getdents
@@ -230,7 +242,7 @@ _chdir:         movl $80, %eax              # CHDIR
 _rename:        movl $82, %eax              # RENAME
                 jmp do_syscall
 
-# int creat(const char *pathname, mode_t mode);
+# int creat(const char *path, mode_t mode);
 
 .globl _creat
 

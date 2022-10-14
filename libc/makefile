@@ -19,25 +19,24 @@ crt0.o:	crt0.s
 
 OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		__flushbuf.o __ieee_val.o __pow10.o __setjmp.o 		\
-		abort.o abs.o atoi.o atol.o brk.o bsearch.o calloc.o	\
-		clearerr.o ctime.o exit.o execvp.o execvpe.o 		\
-		fclose.o  fflush.o fgetpos.o fgets.o fileno.o 		\
-		fopen.o fprintf.o fputc.o fputs.o fread.o 		\
-		freopen.o frexp.o fscanf.o fseek.o fsetpos.o 		\
-		ftell.o fwrite.o getenv.o getopt.o gets.o 		\
-		isalnum.o isalpha.o iscntrl.o isdigit.o 		\
-		isgraph.o islower.o isprint.o ispunct.o 		\
-		isspace.o isupper.o isxdigit.o isatty.o labs.o		\
-		malloc.o memchr.o memcmp.o memcpy.o memmove.o 		\
-		memset.o modf.o mktemp.o perror.o printf.o putenv.o 	\
-		puts.o qsort.o raise.o rand.o remove.o rewind.o 	\
-		scanf.o setbuf.o setvbuf.o sigaction.o 			\
-		sigemptyset.o signal.o sleep.o sprintf.o sscanf.o 	\
-		stdio.o strcat.o strchr.o strcmp.o strcpy.o 		\
-		strerror.o strftime.o strlen.o strncat.o 		\
-		strncmp.o strncpy.o strrchr.o strtof.o strtod.o 	\
-		strtol.o syscall.o system.o tcgetattr.o tmpnam.o 	\
-		tolower.o toupper.o ungetc.o vfprintf.o 		\
+		abort.o abs.o atoi.o atol.o brk.o bsearch.o 		\
+		calloc.o clearerr.o closedir.o ctime.o exit.o 		\
+		execvp.o execvpe.o fclose.o fflush.o fgetpos.o 		\
+		fgets.o fileno.o fopen.o fprintf.o fputc.o fputs.o 	\
+		fread.o freopen.o frexp.o fscanf.o fseek.o fsetpos.o	\
+		ftell.o fwrite.o getenv.o getopt.o gets.o isalnum.o 	\
+		isalpha.o iscntrl.o isdigit.o isgraph.o islower.o 	\
+		isprint.o ispunct.o isspace.o isupper.o isxdigit.o 	\
+		isatty.o labs.o malloc.o memchr.o memcmp.o memcpy.o 	\
+		memmove.o memset.o modf.o mktemp.o opendir.o perror.o 	\
+		printf.o putenv.o puts.o qsort.o raise.o rand.o 	\
+		readdir.o remove.o rewind.o rewinddir.o scanf.o 	\
+		setbuf.o setvbuf.o sigaction.o sigemptyset.o signal.o 	\
+		sleep.o sprintf.o sscanf.o  stdio.o strcat.o strchr.o 	\
+		strcmp.o strcpy.o strerror.o strftime.o strlen.o 	\
+		strncat.o strncmp.o strncpy.o strrchr.o strtof.o 	\
+		strtod.o strtol.o syscall.o system.o tcgetattr.o 	\
+		tmpnam.o tolower.o toupper.o ungetc.o vfprintf.o	\
 		vfscanf.o vsprintf.o wait.o
 
 libc.a:		$(OBJS)
@@ -64,6 +63,7 @@ brk.o:			brk.c
 bsearch.o: 		bsearch.c
 calloc.o:		calloc.c
 clearerr.o:		clearerr.c
+closedir.o:		closedir.c
 ctime.o:		ctime.c
 exit.o:			exit.c
 execvp.o:		execvp.c
@@ -106,6 +106,7 @@ memchr.o:		memchr.c
 memcmp.o:		memcmp.c
 modf.o:			modf.c
 mktemp.o:		mktemp.c
+opendir.o:		opendir.c
 perror.o:		perror.c
 printf.o:		printf.c
 putenv.o:		putenv.c
@@ -113,8 +114,10 @@ puts.o:			puts.c
 qsort.o:		qsort.c
 raise.o:		raise.c
 rand.o:			rand.c
+readdir.o:		readdir.c
 remove.o:		remove.c
 rewind.o:		rewind.c
+rewinddir.o:		rewinddir.c
 scanf.o:		scanf.c
 setbuf.o:		setbuf.c
 setvbuf.o:		setvbuf.c

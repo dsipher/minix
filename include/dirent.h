@@ -57,6 +57,42 @@ struct dirent
 
 extern int getdents(int fildes, struct dirent *dirp, int count);
 
+/* a directory stream for opendir(), readdir(), et al.
+   the contents of DIR are opaque to the user. */
+
+typedef struct __DIR DIR;
+
+struct __DIR
+{
+    int     fildes;                 /* handle to directory file */
+    int     pos;                    /* current position in buf[] */
+    int     count;                  /* # of valid bytes in buf[] */
+
+    /* the size of the buffer isn't critical; larger results in
+       fewer syscalls and is thus more efficient (to a point).
+       we choose a value to keep the size of DIR a power of two
+       minus 8, which makes the most efficient use of RAM with
+       our implementation of malloc. */
+
+    char    buf[1004];
+};
+
+/* open a directory stream */
+
+DIR *opendir(const char *dirname);
+
+/* read the next entry from a directory stream */
+
+struct dirent *readdir(DIR *dirp);
+
+/* rewind a directory stream to the beginning */
+
+void rewinddir(DIR *dirp);
+
+/* close a directory stream */
+
+int closedir(DIR *dirp);
+
 #endif /* _DIRENT_H */
 
 /* vi: set ts=4 expandtab: */

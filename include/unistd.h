@@ -104,6 +104,10 @@ extern void *__brk(void *addr);     /* system call */
 extern int brk(void *addr);
 extern void *sbrk(ssize_t increment);
 
+/* change working directory */
+
+extern int chdir(const char *path);
+
 /* close a file descriptor */
 
 extern int close(int fildes);

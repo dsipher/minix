@@ -216,6 +216,13 @@ _uname:         movl $63, %eax              # UNAME
 _getdents:      movl $78, %eax              # GETDENTS
                 jmp do_syscall
 
+# int chdir(const char *path);
+
+.globl _chdir
+
+_chdir:         movl $80, %eax              # CHDIR
+                jmp do_syscall
+
 # int rename(const char *old, const char *new);
 
 .globl _rename

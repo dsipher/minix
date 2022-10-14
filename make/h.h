@@ -52,8 +52,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-#define MNOENT ENOENT
-
 #ifndef uchar
 #define uchar  unsigned char
 #endif

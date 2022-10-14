@@ -138,7 +138,7 @@ char **argv;
 	ifd = stdin;
   else if (!makefile) {    /*  If no file, then use default */
 	if ((ifd = fopen(makefile = DEFN1, "r")) == (FILE *)0) {
-		if (errno != MNOENT || !DEFN2)
+		if (errno != ENOENT || !DEFN2)
 			fatal("Can't open %s: %s", DEFN1, errno);
 		else if ((ifd = fopen(makefile = DEFN2, "r")) == (FILE *)0)
 			fatal("Can't open %s: %s", DEFN2, errno);

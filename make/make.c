@@ -65,11 +65,6 @@ char *shell;
 #ifdef tos
   return Tosexec(string);
 #endif
-#ifdef eon
-  return ((number = execl(shell, shell,"-c", string, 0)) == -1) ?
-	-1:	/* couldn't start the shell */
-	wait(number);	/* return its exit status */
-#endif
 }
 
 
@@ -125,9 +120,6 @@ struct line *lp;
 
 
   if (*(shell = getmacro("SHELL")) == '\0')
-#ifdef eon
-	shell = ":bin/esh";
-#endif
 #ifdef unix
 	shell = "/bin/sh";
 #endif
@@ -369,26 +361,6 @@ struct name *np;
         np->n_flag |= N_EXISTS;
   }
 #endif
-#ifdef eon
-  struct stat  info;
-  int          fd;
-
-  if ((fd = open(np->n_name, 0)) < 0) {
-	if (errno != ER_NOTF)
-		fatal("Can't open %s: %s", np->n_name, errno);
-
-	np->n_time = 0L;
-	np->n_flag &= ~N_EXISTS;
-  }
-  else if (getstat(fd, &info) < 0)
-	fatal("Can't getstat %s: %s", np->n_name, errno);
-  else {
-	np->n_time = info.st_mod;
-	np->n_flag |= N_EXISTS;
-  }
-
-  close(fd);
-#endif
 }
 
 
@@ -426,17 +398,6 @@ struct name *np;
                 Fdatime(&fm,fd,1);
                 Fclose(fd);
         }
-#endif
-#ifdef eon
-	if ((fd = open(np->n_name, 0)) < 0)
-		printf("%s: '%s' not touched - non-existant\n",
-				myname, np->n_name);
-	else
-	{
-		uread(fd, &c, 1, 0);
-		uwrite(fd, &c, 1);
-	}
-	close(fd);
 #endif
   }
 }

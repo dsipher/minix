@@ -54,7 +54,6 @@
  *	-r don't not use inbuilt rules
  *	-s make silently
  *	-t touch files instead of making them
- *	-m Change memory requirements (EON only)
  */
 
 #define EXTERN
@@ -121,17 +120,6 @@ char **argv;
 				}
 				makefile = p;
 				goto end_of_args;
-#ifdef eon
-			case 'm':	/*  Change space requirements  */
-				if (*++p == '\0') {
-					--argc;
-					if (targc-- <= 0)
-						usage();
-					p = *targv++;
-				}
-				memspace = atoi(p);
-				goto end_of_args;
-#endif
 			default :
 				setoption(*p);
 				break;
@@ -148,12 +136,6 @@ char **argv;
   for( p = ptrmakeflags; !isspace((int)*p); p++) ;
   *p = '\0';
   putenv(makeflags);
-
-
-#ifdef eon
-  if (initalloc(memspace) == 0xffff)  /*  Must get memory for alloc  */
-	fatal("Cannot initalloc memory",(char *)0,0);
-#endif
 
   if (makefile && strcmp(makefile, "-") == 0)  /*   use stdin as makefile  */
 	ifd = stdin;

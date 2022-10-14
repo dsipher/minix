@@ -51,11 +51,6 @@
 #include <limits.h>
 #endif
 
-#ifdef eon
-#include <sys/stat.h>
-#include <sys/err.h>
-#endif
-
 #ifdef tos
 struct DOSTIME {short time,date; };     /* time structure of TOS */
 
@@ -78,11 +73,7 @@ struct DOSTIME {short time,date; };     /* time structure of TOS */
 #include <stdio.h>
 #include <assert.h>
 
-#ifdef eon
-#define MNOENT ER_NOTF
-#else
 #define MNOENT ENOENT
-#endif
 
 #ifndef uchar
 #define uchar  unsigned char
@@ -97,10 +88,6 @@ struct DOSTIME {short time,date; };     /* time structure of TOS */
 #define max(a,b) ((a)>(b)?(a):(b))
 
 #ifdef unix
-#define DEFN1   "makefile"
-#define DEFN2   "Makefile"
-#endif
-#ifdef eon
 #define DEFN1   "makefile"
 #define DEFN2   "Makefile"
 #endif
@@ -239,10 +226,6 @@ EXTERN int           lineno;
 EXTERN int _mneed INIT(60000);    /* VERY important for TOS with LATTICE C*/
 #endif /* LATTICE */
 #endif /* tos */
-#ifdef eon
-#define MEMSPACE  (16384)
-EXTERN unsigned  memspace = MEMSPACE;
-#endif
 
 #define  suffix(name)   strrchr(name,(int)'.')
 

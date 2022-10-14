@@ -167,45 +167,6 @@ void makerules()
   struct depend *dp;
 
 
-#ifdef eon
-  setmacro("BDSCC", "asm");
-  /*	setmacro("BDSCFLAGS", "");	*/
-  cp = newcmd("$(BDSCC) $(BDSCFLAGS) -n $<", (struct cmd *)0);
-  np = newname(".c.o");
-  newline(np, (struct depend *)0, cp, 0);
-
-  setmacro("CC", "c");
-  setmacro("CFLAGS", "-O");
-  cp = newcmd("$(CC) $(CFLAGS) -c $<", (struct cmd *)0);
-  np = newname(".c.obj");
-  newline(np, (struct depend *)0, cp, 0);
-
-  setmacro("M80", "asm -n");
-  /*	setmacro("M80FLAGS", "");	*/
-  cp = newcmd("$(M80) $(M80FLAGS) $<", (struct cmd *)0);
-  np = newname(".mac.o");
-  newline(np, (struct depend *)0, cp, 0);
-
-  setmacro("AS", "zas");
-  /*	setmacro("ASFLAGS", "");	*/
-  cp = newcmd("$(ZAS) $(ASFLAGS) -o $@ $<", (struct cmd *)0);
-  np = newname(".as.obj");
-  newline(np, (struct depend *)0, cp, 0);
-
-  np = newname(".as");
-  dp = newdep(np, (struct depend *)0);
-  np = newname(".obj");
-  dp = newdep(np, dp);
-  np = newname(".c");
-  dp = newdep(np, dp);
-  np = newname(".o");
-  dp = newdep(np, dp);
-  np = newname(".mac");
-  dp = newdep(np, dp);
-  np = newname(".SUFFIXES");
-  newline(np, dp, (struct cmd *)0, 0);
-#endif
-
 #ifdef tos
 #define unix
 #endif

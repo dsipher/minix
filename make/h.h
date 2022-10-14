@@ -39,7 +39,6 @@
 
 *****************************************************************************/
 
-#ifdef unix
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -49,8 +48,6 @@
 #include <utime.h>
 #include <stdio.h>
 #include <limits.h>
-#endif
-
 #include <ctype.h>
 #include <stdio.h>
 #include <assert.h>
@@ -69,10 +66,8 @@
 #define FALSE  (0)
 #define max(a,b) ((a)>(b)?(a):(b))
 
-#ifdef unix
 #define DEFN1   "makefile"
 #define DEFN2   "Makefile"
-#endif
 
 #define TABCHAR '\t'
 

@@ -59,13 +59,10 @@ char *shell;
 {
   int number;
 
-#ifdef unix
   return system(string);
-#endif
 }
 
 
-#ifdef unix
 /*
  *    Make a file look very outdated after an error trying to make it.
  *    Don't remove, this keeps hard links intact.  (kjb)
@@ -78,7 +75,6 @@ int makeold(name) char *name;
 
   return utime(name, &a);
 }
-#endif
 
 
 static void tellstatus(out, name, status)
@@ -117,9 +113,7 @@ struct line *lp;
 
 
   if (*(shell = getmacro("SHELL")) == '\0')
-#ifdef unix
 	shell = "/bin/sh";
-#endif
 
   for (cp = lp->l_cmd; cp; cp = cp->c_next) {
 	execflag = TRUE;
@@ -162,13 +156,8 @@ struct line *lp;
 			tellstatus(stderr, myname, estat);
 			fprintf(stderr, "\n");
 			if (!(np->n_flag & N_PREC))
-#ifdef unix
 			    if (makeold(np->n_name) == 0)
 				fprintf(stderr,"%s: made '%s' look old.\n", myname, np->n_name);
-#else
-			    if (unlink(np->n_name) == 0)
-				fprintf(stderr,"%s: '%s' removed.\n", myname, np->n_name);
-#endif
 			if (!conterr) exit(estat != 0);
 			np->n_flag |= N_ERROR;
 			return;
@@ -195,7 +184,6 @@ struct name *np;
 void modtime(np)
 struct name *np;
 {
-#ifdef unix
   struct stat info;
   int r;
 
@@ -214,7 +202,6 @@ struct name *np;
 	np->n_time = info.st_mtime;
 	np->n_flag |= N_EXISTS;
   }
-#endif
 }
 
 
@@ -230,14 +217,12 @@ struct name *np;
   if (!domake || !silent) printf("touch(%s)\n", np->n_name);
 
   if (domake) {
-#ifdef unix
 	struct utimbuf   a;
 
 	a.actime = a.modtime = time((time_t *)NULL);
 	if (utime(np->n_name, &a) < 0)
 		printf("%s: '%s' not touched - non-existant\n",
 				myname, np->n_name);
-#endif
   }
 }
 

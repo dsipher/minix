@@ -171,8 +171,6 @@ void makerules()
  *	Some of the UNIX implicit rules
  */
 
-#ifdef unix
-
   setmacro("CC", "cc");
   setmacro("CFLAGS", "");
 
@@ -183,16 +181,6 @@ void makerules()
   cp = newcmd("$(CC) -c $(CFLAGS) $<", (struct cmd *)0);
   np = newname(".c.o");
   newline(np, (struct depend *)0, cp, 0);
-
-#if this_rule_is_a_bit_too_much_of_a_good_thing
-#ifdef MINIXPC
-  cp = newcmd("$(CC) $(CFLAGS) -i -o $@ $<", (struct cmd *)0);
-#else
-  cp = newcmd("$(CC) $(CFLAGS) -o $@ $<", (struct cmd *)0);
-#endif /* MINIXPC */
-  np = newname(".c");
-  newline(np, (struct depend *)0, cp, 0);
-#endif
 
   cp = newcmd("$(CC) -c $(CFLAGS) $<", (struct cmd *)0);
   np = newname(".s.o");
@@ -237,6 +225,4 @@ void makerules()
   dp = newdep(np, dp);
   np = newname(".SUFFIXES");
   newline(np, dp, (struct cmd *)0, 0);
-
-#endif /* unix */
 }

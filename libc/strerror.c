@@ -59,7 +59,7 @@ static const char * const errors[] =
     /* 21 */    0,
     /* 22 */    "invalid argument",                         /* EINVAL */
     /* 23 */    0,
-    /* 24 */    0,
+    /* 24 */    "too many open files",                      /* EMFILE */
     /* 25 */    "inappropriate ioctl",                      /* ENOTTY */
     /* 26 */    0,
     /* 27 */    0,

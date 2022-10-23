@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   utsname.c                                               jewel/os kernel
+   utsname.c                                                  ux/64 kernel
 
 ******************************************************************************
 
@@ -36,7 +36,7 @@
 
 struct utsname utsname =
 {
-    /* sysname */       "jewel",
+    /* sysname */       "ux/64",
     /* nodename */      "(noname)",
     /* release */       "0.1",
     /* version */       "(" CONFIG " " __DATE__ " " __TIME__ ")",

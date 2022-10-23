@@ -1,6 +1,6 @@
 ##############################################################################
 #
-#                                                   jewel/os standard library
+#                                                      ux/64 standard library
 #
 #                                   Copyright (c) 2021, 2022 Charles E. Youse
 #                                          See LICENSE file for more details.

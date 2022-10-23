@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# regression testing for the jewel/os assembler.
+# regression testing for the ux/64 assembler.
 #
 # for each of the TESTS, we build with `as', then with $AS.
 # extract the binary text portion of each and compare. they

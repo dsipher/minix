@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   freopen.c                                     jewel/os standard library
+   freopen.c                                        ux/64 standard library
 
 ******************************************************************************
 
@@ -50,7 +50,7 @@
    the file does not exist. The reason is given in fopen.c.
 
    (n.b. this comment, like that in fopen.c, is not applicable.
-   jewel does indeed support O_CREAT so we should use it - cey) */
+   ux/64 does indeed support O_CREAT so we should use it - cey) */
 
 FILE *freopen(const char *name, const char *mode, FILE *stream)
 {

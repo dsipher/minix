@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# simple regression testing for the jewel/os c compiler.
+# simple regression testing for the ux/64 c compiler.
 # we build the compiler, tools, and library three times.
 #
 # 1. the stage1 compiler is built with the system compiler, then

@@ -1,12 +1,12 @@
 # build.sh - basic build script to create a fresh
-# installation of jewel on $DEVICE of $BLOCKS blocks.
+# installation of ux/64 on $DEVICE of $BLOCKS blocks.
 
 # relies on tools built in $TOOLS by cross.sh.
 
 # this, like cross.sh, is a throwaway which will be
-# discarded once jewel/os is minimally self-hosting.
+# discarded once ux/64 is minimally self-hosting.
 
-TOOLS=~/xcc/jewel
+TOOLS=~/xcc/ux64
 DEVICE=$1
 BLOCKS=25600
 

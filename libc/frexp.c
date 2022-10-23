@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   frexp.c                                       jewel/os standard library
+   frexp.c                                          ux/64 standard library
 
                        Copyright (c) 2004 David Schultz <das@freebsd.org>.
   Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.

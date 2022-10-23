@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   modf.c                                        jewel/os standard library
+   modf.c                                           ux/64 standard library
 
     derived from SUNPRO libm, Copyright (C) 1993 by Sun Microsystems, Inc.
   Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.

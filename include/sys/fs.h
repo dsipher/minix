@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/fs.h                                         jewel/os system header
+   sys/fs.h                                            ux/64 system header
 
 ******************************************************************************
 
@@ -40,7 +40,7 @@
 #define FS_BLOCK_SIZE       4096
 #define FS_BLOCK_SHIFT      12
 
-/* the jewel/os filesystem is fairly conventional, with 4k blocks. we
+/* the ux/64 filesystem is fairly conventional, with 4k blocks. we
    choose this value to match our page size, which simplifies the vm
    system. as a bonus, it is the native sector size of modern disks.
 

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   dirent.h                                         jewel/os system header
+   dirent.h                                            ux/64 system header
 
 ******************************************************************************
 
@@ -46,7 +46,7 @@ typedef __ino_t ino_t;
 struct dirent
 {
     ino_t           d_ino;          /* inode associated with entry */
-    int             __pad0;         /* (high bits of ino_t, n/a in jewel) */
+    int             __pad0;         /* (high bits of ino_t, n/a in ux/64) */
     long            __pad1;         /* (linux calls this d_off) */
     unsigned short  d_reclen;       /* length of this dirent struct */
     char            d_name[];       /* NUL-terminated name of entry */

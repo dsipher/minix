@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# memset.s                                          jewel/os standard library
+# memset.s                                             ux/64 standard library
 #
 #         derived from public-domain version by J.T. Conklin <jtc@netbsd.org>
 #  and Open/NetBSD adaptation by Frank van der Linden <fvdl@wasabisytems.com>

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   clock.c                                                 jewel/os kernel
+   clock.c                                                    ux/64 kernel
 
 ******************************************************************************
 
@@ -204,7 +204,7 @@ rtcread(void)
    scheduling. note that we don't account for local APICs
    whose timers vary in frequency with power state (or even
    stop ticking). this doesn't apply to ATOM; that sort of
-   complexity is precisely what jewel is trying to escape. */
+   complexity is precisely what ux/64 is trying to escape. */
 
 void
 clkinit(void)

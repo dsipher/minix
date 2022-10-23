@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   main.c                                                  jewel/os kernel
+   main.c                                                     ux/64 kernel
 
 ******************************************************************************
 
@@ -88,7 +88,7 @@ init(void)
 
     for (;;) {
         sleep(&lbolt, P_STATE_COMA, 0);
-        printf("\7"); /* heartbeat */
+        printf(".\7"); /* heartbeat */
     }
 }
 
@@ -143,7 +143,7 @@ main(void)
     clkinit();
 
     /* the BSP APIC ID must be 0. this is a simplifying assumption we
-       use everywhere, and it's true every `reasonable' system. (jewel
+       use everywhere, and it's true every `reasonable' system. (ux/64
        is not 100% symmetric; in particular, the BSP fields all IRQs.) */
 
     if (CURCPU != 0) panic("bsp");

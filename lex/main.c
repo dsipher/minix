@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   main.c (tool to generate lexical analyzers)                jewel/os lex
+   main.c (tool to generate lexical analyzers)                   ux/64 lex
 
 ******************************************************************************
 

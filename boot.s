@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 /
-/  boot.s                                              jewel/os boot block
+/  boot.s                                                 ux/64 boot block
 /
 //////////////////////////////////////////////////////////////////////////////
 /
@@ -340,7 +340,7 @@ bad_fs_msg:         .ascii "invalid filesystem"
                     .byte 0
 
 banner_msg:         .byte 13, 10, 10
-                    .ascii "jewel: auto-boot in 3 seconds"
+                    .ascii "ux/64 auto-boot in 3 seconds"
                     .byte 13, 10
                     .ascii "(press a key for boot prompt)"
                     .byte 13, 10
@@ -399,7 +399,7 @@ s_bios_magic:       .short      0
 
 / begin second stage of boot, where we load the kernel.
 / first be a good citizen and make sure the CPU we're on
-/ can run jewel (otherwise we'll just crash gracelessly).
+/ can run ux/64 (otherwise we'll just crash gracelessly).
 
 second:             pushfl                      / copy EFLAGS
                     popl %eax                   / into %eax.

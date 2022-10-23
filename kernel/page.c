@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   page.c                                                  jewel/os kernel
+   page.c                                                     ux/64 kernel
 
 ******************************************************************************
 
@@ -42,7 +42,7 @@
 #include <sys/io.h>
 #include "config.h"
 
-/* compared to `modern' POSIX systems, memory management in jewel
+/* compared to `modern' POSIX systems, memory management in ux/64
    is deliberately primitive. except for early static allocations
    for block headers, process descriptors, etc. (see pginit), we
    deal exclusively in whole pages. we maintain linked lists of

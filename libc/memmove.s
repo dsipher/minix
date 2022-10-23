@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# memmove.s                                         jewel/os standard library
+# memmove.s                                            ux/64 standard library
 #
 #                                  derived from NetBSD's bcopy.S for AMD64 by
 #                     Wolfgang Solfrank (ws@tools.de), dsl@netbsd.org, et al.

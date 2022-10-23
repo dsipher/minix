@@ -24,7 +24,7 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		execvp.o execvpe.o fclose.o fflush.o fgetpos.o 		\
 		fgets.o fileno.o fopen.o fprintf.o fputc.o fputs.o 	\
 		fread.o freopen.o frexp.o fscanf.o fseek.o fsetpos.o	\
-		ftell.o fwrite.o getcwd.o getenv.o getopt.o 		\
+		ftell.o fwrite.o getcwd.o getenv.o getgrent.o getopt.o 	\
 		getpwent.o gets.o isalnum.o isalpha.o iscntrl.o 	\
 		isdigit.o isgraph.o islower.o isprint.o ispunct.o 	\
 		isspace.o isupper.o isxdigit.o isatty.o labs.o malloc.o \
@@ -87,6 +87,7 @@ ftell.o:		ftell.c
 fwrite.o:		fwrite.c
 getcwd.o:		getcwd.c
 getenv.o:		getenv.c
+getgrent.o:		getgrent.c
 getopt.o:		getopt.c
 getpwent.o:		getpwent.c
 gets.o:			gets.c

@@ -46,7 +46,6 @@
 #define TAR_EXTERN
 #include "tar.h"
 
-extern int  getoldopt();
 extern void read_and();
 extern void list_archive();
 extern void extract_archive();
@@ -71,6 +70,7 @@ options(argc, argv)
     register int    c;      /* Option letter */
 
     /* Set default option values */
+
     blocking = DEFBLOCKING;     /* From Makefile */
     ar_file = getenv("TAPE");   /* From environment, or */
     if (ar_file == 0)

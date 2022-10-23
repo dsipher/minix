@@ -223,6 +223,8 @@ void            names_notfound(void);
 void            decode_header(union record *header, struct stat *st,
                               int *stdp, int wantug);
 
+int             getoldopt(int argc, char **argv, char *optstring);
+
 #define  annorec(stream, msg)   anno(stream, msg, 0)    /* Cur rec */
 #define annofile(stream, msg)   anno(stream, msg, 1)    /* Saved rec */
 

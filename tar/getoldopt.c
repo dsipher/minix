@@ -32,32 +32,28 @@
 
 *****************************************************************************/
 
-/*
- * Plug-compatible replacement for getopt() for parsing tar-like
- * arguments.  If the first argument begins with "-", it uses getopt;
- * otherwise, it uses the old rules used by tar, dump, and ps.
- */
+/* plug-compatible replacement for getopt() for parsing
+   tar-like arguments. if the first argument begins with
+   "-", it uses getopt; otherwise, it uses the old rules. */
 
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
 int
-getoldopt(argc, argv, optstring)
-	int	argc;
-	char	**argv;
-	char	*optstring;
+getoldopt(int argc, char **argv, char *optstring)
 {
-	static char	*key;		/* Points to next keyletter */
-	static char	use_getopt;	/* !=0 if argv[1][0] was '-' */
+	static char	*key;		        /* points to next keyletter */
+	static char	use_getopt;	        /* !=0 if argv[1][0] was '-' */
 	char		c;
 	char		*place;
 
 	optarg = NULL;
 
-	if (key == NULL) {		/* First time */
+	if (key == NULL) {                  /* first call */
 		if (argc < 2) return EOF;
 		key = argv[1];
+
 		if (*key == '-')
 			use_getopt++;
 		else
@@ -68,10 +64,12 @@ getoldopt(argc, argv, optstring)
 		return getopt(argc, argv, optstring);
 
 	c = *key++;
+
 	if (c == '\0') {
-		key--;
+		--key;
 		return EOF;
 	}
+
 	place = strchr(optstring, c);
 
 	if (place == NULL || c == ':') {
@@ -79,7 +77,8 @@ getoldopt(argc, argv, optstring)
 		return('?');
 	}
 
-	place++;
+	++place;
+
 	if (*place == ':') {
 		if (optind < argc) {
 			optarg = argv[optind];
@@ -87,6 +86,7 @@ getoldopt(argc, argv, optstring)
 		} else {
 			fprintf(stderr, "%s: %c argument missing\n",
 				argv[0], c);
+
 			return('?');
 		}
 	}

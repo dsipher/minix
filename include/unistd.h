@@ -112,6 +112,11 @@ extern int chdir(const char *path);
 
 extern int close(int fildes);
 
+/* duplicate an open file descriptor */
+
+extern int dup(int fildes);
+extern int dup2(int fildes, int fildes2);
+
 /* launch a new executable - replace the current
    process with that specified. only execve() is
    actually a system call, the others are wrappers. */
@@ -143,6 +148,14 @@ extern int isatty(int fildes);
 #define SEEK_END    __SEEK_END      /* offset from end of file */
 
 extern off_t lseek(int fildes, off_t offset, int whence);
+
+/* create an inter-process channel */
+
+extern int pipe(int fildes[2]);
+
+/* wait for a signal */
+
+extern int pause(void);
 
 /* read to or write from a file */
 

@@ -148,6 +148,34 @@ _ioctl:         movl $16, %eax              # IOCTL
 _access:        movl $21, %eax              # ACCESS
                 jmp do_syscall
 
+# int pipe(int fildes[2]);
+
+.globl _pipe
+
+_pipe:          movl $22, %eax              # PIPE
+                jmp do_syscall
+
+# int dup(int fildes);
+
+.globl _dup
+
+_dup:           movl $32, %eax              # DUP
+                jmp do_syscall
+
+# int dup2(int fildes, int fildes2);
+
+.globl _dup2
+
+_dup2:          movl $33, %eax              # DUP2
+                jmp do_syscall
+
+# int pause(void);
+
+.globl _pause
+
+_pause:         movl $34, %eax              # PAUSE
+                jmp do_syscall
+
 # int nanosleep(const struct timespec *rqtp, struct timespec *rmtp);
 
 .globl _nanosleep

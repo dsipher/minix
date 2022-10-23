@@ -138,7 +138,14 @@ extern pid_t fork(void);
 
 /* get working directory name */
 
-char *getcwd(char *buf, size_t size);
+extern char *getcwd(char *buf, size_t size);
+
+/* get current/effective user/group ID */
+
+extern uid_t getuid(void);
+extern gid_t getgid(void);
+extern uid_t geteuid(void);
+extern gid_t getegid(void);
 
 /* get the current process ID */
 

@@ -291,6 +291,34 @@ _unlink:        movl $87, %eax              # UNLINK
 _umask:         movl $95, %eax              # UMASK
                 jmp do_syscall
 
+# int getuid(void);
+
+.globl _getuid
+
+_getuid:        movl $102, %eax             # GETUID
+                jmp do_syscall
+
+# int getgid(void);
+
+.globl _getgid
+
+_getgid:        movl $104, %eax             # GETGID
+                jmp do_syscall
+
+# int geteuid(void);
+
+.globl _geteuid
+
+_geteuid:       movl $107, %eax             # GETEUID
+                jmp do_syscall
+
+# int getegid(void);
+
+.globl _getegid
+
+_getegid:       movl $108, %eax             # GETEGID
+                jmp do_syscall
+
 # int utime(const char *path, const struct utimbuf *times);
 
 .globl _utime

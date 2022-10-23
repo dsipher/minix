@@ -40,7 +40,7 @@ static const char * const errors[] =
     /*  2 */    "no such file or directory",                /* ENOENT */
     /*  3 */    0,
     /*  4 */    "interrupted system call",                  /* EINTR */
-    /*  5 */    0,
+    /*  5 */    "input/output error",                       /* EIO */
     /*  6 */    0,
     /*  7 */    0,
     /*  8 */    0,

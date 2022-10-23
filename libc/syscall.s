@@ -270,6 +270,13 @@ _chdir:         movl $80, %eax              # CHDIR
 _rename:        movl $82, %eax              # RENAME
                 jmp do_syscall
 
+# int mkdir(const char *path, mode_t mode);
+
+.globl _mkdir
+
+_mkdir:         movl $83, %eax              # MKDIR
+                jmp do_syscall
+
 # int creat(const char *path, mode_t mode);
 
 .globl _creat
@@ -282,6 +289,20 @@ _creat:         movl $85, %eax              # CREAT
 .globl _unlink
 
 _unlink:        movl $87, %eax              # UNLINK
+                jmp do_syscall
+
+# int chmod(const char *pathname, mode_t mode);
+
+.globl _chmod
+
+_chmod:         movl $90, %eax              # CHMOD
+                jmp do_syscall
+
+# int fchmod(int fildes, mode_t mode);
+
+.globl _fchmod
+
+_fchmod:        movl $91, %eax              # FCHMOD
                 jmp do_syscall
 
 # int chown(const char *pathname, uid_t owner, gid_t group);

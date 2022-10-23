@@ -143,6 +143,15 @@ struct stat
 extern int stat(const char *path, struct stat *buf);
 extern int fstat(int fildes, struct stat *buf);
 
+/* change permissions of a file */
+
+int chmod(const char *pathname, mode_t mode);
+int fchmod(int fildes, mode_t mode);
+
+/* make a directory */
+
+int mkdir(const char *path, mode_t mode);
+
 /* set and get the file mode creation mask */
 
 extern mode_t umask(mode_t cmask);

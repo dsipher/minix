@@ -34,7 +34,7 @@
 #ifndef _TIME_H
 #define _TIME_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #ifndef __TIME_T
 #define __TIME_T

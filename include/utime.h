@@ -34,7 +34,7 @@
 #ifndef _UTIME_H
 #define _UTIME_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #ifndef __TIME_T
 #define __TIME_T

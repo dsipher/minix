@@ -34,7 +34,7 @@
 #ifndef _SIGNAL_H
 #define _SIGNAL_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #ifndef __PID_T
 #define __PID_T

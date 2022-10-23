@@ -34,7 +34,7 @@
 #ifndef _STRING_H
 #define _STRING_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #ifndef __SIZE_T
 #define __SIZE_T

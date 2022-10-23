@@ -34,7 +34,7 @@
 #ifndef _DIRENT_H
 #define _DIRENT_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #ifndef __INO_T
 #define __INO_T

@@ -34,7 +34,7 @@
 #ifndef _SYS_TYPES_H
 #define _SYS_TYPES_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #ifndef __CADDR_T
 #define __CADDR_T

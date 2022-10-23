@@ -34,7 +34,7 @@
 #ifndef _FCNTL_H
 #define _FCNTL_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #ifndef __MODE_T
 #define __MODE_T

@@ -34,7 +34,7 @@
 #ifndef _SYS_STAT_H
 #define _SYS_STAT_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #ifndef __DEV_T
 #define __DEV_T

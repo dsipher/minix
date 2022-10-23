@@ -41,7 +41,7 @@
 #ifndef _STDIO_H
 #define _STDIO_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #define NULL __NULL
 

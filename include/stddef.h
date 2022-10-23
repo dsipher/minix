@@ -34,7 +34,7 @@
 #ifndef _STDDEF_H
 #define _STDDEF_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #define NULL __NULL
 

@@ -34,7 +34,7 @@
 #ifndef _SYS_WAIT_H
 #define _SYS_WAIT_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #ifndef __PID_T
 #define __PID_T

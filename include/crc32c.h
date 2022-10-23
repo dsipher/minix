@@ -36,7 +36,7 @@
 
 /* we need size_t. until this object is properly integrated into
    the standard library, we use stddef.h from the host and `leak'
-   global names. we should use sys/jewel.h and __size_t below. */
+   global names. we should use sys/defs.h and __size_t below. */
 
 #include <stddef.h>
 

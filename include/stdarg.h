@@ -34,7 +34,7 @@
 #ifndef _STDARG_H
 #define _STDARG_H
 
-#include <sys/jewel.h>
+#include <sys/defs.h>
 
 #define __VA_ALIGNMENT  8
 

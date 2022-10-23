@@ -66,7 +66,6 @@ extern void *bsearch(const void *, const void *, size_t, size_t,
 #define EXIT_FAILURE    1
 
 extern void abort(void);
-extern void _exit(int);
 extern void exit(int);
 
 extern int abs(int);

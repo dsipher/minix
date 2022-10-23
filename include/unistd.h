@@ -112,6 +112,10 @@ extern int chdir(const char *path);
 
 extern int close(int fildes);
 
+/* raw exit system call (no cleanup) */
+
+extern void _exit(int status);
+
 /* duplicate an open file descriptor */
 
 extern int dup(int fildes);

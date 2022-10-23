@@ -42,16 +42,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-/*
- * Some people don't have a #define for these.
- */
-#ifndef O_BINARY
-#define O_BINARY    0
-#endif
-#ifndef O_NDELAY
-#define O_NDELAY    0
-#endif
-
 #ifdef NO_OPEN3
 /* We need the #define's even though we don't use them. */
 #include "open3.h"
@@ -168,9 +158,8 @@ extract_archive(void)
 
         /* FIXME, deal with protection issues */
     again_file:
-        openflag = f_keep?
-            O_BINARY|O_NDELAY|O_WRONLY|O_APPEND|O_CREAT|O_EXCL:
-            O_BINARY|O_NDELAY|O_WRONLY|O_APPEND|O_CREAT|O_TRUNC;
+        openflag = f_keep ? O_NONBLOCK|O_WRONLY|O_APPEND|O_CREAT|O_EXCL
+                          : O_NONBLOCK|O_WRONLY|O_APPEND|O_CREAT|O_TRUNC;
 #ifdef O_CTG
         /*
          * Contiguous files (on the Masscomp) have to specify

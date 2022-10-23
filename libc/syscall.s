@@ -284,6 +284,13 @@ _creat:         movl $85, %eax              # CREAT
 _unlink:        movl $87, %eax              # UNLINK
                 jmp do_syscall
 
+# int chown(const char *pathname, uid_t owner, gid_t group);
+
+.globl _chown
+
+_chown:         movl $92, %eax              # CHOWN
+                jmp do_syscall
+
 # mode_t umask(mode_t cmask);
 
 .globl _umask

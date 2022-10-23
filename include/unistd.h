@@ -112,6 +112,10 @@ extern int chdir(const char *path);
 
 extern int close(int fildes);
 
+/* change ownership of a file */
+
+extern int chown(const char *pathname, uid_t owner, gid_t group);
+
 /* raw exit system call (no cleanup) */
 
 extern void _exit(int status);

@@ -48,7 +48,7 @@
 
 extern union record *head;      /* Points to current tape header */
 extern struct stat hstat;       /* Stat struct corresponding */
-extern int head_standard;       /* Tape header is in ANSI format */
+extern int head_standard;       /* tape header is in POSIX format */
 
 /*
  * If there are no symbolic links, there is no lstat().  Use stat().
@@ -57,13 +57,8 @@ extern int head_standard;       /* Tape header is in ANSI format */
 #define lstat stat
 #endif
 
-extern void print_header();
-
 union record *start_header();
 void finish_header();
-void finduname();
-void findgname();
-char *name_next();
 void to_oct();
 void dump_file();
 
@@ -88,7 +83,7 @@ write_eot(void)
 }
 
 void
-create_archive()
+create_archive(void)
 {
     register char   *p;
 

@@ -49,7 +49,6 @@ union record *head;			/* Points to current archive header */
 struct stat hstat;			/* Stat struct corresponding */
 int head_standard;			/* Tape header is in ANSI format */
 
-void print_header();
 void skip_file();
 
 
@@ -57,8 +56,7 @@ void skip_file();
  * Main loop for reading an archive.
  */
 void
-read_and(do_something)
-	void (*do_something)();
+read_and(void (*do_something)(void))
 {
 	int status = 3;			/* Initial status at start of archive */
 	int prev_status;
@@ -129,8 +127,9 @@ read_and(do_something)
 /*
  * Print a header record, based on tar options.
  */
+
 void
-list_archive()
+list_archive(void)
 {
 
 	/* Save the record */
@@ -316,8 +315,7 @@ from_oct(digs, where)
 static int	ugswidth = UGSWIDTH;	/* Max width encountered so far */
 
 void
-print_header(outfile)
-	FILE *outfile;
+print_header(FILE *outfile)
 {
 	char modes[11];
 	char *timestamp;

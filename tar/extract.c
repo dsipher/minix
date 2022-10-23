@@ -72,7 +72,6 @@ extern union record *head;      /* Points to current tape header */
 extern struct stat hstat;       /* Stat struct corresponding */
 extern int head_standard;       /* Tape header is in ANSI format */
 
-extern void print_header();
 extern void skip_file();
 extern void pr_mkdir();
 
@@ -111,7 +110,7 @@ extr_init(void)
  * Extract a file from the archive.
  */
 void
-extract_archive()
+extract_archive(void)
 {
     register char *data;
     int fd, check, namelen, written, openflag;

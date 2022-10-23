@@ -224,6 +224,15 @@ void            decode_header(union record *header, struct stat *st,
                               int *stdp, int wantug);
 
 int             getoldopt(int argc, char **argv, char *optstring);
+void            read_and(void (*do_something)(void));
+void            list_archive(void);
+void            extract_archive(void);
+void            create_archive(void);
+void            print_header(FILE *outfile);
+void            finduname(char *uname, int uid);
+void            findgname(char *gname, int gid);
+char            *name_next(void);
+
 
 #define  annorec(stream, msg)   anno(stream, msg, 0)    /* Cur rec */
 #define annofile(stream, msg)   anno(stream, msg, 1)    /* Saved rec */

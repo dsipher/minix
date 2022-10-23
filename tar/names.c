@@ -60,10 +60,9 @@ static int  my_gid = -993;
  * This is ifdef'd because on Suns, it drags in about 38K of "yellow
  * pages" code, roughly doubling the program size.  Thanks guys.
  */
+
 void
-finduname(uname, uid)
-    char    uname[TUNMLEN];
-    int uid;
+finduname(char *uname, int uid)
 {
     struct passwd   *pw;
     extern struct passwd *getpwuid ();
@@ -99,9 +98,7 @@ finduid(char *uname)
 
 
 void
-findgname(gname, gid)
-    char    gname[TGNMLEN];
-    int gid;
+findgname(char *gname, int gid)
 {
     struct group    *gr;
     extern struct group *getgrgid ();

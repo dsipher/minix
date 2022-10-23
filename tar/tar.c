@@ -39,46 +39,61 @@
 #define DEFBLOCKING     20          /* default blocking factor */
 #define DEF_AR_FILE     "-"         /* if no archive file specified */
 
-/*
- * The following causes "tar.h" to produce definitions of all the
- * global variables, rather than just "extern" declarations of them.
- */
+/* the following causes "tar.h" to produce definitions of al lthe
+   global variables, rather than just "extern" declarations of them. */
+
 #define TAR_EXTERN
 #include "tar.h"
 
-extern void read_and();
-extern void list_archive();
-extern void extract_archive();
-extern void create_archive();
+static FILE     *namef;         /* file to read names from */
+static char     **n_argv;       /* argv used by name routines */
+static int      n_argc;         /* argc used by name routines */
+                                /* (they also use `optind' from getopt) */
 
-static FILE *namef;     /* File to read names from */
-static char **n_argv;   /* Argv used by name routines */
-static int  n_argc; /* Argc used by name routines */
-                /* They also use "optind" from getopt(). */
+/* usage. we should trim this down, this is what manpages are for */
 
-void    describe();
-
-/*
- * Parse the options for tar.
- */
-
-int
-options(argc, argv)
-    int argc;
-    char    **argv;
+static void
+describe(void)
 {
-    register int    c;      /* Option letter */
+    fputs(
+        "tar: valid options:\n"
+        "-b N    blocking factor N (block size = Nx512 bytes)\n"
+        "-B  reblock as we read (for reading 4.2BSD pipes)\n"
+        "-c  create an archive\n"
+        "-D  don't dump the contents of directories, just the directory\n"
+        "-f F read/write archive from file or device F (or hostname:/ForD)\n"
+        "-h  don't dump symbolic links; dump the files they point to\n"
+        "-i  ignore blocks of zeros in the archive, which normally mean EOF\n"
+        "-k  keep existing files, don't overwrite them from the archive\n"
+        "-l  stay in the local file system when creating an archive\n"
+        "-m  don't extract file modified time\n"
+        "-o  write an old V7 format archive, rather than POSIX format\n"
+        "-p  do extract all protection information\n"
+        "-R  dump record number within archive with each message\n"
+        "-s  list of names to extract is sorted to match the archive\n"
+        "-t  list a table of contents of an archive\n"
+        "-T F    get names to extract or create from file F\n"
+        "-v  verbosely list what files we process\n"
+        "-x  extract files from an archive\n"
+        "-z or Z run the archive through compress\n", stderr);
+}
 
-    /* Set default option values */
+/* parse options for tar */
 
-    blocking = DEFBLOCKING;     /* From Makefile */
-    ar_file = getenv("TAPE");   /* From environment, or */
+static int
+options(int argc, char **argv)
+{
+    int c;
+
+    /* set default option values */
+
+    blocking = DEFBLOCKING;
+    ar_file = getenv("TAPE");
+
     if (ar_file == 0)
-        ar_file = DEF_AR_FILE;  /* From Makefile */
+        ar_file = DEF_AR_FILE;
 
-    /* Parse options */
-    while ((c = getoldopt(argc, argv, "b:BcDf:hiklmopRstT:vxzZ")
-        ) != EOF) {
+    while ((c = getoldopt(argc, argv, "b:BcDf:hiklmopRstT:vxzZ")) != EOF) {
         switch (c) {
 
         case 'b':
@@ -114,14 +129,8 @@ options(argc, argv)
              */
             break;
 
-        case 'k':           /* Don't overwrite files */
-#ifdef NO_OPEN3
-            fprintf(stderr,
-                "tar: can't do -k option on this system\n");
-            exit(EX_ARGSBAD);
-#else
+        case 'k':               /* don't overwrite files */
             f_keep++;
-#endif
             break;
 
         case 'l':
@@ -132,7 +141,7 @@ options(argc, argv)
             f_modified++;
             break;
 
-        case 'o':           /* Generate old archive */
+        case 'o':               /* generate old archive */
             f_oldarch++;
             break;
 
@@ -141,11 +150,11 @@ options(argc, argv)
             break;
 
         case 'R':
-            f_sayblock++;       /* Print block #s for debug */
-            break;          /* of bad tar archives */
+            f_sayblock++;       /* print block #s for debug */
+            break;              /* of bad tar archives */
 
         case 's':
-            f_sorted_names++;   /* Names to extr are sorted */
+            f_sorted_names++;   /* names to extr are sorted */
             break;
 
         case 't':
@@ -166,8 +175,8 @@ options(argc, argv)
             f_extract++;
             break;
 
-        case 'z':       /* Easy to type */
-        case 'Z':       /* Like the filename extension .Z */
+        case 'z':               /* easy to type */
+        case 'Z':               /* like the filename extension .Z */
             f_compress++;
             break;
 
@@ -182,56 +191,12 @@ options(argc, argv)
 }
 
 
-/*
- * Print as much help as the user's gonna get.
- *
- * We have to sprinkle in the KLUDGE lines because too many compilers
- * cannot handle character strings longer than about 512 bytes.  Yuk!
- * In particular, MSDOS MSC 4.0 (and 5.0) and PDP-11 V7 Unix have this
- * problem.
- */
+/* set up to gather file names for tar. they
+   can either come from stdin or from argv. */
 
-void
-describe(void)
+static void
+name_init(int argc, char **argv)
 {
-    fputs("\
-tar: valid options:\n\
--b N    blocking factor N (block size = Nx512 bytes)\n\
--B  reblock as we read (for reading 4.2BSD pipes)\n\
--c  create an archive\n\
--D  don't dump the contents of directories, just the directory\n\
-", stderr); /* KLUDGE */ fputs("\
--f F    read/write archive from file or device F (or hostname:/ForD)\n\
--h  don't dump symbolic links; dump the files they point to\n\
--i  ignore blocks of zeros in the archive, which normally mean EOF\n\
--k  keep existing files, don't overwrite them from the archive\n\
--l  stay in the local file system (like dump(8)) when creating an archive\n\
-", stderr); /* KLUDGE */ fputs("\
--m  don't extract file modified time\n\
--o  write an old V7 format archive, rather than ANSI [draft 6] format\n\
--p  do extract all protection information\n\
--R  dump record number within archive with each message\n\
--s  list of names to extract is sorted to match the archive\n\
--t  list a table of contents of an archive\n\
-", stderr); /* KLUDGE */ fputs("\
--T F    get names to extract or create from file F\n\
--v  verbosely list what files we process\n\
--x  extract files from an archive\n\
--z or Z run the archive through compress(1)\n\
-", stderr);
-}
-
-
-/*
- * Set up to gather file names for tar.
- *
- * They can either come from stdin or from argv.
- */
-name_init(argc, argv)
-    int argc;
-    char    **argv;
-{
-
     if (f_namefile) {
         if (optind < argc) {
             fprintf(stderr, "tar: too many args with -T option\n");
@@ -254,40 +219,37 @@ name_init(argc, argv)
     }
 }
 
-/*
- * Get the next name from argv or the name file.
- *
- * Result is in static storage and can't be relied upon across two calls.
- */
+/* get the next name from argv or the name file. result is in
+ * static storage and can't be relied upon across two calls. */
+
 char *
-name_next()
+name_next(void)
 {
-    static char buffer[NAMSIZ+2];   /* Holding pattern */
-    register char   *p;
-    register char   *q;
+    static char buffer[NAMSIZ+2];   /* holding pattern */
+
+    char *p;
+    char *q;
 
     if (namef == NULL) {
-        /* Names come from argv, after options */
+        /* names come from argv, after options */
         if (optind < n_argc)
             return n_argv[optind++];
-        return (char *)NULL;
+
+        return NULL;
     }
+
     for (;;) {
         p = fgets(buffer, NAMSIZ+1 /*nl*/, namef);
-        if (p == NULL) return p;    /* End of file */
-        q = p+strlen(p)-1;      /* Find the newline */
-        if (q <= p) continue;       /* Ignore empty lines */
-        *q-- = '\0';            /* Zap the newline */
-        while (q > p && *q == '/')  *q-- = '\0'; /* Zap trailing /s */
+        if (p == NULL) return p;                    /* end of file */
+        q = p+strlen(p)-1;                          /* find the newline */
+        if (q <= p) continue;                       /* ignore empty lines */
+        *q-- = '\0';                                /* zap the newline */
+        while (q > p && *q == '/')  *q-- = '\0';    /* zap trailing /s */
         return p;
     }
-    /* NOTREACHED */
 }
 
-
-/*
- * Close the name file, if any.
- */
+/* close the name file, if any */
 
 void
 name_close(void)
@@ -295,33 +257,34 @@ name_close(void)
     if (namef != NULL && namef != stdin) fclose(namef);
 }
 
-/*
- * Add a name to the namelist.
- */
+/* add a name to the namelist */
 
 static void
 addname(char *name)
 {
-    register int    i;      /* Length of string */
-    register struct name    *p; /* Current struct pointer */
+    struct name *p;     /* current struct pointer */
+    int         i;      /* length of string */
 
     i = strlen(name);
     p = malloc((i + sizeof(struct name) - NAMSIZ));
+
     if (!p) {
         fprintf(stderr,"tar: cannot allocate mem for namelist entry\n");
         exit(EX_SYSTEM);
     }
+
     p->next = (struct name *)NULL;
     p->length = i;
     strncpy(p->name, name, i);
-    p->name[i] = '\0';  /* Null term */
+    p->name[i] = '\0';
     p->found = 0;
-    p->regexp = 0;      /* Assume not a regular expression */
-    p->firstch = 1;     /* Assume first char is literal */
+    p->regexp = 0;      /* assume not a regular expression */
+    p->firstch = 1;     /* assume first char is literal */
+
     if (strchr(name, '*') || strchr(name, '[') || strchr(name, '?')) {
-        p->regexp = 1;  /* No, it's a regexp */
+        p->regexp = 1;  /* no, it's a regexp */
         if (name[0] == '*' || name[0] == '[' || name[0] == '?')
-            p->firstch = 0;     /* Not even 1st char literal */
+            p->firstch = 0;     /* not even 1st char literal */
     }
 
     if (namelast) namelast->next = p;
@@ -329,37 +292,32 @@ addname(char *name)
     if (!namelist) namelist = p;
 }
 
-
-
-
-
-/*
- * Gather names in a list for scanning.
- * Could hash them later if we really care.
- *
- * If the names are already sorted to match the archive, we just
- * read them one by one.  name_gather reads the first one, and it
- * is called by name_match as appropriate to read the next ones.
- * At EOF, the last name read is just left in the buffer.
- * This option lets users of small machines extract an arbitrary
- * number of files by doing "tar t" and editing down the list of files.
- */
+/* gather names in a list for scanning. could hash them later if we really
+   care. if the names are already sorted to match the archive, we just read
+   them one by one. name_gather() reads the first one, and it is called by
+   name_match() as appropriate to read the next ones. at EOF, the last name
+   read is just left in the buffer. this option lets users of small machines
+   extract an arbitrary number of files by doing "tar t" and editing down the
+   list of files. */
 
 void
 name_gather(void)
 {
-    register char *p;
-    static struct name namebuf[1];  /* One-name buffer */
+    static struct name namebuf[1];  /* one-name buffer */
+
+    char *p;
 
     if (f_sorted_names) {
         p = name_next();
+
         if (p) {
             namebuf[0].length = strlen(p);
+
             if (namebuf[0].length >= sizeof namebuf[0].name) {
-                fprintf(stderr, "Argument name too long: %s\n",
-                    p);
+                fprintf(stderr, "Argument name too long: %s\n", p);
                 namebuf[0].length = (sizeof namebuf[0].name) - 1;
             }
+
             strncpy(namebuf[0].name, p, namebuf[0].length);
             namebuf[0].name[ namebuf[0].length ] = 0;
             namebuf[0].next = (struct name *)NULL;
@@ -370,69 +328,68 @@ name_gather(void)
         return;
     }
 
-    /* Non sorted names -- read them all in */
-    while (NULL != (p = name_next())) {
+    /* non sorted names -- read them all in */
+
+    while (NULL != (p = name_next()))
         addname(p);
-    }
 }
 
-/*
- * Match a name from an archive, p, with a name from the namelist.
- */
+/* match a name from an archive, p, with a name from the namelist. */
 
 int
 name_match(char *p)
 {
-    register struct name    *nlp;
-    register int        len;
+    struct name *nlp;
+    int         len;
 
 again:
-    if (0 == (nlp = namelist))  /* Empty namelist is easy */
+    if (0 == (nlp = namelist))  /* empty namelist is easy */
         return 1;
+
     len = strlen(p);
     for (; nlp != 0; nlp = nlp->next) {
-        /* If first chars don't match, quick skip */
+        /* if first chars don't match, quick skip */
+
         if (nlp->firstch && nlp->name[0] != p[0])
             continue;
 
-        /* Regular expressions */
+        /* regular expressions */
+
         if (nlp->regexp) {
             if (wildmat(p, nlp->name)) {
-                nlp->found = 1; /* Remember it matched */
-                return 1;   /* We got a match */
+                nlp->found = 1;         /* remember it matched */
+                return 1;               /* we got a match */
             }
             continue;
         }
 
-        /* Plain Old Strings */
-        if (nlp->length <= len      /* Archive len >= specified */
+        /* plain old strings */
+
+        if (nlp->length <= len      /* archive len >= specified */
          && (p[nlp->length] == '\0' || p[nlp->length] == '/')
                         /* Full match on file/dirname */
          && strncmp(p, nlp->name, nlp->length) == 0) /* Name compare */
         {
-            nlp->found = 1;     /* Remember it matched */
-            return 1;       /* We got a match */
+            nlp->found = 1;             /* remember it matched */
+            return 1;                   /* we got a match */
         }
     }
 
-    /*
-     * Filename from archive not found in namelist.
-     * If we have the whole namelist here, just return 0.
-     * Otherwise, read the next name in and compare it.
-     * If this was the last name, namelist->found will remain on.
-     * If not, we loop to compare the newly read name.
-     */
+    /* filename from archive not found in namelist.
+       if we have the whole namelist here, just return 0.
+       otherwise, read the next name in and compare it.
+       if this was the last name, namelist->found will remain on.
+       if not, we loop to compare the newly read name. */
+
     if (f_sorted_names && namelist->found) {
-        name_gather();      /* Read one more */
+        name_gather(); /* read one more */
         if (!namelist->found) goto again;
     }
+
     return 0;
 }
 
-
-/*
- * Print the names of things in the namelist that were not matched.
- */
+/* print the names of things in the namelist that were not matched */
 
 void
 names_notfound(void)
@@ -445,19 +402,10 @@ names_notfound(void)
             fprintf(stderr, "tar: %s not found in archive\n",
                 nlp->name);
         }
-        /*
-         * We could free() the list, but the process is about
-         * to die anyway, so save some CPU time.  Amigas and
-         * other similarly broken software will need to waste
-         * the time, though.
-         */
-#ifndef unix
-        if (!f_sorted_names)
-            free(nlp);
-#endif
     }
-    namelist = (struct name *)NULL;
-    namelast = (struct name *)NULL;
+
+    namelist = NULL;
+    namelast = NULL;
 
     if (f_sorted_names) {
         while (0 != (p = name_next()))
@@ -465,20 +413,12 @@ names_notfound(void)
     }
 }
 
-/*
- * Main routine for tar.
- */
+/* main routine for tar */
 
 int
 main(int argc, char **argv)
 {
-
-    /* Uncomment this message in particularly buggy versions...
-    fprintf(stderr,
-     "tar: You are running an experimental PD tar, maybe use /bin/tar.\n");
-     */
-
-    tar = "tar";        /* Set program name */
+    tar = "tar";        /* set program name */
 
     options(argc, argv);
     name_init(argc, argv);

@@ -51,6 +51,7 @@ extern int errno;
 #define EINVAL      22      /* invalid argument */
 #define EMFILE      24      /* too many open files */
 #define ENOTTY      25      /* not a typewriter */
+#define EPIPE       32      /* broken pipe */
 #define EDOM        33      /* math argument out of domain of func */
 #define ERANGE      34      /* math result not representable */
 

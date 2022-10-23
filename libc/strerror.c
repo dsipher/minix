@@ -67,7 +67,7 @@ static const char * const errors[] =
     /* 29 */    0,
     /* 30 */    0,
     /* 31 */    0,
-    /* 32 */    0,
+    /* 32 */    "broken pipe",                              /* EPIPE */
     /* 33 */    "argument not in domain",                   /* EDOM */
     /* 34 */    "result out of range"                       /* ERANGE */
 };

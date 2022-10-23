@@ -155,6 +155,10 @@ extern gid_t getegid(void);
 
 extern pid_t getpid(void);
 
+/* create a hard link */
+
+extern int link(const char *existing, const char *new);
+
 /* test for a terminal device */
 
 extern int isatty(int fildes);

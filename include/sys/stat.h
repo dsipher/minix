@@ -152,6 +152,10 @@ int fchmod(int fildes, mode_t mode);
 
 int mkdir(const char *path, mode_t mode);
 
+/* make a new special file */
+
+int mknod(const char *path, mode_t mode, dev_t dev);
+
 /* set and get the file mode creation mask */
 
 extern mode_t umask(mode_t cmask);

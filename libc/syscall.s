@@ -284,6 +284,13 @@ _mkdir:         movl $83, %eax              # MKDIR
 _creat:         movl $85, %eax              # CREAT
                 jmp do_syscall
 
+# int link(const char *existing, const char *new);
+
+.globl _link
+
+_link:          movl $86, %eax              # LINK
+                jmp do_syscall
+
 # int unlink(const char *path);
 
 .globl _unlink
@@ -352,6 +359,13 @@ _getegid:       movl $108, %eax             # GETEGID
 .globl _utime
 
 _utime:         movl $132, %eax             # UTIME
+                jmp do_syscall
+
+# int mknod(const char *path, mode_t mode, dev_t dev);
+
+.globl _mknod
+
+_mknod:         movl $133, %eax             # MKNOD
                 jmp do_syscall
 
 # time_t time(time_t *timer);

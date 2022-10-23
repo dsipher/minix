@@ -20,7 +20,7 @@ crt0.o:	crt0.s
 OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		__flushbuf.o __ieee_val.o __pow10.o __setjmp.o 		\
 		abort.o abs.o atoi.o atol.o brk.o bsearch.o 		\
-		calloc.o clearerr.o closedir.o ctime.o execlp.o 	\
+		calloc.o clearerr.o closedir.o ctime.o execl.o execlp.o \
 		execvp.o execvpe.o exit.o fclose.o fflush.o fgetpos.o	\
 		fgets.o fileno.o fopen.o fprintf.o fputc.o fputs.o 	\
 		fread.o freopen.o frexp.o fscanf.o fseek.o fsetpos.o	\
@@ -65,6 +65,7 @@ calloc.o:		calloc.c
 clearerr.o:		clearerr.c
 closedir.o:		closedir.c
 ctime.o:		ctime.c
+execl.o:		execl.c
 execlp.o:		execlp.c
 execvp.o:		execvp.c
 execvpe.o:		execvpe.c

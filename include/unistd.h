@@ -121,10 +121,12 @@ extern int dup2(int fildes, int fildes2);
    process with that specified. only execve() is
    actually a system call, the others are wrappers. */
 
-extern int execlp(const char *file, const char *arg0, ...);
 extern int execvp(const char *file, char *const argv[]);
 extern int execvpe(const char *file, char *const argv[], char *const envp[]);
 extern int execve(const char *path, char *const argv[], char *const envp[]);
+
+extern int execl(const char *path, const char *arg0, ...);
+extern int execlp(const char *file, const char *arg0, ...);
 
 /* create a new process */
 

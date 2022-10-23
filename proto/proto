@@ -18,8 +18,10 @@ include				0040755 0 0
 	errno.h			0100644 0 0 include/errno.h
 	fcntl.h			0100644 0 0 include/fcntl.h
 	float.h			0100644 0 0 include/float.h
+	grp.h			0100644 0 0 include/grp.h
 	limits.h		0100644 0 0 include/limits.h
 	math.h			0100644 0 0 include/math.h
+	pwd.h			0100644 0 0 include/pwd.h
 	signal.h		0100644 0 0 include/signal.h
 	stdarg.h		0100644 0 0 include/stdarg.h
 	stddef.h		0100644 0 0 include/stddef.h

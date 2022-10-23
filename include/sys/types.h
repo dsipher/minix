@@ -51,7 +51,13 @@ typedef __daddr_t daddr_t;
 typedef __dev_t dev_t;
 #endif /* __DEV_T */
 
-#define MAKEDEV(major, minor)   ((dev_t) ((major) << 16) | (minor))
+/* these device macros are decidedly non-standard,
+   but historically they've been here (although in
+   ages past, they were named in lowercase) */
+
+#define MAKEDEV(major, minor)   ((dev_t) (((major) << 16) | (minor)))
+#define MAJOR(dev)              (((dev) >> 16) & 0xFFFF)
+#define MINOR(dev)              ((dev) & 0xFFFF)
 
 #ifndef __GID_T
 #define __GID_T

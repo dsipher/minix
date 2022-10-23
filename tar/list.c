@@ -1,30 +1,46 @@
-/*
- * List a tar archive.
- *
- * Also includes support routines for reading a tar archive.
- *
- * Pubic Domain version written 26 Aug 1985 by John Gilmore (ihnp4!hoptoad!gnu).
- *
- * @(#)list.c 1.31 11/5/87 Public Domain - gnu
- */
-#include <stdio.h>
+/*****************************************************************************
+
+   list.c                                              ux/64 tape archiver
+
+******************************************************************************
+
+   Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
+   derived from John Gilmore's public domain tar (USENET, Nov 1987)
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+
+   THIS SOFTWARE IS  PROVIDED BY  THE COPYRIGHT  HOLDERS AND  CONTRIBUTORS
+   "AS  IS" AND  ANY EXPRESS  OR IMPLIED  WARRANTIES,  INCLUDING, BUT  NOT
+   LIMITED TO, THE  IMPLIED  WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS
+   FOR  A  PARTICULAR  PURPOSE  ARE  DISCLAIMED.  IN  NO  EVENT  SHALL THE
+   COPYRIGHT  HOLDER OR  CONTRIBUTORS BE  LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL,  SPECIAL, EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES (INCLUDING,
+   BUT NOT LIMITED TO,  PROCUREMENT OF  SUBSTITUTE GOODS OR SERVICES; LOSS
+   OF USE, DATA, OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY  OF LIABILITY, WHETHER IN CONTRACT,  STRICT LIABILITY, OR
+   TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE
+   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
+
+#include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
-#include <sys/types.h>
+#include <time.h>
 #include <sys/stat.h>
-#ifndef	MSDOS
-#include <sys/file.h>
-#endif	/* MSDOS */
-
-#ifdef USG
-#include <sys/sysmacros.h>	/* major() and minor() defined here */
-#endif
-
-char *ctime();				/* From libc.a */
-
-#define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
-
 #include "tar.h"
 #include "port.h"
+
+#define	isodigit(c)	( ((c) >= '0') && ((c) <= '7') )
 
 long from_oct();			/* Decode octal number */
 void demode();				/* Print file mode */
@@ -147,8 +163,9 @@ list_archive()
  * You must always userec(head) to skip past the header which this
  * routine reads.
  */
+
 int
-read_header()
+read_header(void)
 {
 	register int	i;
 	register long	sum, recsum;
@@ -215,11 +232,9 @@ read_header()
  * should decode it first, and other callers should decode it without uid/gid
  * before calling a routine, e.g. print_header, that assumes decoded data.
  */
-decode_header(header, st, stdp, wantug)
-	register union record	*header;
-	register struct stat	*st;
-	int	*stdp;
-	int	wantug;
+
+void
+decode_header(union record *header, struct stat *st, int *stdp, int wantug)
 {
 
 	st->st_mode = from_oct(8,  header->header.mode);
@@ -239,7 +254,7 @@ decode_header(header, st, stdp, wantug)
 		}
 		switch  (header->header.linkflag)
 		case LF_BLK: case LF_CHR:
-		    st->st_rdev = makedev(from_oct(8, header->header.devmajor),
+		    st->st_rdev = MAKEDEV(from_oct(8, header->header.devmajor),
 			 		  from_oct(8, header->header.devminor));
 	} else {
 		/* Old fashioned tar archive */
@@ -364,8 +379,8 @@ print_header(outfile)
 		case LF_CHR:
 		case LF_BLK:
 			(void)sprintf(size, "%d,%d",
-					major(hstat.st_rdev),
-					minor(hstat.st_rdev));
+					MAJOR(hstat.st_rdev),
+					MINOR(hstat.st_rdev));
 			break;
 
 		default:
@@ -501,3 +516,5 @@ demode(mode, string)
 			string[-1] = 'T';
 	*string = '\0';
 }
+
+/* vi: set ts=4 expandtab: */

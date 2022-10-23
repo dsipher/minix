@@ -1,132 +1,99 @@
-/*
- * @(#)wildmat.c 1.3 87/11/06	Public Domain.
- *
-From: rs@mirror.TMC.COM (Rich Salz)
-Newsgroups: net.sources
-Subject: Small shell-style pattern matcher
-Message-ID: <596@mirror.TMC.COM>
-Date: 27 Nov 86 00:06:40 GMT
+/*****************************************************************************
 
-There have been several regular-expression subroutines and one or two
-filename-globbing routines in mod.sources.  They handle lots of
-complicated patterns.  This small piece of code handles the *?[]\
-wildcard characters the way the standard Unix(tm) shells do, with the
-addition that "[^.....]" is an inverse character class -- it matches
-any character not in the range ".....".  Read the comments for more
-info.
+   wildmat.c                                           ux/64 tape archiver
 
-For my application, I had first ripped off a copy of the "glob" routine
-from within the find(1) source, but that code is bad news:  it recurses
-on every character in the pattern.  I'm putting this replacement in the
-public domain.  It's small, tight, and iterative.  Compile with -DTEST
-to get a test driver.  After you're convinced it works, install in
-whatever way is appropriate for you.
+******************************************************************************
 
-I would like to hear of bugs, but am not interested in additions; if I
-were, I'd use the code I mentioned above.
-*/
-/*
-**  Do shell-style pattern matching for ?, \, [], and * characters.
-**  Might not be robust in face of malformed patterns; e.g., "foo[a-"
-**  could cause a segmentation violation.
-**
-**  Written by Rich $alz, mirror!rs, Wed Nov 26 19:03:17 EST 1986.
-*/
+   Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
+   derived from John Gilmore's public domain tar (USENET, Nov 1987)
 
-/*
- * Modified 6Nov87 by John Gilmore (hoptoad!gnu) to return a "match"
- * if the pattern is immediately followed by a "/", as well as \0.
- * This matches what "tar" does for matching whole subdirectories.
- *
- * The "*" code could be sped up by only recursing one level instead
- * of two for each trial pattern, perhaps, and not recursing at all
- * if a literal match of the next 2 chars would fail.
- */
-#define TRUE		1
-#define FALSE		0
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
 
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+
+   THIS SOFTWARE IS  PROVIDED BY  THE COPYRIGHT  HOLDERS AND  CONTRIBUTORS
+   "AS  IS" AND  ANY EXPRESS  OR IMPLIED  WARRANTIES,  INCLUDING, BUT  NOT
+   LIMITED TO, THE  IMPLIED  WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS
+   FOR  A  PARTICULAR  PURPOSE  ARE  DISCLAIMED.  IN  NO  EVENT  SHALL THE
+   COPYRIGHT  HOLDER OR  CONTRIBUTORS BE  LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL,  SPECIAL, EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES (INCLUDING,
+   BUT NOT LIMITED TO,  PROCUREMENT OF  SUBSTITUTE GOODS OR SERVICES; LOSS
+   OF USE, DATA, OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY  OF LIABILITY, WHETHER IN CONTRACT,  STRICT LIABILITY, OR
+   TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE
+   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
+
+#include "tar.h"
 
 static int
-Star(s, p)
-    register char	*s;
-    register char	*p;
+star(char *s, char *p)
 {
-    while (wildmat(s, p) == FALSE)
-	if (*++s == '\0')
-	    return(FALSE);
-    return(TRUE);
-}
+    while (wildmat(s, p) == 0)
+        if (*++s == '\0')
+            return 0;
 
+    return 1;
+}
 
 int
-wildmat(s, p)
-    register char	*s;
-    register char	*p;
+wildmat(char *s, char *p)
 {
-    register int 	 last;
-    register int 	 matched;
-    register int 	 reverse;
+    int last;
+    int matched;
+    int reverse;
 
-    for ( ; *p; s++, p++)
-	switch (*p) {
-	    case '\\':
-		/* Literal match with following character; fall through. */
-		p++;
-	    default:
-		if (*s != *p)
-		    return(FALSE);
-		continue;
-	    case '?':
-		/* Match anything. */
-		if (*s == '\0')
-		    return(FALSE);
-		continue;
-	    case '*':
-		/* Trailing star matches everything. */
-		return(*++p ? Star(s, p) : TRUE);
-	    case '[':
-		/* [^....] means inverse character class. */
-		if (reverse = p[1] == '^')
-		    p++;
-		for (last = 0400, matched = FALSE; *++p && *p != ']'; last = *p)
-		    /* This next line requires a good C compiler. */
-		    if (*p == '-' ? *s <= *++p && *s >= last : *s == *p)
-			matched = TRUE;
-		if (matched == reverse)
-		    return(FALSE);
-		continue;
-	}
+    for (; *p; s++, p++)
+        switch (*p) {
+        case '\\':      /* literal match with following
+                           character; fall through. */
 
-    /* For "tar" use, matches that end at a slash also work. --hoptoad!gnu */
-    return(*s == '\0' || *s == '/');
-}
+                        p++;
 
+        default:        if (*s != *p)
+                            return 0;
 
-#ifdef	TEST
-#include <stdio.h>
+                        break;
 
-extern char	*gets();
+        case '?':       /* match anything */
 
+                        if (*s == '\0')
+                            return 0;
 
-main()
-{
-    char	 pattern[80];
-    char	 text[80];
+                        break;
 
-    while (TRUE) {
-	printf("Enter pattern:  ");
-	if (gets(pattern) == NULL)
-	    break;
-	while (TRUE) {
-	    printf("Enter text:  ");
-	    if (gets(text) == NULL)
-		exit(0);
-	    if (text[0] == '\0')
-		/* Blank line; go back and get a new pattern. */
-		break;
-	    printf("      %d\n", wildmat(text, pattern));
-	}
+        case '*':       /* trailing star matches everything */
+
+                        return (*++p ? star(s, p) : 1);
+
+        case '[':       /* character classes.  [^.....]
+                           means inverse character class. */
+
+                        if (reverse = p[1] == '^')
+                            p++;
+
+                        for (last = 0400, matched = 0;
+                             *++p && *p != ']'; last = *p)
+                        {
+                            /* this next line requires a good compiler */
+                            if (*p == '-' ? *s <= *++p && *s >= last
+                                          : *s == *p)
+                                matched = 1;
+
+                            if (matched == reverse)
+                                return 0;
+                        }
     }
-    exit(0);
+
+    return (*s == '\0' || *s == '/');
 }
-#endif	/* TEST */
+
+/* vi: set ts=4 expandtab: */

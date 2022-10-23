@@ -175,13 +175,6 @@ dupto(int from, int to, char *msg)
 void
 child_open(char *rem_host, char *rem_file)
 {
-
-#ifdef  MSDOS
-    fprintf(stderr,
-      "MSDOS %s cannot deal with compressed or remote archives\n", tar);
-    exit(EX_ARGSBAD);
-#else
-
     int pipes[2];
     int err;
     struct stat arstat;
@@ -350,7 +343,6 @@ child_open(char *rem_host, char *rem_file)
         perror("tar: cannot exec sh");
         exit(MAGIC_STAT);
     }
-#endif  /* MSDOS */
 }
 
 
@@ -394,10 +386,6 @@ open_archive(int read)
         perror(ar_file);
         exit(EX_BADARCH);
     }
-
-#ifdef  MSDOS
-    setmode(archive, O_BINARY);
-#endif
 
 gotit:
     if (blocksize == 0) {
@@ -620,7 +608,6 @@ close_archive(void)
     if (!ar_reading) flush_archive();
     (void) close(archive);
 
-#ifndef MSDOS
     if (childpid) {
         /*
          * Loop waiting for the right child to die, or for
@@ -657,7 +644,6 @@ close_archive(void)
             }
         }
     }
-#endif  /* MSDOS */
 }
 
 

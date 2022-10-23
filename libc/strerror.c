@@ -52,7 +52,7 @@ static const char * const errors[] =
     /* 14 */    "bad address",                              /* EFAULT */
     /* 15 */    0,
     /* 16 */    0,
-    /* 17 */    0,
+    /* 17 */    "file exists",                              /* EEXIST */
     /* 18 */    0,
     /* 19 */    0,
     /* 20 */    "not a directory",                          /* ENOTDIR */

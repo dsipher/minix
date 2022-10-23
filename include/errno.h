@@ -47,6 +47,7 @@ extern int errno;
 #define ENOMEM      12      /* out of memory */
 #define EACCES      13      /* permission denied */
 #define EFAULT      14      /* bad address */
+#define EEXIST      17      /* file exists */
 #define ENOTDIR     20      /* not a directory */
 #define EINVAL      22      /* invalid argument */
 #define EMFILE      24      /* too many open files */

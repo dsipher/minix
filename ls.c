@@ -74,12 +74,6 @@ char l_ifmt[] = "0pcCd?bB-?l?s???";
 #define minor(dev)  ((int) (((dev) >> 0) & 0xFF))
 #endif
 
-#ifdef S_IFLNK
-int (*status)(const char *file, struct stat *stp);
-#else
-#define status  stat
-#endif
-
 /* some terminals ignore more than 80 characters on a line. dumb ones wrap
    when the cursor hits the side. nice terminals don't wrap until they have
    to print the 81st character. whether we like it or not, no column 80. */
@@ -667,9 +661,6 @@ off_t countblocks(struct file *flist)
         switch (flist->mode & S_IFMT) {
         case S_IFDIR:
         case S_IFREG:
-#ifdef S_IFLNK
-        case S_IFLNK:
-#endif
             cb += nblocks(flist);
         }
         flist = flist->next;
@@ -702,9 +693,6 @@ int mark(struct file *f, int doit)
         case S_IFDIR:   c= '/'; break;
 #ifdef S_IFIFO
         case S_IFIFO:   c= '|'; break;
-#endif
-#ifdef S_IFLNK
-        case S_IFLNK:   c= '@'; break;
 #endif
 #ifdef S_IFSOCK
         case S_IFSOCK:  c= '='; break;
@@ -905,31 +893,9 @@ void print1(struct file *f, int col, int doit)
     if (doit) {
         printname(f->name);
         if (mark(f, 1) != 0) n++;
-#ifdef S_IFLNK
-        if ((field & L_LONG) && (f->mode & S_IFMT) == S_IFLNK) {
-            char *buf;
-            int r, didx;
-
-            buf= (char *) allocate(((size_t) f->size + 1)
-                            * sizeof(buf[0]));
-            addpath(&didx, f->name);
-            r = readlink(path, buf, (int) f->size);
-            delpath(didx);
-            if (r > 0) buf[r] = 0; else r = 1, strcpy(buf, "?");
-            printf(" -> ");
-            printname(buf);
-            free((void *) buf);
-            n += 4 + r;
-        }
-#endif
         spaces(f1width[W_NAME] - n);
     } else {
         if (mark(f, 0) != 0) n++;
-#ifdef S_IFLNK
-        if ((field & L_LONG) && (f->mode & S_IFMT) == S_IFLNK) {
-            n += 4 + (int) f->size;
-        }
-#endif
         maxise(&f1width[W_NAME], n + NSEP);
 
         for (n = 1; n < MAXFLDS; n++) width += f1width[n];
@@ -1037,13 +1003,10 @@ void listfiles(struct file *flist, enum depth depth, enum state state)
 
             addpath(&didx, (*afl)->name);
 
-            if ((r = status(path, &st)) < 0
-#ifdef S_IFLNK
-                && (status == lstat || lstat(path, &st) < 0)
-#endif
-            ) {
+            if ((r = stat(path, &st)) < 0) {
                 if (depth != SUBMERGED || errno != ENOENT)
                     report((*afl)->name);
+
                 delfile(popfile(afl));
             } else {
                 setstat(*afl, &st);
@@ -1183,10 +1146,6 @@ int main(int argc, char **argv)
     if (present('h')) field |= L_KMG;
 
     if (field & L_LONG) field &= ~L_EXTRA;
-
-#ifdef S_IFLNK
-    status = present('L') ? stat : lstat;
-#endif
 
     if (present('C')) {
         int t = istty ? 1 : open("/dev/tty", O_WRONLY);

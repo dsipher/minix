@@ -88,11 +88,6 @@ int (*status)(const char *file, struct stat *stp);
 #define BLOCK    512
 #endif
 
-/* Assume other systems have st_blocks. */
-#if !__minix
-#define ST_BLOCKS 1
-#endif
-
 /* Some terminals ignore more than 80 characters on a line.  Dumb ones wrap
  * when the cursor hits the side.  Nice terminals don't wrap until they have
  * to print the 81st character.  Whether we like it or not, no column 80.

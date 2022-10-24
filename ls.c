@@ -106,8 +106,6 @@ void *reallocate(void *a, size_t n)
 char allowed[] = "acdfghilnpqrstu1ACFLMRTX";
 char flags[sizeof(allowed)];
 
-char arg0flag[] = "cdfmrtx";    /* these in argv[0] go to upper case */
-
 void setflags(char *flgs)
 {
     int c;
@@ -1038,17 +1036,6 @@ int main(int argc, char **argv)
 
     if ((arg0= strrchr(argv[0], '/')) == nil) arg0 = argv[0]; else arg0++;
     argv++;
-
-    if (strcmp(arg0, "ls") != 0) {
-        char *p = arg0+1;
-
-        while (*p != 0) {
-            if (strchr(arg0flag, *p) != nil) *p += 'A' - 'a';
-            p++;
-        }
-
-        setflags(arg0+1);
-    }
 
     while (*argv != nil && (*argv)[0] == '-') {
         if ((*argv)[1] == '-' && (*argv)[2] == 0) {

@@ -43,7 +43,10 @@ extern char *__dtefg(char *, double *, int, int, int, int *);
 
 extern double modf(double, double *);
 extern double frexp(double, int *);
-extern double __pow10(int);
+
+/* internal library function. compute 10.0^exp. */
+
+extern double __pow10(int exp);
 
 /* an IEEE 754 double broken down in multiple
    ways for the convenience of c functions */

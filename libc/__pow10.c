@@ -38,6 +38,12 @@
 #include <float.h>
 #include <math.h>
 
+/* there are lots of ways to do this, with varying accuracy, size, and
+   speed. this version is nonrecursive and fast but uses somewhat bulky
+   tables. it does the common cases -16 < exp 16 by table lookup with no
+   fp arithmetic. it does 16 <= exp <= DBL_MAX_10_EXP with one multiply.
+   it does DBL_MIN_10_EXP <= exp <= -16 with one divide. */
+
 static const double powtab0[] = {
     1e0,    1e-1,   1e-2,   1e-3,   1e-4,   1e-5,   1e-6,   1e-7,
     1e-8,   1e-9,   1e-10,  1e-11,  1e-12,  1e-13,  1e-14,  1e-15

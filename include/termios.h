@@ -50,8 +50,6 @@ struct termios
     cc_t c_cc[NCCS];        /* control characters */
 };
 
-extern int tcgetattr(int, struct termios *);
-
 #endif /* _TERMIOS_H */
 
 /* vi: set ts=4 expandtab: */

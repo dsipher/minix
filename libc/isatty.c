@@ -33,12 +33,13 @@
 
 #include <unistd.h>
 #include <termios.h>
+#include <sys/ioctl.h>
 
 int isatty(int fildes)
 {
     struct termios dummy;
 
-    return (tcgetattr(fildes, &dummy) != -1);
+    return (ioctl(fildes, TCGETS, &dummy) != -1);
 }
 
 /* vi: set ts=4 expandtab: */

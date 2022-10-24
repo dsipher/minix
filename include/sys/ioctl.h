@@ -34,9 +34,9 @@
 #ifndef _SYS_IOCTL_H
 #define _SYS_IOCTL_H
 
-extern int ioctl(int, int, void *);
+extern int ioctl(int fildes, int cmd, void *arg);
 
-#define TCGETS  0x5401                  /* tcgetattr() */
+#define TCGETS      0x00005401      /* get terminal i/o struct (termios) */
 
 #endif /* _SYS_IOCTL_H */
 

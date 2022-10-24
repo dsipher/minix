@@ -34,9 +34,9 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		sprintf.o sscanf.o stdio.o strcat.o strchr.o strcmp.o 	\
 		strcpy.o strerror.o strftime.o strlen.o strncat.o 	\
 		strncmp.o strncpy.o strrchr.o strtof.o strtod.o 	\
-		strtol.o syscall.o system.o tcgetattr.o tmpnam.o 	\
-		tolower.o toupper.o ungetc.o vfprintf.o vfscanf.o 	\
-		vsprintf.o wait.o
+		strtol.o syscall.o system.o tmpnam.o tolower.o		\
+		toupper.o ungetc.o vfprintf.o vfscanf.o vsprintf.o	\
+		wait.o
 
 libc.a:		$(OBJS)
 	rm -f libc.a
@@ -149,7 +149,6 @@ strtod.o:		strtod.c
 strtof.o:		strtof.c
 strtol.o:		strtol.c
 system.o:		system.c
-tcgetattr.o:		tcgetattr.c
 tmpnam.o:		tmpnam.c
 tolower.o:		tolower.c
 toupper.o:		toupper.c

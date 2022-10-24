@@ -103,7 +103,7 @@ void *reallocate(void *a, size_t n)
     return a;
 }
 
-char allowed[] = "acdfghilnpqrstu1ACDFLMRTX";
+char allowed[] = "acdfghilnpqrstu1ACFLMRTX";
 char flags[sizeof(allowed)];
 
 char arg0flag[] = "cdfmrtx";    /* these in argv[0] go to upper case */
@@ -246,7 +246,6 @@ int field = 0;      /* effects triggered by certain flags */
 #define L_CTIME         0x0100      /* -c */
 #define L_MARK          0x0200      /* -F */
 #define L_MARKDIR       0x0400      /* -p */
-#define L_TYPE          0x0800      /* -D */
 #define L_LONGTIME      0x1000      /* -T */
 #define L_DIR           0x2000      /* -d */
 #define L_KMG           0x4000      /* -h */
@@ -507,11 +506,6 @@ int ctimecmp(struct file *f1, struct file *f2)
     return f1->ctime == f2->ctime ? 0 : f1->ctime > f2->ctime ? -1 : 1;
 }
 
-int typecmp(struct file *f1, struct file *f2)
-{
-    return IFMT(f1->mode) - IFMT(f2->mode);
-}
-
 int revcmp(struct file *f1, struct file *f2) { return (*rCMP)(f2, f1); }
 
 /* sort the files according to the flags */
@@ -540,13 +534,6 @@ static void sort(struct file **al)
             }
 
             if (present('r')) { rCMP = CMP; CMP = revcmp; }
-            mergesort(al);
-        }
-
-        /* separate by file type if so desired */
-
-        if (field & L_TYPE) {
-            CMP = typecmp;
             mergesort(al);
         }
     }
@@ -1098,7 +1085,6 @@ int main(int argc, char **argv)
     if (present('g')) field |= L_MODE | L_LONG | L_GROUP;
     if (present('F')) field |= L_MARK;
     if (present('p')) field |= L_MARKDIR;
-    if (present('D')) field |= L_TYPE;
     if (present('T')) field |= L_MODE | L_LONG | L_LONGTIME;
     if (present('d')) field |= L_DIR;
     if (present('h')) field |= L_KMG;

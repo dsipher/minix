@@ -58,6 +58,7 @@
 #define BLOCK       512         /* we pretend the block size is 512 */
 #define NSEP        3           /* number of spaces between columns */
 #define MAXCOLS     128         /* max # of files per line */
+#define NNAMES      32          /* # of buckets for name hash */
 
 /* the array l_ifmt[] is used in an 'ls -l' to map the type of a file to a
    letter. this is done so that ls can list any future file or device type
@@ -144,8 +145,6 @@ void report(char *f)
 
 #define UIDNAME(uid)    idname((uid), PASSWD)
 #define GIDNAME(gid)    idname((gid), GROUP)
-
-#define NNAMES  (1 << (sizeof(int) + sizeof(char *)))
 
 enum whatmap { PASSWD, GROUP };
 

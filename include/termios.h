@@ -50,6 +50,14 @@ struct termios
     cc_t c_cc[NCCS];        /* control characters */
 };
 
+struct winsize
+{
+    unsigned short  ws_row;     /* rows, in characters */
+    unsigned short  ws_col;     /* columns ........... */
+    unsigned short  ws_xpixel;  /* width, in pixels */
+    unsigned short  ws_ypixel;  /* height ......... */
+};
+
 #endif /* _TERMIOS_H */
 
 /* vi: set ts=4 expandtab: */

@@ -37,6 +37,7 @@
 extern int ioctl(int fildes, int cmd, void *arg);
 
 #define TCGETS      0x00005401      /* get terminal i/o struct (termios) */
+#define TIOCGWINSZ  0x00005413      /* ............ size struct (winsize) */
 
 #endif /* _SYS_IOCTL_H */
 

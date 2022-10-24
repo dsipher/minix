@@ -16,7 +16,7 @@ crt0.o:	crt0.s
 
 OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		__flushbuf.o __ieee_val.o __pow10.o __setjmp.o 		\
-		abort.o abs.o atoi.o atol.o brk.o bsearch.o 		\
+		abort.o abs.o atof.o atoi.o atol.o brk.o bsearch.o 	\
 		calloc.o clearerr.o closedir.o ctime.o execl.o		\
 		execlp.o execvp.o execvpe.o exit.o fclose.o 		\
 		fflush.o fgetc.o fgetpos.o fgets.o fileno.o 		\
@@ -56,6 +56,7 @@ __ieee_val.o:		__ieee_val.s
 __pow10.o:		__pow10.c
 abort.o:		abort.c
 abs.o:			abs.c
+atof.o:			atof.c
 atoi.o:			atoi.c
 atol.o:			atol.c
 brk.o:			brk.c

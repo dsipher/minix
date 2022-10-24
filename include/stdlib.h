@@ -53,6 +53,7 @@ typedef __size_t size_t;
 extern void (*__exit_cleanup)(void);
 extern void __stdio_cleanup(void);
 
+extern double atof(const char *);
 extern int atoi(const char *);
 extern long atol(const char *);
 

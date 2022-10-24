@@ -69,12 +69,6 @@ char l_ifmt[] = "0pcCd?bB-?l?s???";
 #define minor(dev)  ((int) (((dev) >> 0) & 0xFF))
 #endif
 
-#if !__minix
-#define SUPER_ID    uid /* Let -A flag be default for SUPER_ID == 0. */
-#else
-#define SUPER_ID    gid
-#endif
-
 #ifdef S_IFLNK
 int (*status)(const char *file, struct stat *stp);
 #else
@@ -1124,7 +1118,7 @@ int main(int argc, char **argv)
 
     if (istty) setflags("q");
 
-    if (SUPER_ID == 0 || present('a')) setflags("A");
+    if (uid == 0 || present('a')) setflags("A");
 
     if (present('i')) field|= L_INODE;
     if (present('s')) field|= L_BLOCKS;

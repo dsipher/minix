@@ -812,12 +812,6 @@ void print1(struct file *f, int col, int doit)
         switch (f->mode & S_IFMT) {
         case S_IFBLK:
         case S_IFCHR:
-#ifdef S_IFMPB
-        case S_IFMPB:
-#endif
-#ifdef S_IFMPC
-        case S_IFMPC:
-#endif
 #if __minix
             if (doit) {
                 printf("%*d, %3d ", f1width[W_SIZE] - 5,

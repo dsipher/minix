@@ -272,9 +272,6 @@ struct file {
     time_t      mtime;
     time_t      atime;
     time_t      ctime;
-#if ST_BLOCKS
-    long        blocks;
-#endif
 };
 
 void setstat(struct file *f, struct stat *stp)
@@ -289,9 +286,6 @@ void setstat(struct file *f, struct stat *stp)
     f->mtime=   stp->st_mtime;
     f->atime=   stp->st_atime;
     f->ctime=   stp->st_ctime;
-#if ST_BLOCKS
-    f->blocks=  stp->st_blocks;
-#endif
 }
 
 /* between PAST and FUTURE from now a time is printed, otherwise a year. */
@@ -452,19 +446,11 @@ char *cxsize(struct file *f)
 /* transform size of file to number of blocks. this was once a function that
    guessed the number of indirect blocks but that nonsense has been removed */
 
-#if ST_BLOCKS
-#define nblocks(f)  ((f)->blocks)
-#else
 #define nblocks(f)  (((f)->size + BLOCK-1) / BLOCK)
-#endif
 
 /* from number of blocks to kilobytes */
 
-#if BLOCK < 1024
 #define nblk2k(nb)  (((nb) + (1024 / BLOCK - 1)) / (1024 / BLOCK))
-#else
-#define nblk2k(nb)  ((nb) * (BLOCK / 1024))
-#endif
 
 static int (*CMP)(struct file *f1, struct file *f2);
 static int (*rCMP)(struct file *f1, struct file *f2);

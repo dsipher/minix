@@ -691,12 +691,6 @@ int mark(struct file *f, int doit)
     if (field & L_MARK) {
         switch (f->mode & S_IFMT) {
         case S_IFDIR:   c= '/'; break;
-#ifdef S_IFIFO
-        case S_IFIFO:   c= '|'; break;
-#endif
-#ifdef S_IFSOCK
-        case S_IFSOCK:  c= '='; break;
-#endif
         case S_IFREG:
             if (f->mode & (S_IXUSR | S_IXGRP | S_IXOTH)) c= '*';
             break;

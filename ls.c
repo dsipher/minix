@@ -65,7 +65,7 @@
 
 char l_ifmt[] = "0pcCd?bB-?l?s???";
 
-#define ifmt(mode)  l_ifmt[((mode) >> 12) & 0xF]
+#define IFMT(mode)  l_ifmt[((mode) >> 12) & 0xF]
 
 #define nil 0
 
@@ -144,8 +144,11 @@ void report(char *f)
     ex= 1;
 }
 
-/* two functions, uidname and gidname, translate ids to readable
+/* two `functions', UIDNAME and GIDNAME, translate ids to readable
    names. names are cached to avoid searching the password file. */
+
+#define UIDNAME(uid)    idname((uid), PASSWD)
+#define GIDNAME(gid)    idname((gid), GROUP)
 
 #define NNAMES  (1 << (sizeof(int) + sizeof(char *)))
 
@@ -203,10 +206,7 @@ char *idname(unsigned id, enum whatmap map)
     return i->name;
 }
 
-#define uidname(uid)    idname((uid), PASSWD)
-#define gidname(gid)    idname((gid), GROUP)
-
-/* path name construction: addpath adds a component, delpath removes it. the
+/* path name construction: addpath adds a component, DELPATH removes it. the
    string path is used throughout the program as the file under examination */
 
 char *path;                 /* path name constructed in path[] */
@@ -237,7 +237,7 @@ void addpath(int *didx, char *name)
                    statement will overwrite it at the next call. */
 }
 
-#define delpath(didx)   (path[pidx = didx]= 0)   /* remove component */
+#define DELPATH(didx)   (path[pidx = didx] = 0)     /* remove component */
 
 int field = 0;      /* effects triggered by certain flags */
 
@@ -339,7 +339,7 @@ char *permissions(struct file *f)
 {
     static char rwx[] = "drwxr-x--x";
 
-    rwx[0] = ifmt(f->mode);
+    rwx[0] = IFMT(f->mode);
 
     /* note that rwx[0] is a guess for the more alien file types.it
        is correct for BSD4.3 and derived systems. i just don't know
@@ -446,11 +446,11 @@ char *cxsize(struct file *f)
 /* transform size of file to number of blocks. this was once a function that
    guessed the number of indirect blocks but that nonsense has been removed */
 
-#define nblocks(f)  (((f)->size + BLOCK-1) / BLOCK)
+#define NBLOCKS(f)  (((f)->size + BLOCK-1) / BLOCK)
 
 /* from number of blocks to kilobytes */
 
-#define nblk2k(nb)  (((nb) + (1024 / BLOCK - 1)) / (1024 / BLOCK))
+#define NBLK2K(nb)  (((nb) + (1024 / BLOCK - 1)) / (1024 / BLOCK))
 
 static int (*CMP)(struct file *f1, struct file *f2);
 static int (*rCMP)(struct file *f1, struct file *f2);
@@ -515,7 +515,7 @@ int ctimecmp(struct file *f1, struct file *f2)
 
 int typecmp(struct file *f1, struct file *f2)
 {
-    return ifmt(f1->mode) - ifmt(f2->mode);
+    return IFMT(f1->mode) - IFMT(f2->mode);
 }
 
 int revcmp(struct file *f1, struct file *f2) { return (*rCMP)(f2, f1); }
@@ -647,7 +647,7 @@ off_t countblocks(struct file *flist)
         switch (flist->mode & S_IFMT) {
         case S_IFDIR:
         case S_IFREG:
-            cb += nblocks(flist);
+            cb += NBLOCKS(flist);
         }
         flist = flist->next;
     }
@@ -728,8 +728,8 @@ int numxwidth(unsigned long n)
 
 static int nsp = 0;     /* this many spaces have not been printed yet */
 
-#define spaces(n)   (nsp = (n))
-#define terpri()    (nsp = 0, putchar('\n'))    /* no trailing spaces */
+#define SPACES(n)   (nsp = (n))
+#define TERPRI()    (nsp = 0, putchar('\n'))    /* no trailing spaces */
 
 /* either compute the number of spaces needed to print
    file f (doit == 0) or really print it (doit == 1). */
@@ -752,7 +752,7 @@ void print1(struct file *f, int col, int doit)
     }
 
     if (field & L_BLOCKS) {
-        unsigned long nb = nblk2k(nblocks(f));
+        unsigned long nb = NBLK2K(NBLOCKS(f));
 
         if (doit) {
             printf("%*lu ", f1width[W_BLK], nb);
@@ -794,18 +794,18 @@ void print1(struct file *f, int col, int doit)
         if (!(field & L_GROUP)) {
             if (doit) {
                 printf("%-*s  ", f1width[W_UID],
-                            uidname(f->uid));
+                            UIDNAME(f->uid));
             } else {
                 maxise(&f1width[W_UID],
-                        strlen(uidname(f->uid)));
+                        strlen(UIDNAME(f->uid)));
                 width += 2;
             }
         }
 
         if (doit) {
-            printf("%-*s  ", f1width[W_GID], gidname(f->gid));
+            printf("%-*s  ", f1width[W_GID], GIDNAME(f->gid));
         } else {
-            maxise(&f1width[W_GID], strlen(gidname(f->gid)));
+            maxise(&f1width[W_GID], strlen(GIDNAME(f->gid)));
             width += 2;
         }
 
@@ -873,7 +873,7 @@ void print1(struct file *f, int col, int doit)
     if (doit) {
         printname(f->name);
         if (mark(f, 1) != 0) n++;
-        spaces(f1width[W_NAME] - n);
+        SPACES(f1width[W_NAME] - n);
     } else {
         if (mark(f, 0) != 0) n++;
         maxise(&f1width[W_NAME], n + NSEP);
@@ -951,7 +951,7 @@ int print(struct file *flist, int nplin, int doit)
             }
         }
 
-        if (doit) terpri();
+        if (doit) TERPRI();
     }
 
     return 1;
@@ -992,14 +992,14 @@ void listfiles(struct file *flist, enum depth depth, enum state state)
                 setstat(*afl, &st);
                 afl= &(*afl)->next;
             }
-            delpath(didx);
+            DELPATH(didx);
         }
     }
 
     sort(&flist);
 
     if (depth == SUBMERGED && (field & (L_BLOCKS | L_LONG))) {
-        printf("total %ld\n", nblk2k(countblocks(flist)));
+        printf("total %ld\n", NBLK2K(countblocks(flist)));
     }
 
     if (state == SINKING || depth == SURFACE1) {
@@ -1054,7 +1054,7 @@ void listfiles(struct file *flist, enum depth depth, enum state state)
                     state == FLOATING ? FLOATING : BOTTOM);
             }
 
-            delpath(didx);
+            DELPATH(didx);
         }
 
         delfile(popfile(&dlist));

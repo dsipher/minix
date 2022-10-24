@@ -69,11 +69,6 @@ char l_ifmt[] = "0pcCd?bB-?l?s???";
 
 #define nil 0
 
-#ifndef major
-#define major(dev)  ((int) (((dev) >> 8) & 0xFF))
-#define minor(dev)  ((int) (((dev) >> 0) & 0xFF))
-#endif
-
 /* some terminals ignore more than 80 characters on a line. dumb ones wrap
    when the cursor hits the side. nice terminals don't wrap until they have
    to print the 81st character. whether we like it or not, no column 80. */
@@ -812,24 +807,14 @@ void print1(struct file *f, int col, int doit)
         switch (f->mode & S_IFMT) {
         case S_IFBLK:
         case S_IFCHR:
-#if __minix
             if (doit) {
                 printf("%*d, %3d ", f1width[W_SIZE] - 5,
-                    major(f->rdev), minor(f->rdev));
+                    MAJOR(f->rdev), MINOR(f->rdev));
             } else {
                 maxise(&f1width[W_SIZE],
-                        numwidth(major(f->rdev)) + 5);
+                        numwidth(MAJOR(f->rdev)) + 5);
                 width++;
             }
-#else /* !__minix */
-            if (doit) {
-                printf("%*lX ", f1width[W_SIZE],
-                    (unsigned long) f->rdev);
-            } else {
-                maxise(&f1width[W_SIZE], numwidth(f->rdev));
-                width++;
-            }
-#endif /* !__minix */
             break;
         default:
             if (field & L_KMG) {

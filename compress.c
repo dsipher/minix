@@ -301,35 +301,11 @@ char **argv;
             if (do_decomp != 0)
             {           /* DECOMPRESSION */
                 /* Check for .Z suffix */
-#ifndef PCDOS
                 if (strcmp(*fileptr + strlen(*fileptr) - 2, DOTZ) != 0)
-#else
-                if (strcmp(*fileptr + strlen(*fileptr) - 1, DOTZ) != 0)
-#endif
                 {
                     /* No .Z: tack one on */
                     strcpy(tempname, *fileptr);
-#ifndef PCDOS
                     strcat(tempname, DOTZ);
-#else
-                    /* either tack one on or replace last character */
-                    {
-                        char *dot;
-                        if (NULL == (dot = strchr(tempname,'.')))
-                        {
-                            strcat(tempname,".Z");
-                        }
-                        else
-                        /* if there is a dot then either tack a z on
-                           or replace last character */
-                        {
-                            if (strlen(dot) < 4)
-                                strcat(tempname,DOTZ);
-                            else
-                                dot[3] = 'Z';
-                        }
-                    }
-#endif
                     *fileptr = tempname;
                 }
                 /* Open input file */
@@ -363,42 +339,7 @@ char **argv;
                 }
                 /* Generate output filename */
                 strcpy(ofname, *fileptr);
-#ifndef PCDOS
                 ofname[strlen(*fileptr) - 2] = '\0';  /* Strip off .Z */
-#else
-                /* kludge to handle various common three character extension */
-                {
-                    char *dot;
-                    char fixup = '\0';
-                    /* first off, map name to upper case */
-                    for (dot = ofname; *dot; dot++)
-                        *dot = toupper(*dot);
-                    if (NULL == (dot = strchr(ofname,'.')))
-                    {
-                        fprintf(stderr,"Bad filename %s\n",ofname);
-                        exit(1);
-                    }
-                    if (strlen(dot) == 4)
-                    /* we got three letter extensions */
-                    {
-                        if (strcmp(dot,".EXZ") == 0)
-                            fixup = 'E';
-                        else if (strcmp(dot,".COZ") == 0)
-                            fixup = 'M';
-                        else if (strcmp(dot,".BAZ") == 0)
-                            fixup = 'S';
-                        else if (strcmp(dot,".OBZ") == 0)
-                            fixup = 'J';
-                        else if (strcmp(dot,".SYZ") == 0)
-                            fixup = 'S';
-                        else if (strcmp(dot,".DOZ") == 0)
-                            fixup = 'C';
-
-                    }
-                    /* replace the Z */
-                    ofname[strlen(*fileptr) - 1] = fixup;
-                }
-#endif
             } else
             {                   /* COMPRESSION */
                 if (strcmp(*fileptr + strlen(*fileptr) - 2, DOTZ) == 0)
@@ -446,31 +387,8 @@ char **argv;
                     fprintf(stderr, "%s: filename too long for .Z\n", cp);
                     continue;
                 }
-#ifdef PCDOS
-                else
-                {
-                    /* either tack one on or replace last character */
-                    char *dot;
-                    if (NULL == (dot = strchr(cp,'.')))
-                    {
-                        strcat(cp,".Z");
-                    }
-                    else
-                    /* if there is a dot then either tack a z on
-                       or replace last character */
-                    {
-                        if (strlen(dot) < 4)
-                            strcat(cp,DOTZ);
-                        else
-                            dot[3] = 'Z';
-                    }
-                }
-#endif
 
-#ifndef PCDOS
-            /* PCDOS takes care of this above */
                 strcat(ofname, DOTZ);
-#endif
             }
             /* Check for overwrite of existing file */
             if (overwrite == 0 && zcat_flg == 0)
@@ -1165,7 +1083,7 @@ char *ifname, *ofname;
         perror(ifname);
         return;
     }
-#ifndef PCDOS
+
     /* meddling with UNIX-style file modes */
     if ((statbuf.st_mode & S_IFMT/*0170000*/) != S_IFREG/*0100000*/)
     {
@@ -1181,7 +1099,6 @@ char *ifname, *ofname;
         statbuf.st_nlink - 1);
         exit_stat = 1;
     } else
-#endif
     if (exit_stat == 2 && (!force))
     { /* No compression: remove file.Z */
         if(!quiet)
@@ -1189,21 +1106,12 @@ char *ifname, *ofname;
     } else
     {           /* ***** Successful Compression ***** */
         exit_stat = 0;
-#ifndef PCDOS
         mode = statbuf.st_mode & 07777;
-#else
-        mode = statbuf.st_attr & 07777;
-#endif
         if (chmod(ofname, mode))        /* Copy modes */
             perror(ofname);
-#ifndef PCDOS
         chown(ofname, statbuf.st_uid, statbuf.st_gid);  /* Copy ownership */
         timep[0] = statbuf.st_atime;
         timep[1] = statbuf.st_mtime;
-#else
-        timep[0] = statbuf.st_mtime;
-        timep[1] = statbuf.st_mtime;
-#endif
         utime(ofname, (struct utimbuf *)timep); /* Update last accessed and modified times */
 /*
         if (unlink(ifname))

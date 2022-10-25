@@ -237,7 +237,6 @@ char ofname [100];
 int verbose = 0;
 #endif /* DEBUG */
 
-#ifndef METAWARE
 #ifdef AZTEC86
 void
 #else
@@ -247,7 +246,6 @@ int
 (*bgnd_flag)();
 #else
 (*bgnd_flag)(int);
-#endif
 #endif
 
 int do_decomp = 0;
@@ -262,19 +260,11 @@ char **argv;
     char **filelist, **fileptr;
     char *cp;
     struct stat statbuf;
-#ifndef METAWARE
     if ( (bgnd_flag = signal ( SIGINT, SIG_IGN )) != SIG_IGN ) {
     signal ( SIGINT, onintr );
     signal ( SIGSEGV, oops );
     }
-#endif
 #ifdef AZTEC86
-#ifdef METAWARE
-    _setmode(NULL,_ALL_FILES_BINARY);
-    _setmode(stdin,_BINARY);
-    _setmode(stdout,_BINARY);
-    _setmode(stderr,_TEXT);
-#endif
     if (NULL == (htab = (long *)malloc(HTABSIZE)))
     {
         fprintf(stderr,"Can't allocate htab\n");
@@ -850,9 +840,6 @@ int  code;
     int r_off = offset, bits= n_bits;
     char * bp = buf;
 #ifndef BREAKHIGHC
-#ifdef METAWARE
-    int temp;
-#endif
 #endif
 #ifdef DEBUG
     if ( verbose )
@@ -883,13 +870,7 @@ int  code;
      * hunk on the left.
      */
 #ifndef BREAKHIGHC
-#ifdef METAWARE
-    *bp &= rmask[r_off];
-    temp = (code << r_off) & lmask[r_off];
-    *bp |= temp;
-#else
     *bp = (*bp & rmask[r_off]) | ((code << r_off) & lmask[r_off]);
-#endif
 #else
     *bp = (*bp & rmask[r_off]) | ((code << r_off) & lmask[r_off]);
 #endif
@@ -1161,7 +1142,6 @@ char *s, c;
 #endif
 
 
-#ifndef METAWARE
 #ifdef DEBUG
 printcodes()
 {
@@ -1283,7 +1263,6 @@ in_stack(c, stack_top)
 dump_tab() {}
 #endif /* DEBUG2 */
 #endif /* DEBUG */
-#endif /* METAWARE */
 
 void writeerr()
 {
@@ -1371,21 +1350,16 @@ char *ifname, *ofname;
  */
 int foreground()
 {
-#ifndef METAWARE
     if(bgnd_flag) { /* background? */
         return(0);
     } else {            /* foreground */
-#endif
         if(isatty(2)) {     /* and stderr is a tty */
             return(1);
         } else {
             return(0);
         }
-#ifndef METAWARE
     }
-#endif
 }
-#ifndef METAWARE
 void onintr (dummy)
 int dummy; /* to keep the compiler happy */
 {
@@ -1403,7 +1377,7 @@ int dummy; /* to keep the compiler happy */
     unlink ( ofname );
     exit ( 1 );
 }
-#endif
+
 void cl_block ()        /* table clear for block compress */
 {
     long int rat;

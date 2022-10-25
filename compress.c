@@ -1208,65 +1208,7 @@ void cl_block ()        /* table clear for block compress */
 void cl_hash(hsize)     /* reset code table */
     long hsize;
 {
-#ifdef AZTEC86
-#ifdef PCDOS
-    /* This function only in PC-DOS lib, not in MINIX lib */
-    memset(htab,-1, hsize * sizeof(long));
-#else
-/* MINIX and all non-PC machines do it this way */
-#ifndef XENIX_16    /* Normal machine */
-    long *htab_p = htab+hsize;
-#else
-    j;
-    long k = hsize;
-    long *htab_p;
-#endif
-    long i;
-    long m1 = -1;
-
-#ifdef XENIX_16
-    for(j=0; j<=8 && k>=0; j++,k-=8192)
-    {
-        i = 8192;
-        if(k < 8192)
-        {
-            i = k;
-        }
-        htab_p = &(htab[j][i]);
-        i -= 16;
-        if(i > 0)
-        {
-#else
-    i = hsize - 16;
-#endif
-        do
-        {               /* might use Sys V memset(3) here */
-            *(htab_p-16) = m1;
-            *(htab_p-15) = m1;
-            *(htab_p-14) = m1;
-            *(htab_p-13) = m1;
-            *(htab_p-12) = m1;
-            *(htab_p-11) = m1;
-            *(htab_p-10) = m1;
-            *(htab_p-9) = m1;
-            *(htab_p-8) = m1;
-            *(htab_p-7) = m1;
-            *(htab_p-6) = m1;
-            *(htab_p-5) = m1;
-            *(htab_p-4) = m1;
-            *(htab_p-3) = m1;
-            *(htab_p-2) = m1;
-            *(htab_p-1) = m1;
-            htab_p -= 16;
-        } while ((i -= 16) >= 0);
-#ifdef XENIX_16
-        }
-    }
-#endif
-    for ( i += 16; i > 0; i-- )
-        *--htab_p = m1;
-#endif
-#endif
+    memset(htab, -1, hsize * sizeof(long));
 }
 
 void prratio(stream, num, den)

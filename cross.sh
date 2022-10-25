@@ -51,7 +51,7 @@ $LINUX/bin/cc -o $UX64/bin/cc -DROOT=\"$UX64\" cc.c
 (cd lex; make clean; make CC=$LINUX/bin/cc \
 			YACC=$UX64/bin/yacc \
 			ROOT=$UX64; \
-	mv lex $UX64/bin; cp flex.skel $UX64/lib)
+	mv lex $UX64/bin; cp lex.skel $UX64/lib)
 
 (cd as; make clean; make CC=$LINUX/bin/cc \
 			 YACC=$UX64/bin/yacc \

@@ -135,7 +135,7 @@ char *malloc(), *realloc();
 #endif
 
 #ifndef DEFAULT_SKELETON_FILE
-#define DEFAULT_SKELETON_FILE ROOT "/lib/flex.skel"
+#define DEFAULT_SKELETON_FILE ROOT "/lib/lex.skel"
 #endif
 
 /* special chk[] values marking the slots taking by end-of-buffer and action

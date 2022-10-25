@@ -119,13 +119,6 @@
 # define HSIZE  5003        /* 80% occupancy */
 #endif
 
-#ifdef SIGNED_COMPARE_SLOW
-typedef unsigned long int count_int;
-typedef unsigned short int count_short;
-#else
-typedef long int      count_int;
-#endif
-
 #ifdef NO_UCHAR
  typedef char   char_type;
 #else
@@ -157,12 +150,12 @@ int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
 #endif /* COMPATIBLE */
 
 #ifndef AZTEC86
-    count_int htab [HSIZE];
+    long htab [HSIZE];
     unsigned short codetab [HSIZE];
 #else
-    count_int *htab;
+    long *htab;
     unsigned short *codetab;
-#   define HTABSIZE ((size_t)(HSIZE*sizeof(count_int)))
+#   define HTABSIZE ((size_t)(HSIZE*sizeof(long)))
 #   define CODETABSIZE ((size_t)(HSIZE*sizeof(unsigned short)))
 
 
@@ -171,7 +164,7 @@ int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
 #endif  /* XENIX_16 */
 
 int hsize = HSIZE;         /* for dynamic table sizing */
-count_int fsize;
+long fsize;
 
 /* to save much memory, we overlay the table used by compress() with those
    used by decompress(). the tab_prefix table is the same size and type as
@@ -205,7 +198,7 @@ void writeerr(void);
 void copystat(char *ifname, char *ofname);
 int foreground(void);
 void cl_block(void);
-void cl_hash(count_int hsize);
+void cl_hash(long hsize);
 void prratio(FILE *stream, long int num, long int den);
 void version(void);
 
@@ -230,7 +223,7 @@ int block_compress = BLOCK_MASK;
 int clear_flg = 0;
 long int ratio = 0;
 #define CHECK_GAP 10000 /* ratio check interval */
-count_int checkpoint = CHECK_GAP;
+long checkpoint = CHECK_GAP;
 
 /* the next two codes should not be changed lightly, as they
  * must not lie within the contiguous general code space. */
@@ -282,7 +275,7 @@ char **argv;
     _setmode(stdout,_BINARY);
     _setmode(stderr,_TEXT);
 #endif
-    if (NULL == (htab = (count_int *)malloc(HTABSIZE)))
+    if (NULL == (htab = (long *)malloc(HTABSIZE)))
     {
         fprintf(stderr,"Can't allocate htab\n");
         exit(1);
@@ -747,13 +740,9 @@ void compress()
     hshift = 8 - hshift;        /* set hash code range bound */
 
     hsize_reg = hsize;
-    cl_hash( (count_int) hsize_reg);        /* clear hash table */
+    cl_hash( (long) hsize_reg);        /* clear hash table */
 
-#ifdef SIGNED_COMPARE_SLOW
-    while ( (c = getc(stdin)) != (unsigned) EOF )
-#else
     while ( (c = getc(stdin)) != EOF )
-#endif
     {
         in_count++;
         fcode = (long) (((long) c << maxbits) + ent);
@@ -783,16 +772,12 @@ nomatch:
         output ( ent );
         out_count++;
         ent = c;
-#ifdef SIGNED_COMPARE_SLOW
-        if ( (unsigned) free_ent < (unsigned) maxmaxcode)
-#else
         if ( free_ent < maxmaxcode )
-#endif
         {
             codetabof (i) = free_ent++; /* code -> hashtable */
             htabof (i) = fcode;
         }
-        else if ( (count_int)in_count >= checkpoint && block_compress )
+        else if ( (long)in_count >= checkpoint && block_compress )
             cl_block ();
     }
     /*
@@ -1043,11 +1028,7 @@ void decompress() {
     /*
      * Generate output characters in reverse order
      */
-#ifdef SIGNED_COMPARE_SLOW
-    while ( ((unsigned long)code) >= ((unsigned long)256) ) {
-#else
     while ( code >= 256 ) {
-#endif
         *stackp++ = tab_suffixof(code);
         code = tab_prefixof(code);
     }
@@ -1454,7 +1435,7 @@ void cl_block ()        /* table clear for block compress */
     if(verbose)
         dump_tab(); /* dump string table */
 #endif
-    cl_hash ( (count_int) hsize );
+    cl_hash ( (long) hsize );
     free_ent = FIRST;
     clear_flg = 1;
     output ( CLEAR );
@@ -1466,20 +1447,20 @@ void cl_block ()        /* table clear for block compress */
 }
 
 void cl_hash(hsize)     /* reset code table */
-    count_int hsize;
+    long hsize;
 {
 #ifdef AZTEC86
 #ifdef PCDOS
     /* This function only in PC-DOS lib, not in MINIX lib */
-    memset(htab,-1, hsize * sizeof(count_int));
+    memset(htab,-1, hsize * sizeof(long));
 #else
 /* MINIX and all non-PC machines do it this way */
 #ifndef XENIX_16    /* Normal machine */
-    count_int *htab_p = htab+hsize;
+    long *htab_p = htab+hsize;
 #else
     j;
     long k = hsize;
-    count_int *htab_p;
+    long *htab_p;
 #endif
     long i;
     long m1 = -1;
@@ -1562,9 +1543,6 @@ void version()
 #endif
 #ifdef NO_UCHAR
     fprintf(stderr, "NO_UCHAR, ");
-#endif
-#ifdef SIGNED_COMPARE_SLOW
-    fprintf(stderr, "SIGNED_COMPARE_SLOW, ");
 #endif
 #ifdef XENIX_16
     fprintf(stderr, "XENIX_16, ");

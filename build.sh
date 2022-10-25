@@ -37,6 +37,7 @@ done
 (cd cpp; make)
 (cd lex; make)
 (cd make; make)
+(cd yacc; make)
 
 make ar
 make ld

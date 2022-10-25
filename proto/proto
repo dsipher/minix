@@ -11,7 +11,8 @@ bin 				0040755 0 0
 	make			0100555 0 0 make/make
 	mkboot			0100555 0 0 mkboot
 	mkfs			0100555 0 0 mkfs
-	nm			0100555 0 0 nm				$
+	nm			0100555 0 0 nm
+	yacc			0100555 0 0 yacc/yacc			$
 
 dev 				0040755 0 0 				$
 

@@ -839,8 +839,6 @@ int  code;
      */
     int r_off = offset, bits= n_bits;
     char * bp = buf;
-#ifndef BREAKHIGHC
-#endif
 #ifdef DEBUG
     if ( verbose )
         fprintf( stderr, "%5d%c", code,
@@ -869,11 +867,7 @@ int  code;
      * Since code is always >= 8 bits, only need to mask the first
      * hunk on the left.
      */
-#ifndef BREAKHIGHC
     *bp = (*bp & rmask[r_off]) | ((code << r_off) & lmask[r_off]);
-#else
-    *bp = (*bp & rmask[r_off]) | ((code << r_off) & lmask[r_off]);
-#endif
     bp++;
     bits -= (8 - r_off);
     code >>= (8 - r_off);

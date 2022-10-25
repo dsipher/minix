@@ -119,12 +119,7 @@
 # define HSIZE  5003        /* 80% occupancy */
 #endif
 
-#ifdef NO_UCHAR
- typedef char   char_type;
-#else
- typedef    unsigned char   char_type;
-#endif /* UCHAR */
-char_type magic_header[] = "\037\235";  /* 1F 9D */
+unsigned char magic_header[] = "\037\235";  /* 1F 9D */
 
 /* defines for third byte of header */
 
@@ -171,11 +166,11 @@ long fsize;
 
 #define tab_prefixof(i) codetabof(i)
 #ifdef XENIX_16
-# define tab_suffixof(i)    ((char_type *)htab[(i)>>15])[(i) & 0x7fff]
-# define de_stack       ((char_type *)(htab2))
+# define tab_suffixof(i)    ((unsigned char *)htab[(i)>>15])[(i) & 0x7fff]
+# define de_stack       ((unsigned char *)(htab2))
 #else   /* Normal machine */
-# define tab_suffixof(i)    ((char_type *)(htab))[i]
-# define de_stack       ((char_type *)&tab_suffixof(1<<BITS))
+# define tab_suffixof(i)    ((unsigned char *)(htab))[i]
+# define de_stack       ((unsigned char *)&tab_suffixof(1<<BITS))
 #endif  /* XENIX_16 */
 
 int free_ent = 0;          /* first unused entry */
@@ -814,8 +809,8 @@ nomatch:
 static char buf[BITS];
 
 #ifndef vax
-char_type lmask[9] = {0xff, 0xfe, 0xfc, 0xf8, 0xf0, 0xe0, 0xc0, 0x80, 0x00};
-char_type rmask[9] = {0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff};
+unsigned char lmask[9] = {0xff, 0xfe, 0xfc, 0xf8, 0xf0, 0xe0, 0xc0, 0x80, 0x00};
+unsigned char rmask[9] = {0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff};
 #endif /* vax */
 void output( code )
 int  code;
@@ -950,7 +945,7 @@ int  code;
  */
 
 void decompress() {
-    char_type *stackp;
+    unsigned char *stackp;
     int finchar;
     int code, oldcode, incode;
 
@@ -960,7 +955,7 @@ void decompress() {
     maxcode = MAXCODE(n_bits = INIT_BITS);
     for ( code = 255; code >= 0; code-- ) {
     tab_prefixof(code) = 0;
-    tab_suffixof(code) = (char_type)code;
+    tab_suffixof(code) = (unsigned char)code;
     }
     free_ent = ((block_compress) ? FIRST : 256 );
 
@@ -1045,9 +1040,9 @@ getcode()
      */
     int code;
     static int offset = 0, size = 0;
-    static char_type buf[BITS];
+    static unsigned char buf[BITS];
     int r_off, bits;
-    char_type *bp = buf;
+    unsigned char *bp = buf;
 
     if ( clear_flg > 0 || offset >= size || free_ent > maxcode )
     {
@@ -1087,21 +1082,13 @@ getcode()
     bp += (r_off >> 3);
     r_off &= 7;
     /* Get first part (low order bits) */
-#ifdef NO_UCHAR
-    code = ((*bp++ >> r_off) & rmask[8 - r_off]) & 0xff;
-#else
     code = (*bp++ >> r_off);
-#endif /* NO_UCHAR */
     bits -= (8 - r_off);
     r_off = 8 - r_off;      /* now, offset into code word */
     /* Get any 8 bit parts in the middle (<=1 for up to 16 bits). */
     if ( bits >= 8 )
     {
-#ifdef NO_UCHAR
-        code |= (*bp++ & 0xff) << r_off;
-#else
         code |= *bp++ << r_off;
-#endif /* NO_UCHAR */
         r_off += 8;
         bits -= 8;
     }
@@ -1499,9 +1486,6 @@ void version()
 #endif
 #ifdef _MINIX
     fprintf(stderr, "MINIX, ");
-#endif
-#ifdef NO_UCHAR
-    fprintf(stderr, "NO_UCHAR, ");
 #endif
 #ifdef XENIX_16
     fprintf(stderr, "XENIX_16, ");

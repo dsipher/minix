@@ -119,15 +119,6 @@
 # define HSIZE  5003        /* 80% occupancy */
 #endif
 
-/*
- * a code_int must be able to hold 2**BITS values of type int, and also -1
- */
-#if BITS > 15
-typedef long int    code_int;
-#else
-typedef int     code_int;
-#endif
-
 #ifdef SIGNED_COMPARE_SLOW
 typedef unsigned long int count_int;
 typedef unsigned short int count_short;
@@ -156,8 +147,8 @@ char_type magic_header[] = "\037\235";  /* 1F 9D */
 
 int n_bits;                         /* number of bits/code */
 int maxbits = DEFAULTBITS;          /* user settable max # bits/code */
-code_int maxcode;                   /* maximum code, given n_bits */
-code_int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
+int maxcode;                   /* maximum code, given n_bits */
+int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
 
 #ifdef COMPATIBLE       /* But wrong! */
 # define MAXCODE(n_bits)    (1 << (n_bits) - 1)
@@ -179,7 +170,7 @@ code_int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
 #define codetabof(i)    codetab[i]
 #endif  /* XENIX_16 */
 
-code_int hsize = HSIZE;         /* for dynamic table sizing */
+int hsize = HSIZE;         /* for dynamic table sizing */
 count_int fsize;
 
 /* to save much memory, we overlay the table used by compress() with those
@@ -198,7 +189,7 @@ count_int fsize;
 # define de_stack       ((char_type *)&tab_suffixof(1<<BITS))
 #endif  /* XENIX_16 */
 
-code_int free_ent = 0;          /* first unused entry */
+int free_ent = 0;          /* first unused entry */
 int exit_stat = 0;
 
 int main(int argc, char **argv);
@@ -206,10 +197,10 @@ void Usage(void);
 void compress(void);
 void onintr(int dummy);
 void oops(int dummy);
-void output(code_int code);
+void output(int code);
 int foreground(void);
 void decompress(void);
-code_int getcode(void);
+int getcode(void);
 void writeerr(void);
 void copystat(char *ifname, char *ofname);
 int foreground(void);
@@ -716,15 +707,15 @@ long int out_count = 0;         /* # of codes output (for debugging) */
 void compress()
 {
     long fcode;
-    code_int i = 0;
+    int i = 0;
     int c;
-    code_int ent;
+    int ent;
 #ifdef XENIX_16
-    code_int disp;
+    int disp;
 #else   /* Normal machine */
     int disp;
 #endif
-    code_int hsize_reg;
+    int hsize_reg;
     int hshift;
 
 #ifndef COMPATIBLE
@@ -789,7 +780,7 @@ probe:
         if ( (long)htabof (i) > 0 )
             goto probe;
 nomatch:
-        output ( (code_int) ent );
+        output ( ent );
         out_count++;
         ent = c;
 #ifdef SIGNED_COMPARE_SLOW
@@ -807,9 +798,9 @@ nomatch:
     /*
      * Put out the final code.
      */
-    output( (code_int)ent );
+    output( ent );
     out_count++;
-    output( (code_int)-1 );
+    output( -1 );
 
     /*
      * Print out stats on stderr
@@ -861,7 +852,7 @@ char_type lmask[9] = {0xff, 0xfe, 0xfc, 0xf8, 0xf0, 0xe0, 0xc0, 0x80, 0x00};
 char_type rmask[9] = {0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff};
 #endif /* vax */
 void output( code )
-code_int  code;
+int  code;
 {
 #ifdef DEBUG
     static int col = 0;
@@ -1010,7 +1001,7 @@ code_int  code;
 void decompress() {
     char_type *stackp;
     int finchar;
-    code_int code, oldcode, incode;
+    int code, oldcode, incode;
 
     /*
      * As above, initialize the first 256 entries in the table.
@@ -1098,14 +1089,14 @@ void decompress() {
  *  code or -1 is returned.
  */
 
-code_int
+int
 getcode()
 {
     /*
      * On the VAX, it is important to have the declarations
      * in exactly the order given, or the asm will break.
      */
-    code_int code;
+    int code;
     static int offset = 0, size = 0;
     static char_type buf[BITS];
     int r_off, bits;
@@ -1196,7 +1187,7 @@ printcodes()
     /*
      * Just print out codes from input file.  For debugging.
      */
-    code_int code;
+    int code;
     int col = 0, bits;
 
     bits = n_bits = INIT_BITS;
@@ -1220,7 +1211,7 @@ printcodes()
     exit( 0 );
 }
 #ifdef DEBUG2
-code_int sorttab[1<<BITS];  /* sorted pointers into htab */
+int sorttab[1<<BITS];  /* sorted pointers into htab */
 #define STACK_SIZE  500
 static char stack[STACK_SIZE];
 /* dumptab doesn't use main stack now -prevents distressing crashes */
@@ -1466,7 +1457,7 @@ void cl_block ()        /* table clear for block compress */
     cl_hash ( (count_int) hsize );
     free_ent = FIRST;
     clear_flg = 1;
-    output ( (code_int) CLEAR );
+    output ( CLEAR );
 #ifdef DEBUG
     if(debug)
             fprintf ( stderr, "clear\n" );

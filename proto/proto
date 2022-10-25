@@ -3,7 +3,8 @@ asrock				0100644 0 0 proto/asrock
 vbox   				0100644 0 0 proto/vbox
 
 bin 				0040755 0 0
-	make			0100555 0 0 proto/make			$
+	as			0100555 0 0 as/as
+	make			0100555 0 0 make/make 			$
 
 dev 				0040755 0 0 				$
 

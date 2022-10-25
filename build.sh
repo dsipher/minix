@@ -6,6 +6,7 @@
 # this, like cross.sh, is a throwaway which will be
 # discarded once ux/64 is minimally self-hosting.
 
+HOST=~/xcc/linux
 TOOLS=~/xcc/ux64
 DEVICE=$1
 BLOCKS=25600
@@ -13,8 +14,12 @@ BLOCKS=25600
 export AS=$TOOLS/bin/as
 export CC=$TOOLS/bin/cc
 export LD=$TOOLS/bin/ld
+export LEX=$TOOLS/bin/lex
+export YACC=$TOOLS/bin/yacc
 export MKBOOT=$TOOLS/bin/mkboot
 export MKFS=$TOOLS/bin/mkfs
+
+export HOSTCC=$HOST/bin/cc
 
 set -e
 make clean
@@ -27,7 +32,8 @@ do
 	mv kernel/kernel proto/$i
 done
 
-(cd make; make); mv make/make proto
+(cd as; make HOSTCC=$HOSTCC)
+(cd make; make)
 
 dd if=/dev/zero of=$DEVICE bs=4k count=$BLOCKS
 $MKFS -p proto/proto $DEVICE $BLOCKS

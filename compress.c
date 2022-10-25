@@ -47,8 +47,6 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define AZTEC86 1
-
 #define min(a,b)    ((a>b) ? b : a)
 
 #define DOTZ ".Z"
@@ -78,19 +76,11 @@ int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
 
 #define MAXCODE(n_bits)    ((1 << (n_bits)) - 1)
 
-#ifndef AZTEC86
-    long htab [HSIZE];
-    unsigned short codetab [HSIZE];
-#else
-    long *htab;
-    unsigned short *codetab;
-#   define HTABSIZE ((size_t)(HSIZE*sizeof(long)))
-#   define CODETABSIZE ((size_t)(HSIZE*sizeof(unsigned short)))
+long htab [HSIZE];
+unsigned short codetab [HSIZE];
 
-
-#define htabof(i)   htab[i]
+#define htabof(i)       htab[i]
 #define codetabof(i)    codetab[i]
-#endif  /* XENIX_16 */
 
 int hsize = HSIZE;         /* for dynamic table sizing */
 long fsize;
@@ -166,16 +156,7 @@ char ofname [100];
 int verbose = 0;
 #endif /* DEBUG */
 
-#ifdef AZTEC86
-void
-#else
-int
-#endif
-#ifndef __STDC__
-(*bgnd_flag)();
-#else
-(*bgnd_flag)(int);
-#endif
+void (*bgnd_flag)(int);
 
 int do_decomp = 0;
 
@@ -193,18 +174,6 @@ char **argv;
     signal ( SIGINT, onintr );
     signal ( SIGSEGV, oops );
     }
-#ifdef AZTEC86
-    if (NULL == (htab = (long *)malloc(HTABSIZE)))
-    {
-        fprintf(stderr,"Can't allocate htab\n");
-        exit(1);
-    }
-    if (NULL == (codetab = (unsigned short *)malloc(CODETABSIZE)))
-    {
-        fprintf(stderr,"Can't allocate codetab\n");
-        exit(1);
-    }
-#endif
 
     filelist = fileptr = (char **)(malloc((size_t)(argc * sizeof(*argv))));
     *filelist = NULL;
@@ -1071,11 +1040,8 @@ char *ifname, *ofname;
 {
     struct stat statbuf;
     int mode;
-#ifndef AZTEC86
     time_t timep[2];
-#else
-    unsigned long timep[2];
-#endif
+
     fflush(stdout);
     close(fileno(stdout));
     if (stat(ifname, &statbuf))

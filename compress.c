@@ -740,16 +740,20 @@ nomatch:
  *  Chars are 8 bits long.
  * Algorithm:
  *  Maintain a BITS character long buffer (so that 8 codes will
- * fit in it exactly).  Use the VAX insv instruction to insert each
- * code in turn.  When the buffer fills up empty it and start over.
+ *  fit in it exactly). Insert each code in turn. When the buffer
+ *  fills up, empty it and start over.
  */
 
 static char buf[BITS];
 
-#ifndef vax
-unsigned char lmask[9] = {0xff, 0xfe, 0xfc, 0xf8, 0xf0, 0xe0, 0xc0, 0x80, 0x00};
-unsigned char rmask[9] = {0x00, 0x01, 0x03, 0x07, 0x0f, 0x1f, 0x3f, 0x7f, 0xff};
-#endif /* vax */
+unsigned char lmask[9] = {  0xff, 0xfe, 0xfc,
+                            0xf8, 0xf0, 0xe0,
+                            0xc0, 0x80, 0x00 };
+
+unsigned char rmask[9] = {  0x00, 0x01, 0x03,
+                            0x07, 0x0f, 0x1f,
+                            0x3f, 0x7f, 0xff };
+
 void output( code )
 int  code;
 {
@@ -757,10 +761,6 @@ int  code;
     static int col = 0;
 #endif /* DEBUG */
 
-    /*
-     * On the VAX, it is important to have the declarations
-     * in exactly the order given, or the asm will break.
-     */
     int r_off = offset, bits= n_bits;
     char * bp = buf;
 #ifdef DEBUG
@@ -770,18 +770,9 @@ int  code;
 #endif /* DEBUG */
     if ( code >= 0 )
     {
-#ifdef vax
-    /* VAX DEPENDENT!! Implementation on other machines is below.
-     *
-     * Translation: Insert BITS bits from the argument starting at
-     * offset bits from the beginning of buf.
-     */
-    0;  /* Work around for pcc -O bug with asm and if stmt */
-    asm( "insv  4(ap),r11,r10,(r9)" );
-#else /* not a vax */
-/*
- * byte/bit numbering on the VAX is simulated by the following code
- */
+    /* if this seems strange, it's because it was originally written for
+       the VAX; we simulate its bit/byte numbering in the following code. */
+
     /*
      * Get to the first byte.
      */
@@ -805,7 +796,7 @@ int  code;
     /* Last bits. */
     if(bits)
         *bp = code;
-#endif /* vax */
+
     offset += n_bits;
     if ( offset == (n_bits << 3) )
     {
@@ -972,10 +963,6 @@ void decompress() {
 int
 getcode()
 {
-    /*
-     * On the VAX, it is important to have the declarations
-     * in exactly the order given, or the asm will break.
-     */
     int code;
     static int offset = 0, size = 0;
     static unsigned char buf[BITS];
@@ -1011,9 +998,6 @@ getcode()
     }
     r_off = offset;
     bits = n_bits;
-#ifdef vax
-    asm( "extzv   r10,r9,(r8),r11" );
-#else /* not a vax */
     /*
      * Get to the first byte.
      */
@@ -1032,7 +1016,6 @@ getcode()
     }
     /* high order bits. */
     code |= (*bp & rmask[bits]) << r_off;
-#endif /* vax */
     offset += n_bits;
 
     return code;
@@ -1419,9 +1402,6 @@ void version()
 {
     fprintf(stderr, "compress 4.1\n");
     fprintf(stderr, "Options: ");
-#ifdef vax
-    fprintf(stderr, "vax, ");
-#endif
 #ifdef _MINIX
     fprintf(stderr, "MINIX, ");
 #endif

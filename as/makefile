@@ -4,6 +4,8 @@
 #
 ##############################################################################
 
+HOSTCC=$(CC)
+
 all:	as
 
 clean:
@@ -13,7 +15,7 @@ clean:
 	rm -rf regress/*.gas
 
 HDRS=	as.h y.tab.h ../include/crc32c.h ../include/a.out.h
-OBJS=	as.o insns.o lex.yy.o y.tab.o crc32c.o table.o
+OBJS=	as.o insns.o lex.yy.o y.tab.o table.o crc32c.o
 
 as.o:  		as.c $(HDRS)
 insns.o:	insns.c $(HDRS)
@@ -30,8 +32,12 @@ y.tab.h y.tab.c: grammar.y
 lex.yy.c: tokens.l
 	$(LEX) tokens.l
 
-table.c: mktable.c crc32c.o $(HDRS)
-	$(CC) -o mktable mktable.c crc32c.o
+# FIXME: we only need HOSTCC for cross-builds.
+# once removed, the dependency should be on
+# crc32c.o, not on the libc/crc32c.c source.
+
+table.c: mktable.c ../libc/crc32c.c $(HDRS)
+	$(HOSTCC) -o mktable mktable.c ../libc/crc32c.c
 	./mktable >table.c
 
 as: $(OBJS)

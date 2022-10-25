@@ -39,6 +39,7 @@ done
 (cd lex; make)
 (cd libc; make)
 (cd make; make)
+(cd tar; make)
 (cd yacc; make)
 
 make ar

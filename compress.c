@@ -35,6 +35,18 @@
 
 *****************************************************************************/
 
+#include <stdio.h>
+#include <fcntl.h>
+#include <ctype.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <utime.h>
+#include <limits.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #define AZTEC86 1
 
 #define min(a,b)    ((a>b) ? b : a)
@@ -52,10 +64,7 @@
 # define USERMEM    450000  /* default user memory */
 #endif
 
-#define REGISTER register
 #define DOTZ ".Z"
-
-#include <limits.h>
 
 /* the default for Minix is -b13, but
    we can do -b16 if the machine can. */
@@ -142,17 +151,6 @@ char_type magic_header[] = "\037\235";  /* 1F 9D */
    that there is a fourth header byte (for expansion). */
 
 #define INIT_BITS 9         /* initial number of bits/code */
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <ctype.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <utime.h>
-#include <stdio.h>
 
 #define ARGVAL() (*++(*argv) || (--argc && *++argv))
 
@@ -717,17 +715,17 @@ long int out_count = 0;         /* # of codes output (for debugging) */
 
 void compress()
 {
-    REGISTER long fcode;
-    REGISTER code_int i = 0;
-    REGISTER int c;
-    REGISTER code_int ent;
+    long fcode;
+    code_int i = 0;
+    int c;
+    code_int ent;
 #ifdef XENIX_16
-    REGISTER code_int disp;
+    code_int disp;
 #else   /* Normal machine */
-    REGISTER int disp;
+    int disp;
 #endif
-    REGISTER code_int hsize_reg;
-    REGISTER int hshift;
+    code_int hsize_reg;
+    int hshift;
 
 #ifndef COMPATIBLE
     if (nomagic == 0)
@@ -870,11 +868,11 @@ code_int  code;
 #endif /* DEBUG */
 
     /*
-     * On the VAX, it is important to have the REGISTER declarations
+     * On the VAX, it is important to have the declarations
      * in exactly the order given, or the asm will break.
      */
-    REGISTER int r_off = offset, bits= n_bits;
-    REGISTER char * bp = buf;
+    int r_off = offset, bits= n_bits;
+    char * bp = buf;
 #ifndef BREAKHIGHC
 #ifdef METAWARE
     int temp;
@@ -1010,9 +1008,9 @@ code_int  code;
  */
 
 void decompress() {
-    REGISTER char_type *stackp;
-    REGISTER int finchar;
-    REGISTER code_int code, oldcode, incode;
+    char_type *stackp;
+    int finchar;
+    code_int code, oldcode, incode;
 
     /*
      * As above, initialize the first 256 entries in the table.
@@ -1104,14 +1102,14 @@ code_int
 getcode()
 {
     /*
-     * On the VAX, it is important to have the REGISTER declarations
+     * On the VAX, it is important to have the declarations
      * in exactly the order given, or the asm will break.
      */
-    REGISTER code_int code;
+    code_int code;
     static int offset = 0, size = 0;
     static char_type buf[BITS];
-    REGISTER int r_off, bits;
-    REGISTER char_type *bp = buf;
+    int r_off, bits;
+    char_type *bp = buf;
 
     if ( clear_flg > 0 || offset >= size || free_ent > maxcode )
     {
@@ -1180,7 +1178,7 @@ getcode()
 #ifndef AZTEC86
 char *
 strrchr(s, c)       /* For those who don't have it in libc.a */
-REGISTER char *s, c;
+char *s, c;
 {
     char *p;
     for (p = NULL; *s; s++)
@@ -1228,13 +1226,13 @@ static char stack[STACK_SIZE];
 /* dumptab doesn't use main stack now -prevents distressing crashes */
 dump_tab()  /* dump string table */
 {
-    REGISTER int i, first;
-    REGISTER ent;
+    int i, first;
+    ent;
     int stack_top = STACK_SIZE;
-    REGISTER c;
+    c;
 
     if(do_decomp == 0) {    /* compressing */
-    REGISTER int flag = 1;
+    int flag = 1;
 
     for(i=0; i<hsize; i++) {    /* build sort pointers */
         if((long)htabof(i) >= 0) {
@@ -1283,7 +1281,7 @@ dump_tab()  /* dump string table */
 
 int
 in_stack(c, stack_top)
-    REGISTER int c, stack_top;
+    int c, stack_top;
 {
     if ( (isascii(c) && isprint(c) && c != '\\') || c == ' ' ) {
         stack[--stack_top] = c;
@@ -1436,7 +1434,7 @@ int dummy; /* to keep the compiler happy */
 #endif
 void cl_block ()        /* table clear for block compress */
 {
-    REGISTER long int rat;
+    long int rat;
 
     checkpoint = in_count + CHECK_GAP;
 #ifdef DEBUG
@@ -1477,7 +1475,7 @@ void cl_block ()        /* table clear for block compress */
 }
 
 void cl_hash(hsize)     /* reset code table */
-    REGISTER count_int hsize;
+    count_int hsize;
 {
 #ifdef AZTEC86
 #ifdef PCDOS
@@ -1486,14 +1484,14 @@ void cl_hash(hsize)     /* reset code table */
 #else
 /* MINIX and all non-PC machines do it this way */
 #ifndef XENIX_16    /* Normal machine */
-    REGISTER count_int *htab_p = htab+hsize;
+    count_int *htab_p = htab+hsize;
 #else
-    REGISTER j;
-    REGISTER long k = hsize;
-    REGISTER count_int *htab_p;
+    j;
+    long k = hsize;
+    count_int *htab_p;
 #endif
-    REGISTER long i;
-    REGISTER long m1 = -1;
+    long i;
+    long m1 = -1;
 
 #ifdef XENIX_16
     for(j=0; j<=8 && k>=0; j++,k-=8192)
@@ -1545,7 +1543,7 @@ FILE *stream;
 long int num;
 long int den;
 {
-    REGISTER int q;         /* Doesn't need to be long */
+    int q;         /* Doesn't need to be long */
     if(num > 214748L)
     {       /* 2147483647/10000 */
         q = (int)(num / (den / 10000L));

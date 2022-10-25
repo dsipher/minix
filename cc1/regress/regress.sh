@@ -59,7 +59,9 @@ TESTS="		ar cpp directive evaluate input macro token vstring	\
 		lex_sym lex_tblcmp lex_y.tab lex_yylex			\
 		yacc_closure yacc_lr0 yacc_output yacc_symtab		\
 		yacc_error yacc_main yacc_reader yacc_verbose		\
-		yacc_lalr yacc_mkpar yacc_skeleton yacc_warshall	"
+		yacc_lalr yacc_mkpar yacc_skeleton yacc_warshall	\
+		compress tar_buffer tar_create tar_extract tar_list	\
+		tar_getoldopt tar_list tar_names tar_tar tar_wildmat	"
 
 do_stage()	# ( $compiler, $cflags, $stage )
 {

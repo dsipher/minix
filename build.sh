@@ -35,6 +35,7 @@ done
 (cd as; make HOSTCC=$HOSTCC)
 (cd cc1; make)
 (cd cpp; make)
+(cd lex; make)
 (cd make; make)
 
 make ar

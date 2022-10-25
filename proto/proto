@@ -6,6 +6,7 @@ bin 				0040755 0 0
 	ar			0100555 0 0 ar
 	as			0100555 0 0 as/as
 	ld			0100555 0 0 ld
+	lex			0100555 0 0 lex/lex
 	ls			0100555	0 0 ls
 	make			0100555 0 0 make/make
 	mkboot			0100555 0 0 mkboot
@@ -58,4 +59,5 @@ include				0040755 0 0
 lib				0040755 0 0
 	boot			0100644 0 0 boot
 	cpp			0100555 0 0 cpp/cpp
-	cc1			0100555 0 0 cc1/cc1			$ $
+	cc1			0100555 0 0 cc1/cc1
+	lex.skel		0100644 0 0 lex/lex.skel		$ $

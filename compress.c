@@ -89,14 +89,9 @@ long fsize;
    contains characters. there is plenty of room for any possible stack (stack
    used to be 8000 characters). */
 
-#define tab_prefixof(i) codetab[i]
-#ifdef XENIX_16
-# define tab_suffixof(i)    ((unsigned char *)htab[(i)>>15])[(i) & 0x7fff]
-# define de_stack       ((unsigned char *)(htab2))
-#else   /* Normal machine */
-# define tab_suffixof(i)    ((unsigned char *)(htab))[i]
-# define de_stack       ((unsigned char *)&tab_suffixof(1<<BITS))
-#endif  /* XENIX_16 */
+#define tab_prefixof(i)     codetab[i]
+#define tab_suffixof(i)     ((unsigned char *)(htab))[i]
+#define de_stack            ((unsigned char *)&tab_suffixof(1<<BITS))
 
 int free_ent = 0;          /* first unused entry */
 int exit_stat = 0;
@@ -501,11 +496,7 @@ void compress()
     int i = 0;
     int c;
     int ent;
-#ifdef XENIX_16
     int disp;
-#else   /* Normal machine */
-    int disp;
-#endif
     int hsize_reg;
     int hshift;
 
@@ -1201,9 +1192,6 @@ void version()
     fprintf(stderr, "Options: ");
 #ifdef _MINIX
     fprintf(stderr, "MINIX, ");
-#endif
-#ifdef XENIX_16
-    fprintf(stderr, "XENIX_16, ");
 #endif
 #ifdef DEBUG
     fprintf(stderr, "DEBUG, ");

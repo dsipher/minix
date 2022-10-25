@@ -435,14 +435,15 @@ char **argv;
                 /* generate output filename */
 
                 strcpy(ofname, *fileptr);
-#ifndef BSD4_2      /* Short filenames */
+
                 if ((cp=strrchr(ofname,'/')) != NULL)
                     cp++;
                 else
                     cp = ofname;
-                if (strlen(cp) > 12)
+
+                if (strlen(cp) > (NAME_MAX - 2))
                 {
-                    fprintf(stderr,"%s: filename too long to tack on .Z\n",cp);
+                    fprintf(stderr, "%s: filename too long for .Z\n", cp);
                     continue;
                 }
 #ifdef PCDOS
@@ -465,7 +466,7 @@ char **argv;
                     }
                 }
 #endif
-#endif  /* BSD4_2       Long filenames allowed */
+
 #ifndef PCDOS
             /* PCDOS takes care of this above */
                 strcat(ofname, DOTZ);
@@ -1407,9 +1408,6 @@ void version()
 #endif
 #ifdef DEBUG
     fprintf(stderr, "DEBUG, ");
-#endif
-#ifdef BSD4_2
-    fprintf(stderr, "BSD4_2, ");
 #endif
     fprintf(stderr, "BITS = %d\n", BITS);
 }

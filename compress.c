@@ -51,73 +51,11 @@
 
 #define min(a,b)    ((a>b) ? b : a)
 
-/* Set USERMEM to the maximum amount of physical user memory available
-   in bytes. USERMEM is used to determine the maximum BITS that can be
-   used for compression. SACREDMEM is the amount of physical memory saved
-   for others; compress will hog the rest. */
-
-#ifndef SACREDMEM
-#define SACREDMEM   0
-#endif
-
-#ifndef USERMEM
-# define USERMEM    450000  /* default user memory */
-#endif
-
 #define DOTZ ".Z"
 
-/* the default for Minix is -b13, but
-   we can do -b16 if the machine can. */
-
-#define DEFAULTBITS 13
-#if INT_MAX == 32767
-# define BITS 13
-#else
-# define BITS 16
-#endif
-
-#ifdef USERMEM
-# if USERMEM >= (433484+SACREDMEM)
-#  define PBITS 16
-# else
-#  if USERMEM >= (229600+SACREDMEM)
-#   define PBITS    15
-#  else
-#   if USERMEM >= (127536+SACREDMEM)
-#    define PBITS   14
-#   else
-#    if USERMEM >= (73464+SACREDMEM)
-#     define PBITS  13
-#    else
-#     define PBITS  12
-#    endif
-#   endif
-#  endif
-# endif
-# undef USERMEM
-#endif /* USERMEM */
-
-#ifdef PBITS        /* Preferred BITS for this memory size */
-# ifndef BITS
-#  define BITS PBITS
-# endif
-#endif /* PBITS */
-
-#if BITS == 16
-# define HSIZE  69001       /* 95% occupancy */
-#endif
-#if BITS == 15
-# define HSIZE  35023       /* 94% occupancy */
-#endif
-#if BITS == 14
-# define HSIZE  18013       /* 91% occupancy */
-#endif
-#if BITS == 13
-# define HSIZE  9001        /* 91% occupancy */
-#endif
-#if BITS <= 12
-# define HSIZE  5003        /* 80% occupancy */
-#endif
+#define DEFAULTBITS     13          /* Minix defaults to 13 bits */
+#define BITS            16          /* but we'll 16 bits if asked */
+#define HSIZE           69001       /* htab[] size (95% occupancy) */
 
 unsigned char magic_header[] = "\037\235";  /* 1F 9D */
 
@@ -632,7 +570,7 @@ char **argv;
                 block_compress = maxbits & BLOCK_MASK;
                 maxbits &= BIT_MASK;
                 maxmaxcode = 1 << maxbits;
-                fsize = 100000;     /* assume stdin large for USERMEM */
+                fsize = 100000;
                 if(maxbits > BITS)
                 {
                     fprintf(stderr,

@@ -43,6 +43,7 @@ done
 (cd yacc; make)
 
 make ar
+make compress
 make ld
 make ls
 make mkboot

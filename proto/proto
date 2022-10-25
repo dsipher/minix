@@ -5,6 +5,7 @@ vbox   				0100644 0 0 proto/vbox
 bin 				0040755 0 0
 	ar			0100555 0 0 ar
 	as			0100555 0 0 as/as
+	compress		0100555 0 0 compress
 	ld			0100555 0 0 ld
 	lex			0100555 0 0 lex/lex
 	ls			0100555	0 0 ls

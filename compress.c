@@ -143,11 +143,7 @@ int maxbits = DEFAULTBITS;          /* user settable max # bits/code */
 int maxcode;                   /* maximum code, given n_bits */
 int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
 
-#ifdef COMPATIBLE       /* But wrong! */
-# define MAXCODE(n_bits)    (1 << (n_bits) - 1)
-#else
-# define MAXCODE(n_bits)    ((1 << (n_bits)) - 1)
-#endif /* COMPATIBLE */
+#define MAXCODE(n_bits)    ((1 << (n_bits)) - 1)
 
 #ifndef AZTEC86
     long htab [HSIZE];
@@ -276,9 +272,6 @@ char **argv;
         exit(1);
     }
 #endif
-#ifdef COMPATIBLE
-    nomagic = 1;    /* original didn't have a magic number */
-#endif /* COMPATIBLE */
 
     filelist = fileptr = (char **)(malloc((size_t)(argc * sizeof(*argv))));
     *filelist = NULL;
@@ -701,7 +694,6 @@ void compress()
     int hsize_reg;
     int hshift;
 
-#ifndef COMPATIBLE
     if (nomagic == 0)
     {
         putc(magic_header[0],stdout);
@@ -710,7 +702,6 @@ void compress()
         if(ferror(stdout))
             writeerr();
     }
-#endif /* COMPATIBLE */
 
     offset = 0;
     bytes_out = 3;      /* includes 3-byte header mojo */
@@ -1514,9 +1505,6 @@ void version()
 #endif
 #ifdef XENIX_16
     fprintf(stderr, "XENIX_16, ");
-#endif
-#ifdef COMPATIBLE
-    fprintf(stderr, "COMPATIBLE, ");
 #endif
 #ifdef DEBUG
     fprintf(stderr, "DEBUG, ");

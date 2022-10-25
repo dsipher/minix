@@ -1,66 +1,49 @@
-/* compress - Reduce file size using Modified Lempel-Ziv encoding */
+/*****************************************************************************
 
-/*
- * compress.c - File compression ala IEEE Computer, June 1984.
- *
- * Authors: Spencer W. Thomas   (decvax!harpo!utah-cs!utah-gr!thomas)
- *      Jim McKie       (decvax!mcvax!jim)
- *      Steve Davies        (decvax!vax135!petsd!peora!srd)
- *      Ken Turkowski       (decvax!decwrl!turtlevax!ken)
- *      James A. Woods      (decvax!ihnp4!ames!jaw)
- *      Joe Orost       (decvax!vax135!petsd!joe)
- *
- *      Richard Todd        Port to MINIX
- *      Andy Tanenbaum      Cleanup
- *
- *
- * Algorithm from "A Technique for High Performance Data Compression",
- * Terry A. Welch, IEEE Computer Vol 17, No 6 (June 1984), pp 8-19.
- *
- * Usage: compress [-dfvc] [-b bits] [file ...]
- * Inputs:
- *  -d:     If given, decompression is done instead.
- *
- *      -c:         Write output on stdout.
- *
- *      -b:         Parameter limits the max number of bits/code.
- *
- *  -f:     Forces output file to be generated, even if one already
- *          exists, and even if no space is saved by compressing.
- *          If -f is not used, the user will be prompted if stdin is
- *          a tty, otherwise, the output file will not be overwritten.
- *
- *      -v:     Write compression statistics
- *
- *  file ...:   Files to be compressed.  If none specified, stdin
- *          is used.
- * Outputs:
- *  file.Z:     Compressed form of file with same mode, owner, and utimes
- *  or stdout   (if stdin used as input)
- *
- * Assumptions:
- *  When filenames are given, replaces with the compressed version
- *  (.Z suffix) only if the file decreases in size.
- * Algorithm:
- *  Modified Lempel-Ziv method (LZW).  Basically finds common
- * substrings and replaces them with a variable size code.  This is
- * deterministic, and can be done on the fly.  Thus, the decompression
- * procedure needs no input table, but tracks the way the table was built.
- */
+   compress.c                                               ux/64 compress
 
+******************************************************************************
+
+   derived from the public domain compress 4.1 utility originally written
+   by Spencer W. Thomas, Jim McKie, Steve Davies, Ken Turkowski, James A.
+   Woods and Joe Orost; later modified by Richard Todd and Andy Tanenbaum.
+
+   Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+
+   THIS SOFTWARE IS  PROVIDED BY  THE COPYRIGHT  HOLDERS AND  CONTRIBUTORS
+   "AS  IS" AND  ANY EXPRESS  OR IMPLIED  WARRANTIES,  INCLUDING, BUT  NOT
+   LIMITED TO, THE  IMPLIED  WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS
+   FOR  A  PARTICULAR  PURPOSE  ARE  DISCLAIMED.  IN  NO  EVENT  SHALL THE
+   COPYRIGHT  HOLDER OR  CONTRIBUTORS BE  LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL,  SPECIAL, EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES (INCLUDING,
+   BUT NOT LIMITED TO,  PROCUREMENT OF  SUBSTITUTE GOODS OR SERVICES; LOSS
+   OF USE, DATA, OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY  OF LIABILITY, WHETHER IN CONTRACT,  STRICT LIABILITY, OR
+   TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE
+   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
 
 #define AZTEC86 1
 
 #define min(a,b)    ((a>b) ? b : a)
 
-/*
- * Set USERMEM to the maximum amount of physical user memory available
- * in bytes.  USERMEM is used to determine the maximum BITS that can be used
- * for compression.
- *
- * SACREDMEM is the amount of physical memory saved for others; compress
- * will hog the rest.
- */
+/* Set USERMEM to the maximum amount of physical user memory available
+   in bytes. USERMEM is used to determine the maximum BITS that can be
+   used for compression. SACREDMEM is the amount of physical memory saved
+   for others; compress will hog the rest. */
+
 #ifndef SACREDMEM
 #define SACREDMEM   0
 #endif
@@ -74,7 +57,9 @@
 
 #include <limits.h>
 
-/* The default for Minix is -b13, but we can do -b16 if the machine can. */
+/* the default for Minix is -b13, but
+   we can do -b16 if the machine can. */
+
 #define DEFAULTBITS 13
 #if INT_MAX == 32767
 # define BITS 13
@@ -125,7 +110,6 @@
 # define HSIZE  5003        /* 80% occupancy */
 #endif
 
-
 /*
  * a code_int must be able to hold 2**BITS values of type int, and also -1
  */
@@ -149,12 +133,14 @@ typedef long int      count_int;
 #endif /* UCHAR */
 char_type magic_header[] = "\037\235";  /* 1F 9D */
 
-/* Defines for third byte of header */
+/* defines for third byte of header */
+
 #define BIT_MASK    0x1f
 #define BLOCK_MASK  0x80
-/* Masks 0x40 and 0x20 are free.  I think 0x20 should mean that there is
-   a fourth header byte (for expansion).
-*/
+
+/* masks 0x40 and 0x20 are free. I think 0x20 should mean
+   that there is a fourth header byte (for expansion). */
+
 #define INIT_BITS 9         /* initial number of bits/code */
 
 #include <sys/types.h>
@@ -170,10 +156,11 @@ char_type magic_header[] = "\037\235";  /* 1F 9D */
 
 #define ARGVAL() (*++(*argv) || (--argc && *++argv))
 
-int n_bits;             /* number of bits/code */
-int maxbits = DEFAULTBITS;      /* user settable max # bits/code */
-code_int maxcode;           /* maximum code, given n_bits */
+int n_bits;                         /* number of bits/code */
+int maxbits = DEFAULTBITS;          /* user settable max # bits/code */
+code_int maxcode;                   /* maximum code, given n_bits */
 code_int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
+
 #ifdef COMPATIBLE       /* But wrong! */
 # define MAXCODE(n_bits)    (1 << (n_bits) - 1)
 #else
@@ -193,17 +180,16 @@ code_int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
 #define htabof(i)   htab[i]
 #define codetabof(i)    codetab[i]
 #endif  /* XENIX_16 */
+
 code_int hsize = HSIZE;         /* for dynamic table sizing */
 count_int fsize;
 
-/*
- * To save much memory, we overlay the table used by compress() with those
- * used by decompress().  The tab_prefix table is the same size and type
- * as the codetab.  The tab_suffix table needs 2**BITS characters.  We
- * get this from the beginning of htab.  The output stack uses the rest
- * of htab, and contains characters.  There is plenty of room for any
- * possible stack (stack used to be 8000 characters).
- */
+/* to save much memory, we overlay the table used by compress() with those
+   used by decompress(). the tab_prefix table is the same size and type as
+   the codetab. the tab_suffix table needs 2**BITS characters. we get this
+   from the beginning of htab. the output stack uses the rest of htab, and
+   contains characters. there is plenty of room for any possible stack (stack
+   used to be 8000 characters). */
 
 #define tab_prefixof(i) codetabof(i)
 #ifdef XENIX_16
@@ -217,22 +203,22 @@ count_int fsize;
 code_int free_ent = 0;          /* first unused entry */
 int exit_stat = 0;
 
-_PROTOTYPE(int main, (int argc, char **argv));
-_PROTOTYPE(void Usage, (void));
-_PROTOTYPE(void compress, (void));
-_PROTOTYPE(void onintr, (int dummy));
-_PROTOTYPE(void oops, (int dummy));
-_PROTOTYPE(void output, (code_int code));
-_PROTOTYPE(int foreground, (void));
-_PROTOTYPE(void decompress, (void));
-_PROTOTYPE(code_int getcode, (void));
-_PROTOTYPE(void writeerr, (void));
-_PROTOTYPE(void copystat, (char *ifname, char *ofname));
-_PROTOTYPE(int foreground, (void));
-_PROTOTYPE(void cl_block , (void));
-_PROTOTYPE(void cl_hash, (count_int hsize));
-_PROTOTYPE(void prratio, (FILE *stream, long int num, long int den));
-_PROTOTYPE(void version, (void));
+int main(int argc, char **argv);
+void Usage(void);
+void compress(void);
+void onintr(int dummy);
+void oops(int dummy);
+void output(code_int code);
+int foreground(void);
+void decompress(void);
+code_int getcode(void);
+void writeerr(void);
+void copystat(char *ifname, char *ofname);
+int foreground(void);
+void cl_block(void);
+void cl_hash(count_int hsize);
+void prratio(FILE *stream, long int num, long int den);
+void version(void);
 
 void Usage() {
 #ifdef DEBUG
@@ -243,25 +229,25 @@ int debug = 0;
 fprintf(stderr,"Usage: compress [-dfvcV] [-b maxbits] [file ...]\n");
 }
 #endif /* DEBUG */
-int nomagic = 0;    /* Use a 3-byte magic number header, unless old file */
-int zcat_flg = 0;   /* Write output on stdout, suppress messages */
+
+int nomagic = 0;    /* use a 3-byte magic number header, unless old file */
+int zcat_flg = 0;   /* write output on stdout, suppress messages */
 int quiet = 0;      /* don't tell me about compression */
 
-/*
- * block compression parameters -- after all codes are used up,
- * and compression rate changes, start over.
- */
+/* block compression parameters -- after all codes are
+   used up and compression rate changes, start over. */
+
 int block_compress = BLOCK_MASK;
 int clear_flg = 0;
 long int ratio = 0;
 #define CHECK_GAP 10000 /* ratio check interval */
 count_int checkpoint = CHECK_GAP;
-/*
- * the next two codes should not be changed lightly, as they must not
- * lie within the contiguous general code space.
- */
-#define FIRST   257 /* first free entry */
-#define CLEAR   256 /* table clear output code */
+
+/* the next two codes should not be changed lightly, as they
+ * must not lie within the contiguous general code space. */
+
+#define FIRST   257         /* first free entry */
+#define CLEAR   256         /* table clear output code */
 
 int force = 0;
 char ofname [100];
@@ -289,7 +275,7 @@ int main(argc, argv)
 int argc;
 char **argv;
 {
-    int overwrite = 0;  /* Do not overwrite unless given -f flag */
+    int overwrite = 0;      /* do not overwrite unless given -f flag */
     char tempname[100];
     char **filelist, **fileptr;
     char *cp;
@@ -319,7 +305,7 @@ char **argv;
     }
 #endif
 #ifdef COMPATIBLE
-    nomagic = 1;    /* Original didn't have a magic number */
+    nomagic = 1;    /* original didn't have a magic number */
 #endif /* COMPATIBLE */
 
     filelist = fileptr = (char **)(malloc((size_t)(argc * sizeof(*argv))));
@@ -342,90 +328,72 @@ char **argv;
     setlinebuf( stderr );
 #endif /* BSD4_2 */
 
-    /* Argument Processing
-     * All flags are optional.
-     * -D => debug
-     * -V => print Version; debug verbose
-     * -d => do_decomp
-     * -v => unquiet
-     * -f => force overwrite of output file
-     * -n => no header: useful to uncompress old files
-     * -b maxbits => maxbits.  If -b is specified, then maxbits MUST be
-     *      given also.
-     * -c => cat all output to stdout
-     * -C => generate output compatible with compress 2.0.
-     * if a string is left, must be an input filename.
-     */
     for (argc--, argv++; argc > 0; argc--, argv++)
     {
         if (**argv == '-')
-        {   /* A flag argument */
+        {
             while (*++(*argv))
-            {   /* Process all flags in this arg */
+            {
                 switch (**argv)
                 {
 #ifdef DEBUG
-                case 'D':
-                    debug = 1;
-                    break;
-                case 'V':
-                    verbose = 1;
-                    version();
-                    break;
+                case 'D':   debug = 1;
+                            break;
+
+                case 'V':   verbose = 1;
+                            version();
+                            break;
 #else
-                case 'V':
-                    version();
-                    break;
+                case 'V':   version();
+                            break;
 #endif /* DEBUG */
-                case 'v':
-                    quiet = 0;
-                    break;
-                case 'd':
-                    do_decomp = 1;
-                    break;
+                case 'v':   quiet = 0;
+                            break;
+
+                case 'd':   do_decomp = 1;
+                            break;
+
                 case 'f':
-                case 'F':
-                    overwrite = 1;
-                    force = 1;
-                    break;
-                case 'n':
-                    nomagic = 1;
-                    break;
-                case 'C':
-                    block_compress = 0;
-                    break;
-                case 'b':
-                    if (!ARGVAL())
-                    {
-                        fprintf(stderr, "Missing maxbits\n");
-                        Usage();
-                        exit(1);
-                    }
-                    maxbits = atoi(*argv);
-                    goto nextarg;
-                case 'c':
-                    zcat_flg = 1;
-                    break;
-                case 'q':
-                    quiet = 1;
-                    break;
-                default:
-                    fprintf(stderr, "Unknown flag: '%c'; ", **argv);
-                    Usage();
-                    exit(1);
+                case 'F':   overwrite = 1;
+                            force = 1;
+                            break;
+
+                case 'n':   nomagic = 1;
+                            break;
+
+                case 'C':   block_compress = 0;
+                            break;
+
+                case 'b':   if (!ARGVAL())
+                            {
+                                fprintf(stderr, "Missing maxbits\n");
+                                Usage();
+                                exit(1);
+                            }
+
+                            maxbits = atoi(*argv);
+                            goto nextarg;
+
+                case 'c':   zcat_flg = 1;
+                            break;
+
+                case 'q':   quiet = 1;
+                            break;
+
+                default:    fprintf(stderr, "Unknown flag: '%c'; ", **argv);
+                            Usage();
+                            exit(1);
                 }
             }
-        }
-        else
-        {       /* Input file name */
-            *fileptr++ = *argv; /* Build input file list */
+        } else {
+            *fileptr++ = *argv;     /* build input file list */
             *fileptr = NULL;
-            /* process nextarg; */
         }
+
         nextarg: continue;
     }
 
-    if(maxbits < INIT_BITS) maxbits = INIT_BITS;
+    if (maxbits < INIT_BITS) maxbits = INIT_BITS;
     if (maxbits > BITS) maxbits = BITS;
     maxmaxcode = 1 << maxbits;
 
@@ -434,6 +402,7 @@ char **argv;
         for (fileptr = filelist; *fileptr; fileptr++)
         {
             exit_stat = 0;
+
             if (do_decomp != 0)
             {           /* DECOMPRESSION */
                 /* Check for .Z suffix */
@@ -550,12 +519,13 @@ char **argv;
                 }
                 (void)stat( *fileptr, &statbuf );
                 fsize = (long) statbuf.st_size;
-                /*
-                 * tune hash table size for small files -- ad hoc,
-                 * but the sizes match earlier #defines, which
-                 * serve as upper bounds on the number of output codes.
-                 */
-                hsize = HSIZE; /*lint -e506 -e712 */
+
+                /* tune hash table size for small files -- ad hoc,
+                   but the sizes match earlier #defines, which serve
+                   as upper bounds on the number of output codes. */
+
+                hsize = HSIZE;
+
                 if ( fsize < (1 << 12) )
                     hsize = min ( 5003, HSIZE );
                 else if ( fsize < (1 << 13) )
@@ -565,9 +535,10 @@ char **argv;
                 else if ( fsize < (1 << 15) )
                     hsize = min ( 35023, HSIZE );
                 else if ( fsize < 47000 )
-                    hsize = min ( 50021, HSIZE ); /*lint +e506 +e712 */
+                    hsize = min ( 50021, HSIZE );
 
-                /* Generate output filename */
+                /* generate output filename */
+
                 strcpy(ofname, *fileptr);
 #ifndef BSD4_2      /* Short filenames */
                 if ((cp=strrchr(ofname,'/')) != NULL)
@@ -637,6 +608,7 @@ char **argv;
                     }
                 }
             }
+
             if(zcat_flg == 0)
             {       /* Open output file */
                 if (freopen(ofname, "w", stdout) == NULL)
@@ -648,9 +620,11 @@ char **argv;
                     fprintf(stderr, "%s: ", *fileptr);
             }
 
-            /* Actually do the compression/decompression */
+            /* actually do the compression/decompression */
+
             if (do_decomp == 0)
                 compress();
+
 #ifndef DEBUG
             else
                 decompress();
@@ -659,13 +633,16 @@ char **argv;
                 decompress();
             else
                 printcodes();
+
             if (verbose)
                 dump_tab();
-#endif /* DEBUG */
-            if(zcat_flg == 0)
+#endif
+
+            if (zcat_flg == 0)
             {
-                copystat(*fileptr, ofname); /* Copy stats */
-                if((exit_stat == 1) || (!quiet))
+                copystat(*fileptr, ofname);
+
+                if (exit_stat == 1 || !quiet)
                     putc('\n', stderr);
             }
         }
@@ -681,7 +658,8 @@ char **argv;
                 putc('\n', stderr);
         } else
         {
-            /* Check the magic number */
+            /* check the magic number */
+
             if (nomagic == 0)
             {
                 if ((getc(stdin)!=(magic_header[0] & 0xFF))
@@ -712,6 +690,7 @@ char **argv;
 #endif /* DEBUG */
         }
     }
+
     return(exit_stat);
 }
 
@@ -1612,6 +1591,5 @@ void version()
 #endif
     fprintf(stderr, "BITS = %d\n", BITS);
 }
-/* End of text from uok.UUCP:net.sources */
 
 /* vi: set ts=4 expandtab: */

@@ -51,8 +51,8 @@
 
 #define DOTZ ".Z"
 
-#define DEFAULTBITS     13          /* Minix defaults to 13 bits */
-#define BITS            16          /* but we'll 16 bits if asked */
+#define DEFAULTBITS     16          /* default bits (-b) setting */
+#define BITS            16          /* most bits we support (16 max) */
 #define HSIZE           69001       /* htab[] size (95% occupancy) */
 
 unsigned char magic_header[] = "\037\235";  /* 1F 9D */

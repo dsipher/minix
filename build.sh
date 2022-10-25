@@ -35,6 +35,13 @@ done
 (cd as; make HOSTCC=$HOSTCC)
 (cd make; make)
 
+make ar
+make ld
+make ls
+make mkboot
+make mkfs
+make nm
+
 dd if=/dev/zero of=$DEVICE bs=4k count=$BLOCKS
 $MKFS -p proto/proto $DEVICE $BLOCKS
 $MKBOOT -b boot $DEVICE

@@ -24,6 +24,7 @@ kernel/config.h
 kernel/config.c
 kernel/kernel
 ld
+ls
 lex/scan.c
 lex/y.tab.c
 lex/y.tab.h

@@ -1019,20 +1019,6 @@ getcode()
     return code;
 }
 
-#ifndef AZTEC86
-char *
-strrchr(s, c)       /* For those who don't have it in libc.a */
-char *s, c;
-{
-    char *p;
-    for (p = NULL; *s; s++)
-        if (*s == c)
-        p = s;
-    return(p);
-}
-#endif
-
-
 #ifdef DEBUG
 printcodes()
 {

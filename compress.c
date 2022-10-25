@@ -41,8 +41,8 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <utime.h>
+#include <unistd.h>
 #include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -221,10 +221,7 @@ char **argv;
     zcat_flg = 1;
     }
 
-#ifdef BSD4_2
-    /* 4.2BSD dependent - take it out if not */
-    setlinebuf( stderr );
-#endif /* BSD4_2 */
+    setvbuf(stderr, NULL, _IOLBF, 0);
 
     for (argc--, argv++; argc > 0; argc--, argv++)
     {

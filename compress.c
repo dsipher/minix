@@ -79,9 +79,6 @@ int maxmaxcode = 1 << BITS;    /* should NEVER generate this code */
 long htab [HSIZE];
 unsigned short codetab [HSIZE];
 
-#define htabof(i)       htab[i]
-#define codetabof(i)    codetab[i]
-
 int hsize = HSIZE;         /* for dynamic table sizing */
 long fsize;
 
@@ -92,7 +89,7 @@ long fsize;
    contains characters. there is plenty of room for any possible stack (stack
    used to be 8000 characters). */
 
-#define tab_prefixof(i) codetabof(i)
+#define tab_prefixof(i) codetab[i]
 #ifdef XENIX_16
 # define tab_suffixof(i)    ((unsigned char *)htab[(i)>>15])[(i) & 0x7fff]
 # define de_stack       ((unsigned char *)(htab2))
@@ -547,11 +544,11 @@ void compress()
         fcode = (long) (((long) c << maxbits) + ent);
         i = ((c << hshift) ^ ent);  /* xor hashing */
 
-        if ( htabof (i) == fcode )
+        if ( htab[i] == fcode )
         {
-            ent = codetabof (i);
+            ent = codetab[i];
             continue;
-        } else if ( (long)htabof (i) < 0 )  /* empty slot */
+        } else if ( (long) htab[i] < 0 )  /* empty slot */
             goto nomatch;
         disp = hsize_reg - i;       /* secondary hash (after G. Knott) */
         if ( i == 0 )
@@ -560,12 +557,12 @@ probe:
         if ( (i -= disp) < 0 )
             i += hsize_reg;
 
-        if ( htabof (i) == fcode )
+        if ( htab[i] == fcode )
         {
-            ent = codetabof (i);
+            ent = codetab[i];
             continue;
         }
-        if ( (long)htabof (i) > 0 )
+        if ( (long) htab[i] > 0 )
             goto probe;
 nomatch:
         output ( ent );
@@ -573,8 +570,8 @@ nomatch:
         ent = c;
         if ( free_ent < maxmaxcode )
         {
-            codetabof (i) = free_ent++; /* code -> hashtable */
-            htabof (i) = fcode;
+            codetab[i] = free_ent++; /* code -> hashtable */
+            htab[i] = fcode;
         }
         else if ( (long)in_count >= checkpoint && block_compress )
             cl_block ();
@@ -951,8 +948,8 @@ dump_tab()  /* dump string table */
     int flag = 1;
 
     for(i=0; i<hsize; i++) {    /* build sort pointers */
-        if((long)htabof(i) >= 0) {
-            sorttab[codetabof(i)] = i;
+        if((long) htab[i] >= 0) {
+            sorttab[codetab[i]] = i;
         }
     }
     first = block_compress ? FIRST : 256;
@@ -960,12 +957,12 @@ dump_tab()  /* dump string table */
         fprintf(stderr, "%5d: \"", i);
         stack[--stack_top] = '\n';
         stack[--stack_top] = '"'; /* " */
-        stack_top = in_stack((int)(htabof(sorttab[i])>>maxbits)&0xff,
+        stack_top = in_stack((int)(htab[sorttab[i]]>>maxbits)&0xff,
                                      stack_top);
-        for(ent=htabof(sorttab[i]) & ((1<<maxbits)-1);
+        for(ent=htab[sorttab[i]] & ((1<<maxbits)-1);
             ent > 256;
-            ent=htabof(sorttab[ent]) & ((1<<maxbits)-1)) {
-            stack_top = in_stack((int)(htabof(sorttab[ent]) >> maxbits),
+            ent=htab[sorttab[ent]] & ((1<<maxbits)-1)) {
+            stack_top = in_stack((int)(htab[sorttab[ent]] >> maxbits),
                         stack_top);
         }
         stack_top = in_stack(ent, stack_top);

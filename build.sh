@@ -33,6 +33,8 @@ do
 done
 
 (cd as; make HOSTCC=$HOSTCC)
+(cd cc1; make)
+(cd cpp; make)
 (cd make; make)
 
 make ar

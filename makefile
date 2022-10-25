@@ -51,6 +51,16 @@ clean::
 cc:	ld.c
 	$(CC) -o cc cc.c
 
+##################################################################### compress
+
+all::	compress
+
+clean::
+	rm -f compress
+
+compress:	compress.c
+	$(CC) -o compress compress.c
+
 ########################################################################### ld
 
 all::	ld

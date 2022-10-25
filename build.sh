@@ -11,6 +11,7 @@ TOOLS=~/xcc/ux64
 DEVICE=$1
 BLOCKS=25600
 
+export AR=$TOOLS/bin/ar
 export AS=$TOOLS/bin/as
 export CC=$TOOLS/bin/cc
 export LD=$TOOLS/bin/ld
@@ -36,6 +37,7 @@ done
 (cd cc1; make)
 (cd cpp; make)
 (cd lex; make)
+(cd libc; make)
 (cd make; make)
 (cd yacc; make)
 

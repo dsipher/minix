@@ -42,7 +42,7 @@ TESTS="		adc	add	and 	cmov	\
 		movsx	movzx	mul	neg	\
 		not	or	pop	push    \
 		sbb	set	shift 	sub	\
-		test	xor			"
+		test	xor	xchg		"
 
 for TEST in $TESTS
 do

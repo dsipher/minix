@@ -2479,6 +2479,68 @@ struct insn i_ucomisd[] =
 
 struct insn i_wrmsr[]   =   { { 0, 2, { 0x0F, 0x30 } } };
 
+struct insn i_xchgb[] =
+{
+    { 0,            2, { 0x86, 0x00 }, { { O_GPR_8 | O_MEM, F_MODRM },
+                                         { O_GPR_8,         F_MID   } } },
+
+    { 0,            2, { 0x86, 0x00 }, { { O_GPR_8,         F_MID   },
+                                         { O_GPR_8 | O_MEM, F_MODRM } } },
+
+    { 0 }
+};
+
+struct insn i_xchgw[] =
+{
+    { I_DATA_16,    1, { 0x90       }, { { O_ACC_16                  },
+                                         { O_GPR_16,         F_END   } } },
+
+    { I_DATA_16,    1, { 0x90       }, { { O_GPR_16,         F_END   },
+                                         { O_ACC_16                  } } },
+
+    { I_DATA_16,    2, { 0x87, 0x00 }, { { O_GPR_16 | O_MEM, F_MODRM },
+                                         { O_GPR_16,         F_MID   } } },
+
+    { I_DATA_16,    2, { 0x87, 0x00 }, { { O_GPR_16,         F_MID   },
+                                         { O_GPR_16 | O_MEM, F_MODRM } } },
+
+    { 0 }
+};
+
+struct insn i_xchgl[] =
+{
+    { I_DATA_32,    1, { 0x90       }, { { O_ACC_32                  },
+                                         { O_GPR_32,         F_END   } } },
+
+    { I_DATA_32,    1, { 0x90       }, { { O_GPR_32,         F_END   },
+                                         { O_ACC_32                  } } },
+
+    { I_DATA_32,    2, { 0x87, 0x00 }, { { O_GPR_32 | O_MEM, F_MODRM },
+                                         { O_GPR_32,         F_MID   } } },
+
+    { I_DATA_32,    2, { 0x87, 0x00 }, { { O_GPR_32,         F_MID   },
+                                         { O_GPR_32 | O_MEM, F_MODRM } } },
+
+    { 0 }
+};
+
+struct insn i_xchgq[] =
+{
+    { I_DATA_64,    1, { 0x90       }, { { O_ACC_64                  },
+                                         { O_GPR_64,         F_END   } } },
+
+    { I_DATA_64,    1, { 0x90       }, { { O_GPR_64,         F_END   },
+                                         { O_ACC_64                  } } },
+
+    { I_DATA_64,    2, { 0x87, 0x00 }, { { O_GPR_64 | O_MEM, F_MODRM },
+                                         { O_GPR_64,         F_MID   } } },
+
+    { I_DATA_64,    2, { 0x87, 0x00 }, { { O_GPR_64,         F_MID   },
+                                         { O_GPR_64 | O_MEM, F_MODRM } } },
+
+    { 0 }
+};
+
 struct insn i_xlat[]    =   { { 0, 1, { 0xD7 } }, { 0 } };
 
 struct insn i_xorb[] =

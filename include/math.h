@@ -34,8 +34,13 @@
 #ifndef _MATH_H
 #define _MATH_H
 
-extern double __huge_val;
-extern double __frexp_adj;
+/* constants difficult to represent in base 10 are in __ieee_val.s.
+   aside from being unavailable to constant folding, there are no
+   serious penalities associated with these as memory references;
+   ATOM does not have insns with constant floating-point operands. */
+
+extern double __huge_val;               /* +infinity */
+extern double __double_2_514;           /* 2.0 ** 514 */
 
 #define HUGE_VAL    (__huge_val)
 

@@ -34,11 +34,11 @@
 .text
 
 .globl ___huge_val
-.globl ___frexp_adj
+.globl ___double_2_514
 
 .align 8
 
-___huge_val:        .quad 0x7ff0000000000000        # infinity (double)
-___frexp_adj:       .quad 0x6010000000000000        # 0x1.0p514
+___huge_val:        .quad 0x7ff0000000000000        # +infinity
+___double_2_514:    .quad 0x6010000000000000        # 0x1.0p514 (2 * 514)
 
 # vi: set ts=4 expandtab:

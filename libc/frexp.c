@@ -44,7 +44,7 @@ double frexp(double d, int *ex)
         if ((u.bits.manl | u.bits.manh) == 0) {
             *ex = 0;
         } else {
-            u.value *= __frexp_adj;
+            u.value *= __double_2_514;
             *ex = u.bits.exp - 1536;
             u.bits.exp = 1022;
         }

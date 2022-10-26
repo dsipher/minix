@@ -27,16 +27,16 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		iscntrl.o isdigit.o isgraph.o islower.o isprint.o 	\
 		ispunct.o isspace.o isupper.o isxdigit.o isatty.o 	\
 		labs.o ldexp.o malloc.o memchr.o memcmp.o memcpy.o 	\
-		memmove.o memset.o modf.o mktemp.o opendir.o          \
+		memmove.o memset.o modf.o mktemp.o opendir.o          	\
 		perror.o popen.o printf.o putenv.o puts.o qsort.o 	\
 		raise.o rand.o readdir.o remove.o rewind.o rewinddir.o 	\
 		scanf.o setbuf.o setvbuf.o sigaction.o sigemptyset.o 	\
 		signal.o sleep.o sprintf.o sscanf.o stdio.o strcat.o 	\
-		strchr.o strcmp.o strcpy.o strerror.o strftime.o 	\
-		strlen.o strncat.o strncmp.o strncpy.o strrchr.o 	\
-		strtof.o strtod.o strtol.o syscall.o system.o tmpnam.o 	\
-		tolower.o toupper.o ungetc.o vfprintf.o vfscanf.o 	\
-		vsprintf.o  wait.o
+		strchr.o strcmp.o strcpy.o strdup.o strerror.o 		\
+		strftime.o strlen.o strncat.o strncmp.o strncpy.o 	\
+		strrchr.o strtof.o strtod.o strtol.o syscall.o 		\
+		system.o tmpnam.o tolower.o toupper.o ungetc.o 		\
+		vfprintf.o vfscanf.o vsprintf.o wait.o
 
 libc.a:		$(OBJS)
 	rm -f libc.a
@@ -141,6 +141,7 @@ strcat.o:		strcat.c
 strchr.o:		strchr.c
 strcmp.o:		strcmp.c
 strcpy.o:		strcpy.c
+strdup.o:		strdup.c
 strerror.o:		strerror.c
 strftime.o:		strftime.c
 strlen.o:		strlen.c

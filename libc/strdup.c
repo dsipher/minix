@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   string.h                                            ux/64 system header
+   strdup.c                                         ux/64 standard library
 
 ******************************************************************************
 
@@ -31,36 +31,20 @@
 
 *****************************************************************************/
 
-#ifndef _STRING_H
-#define _STRING_H
+#include <string.h>
+#include <stdlib.h>
 
-#include <sys/defs.h>
+char *strdup(const char *s)
+{
+    size_t len;
+    char *copy;
 
-#ifndef __SIZE_T
-#define __SIZE_T
-typedef __size_t size_t;
-#endif /* __SIZE_T */
+    len = strlen(s);
+    copy = malloc(len + 1);
+    if (copy == 0) return 0;
+    strcpy(copy, s);
 
-extern void *memmove(void *, const void *, size_t);
-extern void *memset(void *, int, size_t);
-extern void *memchr(const void *, int, size_t);
-extern int memcmp(const void *, const void *, size_t);
-extern void *memcpy(void *, const void *, size_t);
-extern char *strcat(char *, const char *);
-extern char *strchr(const char *, int);
-extern int strcmp(const char *, const char *);
-extern char *strcpy(char *, const char *);
-extern char *strerror(int);
-extern size_t strlen(const char *);
-extern char *strncat(char *, const char *, size_t);
-extern int strncmp(const char *, const char *, size_t);
-extern char *strncpy(char *, const char *, size_t);
-extern char *strrchr(const char *, int);
-
-/* return a copy of s allocated with malloc() */
-
-extern char *strdup(const char *s);
-
-#endif /* _STRING_H */
+    return copy;
+}
 
 /* vi: set ts=4 expandtab: */

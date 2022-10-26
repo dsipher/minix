@@ -29,7 +29,7 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		ispunct.o isspace.o isupper.o isxdigit.o isatty.o 	\
 		labs.o ldexp.o log10.o malloc.o memchr.o memcmp.o 	\
 		memcpy.o memmove.o memset.o modf.o mktemp.o opendir.o   \
-		perror.o popen.o printf.o putenv.o puts.o qsort.o 	\
+		perror.o popen.o pow.o printf.o putenv.o puts.o qsort.o	\
 		raise.o rand.o readdir.o remove.o rewind.o rewinddir.o 	\
 		scanf.o setbuf.o setvbuf.o sigaction.o sigemptyset.o 	\
 		signal.o sleep.o sprintf.o sscanf.o stdio.o strcat.o 	\
@@ -121,6 +121,7 @@ mktemp.o:		mktemp.c
 opendir.o:		opendir.c
 perror.o:		perror.c
 popen.o:		popen.c
+pow.o:			pow.c
 printf.o:		printf.c
 putenv.o:		putenv.c
 puts.o:			puts.c

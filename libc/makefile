@@ -27,8 +27,8 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		getpwent.o gets.o isalnum.o isalpha.o 			\
 		iscntrl.o isdigit.o isgraph.o islower.o isprint.o 	\
 		ispunct.o isspace.o isupper.o isxdigit.o isatty.o 	\
-		labs.o ldexp.o malloc.o memchr.o memcmp.o memcpy.o 	\
-		memmove.o memset.o modf.o mktemp.o opendir.o          	\
+		labs.o ldexp.o log10.o malloc.o memchr.o memcmp.o 	\
+		memcpy.o memmove.o memset.o modf.o mktemp.o opendir.o   \
 		perror.o popen.o printf.o putenv.o puts.o qsort.o 	\
 		raise.o rand.o readdir.o remove.o rewind.o rewinddir.o 	\
 		scanf.o setbuf.o setvbuf.o sigaction.o sigemptyset.o 	\
@@ -112,6 +112,7 @@ isxdigit.o:		isxdigit.c
 isatty.o:		isatty.c
 labs.o:			labs.c
 ldexp.o:		ldexp.c
+log10.o:		log10.c
 malloc.o:		malloc.c
 memchr.o:		memchr.c
 memcmp.o:		memcmp.c

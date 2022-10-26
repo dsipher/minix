@@ -70,6 +70,7 @@ extern double __two(double x);
 
 #define __L2HUGE_VAL    1023.0                      /* log2(inf) */
 #define __SQRT2         0.14142135623730950e+01     /* sqrt(2) */
+#define __LOG2B10       0.30102999566398119e+00     /* log10(2) */
 
 /* an IEEE 754 double broken down in various ways
    for manipulation by internal library functions */
@@ -103,6 +104,10 @@ extern double frexp(double, int *);
 /* multiply double by integral power of 2 */
 
 extern double ldexp(double x, int exp);
+
+/* compute base 10 logarithm */
+
+extern double log10(double x);
 
 /* compute x ** y */
 

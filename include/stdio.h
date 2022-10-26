@@ -82,7 +82,7 @@ typedef struct __iobuf
 #define _IOWRITING      0x100           /* currently buffering output */
 #define _IOAPPEND       0x200           /* open in append mode */
 
-#define FOPEN_MAX       20
+#define FOPEN_MAX       16      /* must agree with STREAM_MAX (limits.h) */
 
 extern FILE *__iotab[FOPEN_MAX];
 extern FILE __stdin, __stdout, __stderr;
@@ -150,6 +150,18 @@ extern int vsprintf(char *, const char *, __va_list);
 #define TMP_MAX         62      /* (keep in sync with BASE in mktemp.c) */
 
 extern char *tmpnam(char *);
+
+/* pipe stream to or from a process */
+
+extern FILE *popen(const char *command, const char *type);
+
+/* close stream opened with popen() */
+
+extern int pclose(FILE *stream);
+
+/* associate stream with existing descriptor */
+
+extern FILE *fdopen(int fildes, const char *mode);
 
 #endif /* _STDIO_H */
 

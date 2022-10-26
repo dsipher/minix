@@ -19,7 +19,7 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		abort.o abs.o atof.o atoi.o atol.o brk.o bsearch.o 	\
 		calloc.o clearerr.o closedir.o ctime.o execl.o		\
 		execlp.o execvp.o execvpe.o exit.o fclose.o 		\
-		fflush.o fgetc.o fgetpos.o fgets.o fileno.o 		\
+		fdopen.o fflush.o fgetc.o fgetpos.o fgets.o fileno.o 	\
 		fopen.o fprintf.o fputc.o fputs.o fread.o 		\
 		freopen.o frexp.o fscanf.o fseek.o fsetpos.o		\
 		ftell.o fwrite.o getcwd.o getenv.o getgrent.o 		\
@@ -27,14 +27,14 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		iscntrl.o isdigit.o isgraph.o islower.o isprint.o 	\
 		ispunct.o isspace.o isupper.o isxdigit.o isatty.o 	\
 		labs.o ldexp.o malloc.o memchr.o memcmp.o memcpy.o 	\
-		memmove.o memset.o modf.o mktemp.o opendir.o perror.o 	\
-		printf.o putenv.o puts.o qsort.o raise.o rand.o 	\
-		readdir.o remove.o rewind.o rewinddir.o scanf.o 	\
-		setbuf.o setvbuf.o sigaction.o sigemptyset.o signal.o 	\
-		sleep.o sprintf.o sscanf.o stdio.o strcat.o strchr.o 	\
-		strcmp.o strcpy.o strerror.o strftime.o strlen.o 	\
-		strncat.o strncmp.o strncpy.o strrchr.o strtof.o 	\
-		strtod.o strtol.o syscall.o system.o tmpnam.o 		\
+		memmove.o memset.o modf.o mktemp.o opendir.o          \
+		perror.o popen.o printf.o putenv.o puts.o qsort.o 	\
+		raise.o rand.o readdir.o remove.o rewind.o rewinddir.o 	\
+		scanf.o setbuf.o setvbuf.o sigaction.o sigemptyset.o 	\
+		signal.o sleep.o sprintf.o sscanf.o stdio.o strcat.o 	\
+		strchr.o strcmp.o strcpy.o strerror.o strftime.o 	\
+		strlen.o strncat.o strncmp.o strncpy.o strrchr.o 	\
+		strtof.o strtod.o strtol.o syscall.o system.o tmpnam.o 	\
 		tolower.o toupper.o ungetc.o vfprintf.o vfscanf.o 	\
 		vsprintf.o  wait.o
 
@@ -71,6 +71,7 @@ execvp.o:		execvp.c
 execvpe.o:		execvpe.c
 exit.o:			exit.c
 fclose.o:		fclose.c
+fdopen.o:		fdopen.c
 fflush.o:		fflush.c
 fgetc.o:		fgetc.c
 fgetpos.o:		fgetpos.c
@@ -115,6 +116,7 @@ modf.o:			modf.c
 mktemp.o:		mktemp.c
 opendir.o:		opendir.c
 perror.o:		perror.c
+popen.o:		popen.c
 printf.o:		printf.c
 putenv.o:		putenv.c
 puts.o:			puts.c

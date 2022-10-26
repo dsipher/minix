@@ -49,9 +49,27 @@ extern double __double_2_1023;          /* 2.0 ** 1023 */
 
 extern char *__dtefg(char *, double *, int, int, int, int *);
 
-/* internal library function. compute 10.0^exp. */
+/* internal library function. compute 10.0 ** exp. */
 
 extern double __pow10(int exp);
+
+/* internal library function.
+   evaluate a polynomial of the form:
+
+   c[n-1] * x^(n-1) + ... + c[1] * x + c[0]
+
+   there must be at least two terms. */
+
+extern double __poly(double x, const double c[], int n);
+
+/* internal library function. evaluate 2.0 ** x. */
+
+extern double __two(double x);
+
+/* some useful [internal] constants */
+
+#define __L2HUGE_VAL    1023.0                      /* log2(inf) */
+#define __SQRT2         0.14142135623730950e+01     /* sqrt(2) */
 
 /* an IEEE 754 double broken down in various ways
    for manipulation by internal library functions */
@@ -85,6 +103,10 @@ extern double frexp(double, int *);
 /* multiply double by integral power of 2 */
 
 extern double ldexp(double x, int exp);
+
+/* compute x ** y */
+
+extern double pow(double x, double y);
 
 #endif /* _MATH_H */
 

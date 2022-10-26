@@ -15,15 +15,16 @@ clean:
 crt0.o:	crt0.s
 
 OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
-		__flushbuf.o __ieee_val.o __pow10.o __setjmp.o 		\
-		abort.o abs.o atof.o atoi.o atol.o brk.o bsearch.o 	\
-		calloc.o clearerr.o closedir.o ctime.o execl.o		\
-		execlp.o execvp.o execvpe.o exit.o fclose.o 		\
-		fdopen.o fflush.o fgetc.o fgetpos.o fgets.o fileno.o 	\
-		fopen.o fprintf.o fputc.o fputs.o fread.o 		\
-		freopen.o frexp.o fscanf.o fseek.o fsetpos.o		\
-		ftell.o fwrite.o getcwd.o getenv.o getgrent.o 		\
-		getopt.o getpwent.o gets.o isalnum.o isalpha.o 		\
+		__flushbuf.o __ieee_val.o __poly.o __pow10.o 		\
+		__setjmp.o __two.o abort.o abs.o atof.o atoi.o 		\
+		atol.o brk.o bsearch.o calloc.o clearerr.o 		\
+		closedir.o ctime.o execl.o execlp.o execvp.o 		\
+		execvpe.o exit.o fclose.o fdopen.o fflush.o 		\
+		fgetc.o fgetpos.o fgets.o fileno.o fopen.o 		\
+		fprintf.o fputc.o fputs.o fread.o freopen.o 		\
+		frexp.o fscanf.o fseek.o fsetpos.o ftell.o		\
+		fwrite.o getcwd.o getenv.o getgrent.o getopt.o		\
+		getpwent.o gets.o isalnum.o isalpha.o 			\
 		iscntrl.o isdigit.o isgraph.o islower.o isprint.o 	\
 		ispunct.o isspace.o isupper.o isxdigit.o isatty.o 	\
 		labs.o ldexp.o malloc.o memchr.o memcmp.o memcpy.o 	\
@@ -53,7 +54,9 @@ __ctype.o:		__ctype.c
 __fillbuf.o:		__fillbuf.c
 __flushbuf.o:		__flushbuf.c
 __ieee_val.o:		__ieee_val.s
+__poly.o:		__poly.c
 __pow10.o:		__pow10.c
+__two.o:		__two.c
 abort.o:		abort.c
 abs.o:			abs.c
 atof.o:			atof.c

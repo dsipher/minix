@@ -16,7 +16,7 @@
 #define EXTRACT_WORDS(ix0,ix1,d)                                            \
     do {                                                                    \
         union __ieee_double ew_u;                                           \
-        ew_u.value = (d);                                                   \
+        ew_u.f = (d);                                                       \
         (ix0) = ew_u.words.msw;                                             \
         (ix1) = ew_u.words.lsw;                                             \
     } while (0)
@@ -26,7 +26,7 @@
 #define GET_HIGH_WORD(i,d)                                                  \
     do {                                                                    \
         union __ieee_double gh_u;                                           \
-        gh_u.value = (d);                                                   \
+        gh_u.f = (d);                                                       \
         (i) = gh_u.words.msw;                                               \
     } while (0)
 
@@ -37,7 +37,7 @@
         union __ieee_double iw_u;                                           \
         iw_u.words.msw = (ix0);                                             \
         iw_u.words.lsw = (ix1);                                             \
-        (d) = iw_u.value;                                                   \
+        (d) = iw_u.f;                                                       \
     } while (0)
 
 static const double one = 1.0;

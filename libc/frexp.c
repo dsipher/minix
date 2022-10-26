@@ -37,14 +37,14 @@ double frexp(double d, int *ex)
 {
     union __ieee_double u;
 
-    u.value = d;
+    u.f = d;
 
     switch (u.bits.exp) {
     case 0:     /* 0 or subnormal */
         if ((u.bits.manl | u.bits.manh) == 0) {
             *ex = 0;
         } else {
-            u.value *= __double_2_514;
+            u.f *= __double_2_514;
             *ex = u.bits.exp - 1536;
             u.bits.exp = 1022;
         }
@@ -59,7 +59,7 @@ double frexp(double d, int *ex)
         break;
     }
 
-    return (u.value);
+    return (u.f);
 }
 
 /* vi: set ts=4 expandtab: */

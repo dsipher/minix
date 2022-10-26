@@ -34,11 +34,17 @@
 .text
 
 .globl ___huge_val
+
+.globl ___double_2_n969
 .globl ___double_2_514
+.globl ___double_2_1023
 
 .align 8
 
 ___huge_val:        .quad 0x7ff0000000000000        # +infinity
-___double_2_514:    .quad 0x6010000000000000        # 0x1.0p514 (2 * 514)
+
+___double_2_n969:   .quad 0x0360000000000000        # 0x1.0p-969
+___double_2_514:    .quad 0x6010000000000000        # 0x1.0p514
+___double_2_1023:   .quad 0x7fe0000000000000        # 0x1.0p1023
 
 # vi: set ts=4 expandtab:

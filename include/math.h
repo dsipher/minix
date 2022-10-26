@@ -40,28 +40,29 @@
    ATOM does not have insns with constant floating-point operands. */
 
 extern double __huge_val;               /* +infinity */
+
+extern double __double_2_n969;          /* 2.0 ** -969 */
 extern double __double_2_514;           /* 2.0 ** 514 */
+extern double __double_2_1023;          /* 2.0 ** 1023 */
 
 #define HUGE_VAL    (__huge_val)
 
 extern char *__dtefg(char *, double *, int, int, int, int *);
 
-extern double modf(double, double *);
-extern double frexp(double, int *);
-
 /* internal library function. compute 10.0^exp. */
 
 extern double __pow10(int exp);
 
-/* an IEEE 754 double broken down in multiple
-   ways for the convenience of c functions */
+/* an IEEE 754 double broken down in various ways
+   for manipulation by internal library functions */
 
 #define __DBL_MANH_SIZE     20
 #define __DBL_MANL_SIZE     32
 
 union __ieee_double
 {
-    double value;
+    double          f;
+    unsigned long   i;
 
     struct
     {
@@ -71,12 +72,19 @@ union __ieee_double
 
     struct
     {
-        unsigned manl : __DBL_MANL_SIZE;
-        unsigned manh : __DBL_MANH_SIZE;
-        unsigned exp : 11;
-        unsigned sign : 1;
+        unsigned manl   : __DBL_MANL_SIZE;
+        unsigned manh   : __DBL_MANH_SIZE;
+        unsigned exp    : 11;
+        unsigned sign   : 1;
     } bits;
 };
+
+extern double modf(double, double *);
+extern double frexp(double, int *);
+
+/* multiply double by integral power of 2 */
+
+extern double ldexp(double x, int exp);
 
 #endif /* _MATH_H */
 

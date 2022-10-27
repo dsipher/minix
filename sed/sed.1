@@ -5,7 +5,7 @@ sed \- the stream editor
 sed [-n] [-g] [-e script ] [-f sfile ] [ file ] ...
 .SH DESCRIPTION
 Sed copies the named files (standard input default) to the standard
-output, edited according to a script of commands. 
+output, edited according to a script of commands.
 .P
 An -e option supplies a single edit command from the next argument;
 if there are several of these they are executed in the order in  which
@@ -62,7 +62,7 @@ the first input buffer  that matches the first address through the
 next input buffer  that matches the second. (If the second address
 is a number less than or equal to the line number first  selected,
 only one line is selected.) Once the second address is matched sed
-starts looking for the first one again; thus,  any number of these 
+starts looking for the first one again; thus,  any number of these
 ranges will be matched.
 .P
 The negation operator '!' can prefix a command to apply it to every
@@ -269,7 +269,7 @@ Trailing comments are now allowed on command lines.
 In addition,  sed's error messages have been made more specific and
 informative.
 .P
-The implementation is also  significantly  smaller and  faster than 
+The implementation is also  significantly  smaller and  faster than
 BSD 4.1 sed. It uses only the standard I/O library and exit(3).
 .P
 .SH SEE ALSO

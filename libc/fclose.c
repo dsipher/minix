@@ -4,6 +4,7 @@
 
 ******************************************************************************
 
+   Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
    derived from MINIX, Copyright (c) 1987, 1997 by Prentice Hall.
 
    Redistribution and use of the MINIX operating system in source and
@@ -56,7 +57,11 @@ int fclose(FILE *fp)
     if (i >= FOPEN_MAX)
         return EOF;
 
-    if (fflush(fp))
+    /* only fflush() if we're _IOWRITING: it's a waste of
+       time if we're not. even worse, fflush() reports an
+       error if the stream is _IOREADING and non-seekable. */
+
+    if ((fp->_flags & _IOWRITING) && fflush(fp))
         retval = EOF;
 
     if (close(fp->_fd))

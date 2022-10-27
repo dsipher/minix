@@ -31,7 +31,7 @@ const char	*version = "version 20121220";
 #include <string.h>
 #include <signal.h>
 #include "awk.h"
-#include "ytab.h"
+#include "y.tab.h"
 
 extern	char	**environ;
 extern	int	nfields;

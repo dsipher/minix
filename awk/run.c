@@ -32,7 +32,7 @@ THIS SOFTWARE.
 #include <stdlib.h>
 #include <time.h>
 #include "awk.h"
-#include "ytab.h"
+#include "y.tab.h"
 
 #define tempfree(x)	if (istemp(x)) tfree(x); else
 
@@ -515,7 +515,7 @@ Cell *awkdelete(Node **a, int n)	/* a[0] is symtab, a[1] is list of subscripts *
 			s = getsval(y);
 			if (!adjbuf(&buf, &bufsz, strlen(buf)+strlen(s)+nsub+1, recsize, 0, "awkdelete"))
 				FATAL("out of memory deleting %s[%s...]", x->nval, buf);
-			strcat(buf, s);	
+			strcat(buf, s);
 			if (np->nnext)
 				strcat(buf, *SUBSEP);
 			tempfree(y);

@@ -27,7 +27,7 @@ THIS SOFTWARE.
 #include <string.h>
 #include <stdlib.h>
 #include "awk.h"
-#include "ytab.h"
+#include "y.tab.h"
 
 Node *nodealloc(int n)
 {

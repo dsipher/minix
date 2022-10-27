@@ -31,7 +31,7 @@ THIS SOFTWARE.
 #include <string.h>
 #include <stdlib.h>
 #include "awk.h"
-#include "ytab.h"
+#include "y.tab.h"
 
 #define	HAT	(NCHARS+2)	/* matches ^ in regular expr */
 				/* NCHARS is 2**n */
@@ -156,7 +156,7 @@ int makeinit(fa *f, int anchor)
 	f->out[2] = 0;
 	f->reset = 0;
 	k = *(f->re[0].lfollow);
-	xfree(f->posns[2]);			
+	xfree(f->posns[2]);
 	if ((f->posns[2] = (int *) calloc(1, (k+1)*sizeof(int))) == NULL)
 		overflo("out of space in makeinit");
 	for (i=0; i <= k; i++) {
@@ -530,7 +530,7 @@ int pmatch(fa *f, const char *p0)	/* longest match, for sub */
 		if (f->reset) {
 			for (i = 2; i <= f->curstat; i++)
 				xfree(f->posns[i]);
-			k = *f->posns[0];			
+			k = *f->posns[0];
 			if ((f->posns[2] = (int *) calloc(1, (k+1)*sizeof(int))) == NULL)
 				overflo("out of space in pmatch");
 			for (i = 0; i <= k; i++)
@@ -587,7 +587,7 @@ int nematch(fa *f, const char *p0)	/* non-empty match, for sub */
 		if (f->reset) {
 			for (i = 2; i <= f->curstat; i++)
 				xfree(f->posns[i]);
-			k = *f->posns[0];			
+			k = *f->posns[0];
 			if ((f->posns[2] = (int *) calloc(1, (k+1)*sizeof(int))) == NULL)
 				overflo("out of state space");
 			for (i = 0; i <= k; i++)
@@ -794,7 +794,7 @@ int relex(void)		/* lexical analyzer for reparse */
 	default:
 		rlxval = c;
 		return CHAR;
-	case '[': 
+	case '[':
 		if (buf == 0 && (buf = (uschar *) malloc(bufsz)) == NULL)
 			FATAL("out of space in reg expr %.10s..", lastre);
 		bp = buf;

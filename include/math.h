@@ -69,10 +69,13 @@ extern double __two(double x);
 /* some useful [internal] constants */
 
 #define __L2HUGE_VAL    1023.0                      /* log2(inf) */
+#define __L2L2P         6                           /* log2(log2(prec)) */
 #define __PI            0.31415926535897932e+01     /* pizza */
 #define __SQRT2         0.14142135623730950e+01     /* sqrt(2) */
 #define __LOG2B10       0.30102999566398119e+00     /* log10(2) */
 #define __LOG10B2       0.33219280948873623e+01     /* log2(10) */
+#define __LOG10BE       0.23025850929940456e+01     /* log(10) */
+#define __LOGEB2        0.14426950408889634e+01     /* log2(e) */
 
 /* an IEEE 754 double broken down in various ways
    for manipulation by internal library functions */
@@ -103,9 +106,17 @@ union __ieee_double
 extern double modf(double, double *);
 extern double frexp(double, int *);
 
+/* compute e ** x */
+
+extern double exp(double x);
+
 /* multiply double by integral power of 2 */
 
 extern double ldexp(double x, int exp);
+
+/* compute natural logarithm */
+
+extern double log(double x);
 
 /* compute base 10 logarithm */
 
@@ -115,9 +126,19 @@ extern double log10(double x);
 
 extern double pow(double x, double y);
 
+/* compute square root of x */
+
+extern double sqrt(double x);
+
 /* trignometric functions */
 
 extern double cos(double x);
+extern double sin(double x);
+
+/* inverse trigonometric functions */
+
+extern double atan(double x);
+extern double atan2(double y, double x);
 
 #endif /* _MATH_H */
 

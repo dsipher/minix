@@ -1,26 +1,32 @@
-/****************************************************************
-Copyright (C) Lucent Technologies 1997
-All Rights Reserved
+/*****************************************************************************
 
-Permission to use, copy, modify, and distribute this software and
-its documentation for any purpose and without fee is hereby
-granted, provided that the above copyright notice appear in all
-copies and that both that the copyright notice and this
-permission notice and warranty disclaimer appear in supporting
-documentation, and that the name Lucent Technologies or any of
-its entities not be used in advertising or publicity pertaining
-to distribution of the software without specific, written prior
-permission.
+   awk.h                                                         ux/64 awk
 
-LUCENT DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
-IN NO EVENT SHALL LUCENT OR ANY OF ITS ENTITIES BE LIABLE FOR ANY
-SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
-ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-****************************************************************/
+******************************************************************************
+
+      derived from nawk (the one true awk) version 20121220.
+      Copyright (C) Lucent Technologies 1997. All Rights Resreved.
+
+      Permission to use, copy, modify, and distribute this software and
+      its  documentation  for  any purpose  and without  fee is  hereby
+      granted,  provided that the above copyright notice appear in  all
+      copies  and  that  both  that  the  copyright  notice   and  this
+      permission  notice  and warranty disclaimer appear  in supporting
+      documentation,  and that the  name Lucent  Technologies or any of
+      its  entities not be used in advertising or  publicity pertaining
+      to  distribution of the software  without specific, written prior
+      permission.
+
+      LUCENT  DISCLAIMS  ALL WARRANTIES WITH  REGARD TO  THIS  SOFTWARE,
+      INCLUDING  ALL IMPLIED WARRANTIES  OF MERCHANTABILITY AND FITNESS.
+      IN NO EVENT SHALL LUCENT OR ANY OF ITS ENTITIES BE LIABLE FOR ANY
+      SPECIAL,   INDIRECT  OR  CONSEQUENTIAL  DAMAGES  OR  ANY  DAMAGES
+      WHATSOEVER RESULTING FROM LOSS  OF USE, DATA  OR PROFITS, WHETHER
+      IN  AN ACTION  OF CONTRACT,  NEGLIGENCE OR OTHER  TORTIOUS ACTION,
+      ARISING  OUT OF OR  IN CONNECTION  WITH THE USE OR PERFORMANCE OF
+      THIS SOFTWARE.
+
+*****************************************************************************/
 
 #include <assert.h>
 
@@ -32,7 +38,7 @@ typedef	unsigned char uschar;
 
 #define	xfree(a)	{ if ((a) != NULL) { free((void *) (a)); (a) = NULL; } }
 
-#define	NN(p)	((p) ? (p) : "(null)")	/* guaranteed non-null for dprintf 
+#define	NN(p)	((p) ? (p) : "(null)")	/* guaranteed non-null for dprintf
 */
 #define	DEBUG
 #ifdef	DEBUG
@@ -153,7 +159,7 @@ extern Node	*nullnode;
 #define CCOPY	6
 #define CCON	5
 #define CTEMP	4
-#define CNAME	3 
+#define CNAME	3
 #define CVAR	2
 #define CFLD	1
 #define	CUNK	0

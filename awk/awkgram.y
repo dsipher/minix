@@ -1,26 +1,32 @@
-/****************************************************************
-Copyright (C) Lucent Technologies 1997
-All Rights Reserved
+/*****************************************************************************
 
-Permission to use, copy, modify, and distribute this software and
-its documentation for any purpose and without fee is hereby
-granted, provided that the above copyright notice appear in all
-copies and that both that the copyright notice and this
-permission notice and warranty disclaimer appear in supporting
-documentation, and that the name Lucent Technologies or any of
-its entities not be used in advertising or publicity pertaining
-to distribution of the software without specific, written prior
-permission.
+   awkgram.y                                                     ux/64 awk
 
-LUCENT DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
-INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS.
-IN NO EVENT SHALL LUCENT OR ANY OF ITS ENTITIES BE LIABLE FOR ANY
-SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
-ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
-THIS SOFTWARE.
-****************************************************************/
+******************************************************************************
+
+      derived from nawk (the one true awk) version 20121220.
+      Copyright (C) Lucent Technologies 1997. All Rights Resreved.
+
+      Permission to use, copy, modify, and distribute this software and
+      its  documentation  for  any purpose  and without  fee is  hereby
+      granted,  provided that the above copyright notice appear in  all
+      copies  and  that  both  that  the  copyright  notice   and  this
+      permission  notice  and warranty disclaimer appear  in supporting
+      documentation,  and that the  name Lucent  Technologies or any of
+      its  entities not be used in advertising or  publicity pertaining
+      to  distribution of the software  without specific, written prior
+      permission.
+
+      LUCENT  DISCLAIMS  ALL WARRANTIES WITH  REGARD TO  THIS  SOFTWARE,
+      INCLUDING  ALL IMPLIED WARRANTIES  OF MERCHANTABILITY AND FITNESS.
+      IN NO EVENT SHALL LUCENT OR ANY OF ITS ENTITIES BE LIABLE FOR ANY
+      SPECIAL,   INDIRECT  OR  CONSEQUENTIAL  DAMAGES  OR  ANY  DAMAGES
+      WHATSOEVER RESULTING FROM LOSS  OF USE, DATA  OR PROFITS, WHETHER
+      IN  AN ACTION  OF CONTRACT,  NEGLIGENCE OR OTHER  TORTIOUS ACTION,
+      ARISING  OUT OF OR  IN CONNECTION  WITH THE USE OR PERFORMANCE OF
+      THIS SOFTWARE.
+
+*****************************************************************************/
 
 %{
 #include <stdio.h>
@@ -52,7 +58,7 @@ Node	*arglist = 0;	/* list of args for current function */
 %token	<i>	MATCH NOTMATCH MATCHOP
 %token	<i>	FINAL DOT ALL CCL NCCL CHAR OR STAR QUEST PLUS EMPTYRE
 %token	<i>	AND BOR APPEND EQ GE GT LE LT NE IN
-%token	<i>	ARG BLTIN BREAK CLOSE CONTINUE DELETE DO EXIT FOR FUNC 
+%token	<i>	ARG BLTIN BREAK CLOSE CONTINUE DELETE DO EXIT FOR FUNC
 %token	<i>	SUB GSUB IF INDEX LSUBSTR MATCHFCN NEXT NEXTFILE
 %token	<i>	ADD MINUS MULT DIVIDE MOD
 %token	<i>	ASSIGN ASGNOP ADDEQ SUBEQ MULTEQ DIVEQ MODEQ POWEQ
@@ -79,7 +85,7 @@ Node	*arglist = 0;	/* list of args for current function */
 %left	AND
 %left	GETLINE
 %nonassoc APPEND EQ GE GT LE LT NE MATCHOP IN '|'
-%left	ARG BLTIN BREAK CALL CLOSE CONTINUE DELETE DO EXIT FOR FUNC 
+%left	ARG BLTIN BREAK CALL CLOSE CONTINUE DELETE DO EXIT FOR FUNC
 %left	GSUB IF INDEX LSUBSTR MATCHFCN NEXT NUMBER
 %left	PRINT PRINTF RETURN SPLIT SPRINTF STRING SUB SUBSTR
 %left	REGEXPR VAR VARNF IVAR WHILE '('
@@ -238,10 +244,10 @@ pattern:
 			$$ = op3($2, (Node *)1, $1, $3); }
 	| pattern IN varname		{ $$ = op2(INTEST, $1, makearr($3)); }
 	| '(' plist ')' IN varname	{ $$ = op2(INTEST, $2, makearr($5)); }
-	| pattern '|' GETLINE var	{ 
+	| pattern '|' GETLINE var	{
 			if (safe) SYNTAX("cmd | getline is unsafe");
 			else $$ = op3(GETLINE, $4, itonp($2), $1); }
-	| pattern '|' GETLINE		{ 
+	| pattern '|' GETLINE		{
 			if (safe) SYNTAX("cmd | getline is unsafe");
 			else $$ = op3(GETLINE, (Node*)0, itonp($2), $1); }
 	| pattern term %prec CAT	{ $$ = op2(CAT, $1, $2); }
@@ -292,7 +298,7 @@ rparen:
 	;
 
 simple_stmt:
-	  print prarg '|' term		{ 
+	  print prarg '|' term		{
 			if (safe) SYNTAX("print | is unsafe");
 			else $$ = stat3($1, $2, itonp($3), $4); }
 	| print prarg APPEND term	{
@@ -421,7 +427,7 @@ var:
 	| varname '[' patlist ']'	{ $$ = op2(ARRAY, makearr($1), $3); }
 	| IVAR				{ $$ = op1(INDIRECT, celltonode($1, CVAR)); }
 	| INDIRECT term	 		{ $$ = op1(INDIRECT, $2); }
-	;	
+	;
 
 varlist:
 	  /* nothing */		{ arglist = $$ = 0; }

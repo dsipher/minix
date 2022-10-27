@@ -18,7 +18,7 @@ OBJS=		__assert.o __ctype.o __dtefg.o __fillbuf.o 		\
 		__flushbuf.o __ieee_val.o __poly.o __pow10.o 		\
 		__setjmp.o __two.o abort.o abs.o atof.o atoi.o 		\
 		atol.o brk.o bsearch.o calloc.o clearerr.o 		\
-		closedir.o ctime.o execl.o execlp.o execvp.o 		\
+		closedir.o cos.o ctime.o execl.o execlp.o execvp.o 	\
 		execvpe.o exit.o fclose.o fdopen.o fflush.o 		\
 		fgetc.o fgetpos.o fgets.o fileno.o fopen.o 		\
 		fprintf.o fputc.o fputs.o fread.o freopen.o 		\
@@ -67,6 +67,7 @@ bsearch.o: 		bsearch.c
 calloc.o:		calloc.c
 clearerr.o:		clearerr.c
 closedir.o:		closedir.c
+cos.o:			cos.c
 ctime.o:		ctime.c
 execl.o:		execl.c
 execlp.o:		execlp.c

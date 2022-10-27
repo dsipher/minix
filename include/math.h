@@ -69,6 +69,7 @@ extern double __two(double x);
 /* some useful [internal] constants */
 
 #define __L2HUGE_VAL    1023.0                      /* log2(inf) */
+#define __PI            0.31415926535897932e+01     /* pizza */
 #define __SQRT2         0.14142135623730950e+01     /* sqrt(2) */
 #define __LOG2B10       0.30102999566398119e+00     /* log10(2) */
 #define __LOG10B2       0.33219280948873623e+01     /* log2(10) */
@@ -113,6 +114,10 @@ extern double log10(double x);
 /* compute x ** y */
 
 extern double pow(double x, double y);
+
+/* trignometric functions */
+
+extern double cos(double x);
 
 #endif /* _MATH_H */
 

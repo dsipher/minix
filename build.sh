@@ -40,6 +40,7 @@ done
 (cd lex; make)
 (cd libc; make)
 (cd make; make)
+(cd sed; make)
 (cd tar; make)
 (cd yacc; make)
 

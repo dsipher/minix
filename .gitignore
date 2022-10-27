@@ -42,5 +42,6 @@ mkfs
 nm
 proto/asrock
 proto/vbox
+sed/sed
 tar/tar
 yacc/yacc

@@ -11,6 +11,11 @@ as/y.tab.c
 as/regress/*.bin
 as/regress/*.gas
 as/regress/a.out
+awk/awk
+awk/maketab
+awk/proctab.c
+awk/y.tab.c
+awk/y.tab.h
 boot
 cpp/cpp
 cc

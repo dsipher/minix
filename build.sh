@@ -34,6 +34,7 @@ do
 done
 
 (cd as; make HOSTCC=$HOSTCC)
+(cd awk; make HOSTCC=$HOSTCC)
 (cd cc1; make)
 (cd cpp; make)
 (cd lex; make)

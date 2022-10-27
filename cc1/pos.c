@@ -321,6 +321,7 @@ static void recast0(struct block *b)
     {
         if ( (insn->op == I_LIR_CAST)
           && (insn->operand[1].t & T_SIGNED)
+          && (insn->operand[0].t & T_INTEGRAL)
           && is_pos(b, &insn->operand[1]))
             insn->operand[1].t = t_unsigned(insn->operand[1].t);
 

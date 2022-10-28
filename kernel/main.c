@@ -119,13 +119,8 @@ main(void)
 
     STOSQ(&u, 0, USER_PAGES * (PAGE_SIZE >> 3));
 
-    /* interrupts were disabled by boot; make note of it.
-       this is consistent with the fact that we're holding
-       boot_lock (by default- we never actually acquired it).
-
-       all the children we create here will inherit u_locks == 1.
-       this is important: idle processes come into being holding
-       boot_lock, and init comes into being holding sched_lock. */
+    /* interrupts are disabled and
+       we're holding boot_lock */
 
     u.u_locks = 1;
 

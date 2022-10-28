@@ -139,6 +139,7 @@ struct proc *
 newproc(void (*entry)(void))
 {
     struct proc *p;
+    struct user *p_u;
     pte_t *pte;
     int n;
 
@@ -162,8 +163,9 @@ newproc(void (*entry)(void))
        failing; we know there's a mapping */
 
     pte = findpte(p->p_ptl3, USER_ADDR, 0);
-    p->p_u = (struct user *) PTOV(PTE_ADDR(*pte));
-    p->p_u->u_procp = p;
+    p_u = (struct user *) PTOV(PTE_ADDR(*pte));
+    p->p_u = p_u;
+    p_u->u_procp = p;
 
     /* assign a new process id. see comments at the top
        of the file explaining the relationship between
@@ -183,11 +185,17 @@ newproc(void (*entry)(void))
     p->p_flags = CURPROC->p_flags;
     p->p_cpu = CURPROC->p_cpu;
 
+    /* a new process always enters holding a lock.
+       (boot_lock if it's a CPU idle process, or
+       sched_lock if it's normalled forked.) */
+
+    p_u->u_locks = 1;
+
     /* finally, arrange for the process to start
        execution with a fresh stack at `entry'. */
 
-    p->p_u->u_sys_rip = (caddr_t) entry;
-    p->p_u->u_sys_rsp = KERNEL_STACK;
+    p_u->u_sys_rip = (caddr_t) entry;
+    p_u->u_sys_rsp = KERNEL_STACK;
 
     return p;
 }

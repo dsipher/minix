@@ -1,6 +1,7 @@
 LICENSE				0100644 0 0 LICENSE
-asrock				0100644 0 0 proto/asrock
-vbox   				0100644 0 0 proto/vbox
+asrock				0100644 0 0 build/asrock
+fx160				0100644 0 0 build/fx160
+vbox   				0100644 0 0 build/vbox
 
 bin 				0040755 0 0
 	ar			0100555 0 0 ar

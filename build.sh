@@ -27,10 +27,13 @@ make clean
 
 make boot
 
-for i in asrock vbox
+rm -rf build
+mkdir build
+
+for i in asrock fx160 vbox
 do
 	(cd kernel; make clean; make CONFIG=$i)
-	mv kernel/kernel proto/$i
+	mv kernel/kernel build/$i
 done
 
 (cd as; make HOSTCC=$HOSTCC)
@@ -53,5 +56,5 @@ make mkfs
 make nm
 
 dd if=/dev/zero of=$DEVICE bs=4k count=$BLOCKS
-$MKFS -p proto/proto $DEVICE $BLOCKS
+$MKFS -p proto $DEVICE $BLOCKS
 $MKBOOT -b boot $DEVICE

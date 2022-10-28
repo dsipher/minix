@@ -17,6 +17,7 @@ awk/proctab.c
 awk/y.tab.c
 awk/y.tab.h
 boot
+build/
 cpp/cpp
 cc
 cc1/cc1
@@ -40,8 +41,6 @@ make/make
 mkboot
 mkfs
 nm
-proto/asrock
-proto/vbox
 sed/sed
 tar/tar
 yacc/yacc

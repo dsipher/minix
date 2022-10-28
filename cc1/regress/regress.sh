@@ -63,7 +63,8 @@ TESTS="		ar cpp directive evaluate input macro token vstring	\
 		compress tar_buffer tar_create tar_extract tar_list	\
 		tar_getoldopt tar_list tar_names tar_tar tar_wildmat	\
 		awk_b awk_lex awk_lib awk_main awk_maketab awk_parse	\
-		awk_proctab awk_run awk_tran awk_y.tab			"
+		awk_proctab awk_run awk_tran awk_y.tab			\
+		sed_comp sed_exec					"
 
 do_stage()	# ( $compiler, $cflags, $stage )
 {

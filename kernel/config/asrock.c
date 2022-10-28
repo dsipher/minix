@@ -9,6 +9,7 @@
 #include <sys/proc.h>
 #include <sys/boot.h>
 #include <sys/ps2.h>
+#include <sys/ide.h>
 #include "config.h"
 
 void (*isr[NIRQ])(int irq) =
@@ -25,12 +26,12 @@ void (*isr[NIRQ])(int irq) =
     /* 18 */    0,              /* 19 */    0,
     /* 20 */    0,              /* 21 */    0,
     /* 22 */    0,              /* 23 */    0,
-    /* 24 */    0,              /* 25 */    0,
+    /* 24 */    ideisr,         /* 25 */    0,
     /* 26 */    0,              /* 27 */    0,
     /* 28 */    0,              /* 29 */    ipiisr,
     /* 30 */    tmrisr
 };
 
-void (*inits[])() = { ps2init, 0 };
+void (*inits[])() = { ps2init, ideinit, 0 };
 
 /* vi: set ts=4 expandtab: */

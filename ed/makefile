@@ -10,10 +10,12 @@ clean:
 	rm -f ed *.o
 
 HDRS=	ed.h tools.h
-OBJS=	amatch.o append.o ed.o
+
+OBJS=	amatch.o append.o bitmap.o ed.o
 
 amatch.o:	amatch.c	$(HDRS)
 append.o:	append.c	$(HDRS)
+bitmap.o:	bitmap.c	$(HDRS)
 ed.o: 		ed.c 		$(HDRS)
 
 ed: $(OBJS)

@@ -10,9 +10,10 @@ clean:
 	rm -f ed *.o
 
 HDRS=	ed.h tools.h
-OBJS=	ed.o
+OBJS=	amatch.o ed.o
 
-ed.o: 		ed.c $(HDRS)
+amatch.o:	amatch.c	$(HDRS)
+ed.o: 		ed.c 		$(HDRS)
 
 ed: $(OBJS)
 	$(CC) $(CFLAGS) -o ed $(OBJS)

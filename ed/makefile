@@ -15,7 +15,8 @@ OBJS=	amatch.o append.o bitmap.o catsub.o ckglob.o deflt.o 	\
 	del.o docmd.o dodash.o doglob.o doprnt.o doread.o 	\
 	dowrite.o ed.o egets.o esc.o find.o getfn.o getlst.o	\
 	getnum.o getone.o getpat.o getptr.o getrhs.o gettxt.o	\
-	ins.o join.o makepat.o maksub.o matchs.o unmkpat.o
+	ins.o join.o makepat.o maksub.o matchs.o move.o 	\
+	unmkpat.o
 
 amatch.o:	amatch.c	$(HDRS)
 append.o:	append.c	$(HDRS)
@@ -47,6 +48,7 @@ join.o:		join.c		$(HDRS)
 makepat.o:	makepat.c	$(HDRS)
 maksub.o:	maksub.c	$(HDRS)
 matchs.o:	matchs.c	$(HDRS)
+move.o:		move.c		$(HDRS)
 unmkpat.o:	unmkpat.c	$(HDRS)
 
 ed: $(OBJS)

@@ -49,6 +49,8 @@ extern int      nullchar;		        /* count of null chars read */
 extern int      truncated;		        /* count of lines truncated */
 extern int      fchanged;		        /* file changed */
 
+extern int      diag;
+
 #define nextln(l)	((l)+1 > lastln ? 0 : (l)+1)
 #define prevln(l)	((l)-1 < 0 ? lastln : (l)-1)
 

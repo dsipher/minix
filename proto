@@ -8,6 +8,7 @@ bin 				0040755 0 0
 	as			0100555 0 0 as/as
 	awk			0100555 0 0 awk/awk
 	compress		0100555 0 0 compress
+	ed			0100555 0 0 ed/ed
 	ld			0100555 0 0 ld
 	lex			0100555 0 0 lex/lex
 	ls			0100555	0 0 ls

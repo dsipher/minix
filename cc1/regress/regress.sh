@@ -64,7 +64,14 @@ TESTS="		ar cpp directive evaluate input macro token vstring	\
 		tar_getoldopt tar_list tar_names tar_tar tar_wildmat	\
 		awk_b awk_lex awk_lib awk_main awk_maketab awk_parse	\
 		awk_proctab awk_run awk_tran awk_y.tab			\
-		sed_comp sed_exec					"
+		sed_comp sed_exec ed_amatch ed_append ed_bitmap		\
+		ed_catsub ed_ckglob ed_deflt ed_del ed_docmd 		\
+		ed_dodash ed_doglob ed_doprnt ed_doread ed_dowrite	\
+        	ed_ed ed_egets ed_esc ed_find ed_getfn ed_getlst	\
+		ed_getnum ed_getone ed_getpat ed_getptr ed_getrhs 	\
+		ed_gettxt ed_ins ed_join ed_makepat ed_maksub 		\
+		ed_matchs ed_move ed_omatch ed_optpat ed_set		\
+        	ed_setbuf ed_subst ed_sys ed_unmkpat			"
 
 do_stage()	# ( $compiler, $cflags, $stage )
 {

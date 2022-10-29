@@ -11,7 +11,6 @@
 
                  (1) No charge may be made other than
                      reasonable charges for reproduction.
-
                  (2) This notice must remain intact.
                  (3) No further restrictions may be added.
 

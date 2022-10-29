@@ -40,6 +40,7 @@
 #include <sys/proc.h>
 #include <sys/user.h>
 #include <sys/io.h>
+#include <sys/buf.h>
 #include "config.h"
 
 /* compared to `modern' POSIX systems, memory management in ux/64
@@ -446,16 +447,18 @@ pginit(void)
        all of these structs are quadword-aligned,
        so we need no padding between them. */
 
-    size = NPROC * sizeof(struct proc);
-    /* addr += NBUF * sizeof(struct buf); */
-    /* addr += NMBUF + sizeof(struct mbuf); */
+    size  = NPROC * sizeof(struct proc);
+    size += NBUFH * sizeof(struct bufq);
+    size += NBUF  * sizeof(struct buf);
+    /* size += NMBUF + sizeof(struct mbuf); */
 
     size = PAGE_UP(size);
     addr = memall(size / PAGE_SIZE);
     STOSQ((void *) addr, 0, size / 8);
 
-    proc = (struct proc *) PTOV(addr);  addr += NPROC * sizeof(struct proc);
-    /* buf = (struct buf *) addr;    addr += BUF * sizeof(struct buf); */
+    proc   = (struct proc *) PTOV(addr);  addr += NPROC * sizeof(struct proc);
+    bhashq = (struct bufq *) PTOV(addr);  addr += NBUFH * sizeof(struct bufq);
+    buf    = (struct buf *)  PTOV(addr);  addr += NBUF  * sizeof(struct buf);
     /* mbuf = (struct mbuf *) addr;  addr += NMBUF * sizeof(struct mbuf); */
 
     /* we have to do some minimal configuration of proc[0]

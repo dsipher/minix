@@ -42,6 +42,7 @@
 #include <sys/clock.h>
 #include <sys/utsname.h>
 #include <sys/spin.h>
+#include <sys/buf.h>
 #include "config.h"
 
 caddr_t kernel_top;
@@ -134,6 +135,7 @@ main(void)
                                                     KERNEL_EXEC->a_bss);
 
     pginit();
+    bufinit();
     irqinit();
     clkinit();
 

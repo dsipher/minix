@@ -13,6 +13,7 @@
 
 #define NPROC       128
 #define NBUF        8192
+#define NBUFH       512
 #define NMBUF       1024
 #define CONFIG      "FX160"
 #define NCPU        2

@@ -1,16 +1,21 @@
-/* Copyright 1987 Brian Beattie Rights Reserved.
- *
- * Permission to copy and/or distribute granted under the
- * following conditions:
- *
- * 1). No charge may be made other than resonable charges
- *	for reproduction.
- *
- * 2). This notice must remain intact.
- *
- * 3). No further restrictions may be added.
- *
- */
+/*****************************************************************************
+
+   ed.c                                                  ux/64 line editor
+
+******************************************************************************
+
+    derived from source found in Minix 2, Copyright 1987 Brian Beattie.
+
+              Permission to copy and/or distribute granted
+              under the following conditions:
+
+                 (1) No charge may be made other than
+                     reasonable charges for reproduction.
+
+                 (2) This notice must remain intact.
+                 (3) No further restrictions may be added.
+
+*****************************************************************************/
 
 /*	This program used to be in many little pieces, with this makefile:
 .SUFFIXES:	.c .s
@@ -34,200 +39,12 @@ ed:	$(OBJS)
 #include <unistd.h>
 #include <sys/wait.h>
 #include <stdio.h>
-
-/****************************/
-
-/*	tools.h	*/
-/*
- *	#defines for non-printing ASCII characters
- */
-
-#define NUL	0x00		/* ^@ */
-#define EOS	0x00		/* end of string */
-#define SOH	0x01		/* ^A */
-#define STX	0x02		/* ^B */
-#define ETX	0x03		/* ^C */
-#define EOT	0x04		/* ^D */
-#define ENQ	0x05		/* ^E */
-#define ACK	0x06		/* ^F */
-#define BEL	0x07		/* ^G */
-#define BS	0x08		/* ^H */
-#define HT	0x09		/* ^I */
-#define LF	0x0a		/* ^J */
-#define NL	'\n'
-#define VT	0x0b		/* ^K */
-#define FF	0x0c		/* ^L */
-#define CR	0x0d		/* ^M */
-#define SO	0x0e		/* ^N */
-#define SI	0x0f		/* ^O */
-#define DLE	0x10		/* ^P */
-#define DC1	0x11		/* ^Q */
-#define DC2	0x12		/* ^R */
-#define DC3	0x13		/* ^S */
-#define DC4	0x14		/* ^T */
-#define NAK	0x15		/* ^U */
-#define SYN	0x16		/* ^V */
-#define ETB	0x17		/* ^W */
-#define CAN	0x18		/* ^X */
-#define EM	0x19		/* ^Y */
-#define SUB	0x1a		/* ^Z */
-#define ESC	0x1b		/* ^[ */
-#define FS	0x1c		/* ^\ */
-#define GS	0x1d		/* ^] */
-#define RS	0x1e		/* ^^ */
-#define US	0x1f		/* ^_ */
-#define SP	0x20		/* space */
-#define DEL	0x7f		/* DEL */
-
-
-#define TRUE	1
-#define FALSE	0
-#define ERR	-2
-
-
-/*	Definitions of meta-characters used in pattern matching
- *	routines.  LITCHAR & NCCL are only used as token identifiers;
- *	all the others are also both token identifier and actual symbol
- *	used in the regular expression.
- */
-
-
-#define BOL	'^'
-#define EOL	'$'
-#define ANY	'.'
-#define LITCHAR	'L'
-#define	ESCAPE	'\\'
-#define CCL	'['		/* Character class: [...] */
-#define CCLEND	']'
-#define NEGATE	'^'
-#define NCCL	'!'		/* Negative character class [^...] */
-#define CLOSURE	'*'
-#define OR_SYM	'|'
-#define DITTO	'&'
-#define OPEN	'('
-#define CLOSE	')'
-
-/* Largest permitted size for an expanded character class.  (i.e. the class
- * [a-z] will expand into 26 symbols; [a-z0-9] will expand into 36.)
- */
-#define CLS_SIZE	128
-
-/*
- *	Tokens are used to hold pattern templates. (see makepat())
- */
-typedef char BITMAP;
-
-typedef struct token {
-  char tok;
-  char lchar;
-  BITMAP *bitmap;
-  struct token *next;
-} TOKEN;
-
-#define TOKSIZE sizeof (TOKEN)
-
-/*
- *	An absolute maximun for strings.
- */
-
-#define MAXSTR	132		/* Maximum numbers of characters in a line */
-
-
-/* Macros */
-#define max(a,b)	((a>b)?a:b)
-#define min(a,b)	((a<b)?a:b)
-#define toupper(c)	(c>='a'&&c<='z'?c-32:c)
-
-/*	ed.h	*/
-#define FATAL	(ERR-1)
-struct line {
-  int l_stat;			/* empty, mark */
-  struct line *l_prev;
-  struct line *l_next;
-  char l_buff[1];
-};
-
-typedef struct line LINE;
-
-#define LINFREE	1		/* entry not in use */
-#define LGLOB	2		/* line marked global */
-
-				/* max number of chars per line */
-#define MAXLINE	(sizeof(int) == 2 ? 256 : 8192)
-#define MAXPAT	256		/* max number of chars per replacement
-				 * pattern */
-				/* max file name size */
-#define MAXFNAME (sizeof(int) == 2 ? 256 : 1024)
-
-extern LINE line0;
-extern int curln, lastln, line1, line2, nlines;
-extern int nflg;		/* print line number flag */
-extern int lflg;		/* print line in verbose mode */
-extern char *inptr;		/* tty input buffer */
-extern char linbuf[], *linptr;	/* current line */
-extern int truncflg;		/* truncate long line flag */
-extern int eightbit;		/* save eighth bit */
-extern int nonascii;		/* count of non-ascii chars read */
-extern int nullchar;		/* count of null chars read */
-extern int truncated;		/* count of lines truncated */
-extern int fchanged;		/* file changed */
-
-#define nextln(l)	((l)+1 > lastln ? 0 : (l)+1)
-#define prevln(l)	((l)-1 < 0 ? lastln : (l)-1)
+#include "tools.h"
+#include "ed.h"
 
 /*	amatch.c	*/
 /* #include <stdio.h> */
 /* #include "tools.h" */
-
-_PROTOTYPE(int main, (int argc, char **argv));
-_PROTOTYPE(static char *match, (char *lin, TOKEN *pat, char *boln));
-_PROTOTYPE(char *amatch, (char *lin, TOKEN *pat, char *boln));
-_PROTOTYPE(int append, (int line, int glob));
-_PROTOTYPE(BITMAP *makebitmap, (unsigned size));
-_PROTOTYPE(int setbit, (unsigned c, char *map, unsigned val));
-_PROTOTYPE(int testbit, (unsigned c, char *map));
-_PROTOTYPE(char *catsub, (char *from, char *to, char *sub, char *new, char *newend));
-_PROTOTYPE(int ckglob, (void));
-_PROTOTYPE(int deflt, (int def1, int def2));
-_PROTOTYPE(int del, (int from, int to));
-_PROTOTYPE(int docmd, (int glob));
-_PROTOTYPE(int dolst, (int line1, int line2));
-_PROTOTYPE(char *dodash, (int delim, char *src, char *map));
-_PROTOTYPE(int doglob, (void));
-_PROTOTYPE(int doprnt, (int from, int to));
-_PROTOTYPE(void prntln, (char *str, int vflg, int lin));
-_PROTOTYPE(void putcntl, (int c, FILE *stream));
-_PROTOTYPE(int doread, (int lin, char *fname));
-_PROTOTYPE(int dowrite, (int from, int to, char *fname, int apflg));
-_PROTOTYPE(void intr, (int sig));
-_PROTOTYPE(int egets, (char *str, int size, FILE *stream));
-_PROTOTYPE(int esc, (char **s));
-_PROTOTYPE(int find, (TOKEN *pat, int dir));
-_PROTOTYPE(char *getfn, (void));
-_PROTOTYPE(int getlst, (void));
-_PROTOTYPE(int getnum, (int first));
-_PROTOTYPE(int getone, (void));
-_PROTOTYPE(TOKEN *getpat, (char *arg));
-_PROTOTYPE(LINE *getptr, (int num));
-_PROTOTYPE(int getrhs, (char *sub));
-_PROTOTYPE(char *gettxt, (int num));
-_PROTOTYPE(int ins, (char *str));
-_PROTOTYPE(int System, (char *c));
-_PROTOTYPE(int join, (int first, int last));
-_PROTOTYPE(TOKEN *makepat, (char *arg, int delim));
-_PROTOTYPE(char *maksub, (char *sub, int subsz));
-_PROTOTYPE(char *matchs, (char *line, TOKEN *pat, int ret_endp));
-_PROTOTYPE(int move, (int num));
-_PROTOTYPE(int transfer, (int num));
-_PROTOTYPE(int omatch, (char **linp, TOKEN *pat, char *boln));
-_PROTOTYPE(TOKEN *optpat, (void));
-_PROTOTYPE(int set, (void));
-_PROTOTYPE(int show, (void));
-_PROTOTYPE(void relink, (LINE *a, LINE *x, LINE *y, LINE *b));
-_PROTOTYPE(void clrbuf, (void));
-_PROTOTYPE(void set_buf, (void));
-_PROTOTYPE(int subst, (TOKEN *pat, char *sub, int gflg, int pflag));
-_PROTOTYPE(void unmakepat, (TOKEN *head));
 
 /*     Scans throught the pattern template looking for a match
  * with lin.  Each element of lin is compared with the template
@@ -264,7 +81,7 @@ char *boln;
   return lin;
 }
 
-static char *match(lin, pat, boln)
+char *match(lin, pat, boln)
 char *lin;
 TOKEN *pat;
 char *boln;
@@ -340,7 +157,7 @@ char *boln;
    * lin will be pointing at the character following the last character
    * matched.  The exceptions are templates containing only a BOLN or
    * EOLN token.  In these cases omatch doesn't advance.
-   * 
+   *
    * A philosophical point should be mentioned here.  Is $ a position or a
    * character? (i.e. does $ mean the EOL character itself or does it
    * mean the character at the end of the line.)  I decided here to
@@ -2196,3 +2013,5 @@ TOKEN *head;
 	}
   }
 }
+
+/* vi: set ts=4 expandtab: */

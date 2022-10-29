@@ -12,7 +12,8 @@ clean:
 HDRS=	ed.h tools.h
 
 OBJS=	amatch.o append.o bitmap.o catsub.o ckglob.o deflt.o 	\
-	del.o docmd.o dodash.o doglob.o doprnt.o doread.o ed.o
+	del.o docmd.o dodash.o doglob.o doprnt.o doread.o 	\
+	dowrite.o ed.o
 
 amatch.o:	amatch.c	$(HDRS)
 append.o:	append.c	$(HDRS)
@@ -26,6 +27,7 @@ dodash.o:	dodash.c	$(HDRS)
 doglob.o:	doglob.c	$(HDRS)
 doprnt.o:	doprnt.c	$(HDRS)
 doread.o:	doread.c	$(HDRS)
+dowrite.o:	dowrite.c	$(HDRS)
 ed.o: 		ed.c 		$(HDRS)
 
 ed: $(OBJS)

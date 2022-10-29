@@ -13,7 +13,7 @@ HDRS=	ed.h tools.h
 
 OBJS=	amatch.o append.o bitmap.o catsub.o ckglob.o deflt.o 	\
 	del.o docmd.o dodash.o doglob.o doprnt.o doread.o 	\
-	dowrite.o ed.o egets.o esc.o
+	dowrite.o ed.o egets.o esc.o find.o
 
 amatch.o:	amatch.c	$(HDRS)
 append.o:	append.c	$(HDRS)
@@ -31,6 +31,7 @@ dowrite.o:	dowrite.c	$(HDRS)
 ed.o: 		ed.c 		$(HDRS)
 egets.o:	egets.c		$(HDRS)
 esc.o:		esc.c		$(HDRS)
+find.o:		find.c		$(HDRS)
 
 ed: $(OBJS)
 	$(CC) $(CFLAGS) -o ed $(OBJS)

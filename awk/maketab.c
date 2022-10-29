@@ -4,8 +4,7 @@
 
 ******************************************************************************
 
-      derived from nawk (the one true awk) version 20121220.
-      Copyright (C) Lucent Technologies 1997. All Rights Resreved.
+     derived from nawk (20121220) Copyright (C) Lucent Technologies 1997
 
       Permission to use, copy, modify, and distribute this software and
       its  documentation  for  any purpose  and without  fee is  hereby

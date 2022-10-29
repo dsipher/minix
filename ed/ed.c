@@ -135,29 +135,6 @@ char **argv;
   return(0);
 }
 
-/*	setbuf.c	*/
-/* #include <stdio.h> */
-/* #include "tools.h" */
-/* #include "ed.h" */
-
-void relink(a, x, y, b)
-LINE *a, *x, *y, *b;
-{
-  x->l_prev = a;
-  y->l_next = b;
-}
-
-void clrbuf()
-{
-  del(1, lastln);
-}
-
-void set_buf()
-{
-  relink(&line0, &line0, &line0, &line0);
-  curln = lastln = 0;
-}
-
 /*	subst.c	*/
 /* #include <stdio.h> */
 /* #include "tools.h" */

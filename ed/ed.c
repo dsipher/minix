@@ -107,7 +107,7 @@ char **argv;
 	}
 	if (*inlin == '!') {
 		if ((inptr = strchr(inlin, NL)) != NULL) *inptr = EOS;
-		System(inlin + 1);
+		sys(inlin + 1);
 		continue;
 	}
 	inptr = inlin;
@@ -133,27 +133,6 @@ char **argv;
 	printf("?\n");
   }
   return(0);
-}
-
-/*	System.c	*/
-#define SHELL	"/bin/sh"
-#define SHELL2	"/usr/bin/sh"
-
-int System(c)
-char *c;
-{
-  int pid, status;
-
-  switch (pid = fork()) {
-      case -1:
-	return -1;
-      case 0:
-	execl(SHELL, "sh", "-c", c, (char *) 0);
-	execl(SHELL2, "sh", "-c", c, (char *) 0);
-	exit(-1);
-      default:	while (wait(&status) != pid);
-}
-  return status;
 }
 
 /* vi: set ts=4 expandtab: */

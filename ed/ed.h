@@ -86,7 +86,7 @@ LINE    *getptr(int num);
 int     getrhs(char *sub);
 char    *gettxt(int num);
 int     ins(char *str);
-int     System(char *c);
+int     sys(char *c);
 int     join(int first, int last);
 TOKEN   *makepat(char *arg, int delim);
 char    *maksub(char *sub, int subsz);

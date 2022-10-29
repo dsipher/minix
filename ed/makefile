@@ -14,7 +14,7 @@ HDRS=	ed.h tools.h
 OBJS=	amatch.o append.o bitmap.o catsub.o ckglob.o deflt.o 	\
 	del.o docmd.o dodash.o doglob.o doprnt.o doread.o 	\
 	dowrite.o ed.o egets.o esc.o find.o getfn.o getlst.o	\
-	getnum.o unmkpat.o
+	getnum.o getone.o unmkpat.o
 
 amatch.o:	amatch.c	$(HDRS)
 append.o:	append.c	$(HDRS)
@@ -36,6 +36,7 @@ find.o:		find.c		$(HDRS)
 getfn.o:	getfn.c 	$(HDRS)
 getlst.o:	getlst.c	$(HDRS)
 getnum.o:	getnum.c	$(HDRS)
+getone.o:	getone.c	$(HDRS)
 unmkpat.o:	unmkpat.c	$(HDRS)
 
 ed: $(OBJS)

@@ -1,11 +1,11 @@
 # Makefile for ash.
 
-SRCS=	builtins.c cd.c dirent.c error.c eval.c exec.c expand.c input.c \
+SRCS=	builtins.c cd.c error.c eval.c exec.c expand.c input.c \
 	jobs.c mail.c main.c memalloc.c miscbltin.c mystring.c nodes.c \
 	options.c parser.c redir.c show.c signames.c syntax.c trap.c \
 	output.c var.c
 
-OBJS=	builtins.o cd.o dirent.o error.o eval.o exec.o expand.o input.o \
+OBJS=	builtins.o cd.o error.o eval.o exec.o expand.o input.o \
 	jobs.o mail.o main.o memalloc.o miscbltin.o mystring.o nodes.o \
 	options.o parser.o redir.o show.o signames.o syntax.o trap.o \
 	output.o var.o init.o \

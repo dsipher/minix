@@ -141,13 +141,7 @@ tryexec(cmd, argv, envp)
     int e;
     char *p;
 
-#ifdef SYSV
-    do {
-        execve(cmd, argv, envp);
-    } while (errno == EINTR);
-#else
     execve(cmd, argv, envp);
-#endif
 }
 
 
@@ -358,10 +352,6 @@ loop:
             goto success;
         }
         while (stat(fullname, &statb) < 0) {
-#ifdef SYSV
-            if (errno == EINTR)
-                continue;
-#endif
             if (errno != ENOENT && errno != ENOTDIR)
                 e = errno;
             goto loop;
@@ -384,20 +374,6 @@ loop:
             if ((statb.st_mode & 010) == 0)
                 goto loop;
         } else {
-#if __minix_vmd || defined(BSD)
-            gid_t group_list[NGROUPS_MAX];
-            int ngroups, i;
-
-            ngroups = getgroups(NGROUPS_MAX, group_list);
-
-            for (i = 0; i < ngroups; i++) {
-                if (statb.st_gid == group_list[i]) break;
-            }
-            if (i < ngroups) {
-                if ((statb.st_mode & 010) == 0)
-                    goto loop;
-            } else
-#endif
             if ((statb.st_mode & 01) == 0)
                 goto loop;
         }

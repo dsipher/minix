@@ -36,8 +36,6 @@
  * The follow should be set to reflect the type of system you have:
  *  TILDE -> 1 if you want the shell to expand ~logname.
  *  USEGETPW -> 1 if getpwnam() must be used to look up a name.
- *  define BSD if you are running 4.2 BSD or later.
- *  define SYSV if you are running under System V.
  *  define DEBUG=1 to compile in debugging (set global "debug" to turn on)
  *  define DEBUG=2 to compile in and turn on debugging.
  *
@@ -48,7 +46,6 @@
 
 #define TILDE     1
 #define USEGETPW  0
-/* #define BSD */
 #define DEBUG     0
 
 #ifdef __STDC__

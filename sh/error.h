@@ -101,14 +101,4 @@ char *errmsg();
 #define errmsg(errno, action)   strerror(errno)
 
 
-/*
- * BSD setjmp saves the signal mask, which violates ANSI C and takes time,
- * so we use _setjmp instead.
- */
-
-#ifdef BSD
-#define setjmp(jmploc)  _setjmp(jmploc)
-#define longjmp(jmploc, val)    _longjmp(jmploc, val)
-#endif
-
 /* vi: set ts=4 expandtab: */

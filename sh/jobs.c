@@ -51,12 +51,6 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <errno.h>
-#ifdef BSD
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <sys/time.h>
-#include <sys/resource.h>
-#endif
 #include <sys/wait.h>
 
 

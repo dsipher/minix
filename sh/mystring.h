@@ -32,9 +32,7 @@
 
 *****************************************************************************/
 
-#ifndef SYSV
 #define strchr mystrchr
-#endif
 
 #ifdef __STDC__
 void scopyn(const char *, char *, int);

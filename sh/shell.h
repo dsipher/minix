@@ -34,7 +34,6 @@
 
 /*
  * The follow should be set to reflect the type of system you have:
- *  JOBS -> 1 if you have Berkeley job control, 0 otherwise.
  *  TILDE -> 1 if you want the shell to expand ~logname.
  *  USEGETPW -> 1 if getpwnam() must be used to look up a name.
  *  define BSD if you are running 4.2 BSD or later.
@@ -47,7 +46,6 @@
  */
 
 
-#define JOBS      0
 #define TILDE     1
 #define USEGETPW  0
 /* #define BSD */

@@ -909,10 +909,6 @@ execcmd(argc, argv)  char **argv; {
     if (argc > 1) {
         iflag = 0;      /* exit on error */
         setinteractive(0);
-#if JOBS
-        jflag = 0;
-        setjobctl(0);
-#endif
         shellexec(argv + 1, environment(), pathval(), 0);
 
     }

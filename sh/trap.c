@@ -168,13 +168,6 @@ setsignal(signo) {
             if (iflag)
                 action = S_IGN;
             break;
-#if JOBS
-        case SIGTSTP:
-        case SIGTTOU:
-            if (jflag)
-                action = S_IGN;
-            break;
-#endif
         }
     }
     t = &sigmode[signo - 1];
@@ -315,9 +308,6 @@ exitshell(status) {
     }
 l1:   handler = &loc2;          /* probably unnecessary */
     flushall();
-#if JOBS
-    setjobctl(0);
-#endif
 l2:   _exit(status);
 }
 

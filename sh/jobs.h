@@ -65,9 +65,6 @@ struct job {
     char state;     /* true if job is finished */
     char used;      /* true if this entry is in used */
     char changed;       /* true if status has changed */
-#if JOBS
-    char jobctl;        /* job running under job control */
-#endif
 };
 
 extern short backgndpid;    /* pid of last background process */
@@ -87,8 +84,6 @@ int forkshell();
 int waitforjob();
 #endif
 
-#if ! JOBS
 #define setjobctl(on)   /* do nothing */
-#endif
 
 /* vi: set ts=4 expandtab: */

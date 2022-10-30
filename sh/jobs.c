@@ -33,10 +33,6 @@
 *****************************************************************************/
 
 #include "shell.h"
-#if JOBS
-#include "sgtty.h"
-#undef CEOF         /* syntax.h redefines this */
-#endif
 #include "main.h"
 #include "parser.h"
 #include "nodes.h"
@@ -70,10 +66,6 @@
 struct job *jobtab;     /* array of jobs */
 int njobs;          /* size of array */
 MKINIT short backgndpid = -1;   /* pid of last background process */
-#if JOBS
-int initialpgrp;        /* pgrp of shell on invocation */
-short curjob;           /* current job */
-#endif
 
 #ifdef __STDC__
 STATIC void restartjob(struct job *);
@@ -95,122 +87,15 @@ STATIC char *commandtext();
 
 
 
-#if JOBS
-/*
- * Turn job control on and off.
- *
- * Note:  This code assumes that the third arg to ioctl is a character
- * pointer, which is true on Berkeley systems but not System V.  Since
- * System V doesn't have job control yet, this isn't a problem now.
- */
-
-MKINIT int jobctl;
-
-void
-setjobctl(on) {
-    int ldisc;
-
-    if (on == jobctl || rootshell == 0)
-        return;
-    if (on) {
-        do { /* while we are in the background */
-            if (ioctl(2, TIOCGPGRP, (char *)&initialpgrp) < 0) {
-                out2str("ash: can't access tty; job control turned off\n");
-                jflag = 0;
-                return;
-            }
-            if (initialpgrp == -1)
-                initialpgrp = getpgrp(0);
-            else if (initialpgrp != getpgrp(0)) {
-                killpg(initialpgrp, SIGTTIN);
-                continue;
-            }
-        } while (0);
-        if (ioctl(2, TIOCGETD, (char *)&ldisc) < 0 || ldisc != NTTYDISC) {
-            out2str("ash: need new tty driver to run job control; job control turned off\n");
-            jflag = 0;
-            return;
-        }
-        setsignal(SIGTSTP);
-        setsignal(SIGTTOU);
-        setpgrp(0, rootpid);
-        ioctl(2, TIOCSPGRP, (char *)&rootpid);
-    } else { /* turning job control off */
-        setpgrp(0, initialpgrp);
-        ioctl(2, TIOCSPGRP, (char *)&initialpgrp);
-        setsignal(SIGTSTP);
-        setsignal(SIGTTOU);
-    }
-    jobctl = on;
-}
-#endif
-
-
 #ifdef mkinit
 
 SHELLPROC {
     backgndpid = -1;
-#if JOBS
-    jobctl = 0;
-#endif
 }
 
 #endif
 
 
-
-#if JOBS
-fgcmd(argc, argv)  char **argv; {
-    struct job *jp;
-    int pgrp;
-    int status;
-
-    jp = getjob(argv[1]);
-    if (jp->jobctl == 0)
-        error("job not created under job control");
-    pgrp = jp->ps[0].pid;
-    ioctl(2, TIOCSPGRP, (char *)&pgrp);
-    restartjob(jp);
-    INTOFF;
-    status = waitforjob(jp);
-    INTON;
-    return status;
-}
-
-
-bgcmd(argc, argv)  char **argv; {
-    struct job *jp;
-
-    do {
-        jp = getjob(*++argv);
-        if (jp->jobctl == 0)
-            error("job not created under job control");
-        restartjob(jp);
-    } while (--argc > 1);
-    return 0;
-}
-
-
-STATIC void
-restartjob(jp)
-    struct job *jp;
-    {
-    struct procstat *ps;
-    int i;
-
-    if (jp->state == JOBDONE)
-        return;
-    INTOFF;
-    killpg(jp->ps[0].pid, SIGCONT);
-    for (ps = jp->ps, i = jp->nprocs ; --i >= 0 ; ps++) {
-        if ((ps->status & 0377) == 0177) {
-            ps->status = -1;
-            jp->state = 0;
-        }
-    }
-    INTON;
-}
-#endif
 
 
 int
@@ -265,10 +150,6 @@ showjobs(change) {
                 fmtstr(s, 64, "Exit %d", ps->status >> 8);
             } else {
                 i = ps->status;
-#if JOBS
-                if ((i & 0xFF) == 0177)
-                    i >>= 8;
-#endif
                 if ((i & 0x7F) <= MAXSIG && sigmesg[i & 0x7F])
                     scopy(sigmesg[i & 0x7F], s);
                 else
@@ -314,10 +195,6 @@ freejob(jp)
     if (jp->ps != &jp->ps0)
         ckfree(jp->ps);
     jp->used = 0;
-#if JOBS
-    if (curjob == jp - jobtab + 1)
-        curjob = 0;
-#endif
     INTON;
 }
 
@@ -340,10 +217,6 @@ waitcmd(argc, argv)  char **argv; {
                 status = job->ps[job->nprocs - 1].status;
                 if ((status & 0xFF) == 0)
                     status = status >> 8 & 0xFF;
-#if JOBS
-                else if ((status & 0xFF) == 0177)
-                    status = (status >> 8 & 0x7F) + 128;
-#endif
                 else
                     status = (status & 0x7F) + 128;
                 if (! iflag)
@@ -393,24 +266,13 @@ getjob(name)
     int i;
 
     if (name == NULL) {
-#if JOBS
-currentjob:
-        if ((jobno = curjob) == 0 || jobtab[jobno - 1].used == 0)
-            error("No current job");
-        return &jobtab[jobno - 1];
-#else
         error("No current job");
-#endif
     } else if (name[0] == '%') {
         if (is_digit(name[1])) {
             jobno = number(name + 1);
             if (jobno > 0 && jobno <= njobs
              && jobtab[jobno - 1].used != 0)
                 return &jobtab[jobno - 1];
-#if JOBS
-        } else if (name[1] == '%' && name[2] == '\0') {
-            goto currentjob;
-#endif
         } else {
             register struct job *found = NULL;
             for (jp = jobtab, i = njobs ; --i >= 0 ; jp++) {
@@ -477,9 +339,6 @@ makejob(node, nprocs)
     jp->used = 1;
     jp->changed = 0;
     jp->nprocs = 0;
-#if JOBS
-    jp->jobctl = jobctl;
-#endif
     if (nprocs > 1) {
         jp->ps = ckmalloc(nprocs * sizeof (struct procstat));
     } else {
@@ -536,32 +395,6 @@ forkshell(jp, n, mode)
         closescript();
         INTON;
         clear_traps();
-#if JOBS
-        jobctl = 0;     /* do job control only in root shell */
-        if (wasroot && mode != FORK_NOJOB && jflag) {
-            if (jp == NULL || jp->nprocs == 0)
-                pgrp = getpid();
-            else
-                pgrp = jp->ps[0].pid;
-            setpgrp(0, pgrp);
-            if (mode == FORK_FG) {
-                /*** this causes superfluous TIOCSPGRPS ***/
-                if (ioctl(2, TIOCSPGRP, (char *)&pgrp) < 0)
-                    error("TIOCSPGRP failed, errno=%d\n", errno);
-            }
-            setsignal(SIGTSTP);
-            setsignal(SIGTTOU);
-        } else if (mode == FORK_BG) {
-            ignoresig(SIGINT);
-            ignoresig(SIGQUIT);
-            if ((jp == NULL || jp->nprocs == 0)
-                && ! fd0_redirected_p ()) {
-                close(0);
-                if (open("/dev/null", O_RDONLY) != 0)
-                    error("Can't open /dev/null");
-            }
-        }
-#else
         if (mode == FORK_BG) {
             ignoresig(SIGINT);
             ignoresig(SIGQUIT);
@@ -572,7 +405,6 @@ forkshell(jp, n, mode)
                     error("Can't open /dev/null");
             }
         }
-#endif
         if (wasroot && iflag) {
             setsignal(SIGINT);
             setsignal(SIGQUIT);
@@ -585,9 +417,6 @@ forkshell(jp, n, mode)
             pgrp = pid;
         else
             pgrp = jp->ps[0].pid;
-#if JOBS
-        setpgrp(pid, pgrp);
-#endif
     }
     if (mode == FORK_BG)
         backgndpid = pid;       /* set $! */
@@ -629,34 +458,19 @@ int
 waitforjob(jp)
     register struct job *jp;
     {
-#if JOBS
-    int mypgrp = getpgrp(0);
-#endif
     int status;
     int st;
 
     INTOFF;
     TRACE(("waitforjob(%%%d) called\n", jp - jobtab + 1));
     while (jp->state == 0 && dowait(1, jp) != -1) ;
-#if JOBS
-    if (jp->jobctl) {
-        if (ioctl(2, TIOCSPGRP, (char *)&mypgrp) < 0)
-            error("TIOCSPGRP failed, errno=%d\n", errno);
-    }
-    if (jp->state == JOBSTOPPED)
-        curjob = jp - jobtab + 1;
-#endif
     status = jp->ps[jp->nprocs - 1].status;
     /* convert to 8 bits */
     if ((status & 0xFF) == 0)
         st = status >> 8 & 0xFF;
-#if JOBS
-    else if ((status & 0xFF) == 0177)
-        st = (status >> 8 & 0x7F) + 128;
-#endif
     else
         st = (status & 0x7F) + 128;
-    if (! JOBS || jp->state == JOBDONE)
+    if (!0 || jp->state == JOBDONE)     /* XXX */
         freejob(jp);
     CLEAR_PENDING_INT;
     if ((status & 0x7F) == SIGINT)
@@ -716,29 +530,17 @@ dowait(block, job)
                 if (jp->state != state) {
                     TRACE(("Job %d: changing state from %d to %d\n", jp - jobtab + 1, jp->state, state));
                     jp->state = state;
-#if JOBS
-                    if (done && curjob == jp - jobtab + 1)
-                        curjob = 0;     /* no current job */
-#endif
                 }
             }
         }
     }
     INTON;
     if (! rootshell || ! iflag || (job && thisjob == job)) {
-#if JOBS
-        if ((status & 0xFF) == 0177)
-            status >>= 8;
-#endif
         core = status & 0x80;
         status &= 0x7F;
         if (status != 0 && status != SIGINT && status != SIGPIPE) {
             if (thisjob != job)
                 outfmt(out2, "%d: ", pid);
-#if JOBS
-            if (status == SIGTSTP && rootshell && iflag)
-                outfmt(out2, "%%%d ", job - jobtab + 1);
-#endif
             if (status <= MAXSIG && sigmesg[status])
                 out2str(sigmesg[status]);
             else
@@ -805,11 +607,7 @@ waitproc(block, status)
 #ifdef BSD
     int flags;
 
-#if JOBS
-    flags = WUNTRACED;
-#else
     flags = 0;
-#endif
     if (block == 0)
         flags |= WNOHANG;
     return wait3((union wait *)status, flags, (struct rusage *)NULL);

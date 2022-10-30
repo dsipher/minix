@@ -228,10 +228,6 @@ cmdloop(top) {
                 INTON;
             }
             evaltree(n, 0);
-#ifdef notdef
-            if (exitstatus)                   /*DEBUG*/
-                outfmt(&errout, "Exit status 0x%X\n", exitstatus);
-#endif
         }
         popstackmark(&smark);
     }
@@ -323,16 +319,5 @@ lccmd(argc, argv)  char **argv; {
 }
 
 
-
-#ifdef notdef
-/*
- * Should never be called.
- */
-
-void
-exit(exitstatus) {
-    _exit(exitstatus);
-}
-#endif
 
 /* vi: set ts=4 expandtab: */

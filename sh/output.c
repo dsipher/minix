@@ -88,25 +88,6 @@ RESET {
 #endif
 
 
-#ifdef notdef   /* no longer used */
-/*
- * Set up an output file to write to memory rather than a file.
- */
-
-void
-open_mem(block, length, file)
-    char *block;
-    int length;
-    struct output *file;
-    {
-    file->nextc = block;
-    file->nleft = --length;
-    file->fd = BLOCK_OUT;
-    file->flags = 0;
-}
-#endif
-
-
 void
 out1str(p)
     char *p;

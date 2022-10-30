@@ -615,25 +615,6 @@ delete_cmd_entry() {
 
 
 
-#ifdef notdef
-void
-getcmdentry(name, entry)
-    char *name;
-    struct cmdentry *entry;
-    {
-    struct tblentry *cmdp = cmdlookup(name, 0);
-
-    if (cmdp) {
-        entry->u = cmdp->param;
-        entry->cmdtype = cmdp->cmdtype;
-    } else {
-        entry->cmdtype = CMDUNKNOWN;
-        entry->u.index = 0;
-    }
-}
-#endif
-
-
 /*
  * Add a new command entry, replacing any existing command entry for
  * the same name.

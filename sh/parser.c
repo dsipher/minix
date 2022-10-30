@@ -488,10 +488,6 @@ simplecmd(rpp, redir)
             /* We have a function */
             if (readtoken() != TRP)
                 synexpect(TRP);
-#ifdef notdef
-            if (! goodname(n->narg.text))
-                synerror("Bad function name");
-#endif
             n->type = NDEFUN;
             n->narg.next = command();
             return n;

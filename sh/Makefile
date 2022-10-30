@@ -15,7 +15,7 @@ CFLAGS=	-w -DSHELL -I.
 
 CLEANFILES= $(OBJS) \
 	builtins.c builtins.h init.c mkinit mknodes mksignames \
-	nodes.c nodes.h signames.c signames.h token.def \
+	signames.c signames.h token.def \
 	bltin/operators.h bltin/operators.c
 
 all:	sh
@@ -39,12 +39,6 @@ init.o: mkinit $(SRCS)
 
 mkinit: mkinit.c
 	$(CC) $(CFLAGS) -o $@ mkinit.c
-
-nodes.c nodes.h: mknodes nodetypes nodes.c.pat
-	./mknodes nodetypes nodes.c.pat
-
-mknodes: mknodes.c
-	$(CC) $(CFLAGS) -o $@ mknodes.c
 
 signames.c signames.h: mksignames
 	./mksignames

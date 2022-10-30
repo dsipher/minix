@@ -116,10 +116,6 @@ main(argc, argv)  char **argv; {
             goto state4;
     }
     handler = &jmploc;
-#if DEBUG
-    opentrace();
-    trputs("Shell args:  ");  trargs(argv);
-#endif
     rootpid = getpid();
     rootshell = 1;
     init();
@@ -205,9 +201,6 @@ cmdloop(top) {
             flushout(&output);
         }
         n = parsecmd(inter);
-#if DEBUG
-        /* showtree(n); */
-#endif
         if (n == NEOF) {
             if (Iflag == 0 || numeof >= 50)
                 break;

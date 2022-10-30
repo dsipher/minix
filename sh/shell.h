@@ -36,13 +36,7 @@
  * The follow should be set to reflect the type of system you have:
  *  TILDE -> 1 if you want the shell to expand ~logname.
  *  USEGETPW -> 1 if getpwnam() must be used to look up a name.
- *  define DEBUG=1 to compile in debugging (set global "debug" to turn on)
- *  define DEBUG=2 to compile in and turn on debugging.
- *
- * When debugging is on, debugging info will be written to $HOME/trace and
- * a quit signal will generate a core dump.
  */
-
 
 #define TILDE     1
 #define USEGETPW  0
@@ -59,11 +53,6 @@ typedef void *pointer;
 
 extern char nullstr[1];     /* null string */
 
-
-#if DEBUG
-#define TRACE(param)    trace param
-#else
-#define TRACE(param)
-#endif
+#define TRACE(t)
 
 /* vi: set ts=4 expandtab: */

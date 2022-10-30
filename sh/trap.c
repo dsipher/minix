@@ -155,15 +155,6 @@ setsignal(signo) {
                 action = S_CATCH;
             break;
         case SIGQUIT:
-#if DEBUG
-            {
-            extern int debug;
-
-            if (debug)
-                break;
-            }
-#endif
-            /* FALLTHROUGH */
         case SIGTERM:
             if (iflag)
                 action = S_IGN;

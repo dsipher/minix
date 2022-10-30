@@ -251,10 +251,6 @@ printentry(cmdp)
         out1fmt("builtin %s", cmdp->cmdname);
     } else if (cmdp->cmdtype == CMDFUNCTION) {
         out1fmt("function %s", cmdp->cmdname);
-#if DEBUG
-    } else {
-        error("internal error: cmdtype %d", cmdp->cmdtype);
-#endif
     }
     if (cmdp->rehash)
         out1c('*');

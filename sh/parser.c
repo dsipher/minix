@@ -599,9 +599,6 @@ STATIC int xxreadtoken();
 STATIC int
 readtoken() {
     int t;
-#if DEBUG
-    int alreadyseen = tokpushback;
-#endif
 
     t = xxreadtoken();
 
@@ -632,12 +629,6 @@ readtoken() {
             }
         }
     }
-#if DEBUG
-    if (!alreadyseen)
-        TRACE(("token %s %s\n", tokname[t], t == TWORD ? wordtext : ""));
-    else
-        TRACE(("reread token %s %s\n", tokname[t], t == TWORD ? wordtext : ""));
-#endif
     return (t);
 }
 

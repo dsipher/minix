@@ -119,12 +119,7 @@ error(char *msg, ...) {
     CLEAR_PENDING_INT;
     INTOFF;
     va_start(ap, msg);
-#if DEBUG
-    if (msg)
-        TRACE(("error(\"%s\") pid=%d\n", msg, getpid()));
-    else
-        TRACE(("error(NULL) pid=%d\n", getpid()));
-#endif
+
     if (msg) {
         if (commandname)
             outfmt(&errout, "%s: ", commandname);

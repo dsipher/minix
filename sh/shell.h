@@ -54,13 +54,13 @@
 
 
 #define JOBS      0
-#define SYMLINKS  defined(S_ISLNK)
+#define SYMLINKS  0
 #define DIRENT    1
 #define UDIR      0
 #define TILDE     1
 #define USEGETPW  0
 #define ATTY      0
-#define READLINE  1
+#define READLINE  0
 #define HASHBANG  0
 /* #define BSD */
 #define POSIX     1

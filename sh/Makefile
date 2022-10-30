@@ -11,14 +11,7 @@ OBJS=	builtins.o cd.o dirent.o error.o eval.o exec.o expand.o input.o \
 	output.o var.o init.o \
 	bltin/echo.o bltin/expr.o bltin/operators.o bltin/regexp.o
 
-#
-# Set READLINE in shell.h and add -ledit to LIBS if you want to use the
-# editline package by Simmule Turner and Rich Salz.  (The big, bloated
-# and GPL contaminated FSF readline should work too.)
-#
-CPPFLAGS= -DSHELL -I. -D_MINIX -D_POSIX_SOURCE
-CFLAGS=	-wo -i $(CPPFLAGS)
-LIBS=	-ledit
+CFLAGS=	-w -DSHELL -I.
 
 CLEANFILES= $(OBJS) \
 	builtins.c builtins.h init.c mkinit mknodes mksignames mksyntax \
@@ -29,18 +22,6 @@ all:	sh
 
 sh:	$(OBJS)
 	$(CC) $(CFLAGS) -o sh $(OBJS) $(LIBS)
-	install -S 12kw sh
-
-install:	/usr/bin/ash /usr/bin/sh /bin/sh
-
-/usr/bin/ash:	sh
-	install -cs -o bin $? $@
-
-/usr/bin/sh:	/usr/bin/ash
-	install -l $? $@
-
-/bin/sh:	/usr/bin/ash
-	install -lcs $? $@
 
 clean:
 	rm -f $(CLEANFILES) sh core
@@ -57,25 +38,25 @@ init.o: mkinit $(SRCS)
 	./mkinit '$(CC) -c $(CFLAGS) init.c' $(SRCS)
 
 mkinit: mkinit.c
-	$(CC) $(CFLAGS) mkinit.c -o $@
+	$(CC) $(CFLAGS) -o $@ mkinit.c
 
 nodes.c nodes.h: mknodes nodetypes nodes.c.pat
 	./mknodes nodetypes nodes.c.pat
 
 mknodes: mknodes.c
-	$(CC) $(CFLAGS) mknodes.c -o $@
+	$(CC) $(CFLAGS) -o $@ mknodes.c
 
 signames.c signames.h: mksignames
 	./mksignames
 
 mksignames: mksignames.c
-	$(CC) $(CFLAGS) mksignames.c -o $@
+	$(CC) $(CFLAGS) -o $@ mksignames.c
 
 syntax.c syntax.h: mksyntax
 	./mksyntax
 
 mksyntax: mksyntax.c parser.h
-	$(CC) $(CFLAGS) mksyntax.c -o $@
+	$(CC) $(CFLAGS) -o $@ mksyntax.c
 
 bltin/operators.h:	bltin/mkexpr bltin/binary_op bltin/unary_op
 	cd bltin && sh mkexpr

@@ -49,7 +49,6 @@
 #define TILDE     1
 #define USEGETPW  0
 /* #define BSD */
-#define POSIX     1
 #define DEBUG     0
 
 #ifdef __STDC__

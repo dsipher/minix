@@ -91,6 +91,8 @@ STATIC void unsetvar(char *);
 STATIC struct var **hashvar(char *);
 STATIC int varequal(char *, char *);
 
+struct localvar *localvars;
+
 /*
  * This routine initializes the builtin variables.  It is called when the
  * shell is initialized and again when a shell procedure is spawned.

@@ -75,7 +75,7 @@ readcmd(argc, argv)  char **argv; {
     prompt = NULL;
     while ((i = nextopt("ep:")) != '\0') {
         if (i == 'p')
-            prompt = optarg;
+            prompt = noptarg;
         else
             eflag = 1;
     }

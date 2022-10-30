@@ -68,7 +68,7 @@ extern char *minusc;        /* argument to -c option */
 extern char *arg0;      /* $0 */
 extern struct shparam shellparam;  /* $@ */
 extern char **argptr;       /* argument list for builtin commands */
-extern char *optarg;        /* set by nextopt */
+extern char *noptarg;       /* set by nextopt */
 extern char *optptr;        /* used by nextopt */
 extern int editable;        /* isatty(0) && isatty(1) */
 

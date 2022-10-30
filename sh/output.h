@@ -63,7 +63,6 @@ void flushall(void);
 void flushout(struct output *);
 void freestdout(void);
 int xwrite(int, char *, int);
-int xioctl(int, int, int);
 
 #define outc(c, file)   (--(file)->nleft < 0? (emptyoutbuf(file), *(file)->nextc++ = (c)) : (*(file)->nextc++ = (c)))
 #define out1c(c)    outc(c, out1);

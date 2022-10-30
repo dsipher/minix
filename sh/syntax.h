@@ -32,7 +32,6 @@
 
 *****************************************************************************/
 
-#include <sys/cdefs.h>
 /* Syntax classes */
 #define CWORD 0			/* character is nothing special */
 #define CNL 1			/* newline character */

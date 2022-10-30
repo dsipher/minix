@@ -44,8 +44,6 @@
  */
 
 
-#include <sys/cdefs.h>
-
 #include <sys/types.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -144,7 +142,7 @@ void addstr(), addchar(), writetext();
 
 FILE *ckfopen();
 char *savestr();
-void *ckmalloc __P((int));
+void *ckmalloc(int);
 void error();
 
 main(argc, argv)

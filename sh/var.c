@@ -85,9 +85,9 @@ const struct varinit varinit[] = {
 
 struct var *vartab[VTABSIZE];
 
-STATIC void unsetvar __P((char *));
-STATIC struct var **hashvar __P((char *));
-STATIC int varequal __P((char *, char *));
+STATIC void unsetvar(char *);
+STATIC struct var **hashvar(char *);
+STATIC int varequal(char *, char *);
 
 /*
  * Initialize the varable symbol tables and import the environment

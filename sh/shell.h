@@ -62,8 +62,6 @@ typedef char *pointer;
 #define STATIC  /* empty */
 #define MKINIT  /* empty */
 
-#include <sys/cdefs.h>
-
 extern char nullstr[1];     /* null string */
 
 

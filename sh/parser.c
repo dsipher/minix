@@ -86,19 +86,19 @@ static const char types[] = "}-+?=";
 #endif
 
 
-STATIC union node *list __P((int));
-STATIC union node *andor __P((void));
-STATIC union node *pipeline __P((void));
-STATIC union node *command __P((void));
-STATIC union node *simplecmd __P((union node **, union node *));
-STATIC void parsefname __P((void));
-STATIC void parseheredoc __P((void));
-STATIC int readtoken __P((void));
-STATIC int readtoken1 __P((int, char const *, char *, int));
-STATIC void attyline __P((void));
-STATIC int noexpand __P((char *));
-STATIC void synexpect __P((int));
-STATIC void synerror __P((char *));
+STATIC union node *list(int);
+STATIC union node *andor(void);
+STATIC union node *pipeline(void);
+STATIC union node *command(void);
+STATIC union node *simplecmd(union node **, union node *);
+STATIC void parsefname(void);
+STATIC void parseheredoc(void);
+STATIC int readtoken(void);
+STATIC int readtoken1(int, char const *, char *, int);
+STATIC void attyline(void);
+STATIC int noexpand(char *);
+STATIC void synexpect(int);
+STATIC void synerror(char *);
 
 #define putprompt(s)    out2str(s)
 

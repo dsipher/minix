@@ -37,7 +37,6 @@
  *  JOBS -> 1 if you have Berkeley job control, 0 otherwise.
  *  TILDE -> 1 if you want the shell to expand ~logname.
  *  USEGETPW -> 1 if getpwnam() must be used to look up a name.
- *  SHORTNAMES -> 1 if your linker cannot handle long names.
  *  define BSD if you are running 4.2 BSD or later.
  *  define SYSV if you are running under System V.
  *  define DEBUG=1 to compile in debugging (set global "debug" to turn on)

@@ -1,42 +1,36 @@
-/*-
- * Copyright (c) 1991 The Regents of the University of California.
- * All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Kenneth Almquist.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+/*****************************************************************************
 
-#ifndef lint
-static char sccsid[] = "@(#)memalloc.c	5.2 (Berkeley) 3/13/91";
-#endif /* not lint */
+   memalloc.c                                                  ux/64 shell
+
+******************************************************************************
+
+   derived from ash, contributed to Berkeley by Kenneth Almquist.
+   Copyright (c) 1991 The Regents of the University of California.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+
+   THIS SOFTWARE IS  PROVIDED BY  THE COPYRIGHT  HOLDERS AND  CONTRIBUTORS
+   "AS  IS" AND  ANY EXPRESS  OR IMPLIED  WARRANTIES,  INCLUDING, BUT  NOT
+   LIMITED TO, THE  IMPLIED  WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS
+   FOR  A  PARTICULAR  PURPOSE  ARE  DISCLAIMED.  IN  NO  EVENT  SHALL THE
+   COPYRIGHT  HOLDER OR  CONTRIBUTORS BE  LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL,  SPECIAL, EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES (INCLUDING,
+   BUT NOT LIMITED TO,  PROCUREMENT OF  SUBSTITUTE GOODS OR SERVICES; LOSS
+   OF USE, DATA, OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY  OF LIABILITY, WHETHER IN CONTRACT,  STRICT LIABILITY, OR
+   TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE
+   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
 
 #include "shell.h"
 #include "output.h"
@@ -51,12 +45,12 @@ static char sccsid[] = "@(#)memalloc.c	5.2 (Berkeley) 3/13/91";
 
 pointer
 ckmalloc(nbytes) {
-	register pointer p;
-	pointer malloc();
+    register pointer p;
+    pointer malloc();
 
-	if ((p = malloc(nbytes)) == NULL)
-		error("Out of space");
-	return p;
+    if ((p = malloc(nbytes)) == NULL)
+        error("Out of space");
+    return p;
 }
 
 
@@ -66,13 +60,13 @@ ckmalloc(nbytes) {
 
 pointer
 ckrealloc(p, nbytes)
-	register pointer p;
-	{
-	pointer realloc();
+    register pointer p;
+    {
+    pointer realloc();
 
-	if ((p = realloc(p, nbytes)) == NULL)
-		error("Out of space");
-	return p;
+    if ((p = realloc(p, nbytes)) == NULL)
+        error("Out of space");
+    return p;
 }
 
 
@@ -82,13 +76,13 @@ ckrealloc(p, nbytes)
 
 char *
 savestr(s)
-	char *s;
-	{
-	register char *p;
+    char *s;
+    {
+    register char *p;
 
-	p = ckmalloc(strlen(s) + 1);
-	scopy(s, p);
-	return p;
+    p = ckmalloc(strlen(s) + 1);
+    scopy(s, p);
+    return p;
 }
 
 
@@ -101,12 +95,12 @@ savestr(s)
  * well.
  */
 
-#define MINSIZE 504		/* minimum size of a block */
+#define MINSIZE 504     /* minimum size of a block */
 
 
 struct stack_block {
-	struct stack_block *prev;
-	char space[MINSIZE];
+    struct stack_block *prev;
+    char space[MINSIZE];
 };
 
 struct stack_block stackbase;
@@ -120,70 +114,70 @@ int herefd = -1;
 
 pointer
 stalloc(nbytes) {
-	register char *p;
+    register char *p;
 
-	nbytes = ALIGN(nbytes);
-	if (nbytes > stacknleft) {
-		int blocksize;
-		struct stack_block *sp;
+    nbytes = ALIGN(nbytes);
+    if (nbytes > stacknleft) {
+        int blocksize;
+        struct stack_block *sp;
 
-		blocksize = nbytes;
-		if (blocksize < MINSIZE)
-			blocksize = MINSIZE;
-		INTOFF;
-		sp = ckmalloc(sizeof(struct stack_block) - MINSIZE + blocksize);
-		sp->prev = stackp;
-		stacknxt = sp->space;
-		stacknleft = blocksize;
-		stackp = sp;
-		INTON;
-	}
-	p = stacknxt;
-	stacknxt += nbytes;
-	stacknleft -= nbytes;
-	return p;
+        blocksize = nbytes;
+        if (blocksize < MINSIZE)
+            blocksize = MINSIZE;
+        INTOFF;
+        sp = ckmalloc(sizeof(struct stack_block) - MINSIZE + blocksize);
+        sp->prev = stackp;
+        stacknxt = sp->space;
+        stacknleft = blocksize;
+        stackp = sp;
+        INTON;
+    }
+    p = stacknxt;
+    stacknxt += nbytes;
+    stacknleft -= nbytes;
+    return p;
 }
 
 
 void
 stunalloc(p)
-	pointer p;
-	{
-	if (p == NULL) {		/*DEBUG */
-		write(2, "stunalloc\n", 10);
-		abort();
-	}
-	stacknleft += stacknxt - (char *)p;
-	stacknxt = p;
+    pointer p;
+    {
+    if (p == NULL) {        /*DEBUG */
+        write(2, "stunalloc\n", 10);
+        abort();
+    }
+    stacknleft += stacknxt - (char *)p;
+    stacknxt = p;
 }
 
 
 
 void
 setstackmark(mark)
-	struct stackmark *mark;
-	{
-	mark->stackp = stackp;
-	mark->stacknxt = stacknxt;
-	mark->stacknleft = stacknleft;
+    struct stackmark *mark;
+    {
+    mark->stackp = stackp;
+    mark->stacknxt = stacknxt;
+    mark->stacknleft = stacknleft;
 }
 
 
 void
 popstackmark(mark)
-	struct stackmark *mark;
-	{
-	struct stack_block *sp;
+    struct stackmark *mark;
+    {
+    struct stack_block *sp;
 
-	INTOFF;
-	while (stackp != mark->stackp) {
-		sp = stackp;
-		stackp = sp->prev;
-		ckfree(sp);
-	}
-	stacknxt = mark->stacknxt;
-	stacknleft = mark->stacknleft;
-	INTON;
+    INTOFF;
+    while (stackp != mark->stackp) {
+        sp = stackp;
+        stackp = sp->prev;
+        ckfree(sp);
+    }
+    stacknxt = mark->stacknxt;
+    stacknleft = mark->stacknleft;
+    INTON;
 }
 
 
@@ -199,37 +193,37 @@ popstackmark(mark)
 
 void
 growstackblock() {
-	char *p;
-	int newlen = stacknleft * 2 + 100;
-	char *oldspace = stacknxt;
-	int oldlen = stacknleft;
-	struct stack_block *sp;
+    char *p;
+    int newlen = stacknleft * 2 + 100;
+    char *oldspace = stacknxt;
+    int oldlen = stacknleft;
+    struct stack_block *sp;
 
-	if (stacknxt == stackp->space && stackp != &stackbase) {
-		INTOFF;
-		sp = stackp;
-		stackp = sp->prev;
-		sp = ckrealloc((pointer)sp, sizeof(struct stack_block) - MINSIZE + newlen);
-		sp->prev = stackp;
-		stackp = sp;
-		stacknxt = sp->space;
-		stacknleft = newlen;
-		INTON;
-	} else {
-		p = stalloc(newlen);
-		bcopy(oldspace, p, oldlen);
-		stacknxt = p;			/* free the space */
-		stacknleft += newlen;		/* we just allocated */
-	}
+    if (stacknxt == stackp->space && stackp != &stackbase) {
+        INTOFF;
+        sp = stackp;
+        stackp = sp->prev;
+        sp = ckrealloc((pointer)sp, sizeof(struct stack_block) - MINSIZE + newlen);
+        sp->prev = stackp;
+        stackp = sp;
+        stacknxt = sp->space;
+        stacknleft = newlen;
+        INTON;
+    } else {
+        p = stalloc(newlen);
+        bcopy(oldspace, p, oldlen);
+        stacknxt = p;           /* free the space */
+        stacknleft += newlen;       /* we just allocated */
+    }
 }
 
 
 
 void
 grabstackblock(len) {
-	len = ALIGN(len);
-	stacknxt += len;
-	stacknleft -= len;
+    len = ALIGN(len);
+    stacknxt += len;
+    stacknleft -= len;
 }
 
 
@@ -255,15 +249,15 @@ grabstackblock(len) {
 
 char *
 growstackstr() {
-	int len = stackblocksize();
-	if (herefd >= 0 && len >= 1024) {
-		xwrite(herefd, stackblock(), len);
-		sstrnleft = len - 1;
-		return stackblock();
-	}
-	growstackblock();
-	sstrnleft = stackblocksize() - len - 1;
-	return stackblock() + len;
+    int len = stackblocksize();
+    if (herefd >= 0 && len >= 1024) {
+        xwrite(herefd, stackblock(), len);
+        sstrnleft = len - 1;
+        return stackblock();
+    }
+    growstackblock();
+    sstrnleft = stackblocksize() - len - 1;
+    return stackblock() + len;
 }
 
 
@@ -273,20 +267,22 @@ growstackstr() {
 
 char *
 makestrspace() {
-	int len = stackblocksize() - sstrnleft;
-	growstackblock();
-	sstrnleft = stackblocksize() - len;
-	return stackblock() + len;
+    int len = stackblocksize() - sstrnleft;
+    growstackblock();
+    sstrnleft = stackblocksize() - len;
+    return stackblock() + len;
 }
 
 
 
 void
 ungrabstackstr(s, p)
-	char *s;
-	char *p;
-	{
-	stacknleft += stacknxt - s;
-	stacknxt = s;
-	sstrnleft = stacknleft - (p - s);
+    char *s;
+    char *p;
+    {
+    stacknleft += stacknxt - s;
+    stacknxt = s;
+    sstrnleft = stacknleft - (p - s);
 }
+
+/* vi: set ts=4 expandtab: */

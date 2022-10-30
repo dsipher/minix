@@ -1,48 +1,36 @@
-/*-
- * Copyright (c) 1991 The Regents of the University of California.
- * All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Kenneth Almquist.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+/*****************************************************************************
 
-#ifndef lint
-char copyright[] =
-"@(#) Copyright (c) 1991 The Regents of the University of California.\n\
- All rights reserved.\n";
-#endif /* not lint */
+   mkinit.c                                                    ux/64 shell
 
-#ifndef lint
-static char sccsid[] = "@(#)mkinit.c	5.3 (Berkeley) 3/13/91";
-#endif /* not lint */
+******************************************************************************
+
+   derived from ash, contributed to Berkeley by Kenneth Almquist.
+   Copyright (c) 1991 The Regents of the University of California.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+
+   THIS SOFTWARE IS  PROVIDED BY  THE COPYRIGHT  HOLDERS AND  CONTRIBUTORS
+   "AS  IS" AND  ANY EXPRESS  OR IMPLIED  WARRANTIES,  INCLUDING, BUT  NOT
+   LIMITED TO, THE  IMPLIED  WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS
+   FOR  A  PARTICULAR  PURPOSE  ARE  DISCLAIMED.  IN  NO  EVENT  SHALL THE
+   COPYRIGHT  HOLDER OR  CONTRIBUTORS BE  LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL,  SPECIAL, EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES (INCLUDING,
+   BUT NOT LIMITED TO,  PROCUREMENT OF  SUBSTITUTE GOODS OR SERVICES; LOSS
+   OF USE, DATA, OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY  OF LIABILITY, WHETHER IN CONTRACT,  STRICT LIABILITY, OR
+   TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE
+   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
 
 /*
  * This program scans all the source files for code to handle various
@@ -85,15 +73,15 @@ static char sccsid[] = "@(#)mkinit.c	5.3 (Berkeley) 3/13/91";
 #define BLOCKSIZE 512
 
 struct text {
-	char *nextc;
-	int nleft;
-	struct block *start;
-	struct block *last;
-};      
+    char *nextc;
+    int nleft;
+    struct block *start;
+    struct block *last;
+};
 
 struct block {
-	struct block *next;
-	char text[BLOCKSIZE];
+    struct block *next;
+    char text[BLOCKSIZE];
 };
 
 
@@ -102,10 +90,10 @@ struct block {
  */
 
 struct event {
-	char *name;		/* name of event (e.g. INIT) */
-	char *routine;		/* name of routine called on event */
-	char *comment;		/* comment describing routine */
-	struct text code;		/* code for handling event */
+    char *name;     /* name of event (e.g. INIT) */
+    char *routine;      /* name of routine called on event */
+    char *comment;      /* comment describing routine */
+    struct text code;       /* code for handling event */
 };
 
 
@@ -133,25 +121,25 @@ char shellproc[] = "\
 
 
 struct event event[] = {
-	{"INIT", "init", init},
-	{"RESET", "reset", reset},
-	{"SHELLPROC", "initshellproc", shellproc},
-	{NULL, NULL}
+    {"INIT", "init", init},
+    {"RESET", "reset", reset},
+    {"SHELLPROC", "initshellproc", shellproc},
+    {NULL, NULL}
 };
 
 
-char *curfile;				/* current file */
-int linno;				/* current line */
-char *header_files[200];		/* list of header files */
-struct text defines;			/* #define statements */
-struct text decls;			/* declarations */
-int amiddecls;				/* for formatting */
+char *curfile;              /* current file */
+int linno;              /* current line */
+char *header_files[200];        /* list of header files */
+struct text defines;            /* #define statements */
+struct text decls;          /* declarations */
+int amiddecls;              /* for formatting */
 
 
 void readfile(), doevent(), doinclude(), dodecl(), output();
 void addstr(), addchar(), writetext();
 
-#define equal(s1, s2)	(strcmp(s1, s2) == 0)
+#define equal(s1, s2)   (strcmp(s1, s2) == 0)
 
 FILE *ckfopen();
 char *savestr();
@@ -159,31 +147,31 @@ void *ckmalloc __P((int));
 void error();
 
 main(argc, argv)
-	char **argv;
-	{
-	char **ap;
-	int fd;
-	char c;
+    char **argv;
+    {
+    char **ap;
+    int fd;
+    char c;
 
-	if (argc < 2)
-		error("Usage:  mkinit command file...");
-	header_files[0] = "\"shell.h\"";
-	header_files[1] = "\"mystring.h\"";
-	for (ap = argv + 2 ; *ap ; ap++)
-		readfile(*ap);
-	output();
-	if (file_changed()) {
-		unlink(OUTFILE);
-		link(OUTTEMP, OUTFILE);
-		unlink(OUTTEMP);
-	} else {
-		unlink(OUTTEMP);
-		if (touch(OUTOBJ))
-			exit(0);		/* no compilation necessary */
-	}
-	printf("%s\n", argv[1]);
-	execl("/bin/sh", "sh", "-c", argv[1], (char *)0);
-	error("Can't exec shell");
+    if (argc < 2)
+        error("Usage:  mkinit command file...");
+    header_files[0] = "\"shell.h\"";
+    header_files[1] = "\"mystring.h\"";
+    for (ap = argv + 2 ; *ap ; ap++)
+        readfile(*ap);
+    output();
+    if (file_changed()) {
+        unlink(OUTFILE);
+        link(OUTTEMP, OUTFILE);
+        unlink(OUTTEMP);
+    } else {
+        unlink(OUTTEMP);
+        if (touch(OUTOBJ))
+            exit(0);        /* no compilation necessary */
+    }
+    printf("%s\n", argv[1]);
+    execl("/bin/sh", "sh", "-c", argv[1], (char *)0);
+    error("Can't exec shell");
 }
 
 
@@ -193,180 +181,180 @@ main(argc, argv)
 
 void
 readfile(fname)
-	char *fname;
-	{
-	FILE *fp;
-	char line[1024];
-	struct event *ep;
+    char *fname;
+    {
+    FILE *fp;
+    char line[1024];
+    struct event *ep;
 
-	fp = ckfopen(fname, "r");
-	curfile = fname;
-	linno = 0;
-	amiddecls = 0;
-	while (fgets(line, sizeof line, fp) != NULL) {
-		linno++;
-		for (ep = event ; ep->name ; ep++) {
-			if (line[0] == ep->name[0] && match(ep->name, line)) {
-				doevent(ep, fp, fname);
-				break;
-			}
-		}
-		if (line[0] == 'I' && match("INCLUDE", line))
-			doinclude(line);
-		if (line[0] == 'M' && match("MKINIT", line))
-			dodecl(line, fp);
-		if (line[0] == '#' && gooddefine(line))
-			addstr(line, &defines);
-	}
-	fclose(fp);
+    fp = ckfopen(fname, "r");
+    curfile = fname;
+    linno = 0;
+    amiddecls = 0;
+    while (fgets(line, sizeof line, fp) != NULL) {
+        linno++;
+        for (ep = event ; ep->name ; ep++) {
+            if (line[0] == ep->name[0] && match(ep->name, line)) {
+                doevent(ep, fp, fname);
+                break;
+            }
+        }
+        if (line[0] == 'I' && match("INCLUDE", line))
+            doinclude(line);
+        if (line[0] == 'M' && match("MKINIT", line))
+            dodecl(line, fp);
+        if (line[0] == '#' && gooddefine(line))
+            addstr(line, &defines);
+    }
+    fclose(fp);
 }
 
 
 int
 match(name, line)
-	char *name;
-	char *line;
-	{
-	register char *p, *q;
+    char *name;
+    char *line;
+    {
+    register char *p, *q;
 
-	p = name, q = line;
-	while (*p) {
-		if (*p++ != *q++)
-			return 0;
-	}
-	if (*q != '{' && *q != ' ' && *q != '\t' && *q != '\n')
-		return 0;
-	return 1;
+    p = name, q = line;
+    while (*p) {
+        if (*p++ != *q++)
+            return 0;
+    }
+    if (*q != '{' && *q != ' ' && *q != '\t' && *q != '\n')
+        return 0;
+    return 1;
 }
 
 
 int
 gooddefine(line)
-	char *line;
-	{
-	register char *p;
+    char *line;
+    {
+    register char *p;
 
-	if (! match("#define", line))
-		return 0;			/* not a define */
-	p = line + 7;
-	while (*p == ' ' || *p == '\t')
-		p++;
-	while (*p != ' ' && *p != '\t') {
-		if (*p == '(')
-			return 0;		/* macro definition */
-		p++;
-	}
-	while (*p != '\n' && *p != '\0')
-		p++;
-	if (p[-1] == '\\')
-		return 0;			/* multi-line definition */
-	return 1;
+    if (! match("#define", line))
+        return 0;           /* not a define */
+    p = line + 7;
+    while (*p == ' ' || *p == '\t')
+        p++;
+    while (*p != ' ' && *p != '\t') {
+        if (*p == '(')
+            return 0;       /* macro definition */
+        p++;
+    }
+    while (*p != '\n' && *p != '\0')
+        p++;
+    if (p[-1] == '\\')
+        return 0;           /* multi-line definition */
+    return 1;
 }
 
 
 void
 doevent(ep, fp, fname)
-	register struct event *ep;
-	FILE *fp;
-	char *fname;
-	{
-	char line[1024];
-	int indent;
-	char *p;
+    register struct event *ep;
+    FILE *fp;
+    char *fname;
+    {
+    char line[1024];
+    int indent;
+    char *p;
 
-	sprintf(line, "\n      /* from %s: */\n", fname);
-	addstr(line, &ep->code);
-	addstr("      {\n", &ep->code);
-	for (;;) {
-		linno++;
-		if (fgets(line, sizeof line, fp) == NULL)
-			error("Unexpected EOF");
-		if (equal(line, "}\n"))
-			break;
-		indent = 6;
-		for (p = line ; *p == '\t' ; p++)
-			indent += 8;
-		for ( ; *p == ' ' ; p++)
-			indent++;
-		if (*p == '\n' || *p == '#')
-			indent = 0;
-		while (indent >= 8) {
-			addchar('\t', &ep->code);
-			indent -= 8;
-		}
-		while (indent > 0) {
-			addchar(' ', &ep->code);
-			indent--;
-		}
-		addstr(p, &ep->code);
-	}
-	addstr("      }\n", &ep->code);
+    sprintf(line, "\n      /* from %s: */\n", fname);
+    addstr(line, &ep->code);
+    addstr("      {\n", &ep->code);
+    for (;;) {
+        linno++;
+        if (fgets(line, sizeof line, fp) == NULL)
+            error("Unexpected EOF");
+        if (equal(line, "}\n"))
+            break;
+        indent = 6;
+        for (p = line ; *p == '\t' ; p++)
+            indent += 8;
+        for ( ; *p == ' ' ; p++)
+            indent++;
+        if (*p == '\n' || *p == '#')
+            indent = 0;
+        while (indent >= 8) {
+            addchar('\t', &ep->code);
+            indent -= 8;
+        }
+        while (indent > 0) {
+            addchar(' ', &ep->code);
+            indent--;
+        }
+        addstr(p, &ep->code);
+    }
+    addstr("      }\n", &ep->code);
 }
 
 
 void
 doinclude(line)
-	char *line;
-	{
-	register char *p;
-	char *name;
-	register char **pp;
+    char *line;
+    {
+    register char *p;
+    char *name;
+    register char **pp;
 
-	for (p = line ; *p != '"' && *p != '<' && *p != '\0' ; p++);
-	if (*p == '\0')
-		error("Expecting '\"' or '<'");
-	name = p;
-	while (*p != ' ' && *p != '\t' && *p != '\n')
-		p++;
-	if (p[-1] != '"' && p[-1] != '>')
-		error("Missing terminator");
-	*p = '\0';
+    for (p = line ; *p != '"' && *p != '<' && *p != '\0' ; p++);
+    if (*p == '\0')
+        error("Expecting '\"' or '<'");
+    name = p;
+    while (*p != ' ' && *p != '\t' && *p != '\n')
+        p++;
+    if (p[-1] != '"' && p[-1] != '>')
+        error("Missing terminator");
+    *p = '\0';
 
-	/* name now contains the name of the include file */
-	for (pp = header_files ; *pp && ! equal(*pp, name) ; pp++);
-	if (*pp == NULL)
-		*pp = savestr(name);
+    /* name now contains the name of the include file */
+    for (pp = header_files ; *pp && ! equal(*pp, name) ; pp++);
+    if (*pp == NULL)
+        *pp = savestr(name);
 }
 
 
 void
 dodecl(line1, fp)
-	char *line1;
-	FILE *fp;
-	{
-	char line[1024];
-	register char *p, *q;
+    char *line1;
+    FILE *fp;
+    {
+    char line[1024];
+    register char *p, *q;
 
-	if (strcmp(line1, "MKINIT\n") == 0) { /* start of struct/union decl */
-		addchar('\n', &decls);
-		do {
-			linno++;
-			if (fgets(line, sizeof line, fp) == NULL)
-				error("Unterminated structure declaration");
-			addstr(line, &decls);
-		} while (line[0] != '}');
-		amiddecls = 0;
-	} else {
-		if (! amiddecls)
-			addchar('\n', &decls);
-		q = NULL;
-		for (p = line1 + 6 ; *p != '=' && *p != '/' ; p++);
-		if (*p == '=') {		/* eliminate initialization */
-			for (q = p ; *q && *q != ';' ; q++);
-			if (*q == '\0')
-				q = NULL;
-			else {
-				while (p[-1] == ' ')
-					p--;
-				*p = '\0';
-			}
-		}
-		addstr("extern", &decls);
-		addstr(line1 + 6, &decls);
-		if (q != NULL)
-			addstr(q, &decls);
-		amiddecls = 1;
-	}
+    if (strcmp(line1, "MKINIT\n") == 0) { /* start of struct/union decl */
+        addchar('\n', &decls);
+        do {
+            linno++;
+            if (fgets(line, sizeof line, fp) == NULL)
+                error("Unterminated structure declaration");
+            addstr(line, &decls);
+        } while (line[0] != '}');
+        amiddecls = 0;
+    } else {
+        if (! amiddecls)
+            addchar('\n', &decls);
+        q = NULL;
+        for (p = line1 + 6 ; *p != '=' && *p != '/' ; p++);
+        if (*p == '=') {        /* eliminate initialization */
+            for (q = p ; *q && *q != ';' ; q++);
+            if (*q == '\0')
+                q = NULL;
+            else {
+                while (p[-1] == ' ')
+                    p--;
+                *p = '\0';
+            }
+        }
+        addstr("extern", &decls);
+        addstr(line1 + 6, &decls);
+        if (q != NULL)
+            addstr(q, &decls);
+        amiddecls = 1;
+    }
 }
 
 
@@ -377,26 +365,26 @@ dodecl(line1, fp)
 
 void
 output() {
-	FILE *fp;
-	char **pp;
-	struct event *ep;
+    FILE *fp;
+    char **pp;
+    struct event *ep;
 
-	fp = ckfopen(OUTTEMP, "w");
-	fputs(writer, fp);
-	for (pp = header_files ; *pp ; pp++)
-		fprintf(fp, "#include %s\n", *pp);
-	fputs("\n\n\n", fp);
-	writetext(&defines, fp);
-	fputs("\n\n", fp);
-	writetext(&decls, fp);
-	for (ep = event ; ep->name ; ep++) {
-		fputs("\n\n\n", fp);
-		fputs(ep->comment, fp);
-		fprintf(fp, "\nvoid\n%s() {\n", ep->routine);
-		writetext(&ep->code, fp);
-		fprintf(fp, "}\n");
-	}
-	fclose(fp);
+    fp = ckfopen(OUTTEMP, "w");
+    fputs(writer, fp);
+    for (pp = header_files ; *pp ; pp++)
+        fprintf(fp, "#include %s\n", *pp);
+    fputs("\n\n\n", fp);
+    writetext(&defines, fp);
+    fputs("\n\n", fp);
+    writetext(&decls, fp);
+    for (ep = event ; ep->name ; ep++) {
+        fputs("\n\n\n", fp);
+        fputs(ep->comment, fp);
+        fprintf(fp, "\nvoid\n%s() {\n", ep->routine);
+        writetext(&ep->code, fp);
+        fprintf(fp, "}\n");
+    }
+    fclose(fp);
 }
 
 
@@ -406,17 +394,17 @@ output() {
 
 int
 file_changed() {
-	register FILE *f1, *f2;
-	register int c;
+    register FILE *f1, *f2;
+    register int c;
 
-	if ((f1 = fopen(OUTFILE, "r")) == NULL
-	 || (f2 = fopen(OUTTEMP, "r")) == NULL)
-		return 1;
-	while ((c = getc(f1)) == getc(f2)) {
-		if (c == EOF)
-			return 0;
-	}
-	return 1;
+    if ((f1 = fopen(OUTFILE, "r")) == NULL
+     || (f2 = fopen(OUTTEMP, "r")) == NULL)
+        return 1;
+    while ((c = getc(f1)) == getc(f2)) {
+        if (c == EOF)
+            return 0;
+    }
+    return 1;
 }
 
 
@@ -426,21 +414,21 @@ file_changed() {
 
 int
 touch(file)
-	char *file;
-	{
-	int fd;
-	char c;
+    char *file;
+    {
+    int fd;
+    char c;
 
-	if ((fd = open(file, O_RDWR)) < 0)
-		return 0;
-	if (read(fd, &c, 1) != 1) {
-		close(fd);
-		return 0;
-	}
-	lseek(fd, 0L, 0);
-	write(fd, &c, 1);
-	close(fd);
-	return 1;
+    if ((fd = open(file, O_RDWR)) < 0)
+        return 0;
+    if (read(fd, &c, 1) != 1) {
+        close(fd);
+        return 0;
+    }
+    lseek(fd, 0L, 0);
+    write(fd, &c, 1);
+    close(fd);
+    return 1;
 }
 
 
@@ -453,35 +441,35 @@ touch(file)
 
 void
 addstr(s, text)
-	register char *s;
-	register struct text *text;
-	{
-	while (*s) {
-		if (--text->nleft < 0)
-			addchar(*s++, text);
-		else
-			*text->nextc++ = *s++;
-	}
+    register char *s;
+    register struct text *text;
+    {
+    while (*s) {
+        if (--text->nleft < 0)
+            addchar(*s++, text);
+        else
+            *text->nextc++ = *s++;
+    }
 }
 
 
 void
 addchar(c, text)
-	register struct text *text;
-	{
-	struct block *bp;
+    register struct text *text;
+    {
+    struct block *bp;
 
-	if (--text->nleft < 0) {
-		bp = ckmalloc(sizeof *bp);
-		if (text->start == NULL)
-			text->start = bp;
-		else
-			text->last->next = bp;
-		text->last = bp;
-		text->nextc = bp->text;
-		text->nleft = BLOCKSIZE - 1;
-	}
-	*text->nextc++ = c;
+    if (--text->nleft < 0) {
+        bp = ckmalloc(sizeof *bp);
+        if (text->start == NULL)
+            text->start = bp;
+        else
+            text->last->next = bp;
+        text->last = bp;
+        text->nextc = bp->text;
+        text->nleft = BLOCKSIZE - 1;
+    }
+    *text->nextc++ = c;
 }
 
 /*
@@ -489,59 +477,61 @@ addchar(c, text)
  */
 void
 writetext(text, fp)
-	struct text *text;
-	FILE *fp;
-	{
-	struct block *bp;
+    struct text *text;
+    FILE *fp;
+    {
+    struct block *bp;
 
-	if (text->start != NULL) {
-		for (bp = text->start ; bp != text->last ; bp = bp->next)
-			fwrite(bp->text, sizeof (char), BLOCKSIZE, fp);
-		fwrite(bp->text, sizeof (char), BLOCKSIZE - text->nleft, fp);
-	}
+    if (text->start != NULL) {
+        for (bp = text->start ; bp != text->last ; bp = bp->next)
+            fwrite(bp->text, sizeof (char), BLOCKSIZE, fp);
+        fwrite(bp->text, sizeof (char), BLOCKSIZE - text->nleft, fp);
+    }
 }
 
 FILE *
 ckfopen(file, mode)
-	char *file;
-	char *mode;
-	{
-	FILE *fp;
+    char *file;
+    char *mode;
+    {
+    FILE *fp;
 
-	if ((fp = fopen(file, mode)) == NULL) {
-		fprintf(stderr, "Can't open %s\n", file);
-		exit(2);
-	}
-	return fp;
+    if ((fp = fopen(file, mode)) == NULL) {
+        fprintf(stderr, "Can't open %s\n", file);
+        exit(2);
+    }
+    return fp;
 }
 
 void *
 ckmalloc(nbytes) {
-	register char *p;
-	char *malloc();
+    register char *p;
+    char *malloc();
 
-	if ((p = malloc(nbytes)) == NULL)
-		error("Out of space");
-	return p;
+    if ((p = malloc(nbytes)) == NULL)
+        error("Out of space");
+    return p;
 }
 
 char *
 savestr(s)
-	char *s;
-	{
-	register char *p;
+    char *s;
+    {
+    register char *p;
 
-	p = ckmalloc(strlen(s) + 1);
-	strcpy(p, s);
-	return p;
+    p = ckmalloc(strlen(s) + 1);
+    strcpy(p, s);
+    return p;
 }
 
 void
 error(msg)
-	char *msg;
-	{
-	if (curfile != NULL)
-		fprintf(stderr, "%s:%d: ", curfile, linno);
-	fprintf(stderr, "%s\n", msg);
-	exit(2);
+    char *msg;
+    {
+    if (curfile != NULL)
+        fprintf(stderr, "%s:%d: ", curfile, linno);
+    fprintf(stderr, "%s\n", msg);
+    exit(2);
 }
+
+/* vi: set ts=4 expandtab: */

@@ -1,53 +1,47 @@
-/*-
- * Copyright (c) 1991 The Regents of the University of California.
- * All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Kenneth Almquist.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+/*****************************************************************************
 
-#ifndef lint
-static char sccsid[] = "@(#)mystring.c	5.1 (Berkeley) 3/7/91";
-#endif /* not lint */
+   mystring.c                                                  ux/64 shell
+
+******************************************************************************
+
+   derived from ash, contributed to Berkeley by Kenneth Almquist.
+   Copyright (c) 1991 The Regents of the University of California.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+
+   THIS SOFTWARE IS  PROVIDED BY  THE COPYRIGHT  HOLDERS AND  CONTRIBUTORS
+   "AS  IS" AND  ANY EXPRESS  OR IMPLIED  WARRANTIES,  INCLUDING, BUT  NOT
+   LIMITED TO, THE  IMPLIED  WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS
+   FOR  A  PARTICULAR  PURPOSE  ARE  DISCLAIMED.  IN  NO  EVENT  SHALL THE
+   COPYRIGHT  HOLDER OR  CONTRIBUTORS BE  LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL,  SPECIAL, EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES (INCLUDING,
+   BUT NOT LIMITED TO,  PROCUREMENT OF  SUBSTITUTE GOODS OR SERVICES; LOSS
+   OF USE, DATA, OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY  OF LIABILITY, WHETHER IN CONTRACT,  STRICT LIABILITY, OR
+   TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE
+   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
 
 /*
  * String functions.
  *
- *	equal(s1, s2)		Return true if strings are equal.
- *	scopy(from, to)		Copy a string.
- *	scopyn(from, to, n)	Like scopy, but checks for overflow.
- *	strchr(s, c)		Find first occurance of c in s.
- *	bcopy(from, to, n)	Copy a block of memory.
- *	number(s)		Convert a string of digits to an integer.
- *	is_number(s)		Return true if s is a string of digits.
+ *  equal(s1, s2)       Return true if strings are equal.
+ *  scopy(from, to)     Copy a string.
+ *  scopyn(from, to, n) Like scopy, but checks for overflow.
+ *  strchr(s, c)        Find first occurance of c in s.
+ *  bcopy(from, to, n)  Copy a block of memory.
+ *  number(s)       Convert a string of digits to an integer.
+ *  is_number(s)        Return true if s is a string of digits.
  */
 
 #include "shell.h"
@@ -56,27 +50,27 @@ static char sccsid[] = "@(#)mystring.c	5.1 (Berkeley) 3/7/91";
 #include "mystring.h"
 
 
-char nullstr[1];		/* zero length string */
+char nullstr[1];        /* zero length string */
 
 
 /*
  * scopyn - copy a string from "from" to "to", truncating the string
- *		if necessary.  "To" is always nul terminated, even if
- *		truncation is performed.  "Size" is the size of "to".
+ *      if necessary.  "To" is always nul terminated, even if
+ *      truncation is performed.  "Size" is the size of "to".
  */
 
 void
 scopyn(from, to, size)
-	register char const *from;
-	register char *to;
-	register int size;
-	{
+    register char const *from;
+    register char *to;
+    register int size;
+    {
 
-	while (--size > 0) {
-		if ((*to++ = *from++) == '\0')
-			return;
-	}
-	*to = '\0';
+    while (--size > 0) {
+        if ((*to++ = *from++) == '\0')
+            return;
+    }
+    *to = '\0';
 }
 
 
@@ -87,18 +81,18 @@ scopyn(from, to, size)
 #ifndef SYS5
 char *
 mystrchr(s, charwanted)
-	char const *s;
-	register char charwanted;
-	{
-	register char const *scan;
+    char const *s;
+    register char charwanted;
+    {
+    register char const *scan;
 
-	/*
-	 * The odd placement of the two tests is so NUL is findable.
-	 */
-	for (scan = s ; *scan != charwanted ; )	/* ++ moved down for opt. */
-		if (*scan++ == '\0')
-			return NULL;
-	return (char *)scan;
+    /*
+     * The odd placement of the two tests is so NUL is findable.
+     */
+    for (scan = s ; *scan != charwanted ; ) /* ++ moved down for opt. */
+        if (*scan++ == '\0')
+            return NULL;
+    return (char *)scan;
 }
 #endif
 
@@ -112,15 +106,15 @@ mystrchr(s, charwanted)
 
 void
 mybcopy(src, dst, length)
-	pointer dst;
-	const pointer src;
-	register int length;
-	{
-	register char *d = dst;
-	register char *s = src;
+    pointer dst;
+    const pointer src;
+    register int length;
+    {
+    register char *d = dst;
+    register char *s = src;
 
-	while (--length >= 0)
-		*d++ = *s++;
+    while (--length >= 0)
+        *d++ = *s++;
 }
 
 
@@ -130,14 +124,14 @@ mybcopy(src, dst, length)
 
 int
 prefix(pfx, string)
-	register char const *pfx;
-	register char const *string;
-	{
-	while (*pfx) {
-		if (*pfx++ != *string++)
-			return 0;
-	}
-	return 1;
+    register char const *pfx;
+    register char const *string;
+    {
+    while (*pfx) {
+        if (*pfx++ != *string++)
+            return 0;
+    }
+    return 1;
 }
 
 
@@ -148,12 +142,12 @@ prefix(pfx, string)
 
 int
 number(s)
-	const char *s;
-	{
+    const char *s;
+    {
 
-	if (! is_number(s))
-		error2("Illegal number", (char *)s);
-	return atoi(s);
+    if (! is_number(s))
+        error2("Illegal number", (char *)s);
+    return atoi(s);
 }
 
 
@@ -164,11 +158,13 @@ number(s)
 
 int
 is_number(p)
-	register const char *p;
-	{
-	do {
-		if (! is_digit(*p))
-			return 0;
-	} while (*++p != '\0');
-	return 1;
+    register const char *p;
+    {
+    do {
+        if (! is_digit(*p))
+            return 0;
+    } while (*++p != '\0');
+    return 1;
 }
+
+/* vi: set ts=4 expandtab: */

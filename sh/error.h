@@ -1,48 +1,44 @@
-/*-
- * Copyright (c) 1991 The Regents of the University of California.
- * All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Kenneth Almquist.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- *
- *	@(#)error.h	5.1 (Berkeley) 3/7/91
- */
+/*****************************************************************************
+
+   error.h                                                     ux/64 shell
+
+******************************************************************************
+
+   derived from ash, contributed to Berkeley by Kenneth Almquist.
+   Copyright (c) 1991 The Regents of the University of California.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+
+   THIS SOFTWARE IS  PROVIDED BY  THE COPYRIGHT  HOLDERS AND  CONTRIBUTORS
+   "AS  IS" AND  ANY EXPRESS  OR IMPLIED  WARRANTIES,  INCLUDING, BUT  NOT
+   LIMITED TO, THE  IMPLIED  WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS
+   FOR  A  PARTICULAR  PURPOSE  ARE  DISCLAIMED.  IN  NO  EVENT  SHALL THE
+   COPYRIGHT  HOLDER OR  CONTRIBUTORS BE  LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL,  SPECIAL, EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES (INCLUDING,
+   BUT NOT LIMITED TO,  PROCUREMENT OF  SUBSTITUTE GOODS OR SERVICES; LOSS
+   OF USE, DATA, OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY  OF LIABILITY, WHETHER IN CONTRACT,  STRICT LIABILITY, OR
+   TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE
+   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
 
 /*
  * Types of operations (passed to the errmsg routine).
  */
 
-#define E_OPEN 01	/* opening a file */
-#define E_CREAT 02	/* creating a file */
-#define E_EXEC 04	/* executing a program */
+#define E_OPEN 01   /* opening a file */
+#define E_CREAT 02  /* creating a file */
+#define E_EXEC 04   /* executing a program */
 
 
 /*
@@ -58,16 +54,16 @@
 #include <setjmp.h>
 
 struct jmploc {
-	jmp_buf loc;
+    jmp_buf loc;
 };
 
 extern struct jmploc *handler;
 extern int exception;
 
 /* exceptions */
-#define EXINT 0		/* SIGINT received */
-#define EXERROR 1	/* a generic error */
-#define EXSHELLPROC 2	/* execute a shell procedure */
+#define EXINT 0     /* SIGINT received */
+#define EXERROR 1   /* a generic error */
+#define EXSHELLPROC 2   /* execute a shell procedure */
 
 
 /*
@@ -79,7 +75,7 @@ extern int exception;
 
 extern volatile int suppressint;
 extern volatile int intpending;
-extern char *commandname;	/* name of command--printed on error */
+extern char *commandname;   /* name of command--printed on error */
 
 #define INTOFF suppressint++
 #define INTON if (--suppressint == 0 && intpending) onint(); else
@@ -102,7 +98,7 @@ char *errmsg();
 #endif
 
 /* Errmsg uses confusingly different messages.  Prefer strerror().  -- kjb */
-#define errmsg(errno, action)	strerror(errno)
+#define errmsg(errno, action)   strerror(errno)
 
 
 /*
@@ -111,6 +107,8 @@ char *errmsg();
  */
 
 #ifdef BSD
-#define setjmp(jmploc)	_setjmp(jmploc)
-#define longjmp(jmploc, val)	_longjmp(jmploc, val)
+#define setjmp(jmploc)  _setjmp(jmploc)
+#define longjmp(jmploc, val)    _longjmp(jmploc, val)
 #endif
+
+/* vi: set ts=4 expandtab: */

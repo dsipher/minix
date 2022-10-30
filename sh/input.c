@@ -1,49 +1,43 @@
-/*-
- * Copyright (c) 1991 The Regents of the University of California.
- * All rights reserved.
- *
- * This code is derived from software contributed to Berkeley by
- * Kenneth Almquist.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- * 3. All advertising materials mentioning features or use of this software
- *    must display the following acknowledgement:
- *	This product includes software developed by the University of
- *	California, Berkeley and its contributors.
- * 4. Neither the name of the University nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
- * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
- * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- * SUCH DAMAGE.
- */
+/*****************************************************************************
 
-#ifndef lint
-static char sccsid[] = "@(#)input.c	5.4 (Berkeley) 7/1/91";
-#endif /* not lint */
+   input.c                                                     ux/64 shell
+
+******************************************************************************
+
+   derived from ash, contributed to Berkeley by Kenneth Almquist.
+   Copyright (c) 1991 The Regents of the University of California.
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in the
+     documentation and/or other materials provided with the distribution.
+
+   THIS SOFTWARE IS  PROVIDED BY  THE COPYRIGHT  HOLDERS AND  CONTRIBUTORS
+   "AS  IS" AND  ANY EXPRESS  OR IMPLIED  WARRANTIES,  INCLUDING, BUT  NOT
+   LIMITED TO, THE  IMPLIED  WARRANTIES  OF  MERCHANTABILITY  AND  FITNESS
+   FOR  A  PARTICULAR  PURPOSE  ARE  DISCLAIMED.  IN  NO  EVENT  SHALL THE
+   COPYRIGHT  HOLDER OR  CONTRIBUTORS BE  LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL,  SPECIAL, EXEMPLARY,  OR CONSEQUENTIAL  DAMAGES (INCLUDING,
+   BUT NOT LIMITED TO,  PROCUREMENT OF  SUBSTITUTE GOODS OR SERVICES; LOSS
+   OF USE, DATA, OR PROFITS;  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   ON ANY THEORY  OF LIABILITY, WHETHER IN CONTRACT,  STRICT LIABILITY, OR
+   TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  ARISING IN ANY WAY OUT OF THE
+   USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*****************************************************************************/
 
 /*
  * This file implements the input routines used by the parser.
  */
 
 #include <sys/types.h>
-#include <stdio.h>	/* defines BUFSIZ */
+#include <stdio.h>  /* defines BUFSIZ */
 #include "shell.h"
 #include <fcntl.h>
 #include <errno.h>
@@ -53,7 +47,7 @@ static char sccsid[] = "@(#)input.c	5.4 (Berkeley) 7/1/91";
 #include "memalloc.h"
 #include "error.h"
 
-#define EOF_NLEFT -99		/* value of parsenleft when EOF pushed back */
+#define EOF_NLEFT -99       /* value of parsenleft when EOF pushed back */
 
 
 /*
@@ -63,27 +57,27 @@ static char sccsid[] = "@(#)input.c	5.4 (Berkeley) 7/1/91";
 
 MKINIT
 struct parsefile {
-	int linno;		/* current line */
-	int fd;			/* file descriptor (or -1 if string) */
-	int nleft;		/* number of chars left in buffer */
-	char *nextc;		/* next char in buffer */
-	struct parsefile *prev;	/* preceding file on stack */
-	char *buf;		/* input buffer */
+    int linno;      /* current line */
+    int fd;         /* file descriptor (or -1 if string) */
+    int nleft;      /* number of chars left in buffer */
+    char *nextc;        /* next char in buffer */
+    struct parsefile *prev; /* preceding file on stack */
+    char *buf;      /* input buffer */
 };
 
 
-int plinno = 1;			/* input line number */
-MKINIT int parsenleft;		/* copy of parsefile->nleft */
-char *parsenextc;		/* copy of parsefile->nextc */
-MKINIT struct parsefile basepf;	/* top level input file */
-char basebuf[BUFSIZ];		/* buffer for top level input file */
-struct parsefile *parsefile = &basepf;	/* current input file */
-char *pushedstring;		/* copy of parsenextc when text pushed back */
-int pushednleft;		/* copy of parsenleft when text pushed back */
+int plinno = 1;         /* input line number */
+MKINIT int parsenleft;      /* copy of parsefile->nleft */
+char *parsenextc;       /* copy of parsefile->nextc */
+MKINIT struct parsefile basepf; /* top level input file */
+char basebuf[BUFSIZ];       /* buffer for top level input file */
+struct parsefile *parsefile = &basepf;  /* current input file */
+char *pushedstring;     /* copy of parsenextc when text pushed back */
+int pushednleft;        /* copy of parsenleft when text pushed back */
 
 #if READLINE
 char *readline __P((const char *prompt));
-char *r_use_prompt = NULL;	/* the prompt to use with readline */
+char *r_use_prompt = NULL;  /* the prompt to use with readline */
 #endif
 
 #ifdef __STDC__
@@ -99,19 +93,19 @@ INCLUDE "input.h"
 INCLUDE "error.h"
 
 INIT {
-	extern char basebuf[];
+    extern char basebuf[];
 
-	basepf.nextc = basepf.buf = basebuf;
+    basepf.nextc = basepf.buf = basebuf;
 }
 
 RESET {
-	if (exception != EXSHELLPROC)
-		parsenleft = 0;            /* clear input buffer */
-	popallfiles();
+    if (exception != EXSHELLPROC)
+        parsenleft = 0;            /* clear input buffer */
+    popallfiles();
 }
 
 SHELLPROC {
-	popallfiles();
+    popallfiles();
 }
 #endif
 
@@ -122,25 +116,25 @@ SHELLPROC {
 
 char *
 pfgets(line, len)
-	char *line;
-	{
-	register char *p = line;
-	int nleft = len;
-	int c;
+    char *line;
+    {
+    register char *p = line;
+    int nleft = len;
+    int c;
 
-	while (--nleft > 0) {
-		c = pgetc_macro();
-		if (c == PEOF) {
-			if (p == line)
-				return NULL;
-			break;
-		}
-		*p++ = c;
-		if (c == '\n')
-			break;
-	}
-	*p = '\0';
-	return line;
+    while (--nleft > 0) {
+        c = pgetc_macro();
+        if (c == PEOF) {
+            if (p == line)
+                return NULL;
+            break;
+        }
+        *p++ = c;
+        if (c == '\n')
+            break;
+    }
+    *p = '\0';
+    return line;
 }
 
 
@@ -152,7 +146,7 @@ pfgets(line, len)
 
 int
 pgetc() {
-	return pgetc_macro();
+    return pgetc_macro();
 }
 
 
@@ -169,45 +163,45 @@ pgetc() {
 
 int
 preadbuffer() {
-	register char *p, *q;
-	register int i;
+    register char *p, *q;
+    register int i;
 
-	if (pushedstring) {
-		parsenextc = pushedstring;
-		pushedstring = NULL;
-		parsenleft = pushednleft;
-		if (--parsenleft >= 0)
-			return *parsenextc++;
-	}
-	if (parsenleft == EOF_NLEFT || parsefile->buf == NULL)
-		return PEOF;
-	flushout(&output);
-	flushout(&errout);
+    if (pushedstring) {
+        parsenextc = pushedstring;
+        pushedstring = NULL;
+        parsenleft = pushednleft;
+        if (--parsenleft >= 0)
+            return *parsenextc++;
+    }
+    if (parsenleft == EOF_NLEFT || parsefile->buf == NULL)
+        return PEOF;
+    flushout(&output);
+    flushout(&errout);
 #if READLINE
     /* Use the readline() call if a prompt is to be printed (interactive). */
     if (r_use_prompt != NULL) {
-	char *prompt;
-	char *line;
+    char *prompt;
+    char *line;
 
-	p = parsenextc = parsefile->buf;
+    p = parsenextc = parsefile->buf;
 
-	prompt = r_use_prompt;
-	r_use_prompt = NULL;
+    prompt = r_use_prompt;
+    r_use_prompt = NULL;
 
-	if ((line = readline(prompt)) == NULL) {
+    if ((line = readline(prompt)) == NULL) {
                 parsenleft = EOF_NLEFT;
                 return PEOF;
-	}
-	strcpy(p, line);
-	free(line);
-	i = strlen(p);
-	p[i++] = '\n';
+    }
+    strcpy(p, line);
+    free(line);
+    i = strlen(p);
+    p[i++] = '\n';
     } else {
 #endif
 retry:
-	p = parsenextc = parsefile->buf;
-	i = read(parsefile->fd, p, BUFSIZ);
-	if (i <= 0) {
+    p = parsenextc = parsefile->buf;
+    i = read(parsefile->fd, p, BUFSIZ);
+    if (i <= 0) {
                 if (i < 0) {
                         if (errno == EINTR)
                                 goto retry;
@@ -217,7 +211,7 @@ retry:
                                 if (flags >= 0 && flags & O_NONBLOCK) {
                                         flags &=~ O_NONBLOCK;
                                         if (fcntl(0, F_SETFL, flags) >= 0) {
-						out2str("sh: turning off NDELAY mode\n");
+                        out2str("sh: turning off NDELAY mode\n");
                                                 goto retry;
                                         }
                                 }
@@ -226,29 +220,29 @@ retry:
                 }
                 parsenleft = EOF_NLEFT;
                 return PEOF;
-	}
+    }
 #if READLINE
     }
 #endif
-	parsenleft = i - 1;
+    parsenleft = i - 1;
 
-	/* delete nul characters */
-	for (;;) {
-		if (*p++ == '\0')
-			break;
-		if (--i <= 0)
-			return *parsenextc++;		/* no nul characters */
-	}
-	q = p - 1;
-	while (--i > 0) {
-		if (*p != '\0')
-			*q++ = *p;
-		p++;
-	}
-	if (q == parsefile->buf)
-		goto retry;			/* buffer contained nothing but nuls */
-	parsenleft = q - parsefile->buf - 1;
-	return *parsenextc++;
+    /* delete nul characters */
+    for (;;) {
+        if (*p++ == '\0')
+            break;
+        if (--i <= 0)
+            return *parsenextc++;       /* no nul characters */
+    }
+    q = p - 1;
+    while (--i > 0) {
+        if (*p != '\0')
+            *q++ = *p;
+        p++;
+    }
+    if (q == parsefile->buf)
+        goto retry;         /* buffer contained nothing but nuls */
+    parsenleft = q - parsefile->buf - 1;
+    return *parsenextc++;
 }
 
 
@@ -259,8 +253,8 @@ retry:
 
 void
 pungetc() {
-	parsenleft++;
-	parsenextc--;
+    parsenleft++;
+    parsenextc--;
 }
 
 
@@ -271,12 +265,12 @@ pungetc() {
 
 void
 ppushback(string, length)
-	char *string;
-	{
-	pushedstring = parsenextc;
-	pushednleft = parsenleft;
-	parsenextc = string;
-	parsenleft = length;
+    char *string;
+    {
+    pushedstring = parsenextc;
+    pushednleft = parsenleft;
+    parsenextc = string;
+    parsenleft = length;
 }
 
 
@@ -288,23 +282,23 @@ ppushback(string, length)
 
 void
 setinputfile(fname, push)
-	char *fname;
-	{
-	int fd;
-	int fd2;
+    char *fname;
+    {
+    int fd;
+    int fd2;
 
-	INTOFF;
-	if ((fd = open(fname, O_RDONLY)) < 0)
-		error("Can't open %s", fname);
-	if (fd < 10) {
-		fd2 = copyfd(fd, 10);
-		close(fd);
-		if (fd2 < 0)
-			error("Out of file descriptors");
-		fd = fd2;
-	}
-	setinputfd(fd, push);
-	INTON;
+    INTOFF;
+    if ((fd = open(fname, O_RDONLY)) < 0)
+        error("Can't open %s", fname);
+    if (fd < 10) {
+        fd2 = copyfd(fd, 10);
+        close(fd);
+        if (fd2 < 0)
+            error("Out of file descriptors");
+        fd = fd2;
+    }
+    setinputfd(fd, push);
+    INTON;
 }
 
 
@@ -315,18 +309,18 @@ setinputfile(fname, push)
 
 void
 setinputfd(fd, push) {
-	(void) fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
-	if (push) {
-		pushfile();
-		parsefile->buf = ckmalloc(BUFSIZ);
-	}
-	if (parsefile->fd > 0)
-		close(parsefile->fd);
-	parsefile->fd = fd;
-	if (parsefile->buf == NULL)
-		parsefile->buf = ckmalloc(BUFSIZ);
-	parsenleft = 0;
-	plinno = 1;
+    (void) fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
+    if (push) {
+        pushfile();
+        parsefile->buf = ckmalloc(BUFSIZ);
+    }
+    if (parsefile->fd > 0)
+        close(parsefile->fd);
+    parsefile->fd = fd;
+    if (parsefile->buf == NULL)
+        parsefile->buf = ckmalloc(BUFSIZ);
+    parsenleft = 0;
+    plinno = 1;
 }
 
 
@@ -336,16 +330,16 @@ setinputfd(fd, push) {
 
 void
 setinputstring(string, push)
-	char *string;
-	{
-	INTOFF;
-	if (push)
-		pushfile();
-	parsenextc = string;
-	parsenleft = strlen(string);
-	parsefile->buf = NULL;
-	plinno = 1;
-	INTON;
+    char *string;
+    {
+    INTOFF;
+    if (push)
+        pushfile();
+    parsenextc = string;
+    parsenleft = strlen(string);
+    parsefile->buf = NULL;
+    plinno = 1;
+    INTON;
 }
 
 
@@ -357,33 +351,33 @@ setinputstring(string, push)
 
 STATIC void
 pushfile() {
-	struct parsefile *pf;
+    struct parsefile *pf;
 
-	parsefile->nleft = parsenleft;
-	parsefile->nextc = parsenextc;
-	parsefile->linno = plinno;
-	pf = (struct parsefile *)ckmalloc(sizeof (struct parsefile));
-	pf->prev = parsefile;
-	pf->fd = -1;
-	parsefile = pf;
+    parsefile->nleft = parsenleft;
+    parsefile->nextc = parsenextc;
+    parsefile->linno = plinno;
+    pf = (struct parsefile *)ckmalloc(sizeof (struct parsefile));
+    pf->prev = parsefile;
+    pf->fd = -1;
+    parsefile = pf;
 }
 
 
 void
 popfile() {
-	struct parsefile *pf = parsefile;
+    struct parsefile *pf = parsefile;
 
-	INTOFF;
-	if (pf->fd >= 0)
-		close(pf->fd);
-	if (pf->buf)
-		ckfree(pf->buf);
-	parsefile = pf->prev;
-	ckfree(pf);
-	parsenleft = parsefile->nleft;
-	parsenextc = parsefile->nextc;
-	plinno = parsefile->linno;
-	INTON;
+    INTOFF;
+    if (pf->fd >= 0)
+        close(pf->fd);
+    if (pf->buf)
+        ckfree(pf->buf);
+    parsefile = pf->prev;
+    ckfree(pf);
+    parsenleft = parsefile->nleft;
+    parsenextc = parsefile->nextc;
+    plinno = parsefile->linno;
+    INTON;
 }
 
 
@@ -393,8 +387,8 @@ popfile() {
 
 void
 popallfiles() {
-	while (parsefile != &basepf)
-		popfile();
+    while (parsefile != &basepf)
+        popfile();
 }
 
 
@@ -406,9 +400,11 @@ popallfiles() {
 
 void
 closescript() {
-	popallfiles();
-	if (parsefile->fd > 0) {
-		close(parsefile->fd);
-		parsefile->fd = 0;
-	}
+    popallfiles();
+    if (parsefile->fd > 0) {
+        close(parsefile->fd);
+        parsefile->fd = 0;
+    }
 }
+
+/* vi: set ts=4 expandtab: */

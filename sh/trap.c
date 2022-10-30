@@ -32,6 +32,10 @@
 
 *****************************************************************************/
 
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+
 #include "shell.h"
 #include "main.h"
 #include "nodes.h"  /* for other headers */
@@ -45,9 +49,6 @@
 #include "error.h"
 #include "trap.h"
 #include "mystring.h"
-#include <sys/types.h>
-#include <signal.h>
-
 
 /*
  * Sigmode records the current value of the signal handlers for the various

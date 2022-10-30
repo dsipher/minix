@@ -36,14 +36,16 @@
  * Routines to check for mail.  (Perhaps make part of main.c?)
  */
 
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "shell.h"
 #include "exec.h"   /* defines padvance() */
 #include "var.h"
 #include "output.h"
 #include "memalloc.h"
 #include "error.h"
-#include <sys/types.h>
-#include <sys/stat.h>
 
 
 #define MAXMBOXES 10

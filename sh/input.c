@@ -36,16 +36,20 @@
  * This file implements the input routines used by the parser.
  */
 
-#include <sys/types.h>
 #include <stdio.h>  /* defines BUFSIZ */
-#include "shell.h"
 #include <fcntl.h>
 #include <errno.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/types.h>
+
+#include "shell.h"
 #include "syntax.h"
 #include "input.h"
 #include "output.h"
 #include "memalloc.h"
 #include "error.h"
+#include "redir.h"
 
 #define EOF_NLEFT -99       /* value of parsenleft when EOF pushed back */
 

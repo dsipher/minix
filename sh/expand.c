@@ -37,6 +37,15 @@
  * backquotes, shell variables, and file metacharacters.
  */
 
+#include <unistd.h>
+#include <errno.h>
+#include <dirent.h>
+#if USEGETPW
+#include <pwd.h>
+#endif
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "shell.h"
 #include "main.h"
 #include "nodes.h"
@@ -52,13 +61,6 @@
 #include "memalloc.h"
 #include "error.h"
 #include "mystring.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <errno.h>
-#include <dirent.h>
-#if USEGETPW
-#include <pwd.h>
-#endif
 
 /*
  * Structure specifying which parts of the string should be searched

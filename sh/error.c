@@ -36,15 +36,18 @@
  * Errors and exceptions.
  */
 
+#include <stdlib.h>
+#include <unistd.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <errno.h>
+#include <sys/types.h>
+
 #include "shell.h"
 #include "main.h"
 #include "options.h"
 #include "output.h"
 #include "error.h"
-#include <sys/types.h>
-#include <signal.h>
-#include <stdarg.h>
-#include <errno.h>
 
 
 /*

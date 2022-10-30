@@ -63,5 +63,6 @@ extern int tokpushback;
 
 union node *parsecmd(int);
 int goodname(char *);
+int peektoken(void);
 
 /* vi: set ts=4 expandtab: */

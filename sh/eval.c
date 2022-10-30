@@ -36,6 +36,10 @@
  * Evaluate a command.
  */
 
+#include <unistd.h>
+#include <signal.h>
+#include <sys/types.h>
+
 #include "shell.h"
 #include "nodes.h"
 #include "syntax.h"
@@ -54,8 +58,6 @@
 #include "memalloc.h"
 #include "error.h"
 #include "mystring.h"
-#include <sys/types.h>
-#include <signal.h>
 
 
 /* flags in argument to evaltree */

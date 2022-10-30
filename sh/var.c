@@ -36,6 +36,8 @@
  * Shell variables.
  */
 
+#include <unistd.h>
+
 #include "shell.h"
 #include "output.h"
 #include "expand.h"

@@ -36,6 +36,9 @@
  * Miscelaneous builtins.
  */
 
+#include <unistd.h>
+#include <sys/stat.h>
+
 #include "shell.h"
 #include "options.h"
 #include "var.h"

@@ -36,6 +36,15 @@
  * Code for dealing with input/output redirection.
  */
 
+#include <unistd.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <limits.h>
+#include <string.h>
+#include <stdlib.h>
+#include <sys/types.h>
+
 #include "shell.h"
 #include "nodes.h"
 #include "jobs.h"
@@ -45,11 +54,6 @@
 #include "output.h"
 #include "memalloc.h"
 #include "error.h"
-#include <sys/types.h>
-#include <signal.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <limits.h>
 
 
 #define EMPTY -2        /* marks an unused slot in redirtab */

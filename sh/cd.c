@@ -36,8 +36,14 @@
  * The cd and pwd commands.
  */
 
+#include <unistd.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "shell.h"
 #include "var.h"
+#include "redir.h"
 #include "nodes.h"  /* for jobs.h */
 #include "jobs.h"
 #include "options.h"
@@ -45,9 +51,6 @@
 #include "memalloc.h"
 #include "error.h"
 #include "mystring.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <errno.h>
 
 
 STATIC int docd(char *, int, int);

@@ -32,6 +32,13 @@
 
 *****************************************************************************/
 
+#include <unistd.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <errno.h>
+#include <sys/wait.h>
+#include <sys/types.h>
+
 #include "shell.h"
 #include "main.h"
 #include "parser.h"
@@ -47,11 +54,6 @@
 #include "error.h"
 #include "mystring.h"
 #include "redir.h"
-#include <sys/types.h>
-#include <fcntl.h>
-#include <signal.h>
-#include <errno.h>
-#include <sys/wait.h>
 
 
 

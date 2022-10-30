@@ -44,13 +44,16 @@
  */
 
 #include <stdio.h>  /* defines BUFSIZ */
+#include <string.h>
+#include <unistd.h>
+#include <stdarg.h>
+#include <errno.h>
+
 #include "shell.h"
 #include "syntax.h"
 #include "output.h"
 #include "memalloc.h"
 #include "error.h"
-#include <stdarg.h>
-#include <errno.h>
 
 
 #define OUTBUFSIZ BUFSIZ

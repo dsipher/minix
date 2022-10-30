@@ -32,8 +32,10 @@
 
 *****************************************************************************/
 
-#include <sys/types.h>
+#include <unistd.h>
 #include <signal.h>
+#include <stdlib.h>
+#include <sys/types.h>
 #include <fcntl.h>
 #include "shell.h"
 #include "main.h"
@@ -43,6 +45,7 @@
 #include "parser.h"
 #include "nodes.h"
 #include "eval.h"
+#include "exec.h"
 #include "jobs.h"
 #include "input.h"
 #include "trap.h"
@@ -64,7 +67,6 @@ extern int etext();
 #endif
 
 STATIC void read_profile(char *);
-char *getenv(char *);
 
 
 /*

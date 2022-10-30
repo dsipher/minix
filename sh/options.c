@@ -32,6 +32,8 @@
 
 *****************************************************************************/
 
+#include <unistd.h>
+
 #include "shell.h"
 #define DEFINE_OPTIONS
 #include "options.h"

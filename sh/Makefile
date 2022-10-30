@@ -10,7 +10,7 @@ OBJS=	builtins.o cd.o error.o eval.o exec.o expand.o input.o \
 	options.o parser.o redir.o show.o signames.o syntax.o trap.o \
 	output.o var.o init.o
 
-CFLAGS=	-w -DSHELL -I.
+CFLAGS=	-w
 
 CLEANFILES= $(OBJS)
 

@@ -41,6 +41,13 @@
  * would make the command name "hash" a misnomer.
  */
 
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#include <limits.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
 #include "shell.h"
 #include "main.h"
 #include "nodes.h"
@@ -58,11 +65,6 @@
 #include "error.h"
 #include "init.h"
 #include "mystring.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <limits.h>
 
 
 #define CMDTABLESIZE 31     /* should be prime */

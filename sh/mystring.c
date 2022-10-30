@@ -44,6 +44,7 @@
  *  is_number(s)        Return true if s is a string of digits.
  */
 
+#include <stdlib.h>
 #include "shell.h"
 #include "syntax.h"
 #include "error.h"

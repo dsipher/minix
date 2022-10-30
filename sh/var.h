@@ -96,6 +96,8 @@ char *lookupvar(char *);
 char *bltinlookup(char *, int);
 char **environment();
 int showvarscmd(int, char **);
+int unsetvarcmd(int, char **);
+int unsetcmd(int, char **);
 void mklocal(char *);
 void poplocalvars(void);
 

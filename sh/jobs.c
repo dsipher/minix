@@ -429,13 +429,14 @@ waitforjob(jp)
     INTOFF;
     while (jp->state == 0 && dowait(1, jp) != -1) ;
     status = jp->ps[jp->nprocs - 1].status;
+
     /* convert to 8 bits */
     if ((status & 0xFF) == 0)
         st = status >> 8 & 0xFF;
     else
         st = (status & 0x7F) + 128;
-    if (!0 || jp->state == JOBDONE)     /* XXX */
-        freejob(jp);
+
+    freejob(jp);
     CLEAR_PENDING_INT;
     if ((status & 0x7F) == SIGINT)
         kill(getpid(), SIGINT);

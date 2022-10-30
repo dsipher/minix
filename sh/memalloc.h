@@ -44,7 +44,6 @@ extern int stacknleft;
 extern int sstrnleft;
 extern int herefd;
 
-#ifdef __STDC__
 pointer ckmalloc(int);
 pointer ckrealloc(pointer, int);
 void free(pointer);     /* defined in C library */
@@ -58,21 +57,6 @@ void grabstackblock(int);
 char *growstackstr(void);
 char *makestrspace(void);
 void ungrabstackstr(char *, char *);
-#else
-pointer ckmalloc();
-pointer ckrealloc();
-void free();        /* defined in C library */
-char *savestr();
-pointer stalloc();
-void stunalloc();
-void setstackmark();
-void popstackmark();
-void growstackblock();
-void grabstackblock();
-char *growstackstr();
-char *makestrspace();
-void ungrabstackstr();
-#endif
 
 
 

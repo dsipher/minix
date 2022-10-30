@@ -50,17 +50,10 @@
 #include <errno.h>
 
 
-#ifdef __STDC__
 STATIC int docd(char *, int, int);
 STATIC void updatepwd(char *);
 STATIC void getpwd(void);
 STATIC char *getcomponent(void);
-#else
-STATIC int docd();
-STATIC void updatepwd();
-STATIC void getpwd();
-STATIC char *getcomponent();
-#endif
 
 
 char *curdir;           /* current working directory */

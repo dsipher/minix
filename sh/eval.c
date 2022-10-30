@@ -80,7 +80,6 @@ struct strlist *cmdenviron;
 int exitstatus;         /* exit status of last command */
 
 
-#ifdef __STDC__
 STATIC void evalloop(union node *);
 STATIC void evalfor(union node *);
 STATIC void evalcase(union node *, int);
@@ -89,17 +88,6 @@ STATIC void expredir(union node *);
 STATIC void evalpipe(union node *);
 STATIC void evalcommand(union node *, int, struct backcmd *);
 STATIC void prehash(union node *);
-#else
-STATIC void evalloop();
-STATIC void evalfor();
-STATIC void evalcase();
-STATIC void evalsubshell();
-STATIC void expredir();
-STATIC void evalpipe();
-STATIC void evalcommand();
-STATIC void prehash();
-#endif
-
 
 
 /*

@@ -48,17 +48,12 @@
 #define USEGETPW  0
 #define DEBUG     0
 
-#ifdef __STDC__
 typedef void *pointer;
+
 #ifndef NULL
 #define NULL (void *)0
 #endif
-#else /* not __STDC__ */
-typedef char *pointer;
-#ifndef NULL
-#define NULL 0
-#endif
-#endif /*  not __STDC__ */
+
 #define STATIC  /* empty */
 #define MKINIT  /* empty */
 

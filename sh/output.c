@@ -49,11 +49,7 @@
 #include "output.h"
 #include "memalloc.h"
 #include "error.h"
-#ifdef __STDC__
-#include "stdarg.h"
-#else
-#include <varargs.h>
-#endif
+#include <stdarg.h>
 #include <errno.h>
 
 
@@ -181,7 +177,6 @@ freestdout() {
 }
 
 
-#ifdef __STDC__
 void
 outfmt(struct output *file, char *fmt, ...) {
     va_list ap;
@@ -219,63 +214,6 @@ fmtstr(char *outbuf, int length, char *fmt, ...) {
     va_end(ap);
 }
 
-#else /* not __STDC__ */
-
-void
-outfmt(va_alist)
-    va_dcl
-    {
-    va_list ap;
-    struct output *file;
-    char *fmt;
-
-    va_start(ap);
-    file = va_arg(ap, struct output *);
-    fmt = va_arg(ap, char *);
-    doformat(file, fmt, ap);
-    va_end(ap);
-}
-
-
-void
-out1fmt(va_alist)
-    va_dcl
-    {
-    va_list ap;
-    char *fmt;
-
-    va_start(ap);
-    fmt = va_arg(ap, char *);
-    doformat(out1, fmt, ap);
-    va_end(ap);
-}
-
-
-void
-fmtstr(va_alist)
-    va_dcl
-    {
-    va_list ap;
-    struct output strout;
-    char *outbuf;
-    int length;
-    char *fmt;
-
-    va_start(ap);
-    outbuf = va_arg(ap, char *);
-    length = va_arg(ap, int);
-    fmt = va_arg(ap, char *);
-    strout.nextc = outbuf;
-    strout.nleft = length;
-    strout.fd = BLOCK_OUT;
-    strout.flags = 0;
-    doformat(&strout, fmt, ap);
-    outc('\0', &strout);
-    if (strout.flags & OUTPUT_ERR)
-        outbuf[length - 1] = '\0';
-}
-#endif /* __STDC__ */
-
 
 /*
  * Formatted output.  This routine handles a subset of the printf formats:
@@ -292,11 +230,7 @@ fmtstr(va_alist)
 
 #define TEMPSIZE 24
 
-#ifdef __STDC__
 static const char digit[16] = "0123456789ABCDEF";
-#else
-static const char digit[17] = "0123456789ABCDEF";
-#endif
 
 
 void

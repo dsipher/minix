@@ -59,7 +59,6 @@ struct job *jobtab;     /* array of jobs */
 int njobs;          /* size of array */
 MKINIT short backgndpid = -1;   /* pid of last background process */
 
-#ifdef __STDC__
 STATIC void restartjob(struct job *);
 STATIC struct job *getjob(char *);
 STATIC void freejob(struct job *);
@@ -67,15 +66,6 @@ STATIC int procrunning(int);
 STATIC int dowait(int, struct job *);
 STATIC int waitproc(int, int *);
 STATIC char *commandtext(union node *);
-#else
-STATIC void restartjob();
-STATIC struct job *getjob();
-STATIC void freejob();
-STATIC int procrunning();
-STATIC int dowait();
-STATIC int waitproc();
-STATIC char *commandtext();
-#endif
 
 
 

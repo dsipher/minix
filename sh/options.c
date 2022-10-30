@@ -57,13 +57,8 @@ int editable;           /* isatty(0) && isatty(1) */
 char *minusc;           /* argument to -c option */
 
 
-#ifdef __STDC__
 STATIC void options(int);
 STATIC void setoption(int, int);
-#else
-STATIC void options();
-STATIC void setoption();
-#endif
 
 
 

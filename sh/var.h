@@ -87,7 +87,6 @@ extern struct var vpse;
 #define mpathset()  ((vmpath.flags & VUNSET) == 0)
 
 
-#ifdef __STDC__
 void initvar();
 void setvar(char *, char *, int);
 void setvareq(char *, int);
@@ -99,17 +98,5 @@ char **environment();
 int showvarscmd(int, char **);
 void mklocal(char *);
 void poplocalvars(void);
-#else
-void initvar();
-void setvar();
-void setvareq();
-void listsetvar();
-char *lookupvar();
-char *bltinlookup();
-char **environment();
-int showvarscmd();
-void mklocal();
-void poplocalvars();
-#endif
 
 /* vi: set ts=4 expandtab: */

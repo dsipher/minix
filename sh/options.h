@@ -73,16 +73,9 @@ extern char *optptr;        /* used by nextopt */
 extern int editable;        /* isatty(0) && isatty(1) */
 
 
-#ifdef __STDC__
 void procargs(int, char **);
 void setparam(char **);
 void freeparam(struct shparam *);
 int nextopt(char *);
-#else
-void procargs();
-void setparam();
-void freeparam();
-int nextopt();
-#endif
 
 /* vi: set ts=4 expandtab: */

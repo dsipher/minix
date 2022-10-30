@@ -83,21 +83,12 @@ STATIC struct tblentry *cmdtable[CMDTABLESIZE];
 STATIC int builtinloc = -1;     /* index in path of %builtin, or -1 */
 
 
-#ifdef __STDC__
 STATIC void tryexec(char *, char **, char **);
 STATIC void execinterp(char **, char **);
 STATIC void printentry(struct tblentry *);
 STATIC void clearcmdentry(int);
 STATIC struct tblentry *cmdlookup(char *, int);
 STATIC void delete_cmd_entry(void);
-#else
-STATIC void tryexec();
-STATIC void execinterp();
-STATIC void printentry();
-STATIC void clearcmdentry();
-STATIC struct tblentry *cmdlookup();
-STATIC void delete_cmd_entry();
-#endif
 
 
 

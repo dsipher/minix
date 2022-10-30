@@ -75,11 +75,7 @@ struct parsefile *parsefile = &basepf;  /* current input file */
 char *pushedstring;     /* copy of parsenextc when text pushed back */
 int pushednleft;        /* copy of parsenleft when text pushed back */
 
-#ifdef __STDC__
 STATIC void pushfile(void);
-#else
-STATIC void pushfile();
-#endif
 
 
 

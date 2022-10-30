@@ -50,7 +50,6 @@ struct cmdentry {
 
 extern char *pathopt;       /* set by padvance */
 
-#ifdef __STDC__
 void shellexec(char **, char **, char *, int);
 char *padvance(char **, char *);
 void find_command(char *, struct cmdentry *, int);
@@ -59,15 +58,5 @@ void hashcd(void);
 void changepath(char *);
 void defun(char *, union node *);
 void unsetfunc(char *);
-#else
-void shellexec();
-char *padvance();
-void find_command();
-int find_builtin();
-void hashcd();
-void changepath();
-void defun();
-void unsetfunc();
-#endif
 
 /* vi: set ts=4 expandtab: */

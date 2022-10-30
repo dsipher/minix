@@ -83,19 +83,11 @@ extern char *commandname;   /* name of command--printed on error */
 #define CLEAR_PENDING_INT intpending = 0
 #define int_pending() intpending
 
-#ifdef __STDC__
 void exraise(int);
 void onint(void);
 void error2(char *, char *);
 void error(char *, ...);
 char *errmsg(int, int);
-#else
-void exraise();
-void onint();
-void error2();
-void error();
-char *errmsg();
-#endif
 
 /* Errmsg uses confusingly different messages.  Prefer strerror().  -- kjb */
 #define errmsg(errno, action)   strerror(errno)

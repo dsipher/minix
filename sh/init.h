@@ -32,14 +32,8 @@
 
 *****************************************************************************/
 
-#ifdef __STDC__
 void init(void);
 void reset(void);
 void initshellproc(void);
-#else
-void init();
-void reset();
-void initshellproc();
-#endif
 
 /* vi: set ts=4 expandtab: */

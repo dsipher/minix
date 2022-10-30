@@ -45,11 +45,7 @@
 
 int funcblocksize;      /* size of structures in function */
 int funcstringsize;     /* size of strings in node */
-#ifdef __STDC__
 pointer funcblock;      /* block to allocate function from */
-#else
-char *funcblock;        /* block to allocate function from */
-#endif
 char *funcstring;       /* block to allocate strings from */
 
 static const short nodesize[23] = {
@@ -79,19 +75,11 @@ static const short nodesize[23] = {
 };
 
 
-#ifdef __STDC__
 STATIC void calcsize(union node *);
 STATIC void sizenodelist(struct nodelist *);
 STATIC union node *copynode(union node *);
 STATIC struct nodelist *copynodelist(struct nodelist *);
 STATIC char *nodesavestr(char *);
-#else
-STATIC void calcsize();
-STATIC void sizenodelist();
-STATIC union node *copynode();
-STATIC struct nodelist *copynodelist();
-STATIC char *nodesavestr();
-#endif
 
 
 

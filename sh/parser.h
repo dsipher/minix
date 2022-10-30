@@ -61,12 +61,7 @@ extern int tokpushback;
 #define NEOF ((union node *)&tokpushback)
 
 
-#ifdef __STDC__
 union node *parsecmd(int);
 int goodname(char *);
-#else
-union node *parsecmd();
-int goodname();
-#endif
 
 /* vi: set ts=4 expandtab: */

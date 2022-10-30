@@ -86,7 +86,6 @@ struct arglist exparg;      /* holds expanded arg list */
 int didudir;
 #endif
 
-#ifdef __STDC__
 STATIC void argstr(char *, int);
 STATIC void expbackq(union node *, int, int);
 STATIC char *evalvar(char *, int);
@@ -100,29 +99,10 @@ STATIC void addfname(char *);
 STATIC struct strlist *expsort(struct strlist *);
 STATIC struct strlist *msort(struct strlist *, int);
 STATIC int pmatch(char *, char *);
-#else
-STATIC void argstr();
-STATIC void expbackq();
-STATIC char *evalvar();
-STATIC int varisset();
-STATIC void varvalue();
-STATIC void recordregion();
-STATIC void ifsbreakup();
-STATIC void expandmeta();
-STATIC void expmeta();
-STATIC void addfname();
-STATIC struct strlist *expsort();
-STATIC struct strlist *msort();
-STATIC int pmatch();
-#endif
-#if TILDE
-#ifdef __STDC__
-STATIC char *expudir(char *);
-#else
-STATIC char *expudir();
-#endif
-#endif /* TILDE */
 
+#if TILDE
+STATIC char *expudir(char *);
+#endif /* TILDE */
 
 
 /*

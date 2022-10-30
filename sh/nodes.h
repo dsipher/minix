@@ -174,12 +174,7 @@ struct nodelist {
 };
 
 
-#ifdef __STDC__
 union node *copyfunc(union node *);
 void freefunc(union node *);
-#else
-union node *copyfunc();
-void freefunc();
-#endif
 
 /* vi: set ts=4 expandtab: */

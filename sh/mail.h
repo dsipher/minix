@@ -32,10 +32,6 @@
 
 *****************************************************************************/
 
-#ifdef __STDC__
 void chkmail(int);
-#else
-void chkmail();
-#endif
 
 /* vi: set ts=4 expandtab: */

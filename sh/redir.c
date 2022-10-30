@@ -70,13 +70,8 @@ MKINIT struct redirtab *redirlist;
    if it hasn't already been redirected.  */
 int fd0_redirected = 0;
 
-#ifdef __STDC__
 STATIC void openredirect(union node *, char *);
 STATIC int openhere(union node *);
-#else
-STATIC void openredirect();
-STATIC int openhere();
-#endif
 
 
 

@@ -43,11 +43,7 @@
 #include "error.h"
 #include <sys/types.h>
 #include <signal.h>
-#ifdef __STDC__
-#include "stdarg.h"
-#else
-#include <varargs.h>
-#endif
+#include <stdarg.h>
 #include <errno.h>
 
 
@@ -116,26 +112,13 @@ error2(a, b)
  * formatting.  It then raises the error exception.
  */
 
-#ifdef __STDC__
 void
 error(char *msg, ...) {
-#else
-void
-error(va_alist)
-    va_dcl
-    {
-    char *msg;
-#endif
     va_list ap;
 
     CLEAR_PENDING_INT;
     INTOFF;
-#ifdef __STDC__
     va_start(ap, msg);
-#else
-    va_start(ap);
-    msg = va_arg(ap, char *);
-#endif
 #if DEBUG
     if (msg)
         TRACE(("error(\"%s\") pid=%d\n", msg, getpid()));

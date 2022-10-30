@@ -63,13 +63,8 @@ short profile_buf[16384];
 extern int etext();
 #endif
 
-#ifdef __STDC__
 STATIC void read_profile(char *);
 char *getenv(char *);
-#else
-STATIC void read_profile();
-char *getenv();
-#endif
 
 
 /*

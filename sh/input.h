@@ -44,7 +44,6 @@ extern int parsenleft;      /* number of characters left in input buffer */
 extern char *parsenextc;    /* next character in input buffer */
 
 
-#ifdef __STDC__
 char *pfgets(char *, int);
 int pgetc(void);
 int preadbuffer(void);
@@ -56,19 +55,6 @@ void setinputstring(char *, int);
 void popfile(void);
 void popallfiles(void);
 void closescript(void);
-#else
-char *pfgets();
-int pgetc();
-int preadbuffer();
-void pungetc();
-void ppushback();
-void setinputfile();
-void setinputfd();
-void setinputstring();
-void popfile();
-void popallfiles();
-void closescript();
-#endif
 
 #define pgetc_macro()   (--parsenleft >= 0? *parsenextc++ : preadbuffer())
 

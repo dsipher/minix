@@ -43,19 +43,11 @@ struct arglist {
     struct strlist **lastp;
 };
 
-#ifdef __STDC__
 union node;
 void expandarg(union node *, struct arglist *, int);
 void expandhere(union node *, int);
 int patmatch(char *, char *);
 void rmescapes(char *);
 int casematch(union node *, char *);
-#else
-void expandarg();
-void expandhere();
-int patmatch();
-void rmescapes();
-int casematch();
-#endif
 
 /* vi: set ts=4 expandtab: */

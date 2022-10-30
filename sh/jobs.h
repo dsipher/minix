@@ -70,19 +70,11 @@ struct job {
 extern short backgndpid;    /* pid of last background process */
 
 
-#ifdef __STDC__
 void setjobctl(int);
 void showjobs(int);
 struct job *makejob(union node *, int);
 int forkshell(struct job *, union node *, int);
 int waitforjob(struct job *);
-#else
-void setjobctl();
-void showjobs();
-struct job *makejob();
-int forkshell();
-int waitforjob();
-#endif
 
 #define setjobctl(on)   /* do nothing */
 

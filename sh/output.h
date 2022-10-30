@@ -50,7 +50,6 @@ extern struct output *out1;
 extern struct output *out2;
 
 
-#ifdef __STDC__
 void outstr(char *, struct output *);
 void out1str(char *);
 void out2str(char *);
@@ -65,22 +64,6 @@ void flushout(struct output *);
 void freestdout(void);
 int xwrite(int, char *, int);
 int xioctl(int, int, int);
-#else
-void outstr();
-void out1str();
-void out2str();
-void outfmt();
-void out1fmt();
-void fmtstr();
-/* void doformat(); */
-void doformat();
-void emptyoutbuf();
-void flushall();
-void flushout();
-void freestdout();
-int xwrite();
-int xioctl();
-#endif
 
 #define outc(c, file)   (--(file)->nleft < 0? (emptyoutbuf(file), *(file)->nextc++ = (c)) : (*(file)->nextc++ = (c)))
 #define out1c(c)    outc(c, out1);

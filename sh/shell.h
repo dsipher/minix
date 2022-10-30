@@ -49,7 +49,6 @@ typedef void *pointer;
 #endif
 
 #define STATIC  /* empty */
-#define MKINIT  /* empty */
 
 extern char nullstr[1];     /* null string */
 

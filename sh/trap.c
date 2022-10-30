@@ -65,7 +65,7 @@
 extern char nullstr[1];     /* null string */
 
 char *trap[MAXSIG+1];       /* trap handler commands */
-MKINIT char sigmode[MAXSIG];    /* current value of signal */
+char sigmode[MAXSIG];    /* current value of signal */
 char gotsig[MAXSIG];        /* indicates specified signal received */
 int pendingsigs;            /* indicates some signal received */
 

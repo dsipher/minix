@@ -71,9 +71,9 @@
 #define SKIPCONT 2
 #define SKIPFUNC 3
 
-MKINIT int evalskip;        /* set if we are skipping commands */
+int evalskip;        /* set if we are skipping commands */
 STATIC int skipcount;       /* number of levels to skip */
-MKINIT int loopnest;        /* current loop nesting level */
+int loopnest;        /* current loop nesting level */
 int funcnest;           /* depth of function calls */
 
 

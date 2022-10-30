@@ -59,7 +59,6 @@
  * contains information about the current file being read.
  */
 
-MKINIT
 struct parsefile {
     int linno;      /* current line */
     int fd;         /* file descriptor (or -1 if string) */
@@ -71,9 +70,9 @@ struct parsefile {
 
 
 int plinno = 1;         /* input line number */
-MKINIT int parsenleft;      /* copy of parsefile->nleft */
+int parsenleft;      /* copy of parsefile->nleft */
 char *parsenextc;       /* copy of parsefile->nextc */
-MKINIT struct parsefile basepf; /* top level input file */
+struct parsefile basepf; /* top level input file */
 char basebuf[BUFSIZ];       /* buffer for top level input file */
 struct parsefile *parsefile = &basepf;  /* current input file */
 char *pushedstring;     /* copy of parsenextc when text pushed back */

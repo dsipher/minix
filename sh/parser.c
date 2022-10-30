@@ -69,7 +69,7 @@ int parsebackquote;     /* nonzero if we are inside backquotes */
 int doprompt;           /* if set, prompt the user */
 int needprompt;         /* true if interactive and at start of line */
 int lasttoken;          /* last token read */
-MKINIT int tokpushback;     /* last token pushed back */
+int tokpushback;     /* last token pushed back */
 char *wordtext;         /* text of last word returned by readtoken */
 int checkkwd;               /* 1 == check for kwds, 2 == also eat newlines */
 struct nodelist *backquotelist;

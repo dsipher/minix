@@ -59,7 +59,7 @@
 
 struct job *jobtab;     /* array of jobs */
 int njobs;          /* size of array */
-MKINIT short backgndpid = -1;   /* pid of last background process */
+short backgndpid = -1;   /* pid of last background process */
 
 STATIC void restartjob(struct job *);
 STATIC struct job *getjob(char *);

@@ -60,14 +60,13 @@
 #define PIPESIZE 4096       /* amount of buffering in a pipe */
 
 
-MKINIT
 struct redirtab {
     struct redirtab *next;
     short renamed[10];
 };
 
 
-MKINIT struct redirtab *redirlist;
+struct redirtab *redirlist;
 
 /* We keep track of whether or not fd0 has been redirected.  This is for
    background commands, where we want to redirect fd0 to /dev/null only

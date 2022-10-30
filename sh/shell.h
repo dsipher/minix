@@ -40,7 +40,6 @@
  *  UDIR -> 1 if you want the shell to simulate the /u directory.
  *  TILDE -> 1 if you want the shell to expand ~logname.
  *  USEGETPW -> 1 if getpwnam() must be used to look up a name.
- *  ATTY -> 1 to include code for atty(1).
  *  SHORTNAMES -> 1 if your linker cannot handle long names.
  *  READLINE -> 1 if line editing by readline() should be enabled.
  *  define BSD if you are running 4.2 BSD or later.
@@ -59,7 +58,6 @@
 #define UDIR      0
 #define TILDE     1
 #define USEGETPW  0
-#define ATTY      0
 #define READLINE  0
 #define HASHBANG  0
 /* #define BSD */

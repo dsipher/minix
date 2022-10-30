@@ -61,9 +61,6 @@ struct varinit {
 };
 
 
-#if ATTY
-struct var vatty;
-#endif
 struct var vifs;
 struct var vmail;
 struct var vmpath;
@@ -72,14 +69,8 @@ struct var vps1;
 struct var vps2;
 struct var vpse;
 struct var vvers;
-#if ATTY
-struct var vterm;
-#endif
 
 const struct varinit varinit[] = {
-#if ATTY
-    {&vatty,    VSTRFIXED|VTEXTFIXED|VUNSET,    "ATTY="},
-#endif
     {&vifs, VSTRFIXED|VTEXTFIXED,       "IFS= \t\n"},
     {&vmail,    VSTRFIXED|VTEXTFIXED|VUNSET,    "MAIL="},
     {&vmpath,   VSTRFIXED|VTEXTFIXED|VUNSET,    "MAILPATH="},
@@ -89,9 +80,6 @@ const struct varinit varinit[] = {
      */
     {&vps2, VSTRFIXED|VTEXTFIXED,       "PS2=> "},
     {&vpse, VSTRFIXED|VTEXTFIXED,       "PSE=* "},
-#if ATTY
-    {&vterm,    VSTRFIXED|VTEXTFIXED|VUNSET,    "TERM="},
-#endif
     {NULL,  0,              NULL}
 };
 

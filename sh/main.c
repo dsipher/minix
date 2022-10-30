@@ -46,9 +46,6 @@
 #include "jobs.h"
 #include "input.h"
 #include "trap.h"
-#if ATTY
-#include "var.h"
-#endif
 #include "memalloc.h"
 #include "error.h"
 #include "init.h"
@@ -108,12 +105,7 @@ main(argc, argv)  char **argv; {
         } else if (state == 0 || iflag == 0 || ! rootshell)
             exitshell(2);
         reset();
-#if ATTY
-        if (exception == EXINT
-         && (! attyset() || equal(termval(), "emacs"))) {
-#else
         if (exception == EXINT) {
-#endif
             out2c('\n');
             flushout(&errout);
         }

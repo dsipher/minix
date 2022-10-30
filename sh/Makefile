@@ -12,8 +12,7 @@ OBJS=	builtins.o cd.o error.o eval.o exec.o expand.o input.o \
 
 CFLAGS=	-w -DSHELL -I.
 
-CLEANFILES= $(OBJS) \
-	builtins.c builtins.h
+CLEANFILES= $(OBJS)
 
 all:	sh
 
@@ -24,9 +23,6 @@ clean:
 	rm -f $(CLEANFILES) sh core
 
 parser.o: token.h
-
-builtins.c builtins.h: builtins.table shell.h
-	sh mkbuiltins shell.h builtins.table
 
 # Dependencies you say?  This will have to do.
 $(OBJS): error.h eval.h exec.h expand.h init.h input.h \

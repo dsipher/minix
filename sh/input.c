@@ -156,18 +156,16 @@ retry:
                 if (i < 0) {
                         if (errno == EINTR)
                                 goto retry;
-#ifdef EWOULDBLOCK
-                        if (parsefile->fd == 0 && errno == EWOULDBLOCK) {
+                        if (parsefile->fd == 0 && errno == EAGAIN) {
                                 int flags = fcntl(0, F_GETFL, 0);
                                 if (flags >= 0 && flags & O_NONBLOCK) {
                                         flags &=~ O_NONBLOCK;
                                         if (fcntl(0, F_SETFL, flags) >= 0) {
-                        out2str("sh: turning off NDELAY mode\n");
+                        out2str("sh: turning off O_NONBLOCK mode\n");
                                                 goto retry;
                                         }
                                 }
                         }
-#endif
                 }
                 parsenleft = EOF_NLEFT;
                 return PEOF;

@@ -35,11 +35,9 @@
 /*
  * The follow should be set to reflect the type of system you have:
  *  TILDE -> 1 if you want the shell to expand ~logname.
- *  USEGETPW -> 1 if getpwnam() must be used to look up a name.
  */
 
 #define TILDE     1
-#define USEGETPW  0
 #define DEBUG     0
 
 #ifndef NULL

@@ -40,9 +40,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <dirent.h>
-#if USEGETPW
 #include <pwd.h>
-#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -685,9 +683,7 @@ expudir(path)
     char name[MAXLOGNAME];
     char line[MAXPWLINE];
     int i;
-#if USEGETPW
     struct passwd *pw;
-#endif
 
     r = path;               /* result on failure */
     p = r + (*r == '~' ? 1 : 3);    /* the 1 skips "~", 3 skips "/u/" */
@@ -713,32 +709,6 @@ expudir(path)
         return r;
     }
 #endif
-#if !USEGETPW   /* can do without the bloat */
-    setinputfile("/etc/passwd", 1);
-    q = line + strlen(name);
-    while (pfgets(line, MAXPWLINE) != NULL) {
-        if (line[0] == name[0] && prefix(name, line) && *q == ':') {
-            /* skip to start of home directory */
-            i = 4;
-            do {
-                while (*++q && *q != ':');
-            } while (--i > 0);
-            if (*q == '\0')
-                break;      /* fail, corrupted /etc/passwd */
-            q++;
-            for (r = q ; *r && *r != '\n' && *r != ':' ; r++);
-            *r = '\0';      /* nul terminate home directory */
-            i = r - q;      /* i = strlen(q) */
-            r = stalloc(i + strlen(p) + 1);
-            scopy(q, r);
-            scopy(p, r + i);
-            didudir = 1;
-            path = r;       /* succeed */
-            break;
-        }
-    }
-    popfile();
-#else
     if ((pw = getpwnam(name)) != NULL) {
         /* user exists */
         q = pw->pw_dir;
@@ -750,7 +720,6 @@ expudir(path)
         path = r;
     }
     endpwent();
-#endif /* USEGETPW */
 
     return r;
 }

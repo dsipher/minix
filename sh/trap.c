@@ -289,7 +289,6 @@ exitshell(status) {
     struct jmploc loc1, loc2;
     char *p;
 
-    TRACE(("exitshell(%d) pid=%d\n", status, getpid()));
     if (setjmp(loc1.loc))  goto l1;
     if (setjmp(loc2.loc))  goto l2;
     handler = &loc1;

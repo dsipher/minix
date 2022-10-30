@@ -106,7 +106,6 @@ showjobs(change) {
     int col;
     char s[64];
 
-    TRACE(("showjobs(%d) called\n", change));
     while (dowait(0, (struct job *)NULL) > 0);
     for (jobno = 1, jp = jobtab ; jobno <= njobs ; jobno++, jp++) {
         if (! jp->used)
@@ -327,7 +326,6 @@ makejob(node, nprocs)
         jp->ps = &jp->ps0;
     }
     INTON;
-    TRACE(("makejob(0x%x, %d) returns %%%d\n", (int)node, nprocs, jp - jobtab + 1));
     return jp;
 }
 
@@ -355,11 +353,9 @@ forkshell(jp, n, mode)
     int pid;
     int pgrp;
 
-    TRACE(("forkshell(%%%d, 0x%x, %d) called\n", jp - jobtab, (int)n, mode));
     INTOFF;
     pid = fork();
     if (pid == -1) {
-        TRACE(("Fork failed, errno=%d\n", errno));
         INTON;
         error("Cannot fork");
     }
@@ -368,7 +364,6 @@ forkshell(jp, n, mode)
         int wasroot;
         int i;
 
-        TRACE(("Child shell %d\n", getpid()));
         wasroot = rootshell;
         rootshell = 0;
         for (i = njobs, p = jobtab ; --i >= 0 ; p++)
@@ -411,7 +406,6 @@ forkshell(jp, n, mode)
             ps->cmd = commandtext(n);
     }
     INTON;
-    TRACE(("In parent shell:  child = %d\n", pid));
     return pid;
 }
 
@@ -444,7 +438,6 @@ waitforjob(jp)
     int st;
 
     INTOFF;
-    TRACE(("waitforjob(%%%d) called\n", jp - jobtab + 1));
     while (jp->state == 0 && dowait(1, jp) != -1) ;
     status = jp->ps[jp->nprocs - 1].status;
     /* convert to 8 bits */
@@ -480,11 +473,8 @@ dowait(block, job)
     int stopped;
     int core;
 
-    TRACE(("dowait(%d) called\n", block));
     do {
         pid = waitproc(block, &status);
-        TRACE(("wait returns %d, status=%d, errno=%d\n",
-                pid, status, errno));
     } while (pid == -1 && errno == EINTR);
     if (pid <= 0)
         return pid;
@@ -498,7 +488,6 @@ dowait(block, job)
                 if (sp->pid == -1)
                     continue;
                 if (sp->pid == pid) {
-                    TRACE(("Changin status of proc %d from 0x%x to 0x%x\n", pid, sp->status, status));
                     sp->status = status;
                     thisjob = jp;
                 }
@@ -510,7 +499,6 @@ dowait(block, job)
             if (stopped) {      /* stopped or done */
                 int state = done? JOBDONE : JOBSTOPPED;
                 if (jp->state != state) {
-                    TRACE(("Job %d: changing state from %d to %d\n", jp - jobtab + 1, jp->state, state));
                     jp->state = state;
                 }
             }
@@ -532,10 +520,8 @@ dowait(block, job)
             out2c('\n');
             flushout(&errout);
         } else {
-            TRACE(("Not printing status: status=%d\n", status));
         }
     } else {
-        TRACE(("Not printing status, rootshell=%d, job=0x%x\n", rootshell, job));
         if (thisjob)
             thisjob->changed = 1;
     }

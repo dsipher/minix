@@ -187,7 +187,6 @@ cmdloop(top) {
     int inter;
     int numeof;
 
-    TRACE(("cmdloop(%d) called\n", top));
     setstackmark(&smark);
     numeof = 0;
     for (;;) {

@@ -53,6 +53,4 @@ typedef void *pointer;
 
 extern char nullstr[1];     /* null string */
 
-#define TRACE(t)
-
 /* vi: set ts=4 expandtab: */

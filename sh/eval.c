@@ -175,10 +175,8 @@ evaltree(n, flags)
     union node *n;
     {
     if (n == NULL) {
-        TRACE(("evaltree(NULL) called\n"));
         return;
     }
-    TRACE(("evaltree(0x%x: %d) called\n", (int)n, n->type));
     switch (n->type) {
     case NSEMI:
         evaltree(n->nbinary.ch1, 0);
@@ -433,7 +431,6 @@ evalpipe(n)
     int prevfd;
     int pip[2];
 
-    TRACE(("evalpipe(0x%x) called\n", (int)n));
     pipelen = 0;
     for (lp = n->npipe.cmdlist ; lp ; lp = lp->next)
         pipelen++;
@@ -475,7 +472,6 @@ evalpipe(n)
     if (n->npipe.backgnd == 0) {
         INTOFF;
         exitstatus = waitforjob(jp);
-        TRACE(("evalpipe:  job done exit status %d\n", exitstatus));
         INTON;
     }
 }
@@ -527,8 +523,6 @@ evalbackcmd(n, result)
         result->jp = jp;
     }
     popstackmark(&smark);
-    TRACE(("evalbackcmd done: fd=%d buf=0x%x nleft=%d jp=0x%x\n",
-        result->fd, result->buf, result->nleft, result->jp));
 }
 
 
@@ -565,7 +559,6 @@ evalcommand(cmd, flags, backcmd)
     char *lastarg;
 
     /* First expand the arguments. */
-    TRACE(("evalcommand(0x%x, %d) called\n", (int)cmd, flags));
     setstackmark(&smark);
     arglist.lastp = &arglist.list;
     varlist.lastp = &varlist.list;

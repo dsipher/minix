@@ -300,7 +300,6 @@ command() {
         n1->type = (lasttoken == TWHILE)? NWHILE : NUNTIL;
         n1->nbinary.ch1 = list(0);
         if ((got=readtoken()) != TDO) {
-TRACE(("expecting DO got %s %s\n", tokname[got], got == TWORD ? wordtext : ""));
             synexpect(TDO);
         }
         n1->nbinary.ch2 = list(0);
@@ -520,7 +519,6 @@ parsefname() {
 
         if (quoteflag == 0)
             n->type = NXHERE;
-        TRACE(("Here document %d\n", n->type));
         if (here->striptabs) {
             while (*wordtext == '\t')
                 wordtext++;
@@ -623,7 +621,6 @@ readtoken() {
             for (pp = parsekwd; *pp; pp++) {
                 if (**pp == *wordtext && equal(*pp, wordtext)) {
                     lasttoken = t = pp - parsekwd + KWDOFFSET;
-                    TRACE(("keyword %s recognized\n", tokname[t]));
                     break;
                 }
             }

@@ -335,7 +335,6 @@ loop:
         if (fullname[0] == '/' && index <= prev) {
             if (index < prev)
                 goto loop;
-            TRACE(("searchexec \"%s\": no change\n", name));
             goto success;
         }
         while (stat(fullname, &statb) < 0) {
@@ -364,7 +363,6 @@ loop:
             if ((statb.st_mode & 01) == 0)
                 goto loop;
         }
-        TRACE(("searchexec \"%s\" returns \"%s\"\n", name, fullname));
         INTOFF;
         cmdp = cmdlookup(name, 1);
         cmdp->cmdtype = CMDNORMAL;

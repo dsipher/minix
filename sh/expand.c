@@ -256,7 +256,6 @@ expbackq(cmd, quoted, full)
             if (in.fd < 0)
                 break;
             while ((i = read(in.fd, buf, sizeof buf)) < 0 && errno == EINTR);
-            TRACE(("expbackq: read returns %d\n", i));
             if (i <= 0)
                 break;
             p = buf;
@@ -280,10 +279,6 @@ expbackq(cmd, quoted, full)
         exitstatus = waitforjob(in.jp);
     if (quoted == 0)
         recordregion(startloc, dest - stackblock(), 0);
-    TRACE(("evalbackq: size=%d: \"%.*s\"\n",
-        (dest - stackblock()) - startloc,
-        (dest - stackblock()) - startloc,
-        stackblock() + startloc));
     expdest = dest;
     INTON;
 }
@@ -711,7 +706,6 @@ expudir(path)
         r = stalloc(i + strlen(p) + 1);
         scopy(q, r);
         scopy(p, r + i);
-        TRACE(("expudir converts %s to %s\n", path, r));
         didudir = 1;
         path = r;
         return r;
@@ -736,7 +730,6 @@ expudir(path)
             r = stalloc(i + strlen(p) + 1);
             scopy(q, r);
             scopy(p, r + i);
-            TRACE(("expudir converts %s to %s\n", path, r));
             didudir = 1;
             path = r;       /* succeed */
             break;
@@ -751,7 +744,6 @@ expudir(path)
         r = stalloc(i + strlen(p) + 1);
         scopy(q, r);
         scopy(p, r + i);
-        TRACE(("expudir converts %s to %s\n", path, r));
         didudir = 1;
         path = r;
     }

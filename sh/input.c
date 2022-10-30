@@ -75,11 +75,6 @@ struct parsefile *parsefile = &basepf;  /* current input file */
 char *pushedstring;     /* copy of parsenextc when text pushed back */
 int pushednleft;        /* copy of parsenleft when text pushed back */
 
-#if READLINE
-char *readline __P((const char *prompt));
-char *r_use_prompt = NULL;  /* the prompt to use with readline */
-#endif
-
 #ifdef __STDC__
 STATIC void pushfile(void);
 #else
@@ -177,27 +172,6 @@ preadbuffer() {
         return PEOF;
     flushout(&output);
     flushout(&errout);
-#if READLINE
-    /* Use the readline() call if a prompt is to be printed (interactive). */
-    if (r_use_prompt != NULL) {
-    char *prompt;
-    char *line;
-
-    p = parsenextc = parsefile->buf;
-
-    prompt = r_use_prompt;
-    r_use_prompt = NULL;
-
-    if ((line = readline(prompt)) == NULL) {
-                parsenleft = EOF_NLEFT;
-                return PEOF;
-    }
-    strcpy(p, line);
-    free(line);
-    i = strlen(p);
-    p[i++] = '\n';
-    } else {
-#endif
 retry:
     p = parsenextc = parsefile->buf;
     i = read(parsefile->fd, p, BUFSIZ);
@@ -221,9 +195,6 @@ retry:
                 parsenleft = EOF_NLEFT;
                 return PEOF;
     }
-#if READLINE
-    }
-#endif
     parsenleft = i - 1;
 
     /* delete nul characters */

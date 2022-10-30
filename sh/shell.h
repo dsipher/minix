@@ -39,7 +39,6 @@
  *  TILDE -> 1 if you want the shell to expand ~logname.
  *  USEGETPW -> 1 if getpwnam() must be used to look up a name.
  *  SHORTNAMES -> 1 if your linker cannot handle long names.
- *  READLINE -> 1 if line editing by readline() should be enabled.
  *  define BSD if you are running 4.2 BSD or later.
  *  define SYSV if you are running under System V.
  *  define DEBUG=1 to compile in debugging (set global "debug" to turn on)
@@ -54,7 +53,6 @@
 #define UDIR      0
 #define TILDE     1
 #define USEGETPW  0
-#define READLINE  0
 #define HASHBANG  0
 /* #define BSD */
 #define POSIX     1

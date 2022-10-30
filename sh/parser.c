@@ -100,11 +100,7 @@ STATIC int noexpand __P((char *));
 STATIC void synexpect __P((int));
 STATIC void synerror __P((char *));
 
-#if READLINE
-STATIC void putprompt __P((char *));
-#else
 #define putprompt(s)    out2str(s)
-#endif
 
 
 
@@ -1156,23 +1152,6 @@ RESET {
 }
 #endif
 
-
-#if READLINE
-/*
- * Remember a prompt for use with readline if input and output is a terminal.
- */
-
-STATIC void
-putprompt(s)
-    char *s;
-    {
-    if (editable) {
-        r_use_prompt = s;
-    } else {
-        out2str(s);
-    }
-}
-#endif
 
 /*
  * Returns true if the text contains nothing to expand (no dollar signs

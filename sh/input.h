@@ -72,11 +72,4 @@ void closescript();
 
 #define pgetc_macro()   (--parsenleft >= 0? *parsenextc++ : preadbuffer())
 
-#if READLINE
-/* The variable "r_use_prompt" indicates the prompt to use with readline,
- * *and* that readline may only be used if non-NULL.
- */
-extern char *r_use_prompt;
-#endif
-
 /* vi: set ts=4 expandtab: */

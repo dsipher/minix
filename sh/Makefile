@@ -8,14 +8,12 @@ SRCS=	builtins.c cd.c error.c eval.c exec.c expand.c input.c \
 OBJS=	builtins.o cd.o error.o eval.o exec.o expand.o input.o \
 	jobs.o mail.o main.o memalloc.o miscbltin.o mystring.o nodes.o \
 	options.o parser.o redir.o show.o signames.o syntax.o trap.o \
-	output.o var.o init.o \
-	bltin/echo.o bltin/expr.o bltin/operators.o bltin/regexp.o
+	output.o var.o init.o
 
 CFLAGS=	-w -DSHELL -I.
 
 CLEANFILES= $(OBJS) \
-	builtins.c builtins.h init.c mkinit \
-	bltin/operators.h bltin/operators.c
+	builtins.c builtins.h init.c mkinit
 
 all:	sh
 
@@ -36,25 +34,9 @@ init.o: mkinit $(SRCS)
 mkinit: mkinit.c
 	$(CC) $(CFLAGS) -o $@ mkinit.c
 
-bltin/operators.h:	bltin/mkexpr bltin/binary_op bltin/unary_op
-	cd bltin && sh mkexpr
-
-bltin/echo.o:	bltin/echo.c
-	cd bltin && $(CC) -I.. $(CFLAGS) -c echo.c
-
-bltin/expr.o:	bltin/expr.c
-	cd bltin && $(CC) -I.. $(CFLAGS) -c expr.c
-
-bltin/operators.o:	bltin/operators.c
-	cd bltin && $(CC) -I.. $(CFLAGS) -c operators.c
-
-bltin/regexp.o:	bltin/regexp.c
-	cd bltin && $(CC) -I.. $(CFLAGS) -c regexp.c
-
 # Dependencies you say?  This will have to do.
 $(OBJS): error.h eval.h exec.h expand.h init.h input.h \
 	jobs.h machdep.h mail.h main.h memalloc.h mystring.h options.h \
 	output.h parser.h redir.h shell.h trap.h var.h \
 	builtins.h nodes.h signames.h syntax.h
 
-bltin/expr.o bltin/operators.o:	bltin/operators.h

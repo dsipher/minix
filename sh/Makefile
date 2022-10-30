@@ -14,8 +14,8 @@ OBJS=	builtins.o cd.o dirent.o error.o eval.o exec.o expand.o input.o \
 CFLAGS=	-w -DSHELL -I.
 
 CLEANFILES= $(OBJS) \
-	builtins.c builtins.h init.c mkinit mknodes mksignames mksyntax \
-	nodes.c nodes.h signames.c signames.h syntax.c syntax.h token.def \
+	builtins.c builtins.h init.c mkinit mknodes mksignames \
+	nodes.c nodes.h signames.c signames.h token.def \
 	bltin/operators.h bltin/operators.c
 
 all:	sh
@@ -51,12 +51,6 @@ signames.c signames.h: mksignames
 
 mksignames: mksignames.c
 	$(CC) $(CFLAGS) -o $@ mksignames.c
-
-syntax.c syntax.h: mksyntax
-	./mksyntax
-
-mksyntax: mksyntax.c parser.h
-	$(CC) $(CFLAGS) -o $@ mksyntax.c
 
 bltin/operators.h:	bltin/mkexpr bltin/binary_op bltin/unary_op
 	cd bltin && sh mkexpr

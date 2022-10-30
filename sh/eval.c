@@ -651,7 +651,6 @@ evalcommand(cmd, flags, backcmd)
     /* This is the child process if a fork occurred. */
     /* Execute the command. */
     if (cmdentry.cmdtype == CMDFUNCTION) {
-        trputs("Shell function:  ");  trargs(argv);
         redirect(cmd->ncmd.redirect, REDIR_PUSH);
         saveparam = shellparam;
         shellparam.malloc = 0;
@@ -696,7 +695,6 @@ evalcommand(cmd, flags, backcmd)
         if (flags & EV_EXIT)
             exitshell(exitstatus);
     } else if (cmdentry.cmdtype == CMDBUILTIN) {
-        trputs("builtin command:  ");  trargs(argv);
         mode = (cmdentry.u.index == EXECCMD)? 0 : REDIR_PUSH;
         if (flags == EV_BACKCMD) {
             memout.nleft = 0;
@@ -747,7 +745,6 @@ cmddone:
             memout.buf = NULL;
         }
     } else {
-        trputs("normal command:  ");  trargs(argv);
         clearredir();
         redirect(cmd->ncmd.redirect, 0);
         if (varlist.list) {

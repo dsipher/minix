@@ -45,38 +45,10 @@
 #include "memalloc.h"
 #include "var.h"
 
-#define MAXPWD 256
-#define EV_EXIT 01      /* exit after evaluating tree */
-#define EV_TESTED 02        /* exit status is checked; ignore -e flag */
-#define EV_BACKCMD 04       /* command executing within back quotes */
-#define SKIPBREAK 1
-#define SKIPCONT 2
-#define SKIPFUNC 3
-#define CMDTABLESIZE 31     /* should be prime */
-#define ARB 1           /* actual size determined at run time */
-#define MAXLOGNAME 32
-#define MAXPWLINE 128
-#define EOF_NLEFT -99       /* value of parsenleft when EOF pushed back */
-#define MAXMBOXES 10
-#define PROFILE 0
-#define MINSIZE 504     /* minimum size of a block */
-#define DEFINE_OPTIONS
-#define EOFMARKLEN 79
-#define GDB_HACK 1 /* avoid local declarations which gdb can't handle */
-#define EMPTY -2        /* marks an unused slot in redirtab */
-#define PIPESIZE 4096       /* amount of buffering in a pipe */
 #define S_DFL 1         /* default signal handling (SIG_DFL) */
 #define S_CATCH 2       /* signal is caught */
 #define S_IGN 3         /* signal is ignored (SIG_IGN) */
 #define S_HARD_IGN 4        /* signal is ignored permenantly */
-#define OUTBUFSIZ BUFSIZ
-#define BLOCK_OUT -2        /* output to a fixed block of memory */
-#define MEM_OUT -3      /* output to dynamically allocated memory */
-#define OUTPUT_ERR 01       /* error occurred on output */
-#define TEMPSIZE 24
-#define VTABSIZE 39
-
-
 
 extern int evalskip;        /* set if we are skipping commands */
 extern int loopnest;        /* current loop nesting level */

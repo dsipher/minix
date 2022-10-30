@@ -69,17 +69,6 @@ STATIC char *commandtext(union node *);
 
 
 
-#ifdef mkinit
-
-SHELLPROC {
-    backgndpid = -1;
-}
-
-#endif
-
-
-
-
 int
 jobscmd(argc, argv)  char **argv; {
     showjobs(0);

@@ -258,25 +258,6 @@ popredir() {
 
 
 
-/*
- * Undo all redirections.  Called on error or interrupt.
- */
-
-#ifdef mkinit
-
-INCLUDE "redir.h"
-
-RESET {
-    while (redirlist)
-        popredir();
-}
-
-SHELLPROC {
-    clearredir();
-}
-
-#endif
-
 
 /*
  * Discard all saved file descriptors.

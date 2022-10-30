@@ -91,26 +91,6 @@ STATIC void prehash(union node *);
 
 
 /*
- * Called to reset things after an exception.
- */
-
-#ifdef mkinit
-INCLUDE "eval.h"
-
-RESET {
-    evalskip = 0;
-    loopnest = 0;
-    funcnest = 0;
-}
-
-SHELLPROC {
-    exitstatus = 0;
-}
-#endif
-
-
-
-/*
  * The eval commmand.
  */
 

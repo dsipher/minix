@@ -505,14 +505,6 @@ clearcmdentry(firstchange) {
  * Delete all functions.
  */
 
-#ifdef mkinit
-MKINIT void deletefuncs();
-
-SHELLPROC {
-    deletefuncs();
-}
-#endif
-
 void
 deletefuncs() {
     struct tblentry **tblp;

@@ -90,26 +90,6 @@ STATIC struct var **hashvar(char *);
 STATIC int varequal(char *, char *);
 
 /*
- * Initialize the varable symbol tables and import the environment
- */
-
-#ifdef mkinit
-INCLUDE "var.h"
-INIT {
-    char **envp;
-    extern char **environ;
-
-    initvar();
-    for (envp = environ ; *envp ; envp++) {
-        if (strchr(*envp, '=')) {
-            setvareq(*envp, VEXPORT|VTEXTFIXED);
-        }
-    }
-}
-#endif
-
-
-/*
  * This routine initializes the builtin variables.  It is called when the
  * shell is initialized and again when a shell procedure is spawned.
  */
@@ -339,14 +319,6 @@ environment() {
  * variables.  It is also necessary to reallocate variables of with
  * VSTACK set since these are currently allocated on the stack.
  */
-
-#ifdef mkinit
-MKINIT void shprocvar();
-
-SHELLPROC {
-    shprocvar();
-}
-#endif
 
 void
 shprocvar() {

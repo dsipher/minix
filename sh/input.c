@@ -79,28 +79,6 @@ STATIC void pushfile(void);
 
 
 
-#ifdef mkinit
-INCLUDE "input.h"
-INCLUDE "error.h"
-
-INIT {
-    extern char basebuf[];
-
-    basepf.nextc = basepf.buf = basebuf;
-}
-
-RESET {
-    if (exception != EXSHELLPROC)
-        parsenleft = 0;            /* clear input buffer */
-    popallfiles();
-}
-
-SHELLPROC {
-    popallfiles();
-}
-#endif
-
-
 /*
  * Read a line from the script.
  */

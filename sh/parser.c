@@ -1130,13 +1130,6 @@ parsebackq: {
 
 
 
-#ifdef mkinit
-RESET {
-    tokpushback = 0;
-}
-#endif
-
-
 /*
  * Returns true if the text contains nothing to expand (no dollar signs
  * or backquotes).

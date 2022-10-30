@@ -67,23 +67,6 @@ struct output *out2 = &errout;
 
 
 
-#ifdef mkinit
-
-INCLUDE "output.h"
-INCLUDE "memalloc.h"
-
-RESET {
-    out1 = &output;
-    out2 = &errout;
-    if (memout.buf != NULL) {
-        ckfree(memout.buf);
-        memout.buf = NULL;
-    }
-}
-
-#endif
-
-
 void
 out1str(p)
     char *p;

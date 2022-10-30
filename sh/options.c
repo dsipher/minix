@@ -179,18 +179,6 @@ setoption(flag, val)
 
 
 
-#ifdef mkinit
-INCLUDE "options.h"
-
-SHELLPROC {
-    char *p;
-
-    for (p = optval ; p < optval + sizeof optval ; p++)
-        *p = 0;
-}
-#endif
-
-
 /*
  * Set the shell parameters.
  */

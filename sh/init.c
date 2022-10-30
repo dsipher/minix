@@ -32,6 +32,7 @@
 
 *****************************************************************************/
 
+#include <sys/types.h>
 #include "shell.h"
 #include "mystring.h"
 #include "eval.h"
@@ -67,7 +68,7 @@ struct parsefile {
 extern int parsenleft;      /* copy of parsefile->nleft */
 extern struct parsefile basepf; /* top level input file */
 
-extern short backgndpid;   /* pid of last background process */
+extern pid_t backgndpid;   /* pid of last background process */
 
 extern int tokpushback;     /* last token pushed back */
 

@@ -79,12 +79,6 @@ int quoteflag;          /* set if (part of) last token was quoted */
 int startlinno;         /* line # where last token started */
 
 
-#define GDB_HACK 1 /* avoid local declarations which gdb can't handle */
-#ifdef GDB_HACK
-static const char argvars[5] = {CTLVAR, VSNORMAL|VSQUOTE, '@', '=', '\0'};
-static const char types[] = "}-+?=";
-#endif
-
 
 STATIC union node *list(int);
 STATIC union node *andor(void);
@@ -331,10 +325,9 @@ command() {
             if (lasttoken != TNL && lasttoken != TSEMI)
                 synexpect(-1);
         } else {
-#ifndef GDB_HACK
             static const char argvars[5] = {CTLVAR, VSNORMAL|VSQUOTE,
                                    '@', '=', '\0'};
-#endif
+
             n2 = (union node *)stalloc(sizeof (struct narg));
             n2->type = NARG;
             n2->narg.text = (char *)argvars;
@@ -968,9 +961,7 @@ parsesub: {
     int typeloc;
     int flags;
     char *p;
-#ifndef GDB_HACK
     static const char types[] = "}-+?=";
-#endif
 
     c = pgetc();
     if (c != '(' && c != '{' && !is_name(c) && !is_special(c)) {

@@ -13,7 +13,6 @@ bltincmd    command
 #alloccmd   alloc
 bgcmd -j    bg
 breakcmd    break continue
-#catfcmd    catf
 cdcmd       cd chdir
 dotcmd      .
 echocmd     echo

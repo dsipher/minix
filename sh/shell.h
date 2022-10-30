@@ -32,14 +32,6 @@
 
 *****************************************************************************/
 
-/*
- * The follow should be set to reflect the type of system you have:
- *  TILDE -> 1 if you want the shell to expand ~logname.
- */
-
-#define TILDE     1
-#define DEBUG     0
-
 #ifndef NULL
 #define NULL (void *)0
 #endif

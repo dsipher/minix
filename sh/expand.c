@@ -78,13 +78,11 @@ struct nodelist *argbackq;  /* list of back quote expressions */
 struct ifsregion ifsfirst;  /* first struct in list of ifs regions */
 struct ifsregion *ifslastp; /* last struct in list */
 struct arglist exparg;      /* holds expanded arg list */
-#if TILDE
 /*
  * Set if the last argument processed had ~logname expanded.
  * This variable is read by the cd command.
  */
 int didudir;
-#endif
 
 STATIC void argstr(char *, int);
 STATIC void expbackq(union node *, int, int);
@@ -100,9 +98,7 @@ STATIC struct strlist *expsort(struct strlist *);
 STATIC struct strlist *msort(struct strlist *, int);
 STATIC int pmatch(char *, char *);
 
-#if TILDE
 STATIC char *expudir(char *);
-#endif /* TILDE */
 
 
 /*
@@ -135,9 +131,7 @@ expandarg(arg, arglist, full)
     struct strlist *sp;
     char *p;
 
-#if TILDE
     didudir = 0;
-#endif
     argbackq = arg->narg.backquote;
     STARTSTACKSTR(expdest);
     ifsfirst.next = NULL;
@@ -624,10 +618,8 @@ expandmeta(str)
         if (fflag)
             goto nometa;
         p = str->text;
-#if TILDE
         if (p[0] == '~')
             str->text = p = expudir(p);
-#endif
         for (;;) {          /* fast check for meta chars */
             if ((c = *p++) == '\0')
                 goto nometa;
@@ -661,7 +653,6 @@ nometa:
 }
 
 
-#if TILDE
 /*
  * Expand ~username into the home directory for the specified user. We hope
  * not to use the getpw stuff here, because then we would have to load in
@@ -695,7 +686,6 @@ expudir(path)
     }
     *q = '\0';
 
-#if TILDE
     if (*name == 0 && *r == '~') {
         /* null name, use $HOME */
         if ((q = lookupvar("HOME")) == NULL)
@@ -708,7 +698,6 @@ expudir(path)
         path = r;
         return r;
     }
-#endif
     if ((pw = getpwnam(name)) != NULL) {
         /* user exists */
         q = pw->pw_dir;
@@ -723,7 +712,6 @@ expudir(path)
 
     return r;
 }
-#endif
 
 
 /*

@@ -108,7 +108,6 @@ cdcmd(argc, argv)  char **argv; {
  * cd command some additional, unused arguments.)
  */
 
-#if SYMLINKS == 0
 STATIC int
 docd(dest, print, tohome)
     char *dest;
@@ -128,104 +127,6 @@ docd(dest, print, tohome)
         out1fmt("%s\n", stackblock());
     return 0;
 }
-
-#else
-
-
-
-STATIC int
-docd(dest, print, tohome)
-    char *dest;
-    {
-    register char *p;
-    register char *q;
-    char *symlink;
-    char *component;
-    struct stat statb;
-    int first;
-    int i;
-
-    TRACE(("docd(\"%s\", %d, %d) called\n", dest, print, tohome));
-#if UDIR || TILDE
-    if (didudir)
-        print = 1;
-#endif
-
-top:
-    cdcomppath = dest;
-    STARTSTACKSTR(p);
-    if (*dest == '/') {
-        STPUTC('/', p);
-        cdcomppath++;
-    }
-    first = 1;
-    while ((q = getcomponent()) != NULL) {
-        if (q[0] == '\0' || q[0] == '.' && q[1] == '\0')
-            continue;
-        if (! first)
-            STPUTC('/', p);
-        first = 0;
-        component = q;
-        while (*q)
-            STPUTC(*q++, p);
-        if (equal(component, ".."))
-            continue;
-        STACKSTRNUL(p);
-        if (lstat(stackblock(), &statb) < 0)
-            error("lstat %s failed", stackblock());
-        if ((statb.st_mode & S_IFMT) != S_IFLNK)
-            continue;
-
-        /* Hit a symbolic link.  We have to start all over again. */
-        print = 1;
-        STPUTC('\0', p);
-        symlink = grabstackstr(p);
-        i = (int)statb.st_size + 2;     /* 2 for '/' and '\0' */
-        if (cdcomppath != NULL)
-            i += strlen(cdcomppath);
-        p = stalloc(i);
-        if (readlink(symlink, p, (int)statb.st_size) < 0) {
-            error("readlink %s failed", stackblock());
-        }
-        if (cdcomppath != NULL) {
-            p[(int)statb.st_size] = '/';
-            scopy(cdcomppath, p + (int)statb.st_size + 1);
-        } else {
-            p[(int)statb.st_size] = '\0';
-        }
-        if (p[0] != '/') {  /* relative path name */
-            char *r;
-            q = r = symlink;
-            while (*q) {
-                if (*q++ == '/')
-                    r = q;
-            }
-            *r = '\0';
-            dest = stalloc(strlen(symlink) + strlen(p) + 1);
-            scopy(symlink, dest);
-            strcat(dest, p);
-        } else {
-            dest = p;
-        }
-        goto top;
-    }
-    STPUTC('\0', p);
-    p = grabstackstr(p);
-    INTOFF;
-    /* The empty string is not a legal argument to chdir on a POSIX 1003.1
-     * system. */
-    if (p[0] != '\0' && chdir(p) < 0) {
-        INTON;
-        return -1;
-    }
-    updatepwd(p);
-    INTON;
-    if (print && !tohome && iflag)
-        out1fmt("%s\n", p);
-    return 0;
-}
-#endif /* SYMLINKS */
-
 
 
 /*

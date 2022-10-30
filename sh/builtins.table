@@ -2,16 +2,13 @@
 
 #
 # This file lists all the builtin commands.  The first column is the name
-# of a C routine.  The -j flag, if present, specifies that this command
-# is to be excluded from systems without job control.  The rest of the line
-# specifies the command name or names used to run the command.  The entry
-# for nullcmd, which is run when the user does not specify a command, must
-# come first.
+# of a C routine. The rest of the line specifies the command name or names
+# used to run the command.  The entry for nullcmd, which is run when the
+# user does not specify a command, must come first.
 #
 
 bltincmd    command
 #alloccmd   alloc
-bgcmd -j    bg
 breakcmd    break continue
 cdcmd       cd chdir
 dotcmd      .
@@ -21,7 +18,6 @@ execcmd     exec
 exitcmd     exit
 exportcmd   export readonly
 exprcmd     expr test [
-fgcmd -j    fg
 getoptscmd  getopts
 hashcmd     hash
 jobidcmd    jobid

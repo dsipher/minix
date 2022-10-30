@@ -21,22 +21,12 @@ cat <<\!
 #include "builtins.h"
 
 !
-if grep '^#define JOBS[  ]*1' $SHL > /dev/null
-then
-    # Job control.
-    sed -e '/^#/d
-        s/  / /g
-        s/ #.*//
-        /^ *$/d
-        s/-j//' $BLTINS > $temp
-else
-    # No job control.
-    sed -e '/^#/d
+sed -e '/^#/d
         s/  / /g
         s/ #.*//
         /^ *$/d
         /-j/d' $BLTINS > $temp
-fi
+
 sed -e 's/ .*//
     s/\(.*\)/int \1();/' $temp
 echo '

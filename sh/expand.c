@@ -78,9 +78,9 @@ struct nodelist *argbackq;  /* list of back quote expressions */
 struct ifsregion ifsfirst;  /* first struct in list of ifs regions */
 struct ifsregion *ifslastp; /* last struct in list */
 struct arglist exparg;      /* holds expanded arg list */
-#if UDIR || TILDE
+#if TILDE
 /*
- * Set if the last argument processed had /u/logname or ~logname expanded.
+ * Set if the last argument processed had ~logname expanded.
  * This variable is read by the cd command.
  */
 int didudir;
@@ -115,13 +115,13 @@ STATIC struct strlist *expsort();
 STATIC struct strlist *msort();
 STATIC int pmatch();
 #endif
-#if UDIR || TILDE
+#if TILDE
 #ifdef __STDC__
 STATIC char *expudir(char *);
 #else
 STATIC char *expudir();
 #endif
-#endif /* UDIR || TILDE */
+#endif /* TILDE */
 
 
 
@@ -155,7 +155,7 @@ expandarg(arg, arglist, full)
     struct strlist *sp;
     char *p;
 
-#if UDIR || TILDE
+#if TILDE
     didudir = 0;
 #endif
     argbackq = arg->narg.backquote;
@@ -649,10 +649,6 @@ expandmeta(str)
         if (fflag)
             goto nometa;
         p = str->text;
-#if UDIR
-        if (p[0] == '/' && p[1] == 'u' && p[2] == '/')
-            str->text = p = expudir(p);
-#endif
 #if TILDE
         if (p[0] == '~')
             str->text = p = expudir(p);
@@ -690,12 +686,11 @@ nometa:
 }
 
 
-#if UDIR || TILDE
+#if TILDE
 /*
- * UDIR: Expand /u/username into the home directory for the specified user.
- * TILDE: Expand ~username into the home directory for the specified user.
- * We hope not to use the getpw stuff here, because then we would have to load
- * in stdio and who knows what else.  With networked password files there is
+ * Expand ~username into the home directory for the specified user. We hope
+ * not to use the getpw stuff here, because then we would have to load in
+ * stdio and who knows what else. With networked password files there is
  * no choice alas.
  */
 

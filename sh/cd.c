@@ -66,7 +66,7 @@ STATIC char *getcomponent();
 char *curdir;           /* current working directory */
 STATIC char *cdcomppath;
 
-#if UDIR || TILDE
+#if TILDE
 extern int didudir;     /* set if /u/logname or ~logname expanded */
 #endif
 
@@ -112,7 +112,7 @@ STATIC int
 docd(dest, print, tohome)
     char *dest;
     {
-#if UDIR || TILDE
+#if TILDE
     if (didudir)
         print = 1;
 #endif

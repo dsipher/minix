@@ -35,7 +35,6 @@
 /*
  * The follow should be set to reflect the type of system you have:
  *  JOBS -> 1 if you have Berkeley job control, 0 otherwise.
- *  UDIR -> 1 if you want the shell to simulate the /u directory.
  *  TILDE -> 1 if you want the shell to expand ~logname.
  *  USEGETPW -> 1 if getpwnam() must be used to look up a name.
  *  SHORTNAMES -> 1 if your linker cannot handle long names.
@@ -50,7 +49,6 @@
 
 
 #define JOBS      0
-#define UDIR      0
 #define TILDE     1
 #define USEGETPW  0
 #define HASHBANG  0

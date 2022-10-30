@@ -161,25 +161,13 @@ movefd:
         break;
     case NTO:
         fname = redir->nfile.expfname;
-#ifdef O_CREAT
         if ((f = open(fname, O_WRONLY|O_CREAT|O_TRUNC, 0666)) < 0)
             error("cannot create %s: %s", fname, errmsg(errno, E_CREAT));
-#else
-        if ((f = creat(fname, 0666)) < 0)
-            error("cannot create %s: %s", fname, errmsg(errno, E_CREAT));
-#endif
         goto movefd;
     case NAPPEND:
         fname = redir->nfile.expfname;
-#ifdef O_APPEND
         if ((f = open(fname, O_WRONLY|O_CREAT|O_APPEND, 0666)) < 0)
             error("cannot create %s: %s", fname, errmsg(errno, E_CREAT));
-#else
-        if ((f = open(fname, O_WRONLY)) < 0
-         && (f = creat(fname, 0666)) < 0)
-            error("cannot create %s: %s", fname, errmsg(errno, E_CREAT));
-        lseek(f, 0L, 2);
-#endif
         goto movefd;
     case NTOFD:
     case NFROMFD:
@@ -228,9 +216,6 @@ openhere(redir)
         signal(SIGINT, SIG_IGN);
         signal(SIGQUIT, SIG_IGN);
         signal(SIGHUP, SIG_IGN);
-#ifdef SIGTSTP
-        signal(SIGTSTP, SIG_IGN);
-#endif
         signal(SIGPIPE, SIG_DFL);
         if (redir->type == NHERE)
             xwrite(pip[1], redir->nhere.doc->narg.text, len);
@@ -322,34 +307,12 @@ clearredir() {
 
 int
 copyfd(from, to) {
-#ifdef F_DUPFD
     int newfd;
 
     newfd = fcntl(from, F_DUPFD, to);
     if (newfd < 0 && errno == EMFILE)
         return EMPTY;
     return newfd;
-#else
-    char toclose[32];
-    int i;
-    int newfd;
-    int e;
-
-    for (i = 0 ; i < to ; i++)
-        toclose[i] = 0;
-    INTOFF;
-    while ((newfd = dup(from)) >= 0 && newfd < to)
-        toclose[newfd] = 1;
-    e = errno;
-    for (i = 0 ; i < to ; i++) {
-        if (toclose[i])
-            close(i);
-    }
-    INTON;
-    if (newfd < 0 && e == EMFILE)
-        return EMPTY;
-    return newfd;
-#endif
 }
 
 /* Return true if fd 0 has already been redirected at least once.  */

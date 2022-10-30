@@ -45,6 +45,7 @@
 #include "error.h"
 #include "memalloc.h"
 #include "mystring.h"
+#include "token.h"
 
 
 /*
@@ -52,10 +53,6 @@
  */
 
 #define EOFMARKLEN 79
-
-/* values returned by readtoken */
-#include "token.def"
-
 
 
 struct heredoc {

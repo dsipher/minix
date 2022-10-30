@@ -15,7 +15,6 @@ CFLAGS=	-w -DSHELL -I.
 
 CLEANFILES= $(OBJS) \
 	builtins.c builtins.h init.c mkinit \
-	token.def \
 	bltin/operators.h bltin/operators.c
 
 all:	sh
@@ -26,10 +25,7 @@ sh:	$(OBJS)
 clean:
 	rm -f $(CLEANFILES) sh core
 
-parser.o: token.def
-
-token.def: mktokens
-	sh mktokens
+parser.o: token.h
 
 builtins.c builtins.h: builtins.table shell.h
 	sh mkbuiltins shell.h builtins.table

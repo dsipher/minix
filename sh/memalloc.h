@@ -44,12 +44,12 @@ extern int stacknleft;
 extern int sstrnleft;
 extern int herefd;
 
-pointer ckmalloc(int);
-pointer ckrealloc(pointer, int);
-void free(pointer);     /* defined in C library */
+void *ckmalloc(int);
+void *ckrealloc(void *, int);
+void free(void *);     /* defined in C library */
 char *savestr(char *);
-pointer stalloc(int);
-void stunalloc(pointer);
+void *stalloc(int);
+void stunalloc(void *);
 void setstackmark(struct stackmark *);
 void popstackmark(struct stackmark *);
 void growstackblock(void);
@@ -72,6 +72,6 @@ void ungrabstackstr(char *, char *);
 #define STADJUST(amount, p) (p += (amount), sstrnleft -= (amount))
 #define grabstackstr(p) stalloc(stackblocksize() - sstrnleft)
 
-#define ckfree(p)   free((pointer)(p))
+#define ckfree(p)   free((void *)(p))
 
 /* vi: set ts=4 expandtab: */

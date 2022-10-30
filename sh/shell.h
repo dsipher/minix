@@ -42,8 +42,6 @@
 #define USEGETPW  0
 #define DEBUG     0
 
-typedef void *pointer;
-
 #ifndef NULL
 #define NULL (void *)0
 #endif

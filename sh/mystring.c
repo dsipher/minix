@@ -107,12 +107,12 @@ mystrchr(s, charwanted)
 
 void
 mybcopy(src, dst, length)
-    pointer dst;
-    const pointer src;
+    void *dst;
+    const void *src;
     register int length;
     {
     register char *d = dst;
-    register char *s = src;
+    register const char *s = src;
 
     while (--length >= 0)
         *d++ = *s++;

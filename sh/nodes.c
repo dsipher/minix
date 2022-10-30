@@ -45,7 +45,7 @@
 
 int funcblocksize;      /* size of structures in function */
 int funcstringsize;     /* size of strings in node */
-pointer funcblock;      /* block to allocate function from */
+void *funcblock;        /* block to allocate function from */
 char *funcstring;       /* block to allocate strings from */
 
 static const short nodesize[23] = {

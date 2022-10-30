@@ -36,7 +36,7 @@
 
 void scopyn(const char *, char *, int);
 char *strchr(const char *, int);
-void mybcopy(const pointer, pointer, int);
+void mybcopy(const void *, void *, int);
 int prefix(const char *, const char *);
 int number(const char *);
 int is_number(const char *);
@@ -48,6 +48,6 @@ char *strerror(int);            /* from C library */
 
 #define equal(s1, s2)   (strcmp(s1, s2) == 0)
 #define scopy(s1, s2)   ((void)strcpy(s2, s1))
-#define bcopy(src, dst, n)  mybcopy((pointer)(src), (pointer)(dst), n)
+#define bcopy(src, dst, n)  mybcopy((void *)(src), (void *)(dst), n)
 
 /* vi: set ts=4 expandtab: */

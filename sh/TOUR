@@ -1,71 +1,5 @@
-#	@(#)TOUR	5.1 (Berkeley) 3/7/91
-
-                       A Tour through Ash
-
-               Copyright 1989 by Kenneth Almquist.
-
-
-DIRECTORIES:  The subdirectory bltin contains commands which can
-be compiled stand-alone.  The rest of the source is in the main
-ash directory.
-
-SOURCE CODE GENERATORS:  Files whose names begin with "mk" are
-programs that generate source code.  A complete list of these
-programs is:
-
-        program         intput files        generates
-        -------         ------------        ---------
-        mkbuiltins      builtins            builtins.h builtins.c
-        mkinit          *.c                 init.c
-        mknodes         nodetypes           nodes.h nodes.c
-        mksignames          -               signames.h signames.c
-        mksyntax            -               syntax.h syntax.c
-        mktokens            -               token.def
-        bltin/mkexpr    unary_op binary_op  operators.h operators.c
-
-There are undoubtedly too many of these.  Mkinit searches all the
-C source files for entries looking like:
-
-        INIT {
-              x = 1;    /* executed during initialization */
-        }
-
-        RESET {
-              x = 2;    /* executed when the shell does a longjmp
-                           back to the main command loop */
-        }
-
-        SHELLPROC {
-              x = 3;    /* executed when the shell runs a shell procedure */
-        }
-
-It pulls this code out into routines which are when particular
-events occur.  The intent is to improve modularity by isolating
-the information about which modules need to be explicitly
-initialized/reset within the modules themselves.
-
-Mkinit recognizes several constructs for placing declarations in
-the init.c file.
-        INCLUDE "file.h"
-includes a file.  The storage class MKINIT makes a declaration
-available in the init.c file, for example:
-        MKINIT int funcnest;    /* depth of function calls */
-MKINIT alone on a line introduces a structure or union declara-
-tion:
-        MKINIT
-        struct redirtab {
-              short renamed[10];
-        };
-Preprocessor #define statements are copied to init.c without any
-special action to request this.
-
-INDENTATION:  The ash source is indented in multiples of six
-spaces.  The only study that I have heard of on the subject con-
-cluded that the optimal amount to indent is in the range of four
-to six spaces.  I use six spaces since it is not too big a jump
-from the widely used eight spaces.  If you really hate six space
-indentation, use the adjind (source included) program to change
-it to something else.
+(this is an except from Almquist's original notes. many
+ parts which are no longer relevant have been removed -cey)
 
 EXCEPTIONS:  Code for dealing with exceptions appears in
 exceptions.c.  The C language doesn't include exception handling,
@@ -336,13 +270,3 @@ input to come from a string rather than a file.  (This is for the
 variable plinno is saved and restored when files are pushed and
 popped from the stack.  The parser routines store the number of
 the current line in this variable.
-
-DEBUGGING:  If DEBUG is defined in shell.h, then the shell will
-write debugging information to the file $HOME/trace.  Most of
-this is done using the TRACE macro, which takes a set of printf
-arguments inside two sets of parenthesis.  Example:
-"TRACE(("n=%d0, n))".  The double parenthesis are necessary be-
-cause the preprocessor can't handle functions with a variable
-number of arguments.  Defining DEBUG also causes the shell to
-generate a core dump if it is sent a quit signal.  The tracing
-code is in show.c.

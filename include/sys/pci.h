@@ -82,6 +82,10 @@ typedef unsigned pcidev_t;
 #define PCI_CLASS_STORAGE       0x01000000              /* mass storage */
 #define PCI_SBCLS_IDE           0x00010000              /* IDE controller */
 
+/* PCI_CONF_BARx */
+
+#define PCI_BAR_IO(x)           ((x) & 1)       /* true if i/o address */
+#define PCI_BAR(x)              ((x) & ~3)      /* address bits only pls */
 
 #ifdef _KERNEL
 

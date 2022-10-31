@@ -158,9 +158,10 @@ static spinlock_t ide_lock;
 
 #define DEVSEL(dev)         (((dev) & 1) << 4)
 
-/* attempt to IDENTIFY DEVICE associated with `dev'. print some
-   pretty messages for the user. on success, the size[] entry for
-   `dev' on the appropriate channel will be set accordingly. */
+/* attempt to IDENTIFY DEVICE associated with `dev'. print some pretty
+   messages for the user. on success, the size[] entry for `dev' on the
+   appropriate channel will be set accordingly. per our usual arrangement,
+   we assume the BIOS has left the drive in a reasonable state. */
 
 static void
 identify(dev_t dev)
@@ -171,13 +172,8 @@ identify(dev_t dev)
     int base;                   /* base i/o of controller */
     unsigned long blocks;       /* computed size in blocks */
 
-    printf("ide %d.%d: ", CHANNEL(dev), DEVICE(dev));
-
     chan = &channel[CHANNEL(dev)];
     base = chan->base;
-
-    ident = (unsigned short *) pgall(0);
-    if (ident == 0) panic("ide ident");
 
     OUTB(base + IDE_BASE_DRVHD, DEVSEL(dev));
     OUTB(base + IDE_BASE_CMDSTAT, IDE_CMD_IDENTIFY);
@@ -187,11 +183,7 @@ identify(dev_t dev)
     if (    INB(base + IDE_BASE_COUNT) == ATAPI_SIG_COUNT
          && INB(base + IDE_BASE_LBALO) == ATAPI_SIG_LBALO
          && INB(base + IDE_BASE_LBAMD) == ATAPI_SIG_LBAMD
-         && INB(base + IDE_BASE_LBAHI) == ATAPI_SIG_LBAHI)
-    {
-        printf("[unsupported ATAPI device]\n");
-        goto out;
-    }
+         && INB(base + IDE_BASE_LBAHI) == ATAPI_SIG_LBAHI) return;
 
     /* IDENTIFY is always a PIO-mode command: we poll for the data. a drive
        should de-assert BUSY and assert DRQ when the data is ready. if this
@@ -203,16 +195,18 @@ identify(dev_t dev)
     while (time < timeout && !(INB(base + IDE_BASE_CMDSTAT) & IDE_STAT_DRQ)) ;
 
     if (time >= timeout || (INB(base + IDE_BASE_CMDSTAT) & IDE_STAT_ERR))
-    {
-        printf("[not present or not responding]\n");
-        goto out;
-    }
+        return; /* error, not present, or not responding */
 
     /* read the identification sector data -> ident[] */
+
+    ident = (unsigned short *) pgall(0);
+    if (ident == 0) panic("ide ident");
 
     INSW(base + IDE_BASE_DATA, ident, SECTOR_SIZE / 2);
 
     /* print the disk model string for the user */
+
+    printf("ide %d.%d: ", CHANNEL(dev), DEVICE(dev));
 
     {
         char *cp = (char *) &ident[IDENT_MODEL];
@@ -234,13 +228,11 @@ identify(dev_t dev)
         blocks = * (unsigned int *) &ident[IDENT_SIZE28];
     }
 
+    pgfree((caddr_t) ident);
+
     blocks /= FS_BLOCK_SIZE / SECTOR_SIZE;
     chan->size[DEVICE(dev)] = blocks;
-
     printf(" %u blocks\n", chan->size[DEVICE(dev)]);
-
-out:
-    pgfree((caddr_t) ident);
 }
 
 /* initialize the struct for channel `c' by probing
@@ -330,8 +322,8 @@ ideisr(int irq)
 {
     acquire(&ide_lock);
 
-    /* read the status registers to
-       silence device interrupts */
+    /* read the status registers to silence device interrupts.
+       this also serves to ensure all memory writes are posted. */
 
     INB(channel[0].base + IDE_BASE_CMDSTAT);
     INB(channel[1].base + IDE_BASE_CMDSTAT);

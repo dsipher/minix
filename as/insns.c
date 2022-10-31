@@ -1224,6 +1224,10 @@ struct insn i_incq[] =
     { 0 }
 };
 
+struct insn i_insb[] = { 0,         1, { 0x6C } };
+struct insn i_insw[] = { I_DATA_16, 1, { 0x6D } };
+struct insn i_insl[] = { I_DATA_32, 1, { 0x6D } };
+
 struct insn i_int[] = { { 0, 1, { 0xCD }, { { O_IMM_8 } } }, { 0 } };
 
 struct insn i_invlpg[] =

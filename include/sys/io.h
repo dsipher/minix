@@ -67,6 +67,18 @@
                         (_l);                                               \
                     })
 
+#define INSW(p, b, n)   ({                                                  \
+                            unsigned _port = (p);                           \
+                            void *_b = (b);                                 \
+                            unsigned _n = (n);                              \
+                                                                            \
+                            __asm("\trep\n"                                 \
+                                  "\tinsw\n"    : rdx = _port,              \
+                                                  rdi = _b,                 \
+                                                  rcx = _n                  \
+                                                : mem);                     \
+                        })
+
 #define OUTB(p, b)  do {                                                    \
                         unsigned _port = (p);                               \
                         unsigned char _b = (b);                             \

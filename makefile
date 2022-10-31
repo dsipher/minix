@@ -16,6 +16,7 @@ clean::
 	(cd libc; make clean)
 	(cd make; make clean)
 	(cd sed; make clean)
+	(cd sh; make clean)
 	(cd tar; make clean)
 	(cd yacc; make clean)
 	rm -f *.lst *.o

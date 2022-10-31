@@ -45,6 +45,7 @@ done
 (cd libc; make)
 (cd make; make)
 (cd sed; make)
+(cd sh; make)
 (cd tar; make)
 (cd yacc; make)
 

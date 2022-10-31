@@ -43,5 +43,6 @@ mkboot
 mkfs
 nm
 sed/sed
+sh/sh
 tar/tar
 yacc/yacc

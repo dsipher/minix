@@ -17,6 +17,7 @@ bin 				0040755 0 0
 	mkfs			0100555 0 0 mkfs
 	nm			0100555 0 0 nm
 	sed			0100555 0 0 sed/sed
+	sh			0100555 0 0 sh/sh
 	tar			0100555 0 0 tar
 	yacc			0100555 0 0 yacc/yacc			$
 

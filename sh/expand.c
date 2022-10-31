@@ -98,7 +98,7 @@ STATIC struct strlist *expsort(struct strlist *);
 STATIC struct strlist *msort(struct strlist *, int);
 STATIC int pmatch(char *, char *);
 
-STATIC char *expudir(char *);
+static char *expudir(char *path);
 
 
 /*
@@ -654,42 +654,38 @@ nometa:
 
 
 /*
- * Expand ~username into the home directory for the specified user. We hope
- * not to use the getpw stuff here, because then we would have to load in
- * stdio and who knows what else. With networked password files there is
- * no choice alas.
+ * Expand ~username into the home directory for the specified user.
  */
 
 #define MAXLOGNAME 32
-#define MAXPWLINE 128
 
-char *pfgets();
-
-
-STATIC char *
-expudir(path)
-    char *path;
-    {
-    register char *p, *q, *r;
+static char *
+expudir(char *path)
+{
+    char *p, *q, *r;
     char name[MAXLOGNAME];
-    char line[MAXPWLINE];
     int i;
     struct passwd *pw;
 
-    r = path;               /* result on failure */
-    p = r + (*r == '~' ? 1 : 3);    /* the 1 skips "~", 3 skips "/u/" */
+    r = path;       /* result on failure */
+    p = r + 1;      /* skip the  ~ */
     q = name;
+
     while (*p && *p != '/') {
         if (q >= name + MAXLOGNAME - 1)
-            return r;       /* fail, name too long */
+            return r;  /* name too long */
+
         *q++ = *p++;
     }
+
     *q = '\0';
 
     if (*name == 0 && *r == '~') {
         /* null name, use $HOME */
+
         if ((q = lookupvar("HOME")) == NULL)
-            return r;       /* fail, home not set */
+            return r;  /* home not set */
+
         i = strlen(q);
         r = stalloc(i + strlen(p) + 1);
         scopy(q, r);
@@ -698,6 +694,7 @@ expudir(path)
         path = r;
         return r;
     }
+
     if ((pw = getpwnam(name)) != NULL) {
         /* user exists */
         q = pw->pw_dir;
@@ -708,8 +705,8 @@ expudir(path)
         didudir = 1;
         path = r;
     }
-    endpwent();
 
+    endpwent();
     return r;
 }
 

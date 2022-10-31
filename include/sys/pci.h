@@ -72,7 +72,8 @@ typedef unsigned pcidev_t;
 #define PCI_CMD_IO              0x00000001      /* i/o decoder enabled */
 #define PCI_CMD_MEM             0x00000002      /* mem decoder enabled */
 #define PCI_CMD_BUSMASTER       0x00000004      /* busmastering enabled */
-#define PCI_STAT_CAPS           0x00000010      /* capabilities present */
+
+#define PCI_STAT_CAPS           0x00100000      /* capabilities present */
 
 /* PCI_CONF_CLASS */
 
@@ -87,6 +88,41 @@ typedef unsigned pcidev_t;
 #define PCI_BAR_IO(x)           ((x) & 1)       /* true if i/o address */
 #define PCI_BAR(x)              ((x) & ~3)      /* address bits only pls */
 
+/* PCI_CONF_CAPS */
+
+#define PCI_CAPS_FIRST(x)       ((x) & 0xFF)
+
+/* the structure an entry in the PCI capabilities list */
+
+#define PCI_CAP_ID(x)           ((x) & 0x000000FF)
+#define PCI_CAP_NEXT(x)         (((x) & 0x0000FF00) >> 8)
+
+/* the only PCI capability of interest to us is the
+   MSI (message-signaled interrupts) capability */
+
+#define PCI_MSI_CAP             0x05            /* PCI_CAP_ID() */
+
+/* bits in the upper part of the capabilities word for MSI */
+
+#define PCI_MSI_CAP_EN          0x00010000      /* enable MSI */
+#define PCI_MSI_CAP_64BIT       0x00800000      /* 64-bit address */
+
+/* offsets (from the capabilities reg) to the MSI registers.
+   note that the offsets differ depending on address size. */
+
+#define PCI_MSI32_MAR           4       /* offset to 32-bit address reg */
+#define PCI_MSI32_MDR           8       /* and the data to store there */
+
+#define PCI_MSI64_MARL          4       /* offset to bits[31:0] and ... */
+#define PCI_MSI64_MARH          8       /* ... bits[63:31] of the address */
+#define PCI_MSI64_MDR           12      /* and the data to store there */
+
+/* the values to put in the MAR and MDR. the former determines which
+   cpu it will be delivered to, the latter which vector is triggered. */
+
+#define PCI_MSI_MAR(cpu)        (0xFEE00000 | ((cpu) << 12))
+#define PCI_MSI_MDR(vec)        (0x00004000 | (vec))
+
 #ifdef _KERNEL
 
 /* read configuration register `reg' of device `dev' */
@@ -96,6 +132,10 @@ extern int pci_read_conf(pcidev_t dev, int reg);
 /* write configuration register `reg' of device `dev' */
 
 extern void pci_write_conf(pcidev_t dev, int reg, int data);
+
+/* route interrupts from `dev' to `irq' via message signaling */
+
+extern void pci_enable_msi(pcidev_t dev, int irq);
 
 #endif /* _KERNEL */
 

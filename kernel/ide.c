@@ -316,7 +316,7 @@ ideinit(void)
         if (IDE_IRQB != IDE_IRQA)       /* in compatibility mode */
             enable(IDE_IRQB, 1);        /* there are two IRQs */
     } else
-        printf("[ide msi]\n");      /* XXX enable_msi(IDE_BDF, IDE_IRQA); */
+        pci_enable_msi(IDE_BDF, IDE_IRQA);
 
     /* probe the channels. the identify() procedure will
        trigger interrupts, but ideisr() will ignore them. */
@@ -336,7 +336,7 @@ ideisr(int irq)
     INB(channel[0].base + IDE_BASE_CMDSTAT);
     INB(channel[1].base + IDE_BASE_CMDSTAT);
 
-    printf("\nideisr()\n"); /* XXX */
+    /* XXX process interrupt! */
 
     release(&ide_lock);
 }

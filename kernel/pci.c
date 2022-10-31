@@ -34,6 +34,8 @@
 #include <sys/pci.h>
 #include <sys/io.h>
 #include <sys/spin.h>
+#include <sys/apic.h>
+#include <sys/log.h>
 
 /* protects access to PCI configuration space */
 
@@ -61,6 +63,51 @@ void pci_write_conf(pcidev_t dev, int reg, int data)
     OUTL(PCI_DATA, data);
 
     release(&pci_lock);
+}
+
+/* traverse the capabilities list to find the MSI MAR and MDR, and stuff
+   them accordingly. we panic if we don't find everything in order. */
+
+void pci_enable_msi(pcidev_t dev, int irq)
+{
+    unsigned index;
+    unsigned config;
+
+    config = pci_read_conf(dev, PCI_CONF_CMDSTAT);
+    if ((config & PCI_STAT_CAPS) == 0) goto panic;
+
+    config = pci_read_conf(dev, PCI_CONF_CAPS);
+    index = PCI_CAPS_FIRST(config);
+
+    while (index)
+    {
+        config = pci_read_conf(dev, index);
+
+        if (PCI_CAP_ID(config) == PCI_MSI_CAP)
+        {
+            unsigned mar = PCI_MSI_MAR(0); /* BSP */
+            unsigned mdr = PCI_MSI_MDR(VECTOR(irq));
+
+            if (config & PCI_MSI_CAP_64BIT)
+            {
+                pci_write_conf(dev, index + PCI_MSI64_MARL, mar);
+                pci_write_conf(dev, index + PCI_MSI64_MARH, 0);
+                pci_write_conf(dev, index + PCI_MSI64_MDR, mdr);
+            } else {
+                pci_write_conf(dev, index + PCI_MSI32_MAR, mar);
+                pci_write_conf(dev, index + PCI_MSI32_MDR, mdr);
+            }
+
+            config |= PCI_MSI_CAP_EN;
+            pci_write_conf(dev, index, config);
+            return; /* success */
+        }
+
+        index = PCI_CAP_NEXT(config);
+    }
+
+panic:
+    panic("msi");
 }
 
 /* vi: set ts=4 expandtab: */

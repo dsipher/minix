@@ -53,9 +53,10 @@ struct buf
 {
     dev_t               b_dev;          /* associated device */
     daddr_t             b_blkno;        /* and its block number */
-    short               b_flags;        /* see B_* below */
+    char                b_flags;        /* see B_* below */
 
-    char                b_busy,         /* flag: someone is using buf */
+    char                b_done,         /* flag: driver completed i/o */
+                        b_busy,         /* flag: someone is using buf */
                         b_wanted;       /* flag: someone else wants it */
 
     /* the actual block data is pointed to here; it is always
@@ -79,35 +80,39 @@ struct buf
    isn't real; it is provided as a mnemonic convenience to
    the callers of routines which have a read/write argument */
 
-#define B_WRITE     0x00000000
-#define B_READ      0x00000001
+#define B_WRITE         0x00
+#define B_READ          0x01
 
 /* this bit is set when the data in b_data mirrors
    what is (or what should be) in the disk block. */
 
-#define B_VALID     0x00000002
+#define B_VALID         0x02
 
 /* this bit is set by the driver when an i/o error occurs */
 
-#define B_ERROR     0x00000004
+#define B_ERROR         0x04
 
-/* set on a buffer just before it is released to indicate it
-   should be placed at the head of the free list, rather than
-   the tail. it is a performance heuristic used when the owner
-   judges that the block is unlikely to be used again soon. */
+/* set on a buffer to indicate it should be placed at the head
+   of the free list when it released, rather than the tail. it
+   it is a performance heuristic used when the owner judges the
+   block is unlikely to be used again soon. */
 
-#define B_AGE       0x00000008
+#define B_AGE           0x08
 
-/* set by bawrite() to indicate to the driver that the buffer should be
-   released when the write is done, usually at interrupt time with iodone */
+/* indicates that the owner does not want the block after
+   i/o is done, so after completion it should be released */
 
-#define B_ASYNC     0x00000010
+#define B_ASYNC         0x10
 
-/* set by bdwrite() before releasing the buffer. when getblk(), while
-   searching for a free block, discovers the bit is set in a buffer it
-   would otherwise grab, it writes the block out before reusing it */
+/* set on a buffer on the bavailq when its contents are dirty,
+   that is, must be written out before reusing the buffer. */
 
-#define B_DELWRI    0x00000020
+#define B_DIRTY         0x20
+
+/* if an i/o error occurs on a buf with B_CRITICAL set, we panic */
+
+#define B_CRITICAL      0x40
+
 
 #ifdef _KERNEL
 
@@ -125,6 +130,26 @@ extern void bufinit(void);
    or may not already have valid data in it. */
 
 extern struct buf *getblk(dev_t dev, daddr_t blkno);
+
+/* synchronous write. initiate transfer and wait for its completion.
+   as a convenience, `flags' are applied to bp->b_flags before writing. */
+
+extern void bwrite(struct buf *bp, int flag);
+
+/* read in (if necessary) the block and return its buf. as
+   with bwrite(), `flags' are a convenience to the caller. */
+
+extern struct buf *bread(dev_t dev, daddr_t blkno, int flags);
+
+/* relinquish ownership a buffer. no immediate i/o is implied, but if
+   marked B_DIRTY, the buf will be written out before it is reassigned. */
+
+extern void brelse(struct buf *bp);
+
+/* called by a device driver after completing i/o on a buf.
+   the driver need only do the i/o and set/unset B_ERROR. */
+
+extern void iodone(struct buf *bp);
 
 #endif /* _KERNEL */
 

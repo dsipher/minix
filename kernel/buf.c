@@ -50,8 +50,8 @@ struct buf *buf; /* buf[NBUF] */
 struct bufq bavailq = TAILQ_HEAD_INITIALIZER(bavailq);
 struct bufq *bhashq; /* bhashq[NBUFH] */
 
-/* protects the global buffer data, and the b_wanted and b_busy fields of
-   all bufs (the owner of a buf has exclusive use of the remaining fields) */
+/* protects the global buffer data, and the b_wanted, b_busy, and b_done
+   fields of buf. (the remaining fields are exclusively for the owner.) */
 
 static spinlock_t buf_lock;
 
@@ -105,11 +105,122 @@ void bufinit(void)
     }
 }
 
+void brelse(struct buf *bp)
+{
+    acquire(&buf_lock);
+
+    bp->b_busy = 0;
+
+    if (bp->b_wanted) {
+        bp->b_wanted = 0;
+        wakeup(bp);
+    }
+
+    /* wake up anyone waiting for ANY free block
+       (which can only be true if bavailq is empty) */
+
+    if (TAILQ_FIRST(&bavailq) == 0) wakeup(&bavailq);
+
+    if (bp->b_flags & B_AGE) {
+        bp->b_flags &= ~B_AGE;
+        TAILQ_INSERT_HEAD(&bavailq, bp, b_avail_links);
+    } else
+        TAILQ_INSERT_TAIL(&bavailq, bp, b_avail_links);
+
+    release(&buf_lock);
+}
+
+/* wait for i/o on `bp' to complete; we do this by looking for
+   bp->b_done to go true when it's set by iodone(). notice that
+   b_done is only partly protected by buf_lock: it can be reset
+   with impunity by the buf owner, but it can't be set without
+   holding the lock, since we synch on the positive transition */
+
+static void
+iowait(struct buf *bp)
+{
+    acquire(&buf_lock);
+
+    while (bp->b_done == 0) /* maybe if? */
+        sleep(bp, P_STATE_COMA, &buf_lock);
+
+    release(&buf_lock);
+}
+
+/* iodone() is usually (but not always) called from in interrupt
+   context, from the bottom half of a device's strategy routine. */
 
 void
-bwrite(struct buf *bp)
+iodone(struct buf *bp)
 {
-    /* XXX */
+    /* the filesystem code sets B_CRITICAL on all i/o involving
+       filesystem metadata. a panic is the only safe response. */
+
+    if (bp->b_flags & B_ERROR) {
+        printf("i/o error: device %d/%d block %u\n", MAJOR(bp->b_dev),
+                                                     MINOR(bp->b_dev),
+                                                     bp->b_blkno);
+
+        if (bp->b_flags & B_CRITICAL) panic("B_CRITICAL");
+    }
+
+    if (bp->b_flags & B_READ)           /* a completed read means */
+        bp->b_flags |= B_VALID;         /* the data is now B_VALID. */
+    else                                /* a completed write means */
+        bp->b_flags &= ~B_DIRTY;        /* the buf is no longer B_DIRTY. */
+
+    bp->b_flags &= ~(B_READ | B_CRITICAL);
+
+    if (bp->b_flags & B_ASYNC) {
+        /* async i/o means the owner doesn't want the buf anymore,
+           so we release it on his behalf. we must clear the error
+           flag, since there's no process to report the error to. */
+
+        bp->b_flags &= ~(B_ASYNC | B_ERROR);
+        brelse(bp);
+     } else {
+        /* otherwise, we know the owner is waiting for it in iowait().
+           the owner must do something appropriate with any B_ERROR. */
+
+        acquire(&buf_lock);
+        bp->b_done = 1;
+        bp->b_wanted = 0;
+        wakeup(bp);
+        release(&buf_lock);
+    }
+}
+
+void
+bwrite(struct buf *bp, int flags)
+{
+    int sync;
+
+    bp->b_done = 0;
+    bp->b_flags |= B_WRITE | flags;
+    sync = !(bp->b_flags & B_ASYNC);
+    /* XXX: strategy */
+
+    if (sync) {
+        iowait(bp);
+        brelse(bp);
+    }
+}
+
+struct buf *
+bread(dev_t dev, daddr_t blkno, int flags)
+{
+    struct buf *bp;
+
+    bp = getblk(dev, blkno);
+
+    if (bp->b_flags & B_VALID)
+        return bp;
+
+    bp->b_done = 0;
+    bp->b_flags |= B_READ | flags;
+    /* XXX: strategy */
+    iowait(bp);
+    return bp;
 }
 
 /* mark `bp' busy and remove it from the bavailq */
@@ -174,10 +285,9 @@ retry:
 
     notavail(bp);
 
-    if (bp->b_flags & B_DELWRI) {
+    if (bp->b_flags & B_DIRTY) {
         release(&buf_lock);
-        bp->b_flags |= B_ASYNC;
-        bwrite(bp);
+        bwrite(bp, B_ASYNC | B_AGE);
         goto relock;
     }
 

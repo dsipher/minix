@@ -80,9 +80,20 @@ struct ide_channel
     struct bufq requestq;
 
     /* physical region descriptor for DMA. since there is at most one
-       request in progress per channel, we only need one of these */
+       request in progress per channel, we only need one of these. per
+       the spec, a PRD can't cross a 64k boundary, so we use the dummy
+       field to force quadword alignment, which achieves the same */
 
-    struct { unsigned addr; unsigned count; } prd;
+    struct
+    {
+        long dummy;
+
+        union
+        {
+            unsigned addr;       /* address of buffer data */
+            unsigned count;      /* count (and terminator) */
+        };
+    } prd;
 };
 
 static struct ide_channel channel[NR_IDE_CHANNELS];

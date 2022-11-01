@@ -5,6 +5,7 @@
 ******************************************************************************
 
    Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
+   derived from UNIX (Seventh Edition), which is in the public domain.
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions
@@ -39,28 +40,23 @@
 #include <sys/tailq.h>
 #include <sys/fs.h>
 
-/* we adopt the research unix buffer cache with only minimal
-   modification. as such, dmr's classic paper on the unix i/o
-   system is still mostly relevant, and many of the comments
-   here are basically lifted from there and the v7 sources. */
-
-TAILQ_HEAD(bufq, buf);  /* struct bufq */
-
 /* a buffer header contains all the information required to perform i/o.
    each buffer in the pool is usually linked into two queues: the bhashq
    which permits fast lookups by dev/blkno (always) and the bavailq which
    holds blocks available for other use (sometimes). a buffer is on the
-   bavailq if and only if it is not marked B_BUSY; when it is B_BUSY, the
-   b_avail_links can be used (by, e.g., the driver) for another bufq.
+   bavailq if and only if it is not marked b_busy; when it is b_busy, the
+   b_avail_links can be used (by, e.g., the driver) for another bufq. */
 
-   note that `b_flags' is volatile. this field is not protected by any
-   locks and must be accessed atomically regardless of who owns the buf. */
+TAILQ_HEAD(bufq, buf);  /* struct bufq */
 
 struct buf
 {
     dev_t               b_dev;          /* associated device */
     daddr_t             b_blkno;        /* and its block number */
-    volatile int        b_flags;        /* see B_* flags below */
+    short               b_flags;        /* see B_* below */
+
+    char                b_busy,         /* flag: someone is using buf */
+                        b_wanted;       /* flag: someone else wants it */
 
     /* the actual block data is pointed to here; it is always
        located in the first 4G to make direct PCI DMA possible.
@@ -86,56 +82,40 @@ struct buf
 #define B_WRITE     0x00000000
 #define B_READ      0x00000001
 
-/* this bit is cleared when the buffer is handed to the device
-   strategy routine and is set when the operation completes,
-   whether normally or as the result of an error. if this bit
-   is set on a block in bavailq or returned from getblk(), it
-   signals the block is in agreement with the data on disk. */
+/* this bit is set when the data in b_data mirrors
+   what is (or what should be) in the disk block. */
 
-#define B_DONE      0x00000002
+#define B_VALID     0x00000002
 
-/* this bit is set when B_DONE is set to indicate an i/o error */
+/* this bit is set by the driver when an i/o error occurs */
 
 #define B_ERROR     0x00000004
-
-/* when set, this bit indicates the block is not on bavailq,
-   i.e., it is dedicated to someone's exclusive use. the buf
-   remains in the appropriate bhashq bucket, however. */
-
-#define B_BUSY      0x00000008
-
-/* used in conjuction with the B_BUSY bit. this indicates
-   that the block is wanted by someone else, so a wakeup()
-   on the block address should be issued when it is released */
-
-#define B_WANTED    0x00000010
 
 /* set on a buffer just before it is released to indicate it
    should be placed at the head of the free list, rather than
    the tail. it is a performance heuristic used when the owner
    judges that the block is unlikely to be used again soon. */
 
-#define B_AGE       0x00000020
+#define B_AGE       0x00000008
 
 /* set by bawrite() to indicate to the driver that the buffer should be
    released when the write is done, usually at interrupt time with iodone */
 
-#define B_ASYNC     0x00000040
+#define B_ASYNC     0x00000010
 
 /* set by bdwrite() before releasing the buffer. when getblk(), while
    searching for a free block, discovers the bit is set in a buffer it
-   would otherwise grab, it causes the block to be written out before
-   reusing it. */
+   would otherwise grab, it writes the block out before reusing it */
 
-#define B_DELWRI    0x00000080
+#define B_DELWRI    0x00000020
 
 #ifdef _KERNEL
 
-/* we must export these so
-   page.c can allocate them */
+/* these are basically private to buf.c, but they
+   must be exported so page.c can allocate them. */
 
-extern struct buf  *buf;
-extern struct bufq *bhashq;
+extern struct buf  *buf;        /* buf[NBUF] */
+extern struct bufq *bhashq;     /* bhashq[NBUFH] */
 
 /* initialialize buffer cache */
 

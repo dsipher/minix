@@ -45,15 +45,13 @@
 struct buf *buf; /* buf[NBUF] */
 
 /* all bufs are always in the bhashq (hash by b_blkno),
-   and buffers not B_BUSY are also in the bavailq. */
+   and buffers not b_busy are also in the bavailq. */
 
 struct bufq bavailq = TAILQ_HEAD_INITIALIZER(bavailq);
-struct bufq *bhashq;         /* bhashq[NBUFH] */
+struct bufq *bhashq; /* bhashq[NBUFH] */
 
-/* protects the global buffer data, but not the
-   bufs themselves. (the owner has exclusive use
-   of a buf, EXCEPT for the b_flags field, which
-   must be updated atomically.) */
+/* protects the global buffer data, and the b_wanted and b_busy fields of
+   all bufs (the owner of a buf has exclusive use of the remaining fields) */
 
 static spinlock_t buf_lock;
 
@@ -119,16 +117,13 @@ bwrite(struct buf *bp)
 static
 notavail(struct buf *bp)    /* held: buf_lock */
 {
-    bp->b_flags |= B_BUSY;
+    bp->b_busy = 1;
     TAILQ_REMOVE(&bavailq, bp, b_avail_links);
 }
 
 /* assign a buffer for the given block. if the appropriate
    block is already associated, return it; otherwise search
-   for the oldest non-busy buffer and reassign it.
-
-   if the returned buf has B_DONE set, its contents are valid
-   i.e., they reflect the contents of the block on the disk. */
+   for the oldest non-busy buffer and reassign it. */
 
 struct buf *
 getblk(dev_t dev, daddr_t blkno)
@@ -151,8 +146,8 @@ retry:
         if (bp->b_dev != dev || bp->b_blkno != blkno)
             continue;
 
-        if (bp->b_flags & B_BUSY) {
-            bp->b_flags |= B_WANTED;
+        if (bp->b_busy) {
+            bp->b_wanted = 1;
             sleep(bp, P_STATE_COMA, &buf_lock);
             goto retry;
         }
@@ -173,9 +168,9 @@ retry:
         goto retry;
     }
 
-    /* claim the block for ourselves. if it's got data that
-       must to be written to disk, our success is short-lived:
-       we must schedule the write and start all over again. */
+    /* claim ownership of the block for ourselves. if it's got data
+       that must to be written to disk, our success is short-lived:
+       we must schedule the write and start the search over again. */
 
     notavail(bp);
 
@@ -191,10 +186,9 @@ retry:
 
     b = BUFHASH(bp->b_blkno); TAILQ_REMOVE(&bhashq[b], bp, b_hash_links);
 
-    bp->b_flags &= B_BUSY;      /* discard all other flags */
-    bp->b_dev = dev;            /* and reassign the block */
+    bp->b_flags = 0;            /* zap all the flags */
+    bp->b_dev = dev;            /* reassign the block */
     bp->b_blkno = blkno;
-    bp->b_flags &= B_BUSY;
 
     b = BUFHASH(blkno); TAILQ_INSERT_HEAD(&bhashq[b], bp, b_hash_links);
 

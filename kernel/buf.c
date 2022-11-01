@@ -5,6 +5,7 @@
 ******************************************************************************
 
    Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
+   derived from UNIX (Seventh Edition), which is in the public domain.
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions
@@ -34,17 +35,32 @@
 #include <sys/buf.h>
 #include <sys/page.h>
 #include <sys/log.h>
+#include <sys/spin.h>
+#include <sys/proc.h>
 #include "config.h"
 
+/* we maintain a fixed number of buffers
+   allocated at initialization by page.c */
+
+struct buf *buf; /* buf[NBUF] */
+
+/* all bufs are always in the bhashq (hash by b_blkno),
+   and buffers not B_BUSY are also in the bavailq. */
+
 struct bufq bavailq = TAILQ_HEAD_INITIALIZER(bavailq);
-
 struct bufq *bhashq;         /* bhashq[NBUFH] */
-struct buf  *buf;            /* buf[NBUF] */
 
-/* compute the hash bucket for buf `b'. (this is
-   why we recommend that NBUFH be a power of 2.) */
+/* protects the global buffer data, but not the
+   bufs themselves. (the owner has exclusive use
+   of a buf, EXCEPT for the b_flags field, which
+   must be updated atomically.) */
 
-#define BUFHASH(b)      ((b)->b_blkno % NBUFH)
+static spinlock_t buf_lock;
+
+/* compute the hash bucket for `blkno'. we
+   recommend that NBUFH be a power of 2. */
+
+#define BUFHASH(blkno)  ((blkno) % NBUFH)
 
 /* bhashq[] and buf[] have been allocated and
    zeroed by pginit(). we have four tasks:
@@ -61,7 +77,9 @@ struct buf  *buf;            /* buf[NBUF] */
         penalizes `real' buffers in that bucket until
         they finally spread themselves out over time)
 
-    (4) allocate pages for data storage for each buf */
+    (4) allocate pages for data storage for each buf
+
+   we skip locking, since this is called very early */
 
 void bufinit(void)
 {
@@ -74,7 +92,7 @@ void bufinit(void)
     for (i = 0; i < NBUF; ++i) {
         buf[i].b_dev = NODEV;
         buf[i].b_blkno = i;
-        b = BUFHASH(&buf[i]);
+        b = BUFHASH(buf[i].b_blkno);
         TAILQ_INSERT_TAIL(&bhashq[b], &buf[i], b_hash_links);
         TAILQ_INSERT_TAIL(&bavailq, &buf[i], b_avail_links);
 
@@ -87,6 +105,101 @@ void bufinit(void)
         if (data == 0 || VTOP(data) >= 0x100000000 /* 4GB */)
             panic("bufinit");
     }
+}
+
+
+void
+bwrite(struct buf *bp)
+{
+    /* XXX */
+}
+
+/* mark `bp' busy and remove it from the bavailq */
+
+static
+notavail(struct buf *bp)    /* held: buf_lock */
+{
+    bp->b_flags |= B_BUSY;
+    TAILQ_REMOVE(&bavailq, bp, b_avail_links);
+}
+
+/* assign a buffer for the given block. if the appropriate
+   block is already associated, return it; otherwise search
+   for the oldest non-busy buffer and reassign it.
+
+   if the returned buf has B_DONE set, its contents are valid
+   i.e., they reflect the contents of the block on the disk. */
+
+struct buf *
+getblk(dev_t dev, daddr_t blkno)
+{
+    struct buf *bp;
+    int b; /* bucket */
+
+relock:
+    acquire(&buf_lock);
+
+retry:
+
+    /* first, see if the block is already associated in the cache. if yes,
+       but it's busy, we'll have to sleep on the block and retry on wakeup */
+
+    b = BUFHASH(blkno);
+
+    for (bp = TAILQ_FIRST(&bhashq[b]); bp; bp = TAILQ_NEXT(bp, b_hash_links))
+    {
+        if (bp->b_dev != dev || bp->b_blkno != blkno)
+            continue;
+
+        if (bp->b_flags & B_BUSY) {
+            bp->b_flags |= B_WANTED;
+            sleep(bp, P_STATE_COMA, &buf_lock);
+            goto retry;
+        }
+
+        notavail(bp);
+        release(&buf_lock);
+        return bp;
+    }
+
+    /* not in the cache, so we need to grab an available block and
+       reassign it. in the highly unlikely event that there are no
+       available blocks, sleep on the bavailq and retry on wakeup */
+
+    bp = TAILQ_FIRST(&bavailq);
+
+    if (bp == 0) {
+        sleep(&bavailq, P_STATE_COMA, &buf_lock);
+        goto retry;
+    }
+
+    /* claim the block for ourselves. if it's got data that
+       must to be written to disk, our success is short-lived:
+       we must schedule the write and start all over again. */
+
+    notavail(bp);
+
+    if (bp->b_flags & B_DELWRI) {
+        release(&buf_lock);
+        bp->b_flags |= B_ASYNC;
+        bwrite(bp);
+        goto relock;
+    }
+
+    /* this is the ONLY place where a buf can be reassigned, and
+       thus the only place where it will change bhashq buckets */
+
+    b = BUFHASH(bp->b_blkno); TAILQ_REMOVE(&bhashq[b], bp, b_hash_links);
+
+    bp->b_flags &= B_BUSY;      /* discard all other flags */
+    bp->b_dev = dev;            /* and reassign the block */
+    bp->b_blkno = blkno;
+    bp->b_flags &= B_BUSY;
+
+    b = BUFHASH(blkno); TAILQ_INSERT_HEAD(&bhashq[b], bp, b_hash_links);
+
+    release(&buf_lock);
+    return bp;
 }
 
 /* vi: set ts=4 expandtab: */

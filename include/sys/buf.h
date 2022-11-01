@@ -51,13 +51,16 @@ TAILQ_HEAD(bufq, buf);  /* struct bufq */
    which permits fast lookups by dev/blkno (always) and the bavailq which
    holds blocks available for other use (sometimes). a buffer is on the
    bavailq if and only if it is not marked B_BUSY; when it is B_BUSY, the
-   b_avail_links can be used (by, e.g., the driver) for another bufq. */
+   b_avail_links can be used (by, e.g., the driver) for another bufq.
+
+   note that `b_flags' is volatile. this field is not protected by any
+   locks and must be accessed atomically regardless of who owns the buf. */
 
 struct buf
 {
     dev_t               b_dev;          /* associated device */
     daddr_t             b_blkno;        /* and its block number */
-    int                 b_flags;        /* see B_* flags below */
+    volatile int        b_flags;        /* see B_* flags below */
 
     /* the actual block data is pointed to here; it is always
        located in the first 4G to make direct PCI DMA possible.
@@ -128,11 +131,20 @@ struct buf
 
 #ifdef _KERNEL
 
-extern struct bufq bavailq;         /* free buffers */
-extern struct bufq *bhashq;         /* hash buckets */
-extern struct buf  *buf;            /* buffer headers */
+/* we must export these so
+   page.c can allocate them */
 
-extern void bufinit(void);          /* initialize bufs and queues */
+extern struct buf  *buf;
+extern struct bufq *bhashq;
+
+/* initialialize buffer cache */
+
+extern void bufinit(void);
+
+/* get a buffer for the specified block. it may
+   or may not already have valid data in it. */
+
+extern struct buf *getblk(dev_t dev, daddr_t blkno);
 
 #endif /* _KERNEL */
 

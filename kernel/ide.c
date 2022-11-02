@@ -61,10 +61,11 @@
 
 struct ide_channel
 {
-    unsigned short base;    /* base port of main i/o region */
-    unsigned short dma;     /* base port of busmastering region */
-    unsigned short ctrl;    /* control port (alt status/interrupts) */
-    unsigned short flags;   /* see CHANNEL_F_* below */
+    unsigned short  base;   /* base port of main i/o region */
+    unsigned short  dma;    /* base port of busmastering region */
+    unsigned short  ctrl;   /* control port (alt status/interrupts) */
+
+    unsigned char   busy;   /* busy (working on head of requestq) */
 
     /* at startup, we probe the bus and populate the size
        for each device. if size == 0, then the device is
@@ -102,12 +103,6 @@ static struct ide_channel channel[NR_IDE_CHANNELS];
    access to the controller itself */
 
 static spinlock_t ide_lock;
-
-/* channel flags. BUSY and WANTED have the semantics they
-   do just about everywhere else (e.g., the buffer cache) */
-
-#define CHANNEL_F_BUSY      0x0001      /* channel is in use */
-#define CHANNEL_F_WANTED    0x0002      /* someone wants channel */
 
 /* we map minors to devices in a straightforward manner: bit[1] is
    the controller, bit[0] the dev on the controller (0 == master).
@@ -168,6 +163,23 @@ static spinlock_t ide_lock;
    given a dev_t (or just the minor) */
 
 #define DEVSEL(dev)         (((dev) & 1) << 4)
+
+/* i/o ports (offsets from channel->dma) */
+
+#define IDE_DMA_CMD         0           /* bus master command register */
+#define IDE_DMA_STAT        2           /* bus master status register */
+#define IDE_DMA_PRD         4           /* bus master PRD base address */
+
+/* bits in the IDE_DMA_CMD register */
+
+#define DMA_CMD_START       0x01        /* start/stop bit */
+#define DMA_CMD_DIR         0x08        /* dma direction bit */
+
+/* ........... IDE_DMA_STAT register */
+
+#define DMA_STAT_INTR       0x04        /* device interrupt */
+#define DMA_STAT_ERROR      0x02        /* dma error */
+#define DMA_STAT_ACTIVE     0x01        /* transfer active */
 
 /* attempt to IDENTIFY DEVICE associated with `dev'. print some pretty
    messages for the user. on success, the size[] entry for `dev' on the

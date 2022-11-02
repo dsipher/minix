@@ -105,10 +105,11 @@ void bufinit(void)
     }
 }
 
-void brelse(struct buf *bp)
+void brelse(struct buf *bp, int flags)
 {
     acquire(&buf_lock);
 
+    bp->b_flags |= flags;
     bp->b_busy = 0;
 
     if (bp->b_wanted) {
@@ -151,8 +152,10 @@ iowait(struct buf *bp)
    context, from the bottom half of a device's strategy routine. */
 
 void
-iodone(struct buf *bp)
+iodone(struct buf *bp, int flags)
 {
+    bp->b_flags |= flags;
+
     /* the filesystem code sets B_CRITICAL on all i/o involving
        filesystem metadata. a panic is the only safe response. */
 
@@ -177,7 +180,7 @@ iodone(struct buf *bp)
            flag, since there's no process to report the error to. */
 
         bp->b_flags &= ~(B_ASYNC | B_ERROR);
-        brelse(bp);
+        brelse(bp, 0);
      } else {
         /* otherwise, we know the owner is waiting for it in iowait().
            the owner must do something appropriate with any B_ERROR. */
@@ -189,6 +192,10 @@ iodone(struct buf *bp)
         release(&buf_lock);
     }
 }
+
+/* we must observe the state of B_ASYNC before calling the strategy
+   routine, because ownership of the buf passes to the driver then.
+   reading them directly would result in a race with the driver. */
 
 void
 bwrite(struct buf *bp, int flags)
@@ -202,7 +209,7 @@ bwrite(struct buf *bp, int flags)
 
     if (sync) {
         iowait(bp);
-        brelse(bp);
+        brelse(bp, 0);
     }
 }
 

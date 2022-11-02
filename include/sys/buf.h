@@ -131,25 +131,25 @@ extern void bufinit(void);
 
 extern struct buf *getblk(dev_t dev, daddr_t blkno);
 
-/* synchronous write. initiate transfer and wait for its completion.
-   as a convenience, `flags' are applied to bp->b_flags before writing. */
+/* synchronous write. initiate transfer and wait for its completion. here
+   in bwrite(), as well as in the following functions, `flags' are applied
+   to bp->b_flags before `bp' is processed. this is simply a convenience */
 
 extern void bwrite(struct buf *bp, int flag);
 
-/* read in (if necessary) the block and return its buf. as
-   with bwrite(), `flags' are a convenience to the caller. */
+/* read in (if necessary) the block and return its buf. */
 
 extern struct buf *bread(dev_t dev, daddr_t blkno, int flags);
 
 /* relinquish ownership a buffer. no immediate i/o is implied, but if
    marked B_DIRTY, the buf will be written out before it is reassigned. */
 
-extern void brelse(struct buf *bp);
+extern void brelse(struct buf *bp, int flags);
 
-/* called by a device driver after completing i/o on a buf.
-   the driver need only do the i/o and set/unset B_ERROR. */
+/* called by a device driver after completing i/o on a buf. if an error
+   occurred, bp->b_flags must have B_ERROR set (possibly via `flags') */
 
-extern void iodone(struct buf *bp);
+extern void iodone(struct buf *bp, int flags);
 
 #endif /* _KERNEL */
 

@@ -11,6 +11,7 @@ clean::
 	(cd awk; make clean)
 	(cd cc1; make clean)
 	(cd cpp; make clean)
+	(cd ed; make clean)
 	(cd kernel; make clean)
 	(cd lex; make clean)
 	(cd libc; make clean)

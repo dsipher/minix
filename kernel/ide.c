@@ -56,7 +56,7 @@
 /* a PCI IDE controller has two [mostly] independent
    channels, and at most two devices per channel. */
 
-#define NR_IDE_CHANNELS     2
+#define NR_CHANNELS         2
 #define DEVS_PER_CHANNEL    2
 
 struct ide_channel
@@ -97,7 +97,7 @@ struct ide_channel
     } prd;
 };
 
-static struct ide_channel channel[NR_IDE_CHANNELS];
+static struct ide_channel channel[NR_CHANNELS];
 
 /* protects global data channel[] and
    access to the controller itself */
@@ -108,7 +108,7 @@ static spinlock_t ide_lock;
    the controller, bit[0] the dev on the controller (0 == master).
    CHANNEL() and DEVICE() work on both full dev_t and pure minors. */
 
-#define NR_MINORS           (NR_IDE_CHANNELS * DEVS_PER_CHANNEL)
+#define NR_MINORS           (NR_CHANNELS * DEVS_PER_CHANNEL)
 #define CHANNEL(dev)        (((dev) >> 1) & 1)
 #define DEVICE(dev)         ((dev) & 1)
 
@@ -118,27 +118,27 @@ static spinlock_t ide_lock;
 #define PIF_0               0x00000100      /* primary */
 #define PIF_1               0x00000400      /* secondary */
 
-/* i/o ports (offsets from channel->base) */
+/* base i/o ports (offsets from channel->base) */
 
-#define IDE_BASE_DATA       0       /* 16-bit data window */
-#define IDE_BASE_ERRFEAT    1       /* feature (w) or error (r) */
-#define IDE_BASE_COUNT      2       /* sector count */
-#define IDE_BASE_LBALO      3       /* lba[7:0] */
-#define IDE_BASE_LBAMD      4       /* lba[15:8] */
-#define IDE_BASE_LBAHI      5       /* lba[23:16] */
-#define IDE_BASE_DRVHD      6       /* drive, head, lba[27:24] */
-#define IDE_BASE_CMDSTAT    7       /* command (w) or status (r) */
+#define BASE_DATA           0       /* 16-bit data window */
+#define BASE_ERRFEAT        1       /* feature (w) or error (r) */
+#define BASE_COUNT          2       /* sector count */
+#define BASE_LBALO          3       /* lba[7:0] */
+#define BASE_LBAMD          4       /* lba[15:8] */
+#define BASE_LBAHI          5       /* lba[23:16] */
+#define BASE_DRVHD          6       /* drive, head, lba[27:24] */
+#define BASE_CMDSTAT        7       /* command (w) or status (r) */
 
-/* bits in IDE_BASE_CMDSTAT */
+/* bits in BASE_CMDSTAT */
 
-#define IDE_STAT_ERR        0x01    /* error */
-#define IDE_STAT_DRQ        0x08    /* data request */
-#define IDE_STAT_RDY        0x40    /* drive ready */
-#define IDE_STAT_BSY        0x80    /* drive busy */
+#define BASE_STAT_ERR       0x01    /* error */
+#define BASE_STAT_DRQ       0x08    /* data request */
+#define BASE_STAT_RDY       0x40    /* drive ready */
+#define BASE_STAT_BSY       0x80    /* drive busy */
 
-/* commands for IDE_BASE_CMDSTAT */
+/* commands for BASE_CMDSTAT */
 
-#define IDE_CMD_IDENTIFY    0xEC    /* identify device */
+#define BASE_CMD_IDENTIFY   0xEC    /* identify device */
 
 /* offsets into the IDENTIFY DEVICE buffer */
 
@@ -159,23 +159,23 @@ static spinlock_t ide_lock;
 #define ATAPI_SIG_LBAMD     0x14
 #define ATAPI_SIG_LBAHI     0xEB
 
-/* compute the DEV bit for IDE_BASE_DRVHD
+/* compute the DEV bit for BASE_DRVHD
    given a dev_t (or just the minor) */
 
 #define DEVSEL(dev)         (((dev) & 1) << 4)
 
 /* i/o ports (offsets from channel->dma) */
 
-#define IDE_DMA_CMD         0           /* bus master command register */
-#define IDE_DMA_STAT        2           /* bus master status register */
-#define IDE_DMA_PRD         4           /* bus master PRD base address */
+#define DMA_CMD             0           /* bus master command register */
+#define DMA_STAT            2           /* bus master status register */
+#define DMA_PRD             4           /* bus master PRD base address */
 
-/* bits in the IDE_DMA_CMD register */
+/* bits in the DMA_CMD register */
 
 #define DMA_CMD_START       0x01        /* start/stop bit */
 #define DMA_CMD_DIR         0x08        /* dma direction bit */
 
-/* ........... IDE_DMA_STAT register */
+/* ........... DMA_STAT register */
 
 #define DMA_STAT_INTR       0x04        /* device interrupt */
 #define DMA_STAT_ERROR      0x02        /* dma error */
@@ -198,15 +198,15 @@ identify(dev_t dev)
     chan = &channel[CHANNEL(dev)];
     base = chan->base;
 
-    OUTB(base + IDE_BASE_DRVHD, DEVSEL(dev));
-    OUTB(base + IDE_BASE_CMDSTAT, IDE_CMD_IDENTIFY);
+    OUTB(base + BASE_DRVHD, DEVSEL(dev));
+    OUTB(base + BASE_CMDSTAT, BASE_CMD_IDENTIFY);
 
     /* look for an ATAPI signature. we don't do ATAPI (yet?) */
 
-    if (    INB(base + IDE_BASE_COUNT) == ATAPI_SIG_COUNT
-         && INB(base + IDE_BASE_LBALO) == ATAPI_SIG_LBALO
-         && INB(base + IDE_BASE_LBAMD) == ATAPI_SIG_LBAMD
-         && INB(base + IDE_BASE_LBAHI) == ATAPI_SIG_LBAHI) return;
+    if (    INB(base + BASE_COUNT) == ATAPI_SIG_COUNT
+         && INB(base + BASE_LBALO) == ATAPI_SIG_LBALO
+         && INB(base + BASE_LBAMD) == ATAPI_SIG_LBAMD
+         && INB(base + BASE_LBAHI) == ATAPI_SIG_LBAHI) return;
 
     /* IDENTIFY is always a PIO-mode command: we poll for the data. a drive
        should de-assert BUSY and assert DRQ when the data is ready. if this
@@ -214,10 +214,10 @@ identify(dev_t dev)
 
     timeout = time + TIMEOUT + 1;
 
-    while (time < timeout && (INB(base + IDE_BASE_CMDSTAT) & IDE_STAT_BSY)) ;
-    while (time < timeout && !(INB(base + IDE_BASE_CMDSTAT) & IDE_STAT_DRQ)) ;
+    while (time < timeout && (INB(base + BASE_CMDSTAT) & BASE_STAT_BSY)) ;
+    while (time < timeout && !(INB(base + BASE_CMDSTAT) & BASE_STAT_DRQ)) ;
 
-    if (time >= timeout || (INB(base + IDE_BASE_CMDSTAT) & IDE_STAT_ERR))
+    if (time >= timeout || (INB(base + BASE_CMDSTAT) & BASE_STAT_ERR))
         return; /* error, not present, or not responding */
 
     /* read the identification sector data -> ident[] */
@@ -225,7 +225,7 @@ identify(dev_t dev)
     ident = (unsigned short *) pgall(0);
     if (ident == 0) panic("ide ident");
 
-    INSW(base + IDE_BASE_DATA, ident, SECTOR_SIZE / 2);
+    INSW(base + BASE_DATA, ident, SECTOR_SIZE / 2);
 
     /* print the disk model string for the user */
 
@@ -348,8 +348,8 @@ ideisr(int irq)
     /* read the status registers to silence device interrupts.
        this also serves to ensure all memory writes are posted. */
 
-    INB(channel[0].base + IDE_BASE_CMDSTAT);
-    INB(channel[1].base + IDE_BASE_CMDSTAT);
+    INB(channel[0].base + BASE_CMDSTAT);
+    INB(channel[1].base + BASE_CMDSTAT);
 
     /* XXX process interrupt! */
 

@@ -114,7 +114,7 @@ procall(void)
         }
 
     p = 0;
-    u.u_error = EAGAIN;
+    u.u_errno = EAGAIN;
 
 out:
     release(&sched_lock);
@@ -154,7 +154,7 @@ newproc(void (*entry)(void))
 
     if (p->p_ptl3 == 0) {
         procfree(p);
-        u.u_error = ENOMEM;
+        u.u_errno = ENOMEM;
         return 0;
     }
 

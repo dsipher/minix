@@ -57,7 +57,7 @@ _u = 0x00100000                 / USER_ADDR from sys/page.h
 U_FXSAVE    =   _u + 0x0000
 U_PROCP     =   _u + 0x0200
 U_LOCKS     =   _u + 0x0208
-U_ERROR     =   _u + 0x0209
+U_ERRNO     =   _u + 0x0209
 
 U_SYS_RBX   =   _u + 0x0210
 U_SYS_RBP   =   _u + 0x0218

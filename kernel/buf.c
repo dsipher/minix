@@ -149,7 +149,7 @@ iowait(struct buf *bp)
     release(&buf_lock);
 
     if (bp->b_flags & B_ERROR)
-        u.u_error = bp->b_errno;
+        u.u_errno = bp->b_errno;
 }
 
 /* iodone() is usually (but not always) called from in interrupt

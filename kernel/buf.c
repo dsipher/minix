@@ -172,7 +172,9 @@ iodone(struct buf *bp, int flags)
     else                                /* a completed write means */
         bp->b_flags &= ~B_DIRTY;        /* the buf is no longer B_DIRTY. */
 
-    bp->b_flags &= ~(B_READ | B_CRITICAL);
+    /* hygiene. don't keep stray flags around. */
+
+    bp->b_flags &= ~(B_READ | B_CRITICAL | B_SYNC);
 
     if (bp->b_flags & B_ASYNC) {
         /* async i/o means the owner doesn't want the buf anymore,

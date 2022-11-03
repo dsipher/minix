@@ -113,6 +113,11 @@ struct buf
 
 #define B_CRITICAL      0x40
 
+/* synchronous write. when set, a write request can not be marked complete
+  until the data is commited to the medium. not the opposite of B_ASYNC! */
+
+#define B_SYNC          0x80
+
 
 #ifdef _KERNEL
 

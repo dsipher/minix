@@ -59,7 +59,7 @@
 #define NR_CHANNELS         2
 #define DEVS_PER_CHANNEL    2
 
-struct ide_channel
+struct channel
 {
     unsigned short  base;   /* base port of main i/o region */
     unsigned short  dma;    /* base port of busmastering region */
@@ -97,7 +97,7 @@ struct ide_channel
     } prd;
 };
 
-static struct ide_channel channel[NR_CHANNELS];
+static struct channel channel[NR_CHANNELS];
 
 /* protects global data channel[] and
    access to the controller itself */
@@ -118,7 +118,7 @@ static spinlock_t ide_lock;
 #define PIF_0               0x00000100      /* primary */
 #define PIF_1               0x00000400      /* secondary */
 
-/* base i/o ports (offsets from channel->base) */
+/* base i/o ports (offsets from channel.base) */
 
 #define BASE_DATA           0       /* 16-bit data window */
 #define BASE_ERRFEAT        1       /* feature (w) or error (r) */
@@ -164,7 +164,7 @@ static spinlock_t ide_lock;
 
 #define DEVSEL(dev)         (((dev) & 1) << 4)
 
-/* i/o ports (offsets from channel->dma) */
+/* i/o ports (offsets from channel.dma) */
 
 #define DMA_CMD             0           /* bus master command register */
 #define DMA_STAT            2           /* bus master status register */
@@ -189,14 +189,14 @@ static spinlock_t ide_lock;
 static void
 identify(dev_t dev)
 {
-    struct ide_channel *chan;   /* handle to channel */
+    struct channel *chanp;      /* handle to channel */
     unsigned short *ident;      /* identification sector */
     time_t timeout;             /* deadline for timeout */
     int base;                   /* base i/o of controller */
     unsigned long blocks;       /* computed size in blocks */
 
-    chan = &channel[CHANNEL(dev)];
-    base = chan->base;
+    chanp = &channel[CHANNEL(dev)];
+    base = chanp->base;
 
     OUTB(base + BASE_DRVHD, DEVSEL(dev));
     OUTB(base + BASE_CMDSTAT, BASE_CMD_IDENTIFY);
@@ -254,8 +254,8 @@ identify(dev_t dev)
     pgfree((caddr_t) ident);
 
     blocks /= FS_BLOCK_SIZE / SECTOR_SIZE;
-    chan->size[DEVICE(dev)] = blocks;
-    printf(" %u blocks\n", chan->size[DEVICE(dev)]);
+    chanp->size[DEVICE(dev)] = blocks;
+    printf(" %u blocks\n", blocks);
 }
 
 /* initialize the struct for channel `c' by probing
@@ -267,9 +267,9 @@ identify(dev_t dev)
 static void
 init(int c, int bar, int dmaofs, int pif)
 {
-    struct ide_channel *chan = &channel[c];
+    struct channel *chanp = &channel[c];
 
-    TAILQ_INIT(&chan->requestq);
+    TAILQ_INIT(&chanp->requestq);
 
     /* if the channel is in native mode, then we
        must read its i/o windows out of the BARs.
@@ -277,13 +277,13 @@ init(int c, int bar, int dmaofs, int pif)
 
     if (pci_read_conf(IDE_BDF, PCI_CONF_CLASS) & pif)
     {
-        chan->base = PCI_BAR(pci_read_conf(IDE_BDF, bar));
-        chan->ctrl = PCI_BAR(pci_read_conf(IDE_BDF, bar + 1)) + 2;
+        chanp->base = PCI_BAR(pci_read_conf(IDE_BDF, bar));
+        chanp->ctrl = PCI_BAR(pci_read_conf(IDE_BDF, bar + 1)) + 2;
     }
 
     /* the bus mastering i/o base is always in BAR4 */
 
-    chan->dma = PCI_BAR(pci_read_conf(IDE_BDF, PCI_CONF_BAR4)) + dmaofs;
+    chanp->dma = PCI_BAR(pci_read_conf(IDE_BDF, PCI_CONF_BAR4)) + dmaofs;
 }
 
 /* configure the controller as a busmaster, find its channels'

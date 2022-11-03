@@ -49,6 +49,7 @@ extern int errno;
 #define EACCES      13      /* permission denied */
 #define EFAULT      14      /* bad address */
 #define EEXIST      17      /* file exists */
+#define ENODEV      19      /* no such device */
 #define ENOTDIR     20      /* not a directory */
 #define EINVAL      22      /* invalid argument */
 #define EMFILE      24      /* too many open files */

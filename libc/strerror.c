@@ -54,7 +54,7 @@ static const char * const errors[] =
     /* 16 */    0,
     /* 17 */    "file exists",                              /* EEXIST */
     /* 18 */    0,
-    /* 19 */    0,
+    /* 19 */    "no such device",                           /* ENODEV */
     /* 20 */    "not a directory",                          /* ENOTDIR */
     /* 21 */    0,
     /* 22 */    "invalid argument",                         /* EINVAL */

@@ -42,22 +42,30 @@
 #include <sys/clock.h>
 #include <sys/page.h>
 #include <sys/fs.h>
+#include <errno.h>
 #include "config.h"
 
 /* we wait at most TIMEOUT + 1 seconds for a
    command to complete, or we call it an error */
 
-#define TIMEOUT             1
+#define TIMEOUT                 1
 
-/* an IDE device works in 512-byte sectors */
+/* an IDE device works in 512-byte sectors.
+   the kernel of course works in 4k blocks */
 
-#define SECTOR_SIZE         512
+#define SECTOR_SIZE             512
+#define SECTORS_PER_BLOCK       (FS_BLOCK_SIZE / SECTOR_SIZE)
+#define BLOCK_TO_SECTOR(d)      (((long) (d)) * SECTORS_PER_BLOCK)
+
+/* true if LBA28 is insufficient to address sector `s' */
+
+#define USE_LBA48(s)            ((s) >= (1 << 28))
 
 /* a PCI IDE controller has two [mostly] independent
    channels, and at most two devices per channel. */
 
-#define NR_CHANNELS         2
-#define DEVS_PER_CHANNEL    2
+#define NR_CHANNELS             2
+#define DEVS_PER_CHANNEL        2
 
 struct channel
 {
@@ -65,7 +73,8 @@ struct channel
     unsigned short  dma;    /* base port of busmastering region */
     unsigned short  ctrl;   /* control port (alt status/interrupts) */
 
-    unsigned char   busy;   /* busy (working on head of requestq) */
+    unsigned char   state;  /* current FSM state (STATE_*) */
+    unsigned char   flags;  /* driver status flags (FLAG_*) */
 
     /* at startup, we probe the bus and populate the size
        for each device. if size == 0, then the device is
@@ -85,11 +94,11 @@ struct channel
        the spec, a PRD can't cross a 64k boundary, so we use the dummy
        field to force quadword alignment, which achieves the same */
 
-    struct
+    union
     {
         long dummy;
 
-        union
+        struct
         {
             unsigned addr;       /* address of buffer data */
             unsigned count;      /* count (and terminator) */
@@ -104,9 +113,26 @@ static struct channel channel[NR_CHANNELS];
 
 static spinlock_t ide_lock;
 
+/* states of the finite state machine */
+
+#define STATE_IDLE      0           /* waiting for work */
+#define STATE_IO        1           /* doing i/o on head of requestq */
+#define STATE_SYNC      2           /* syncing write of head of requestq */
+#define STATE_FLUSH     3           /* performing flush */
+
+/* channel flags */
+
+#define FLAG_FLUSH0     0x01        /* device 0 needs flush */
+#define FLAG_FLUSH1     0x02        /* device 1 needs flash */
+
+#define FLAG_FLUSH      (FLAG_FLUSH0 | FLAG_FLUSH1)
+
 /* we map minors to devices in a straightforward manner: bit[1] is
    the controller, bit[0] the dev on the controller (0 == master).
-   CHANNEL() and DEVICE() work on both full dev_t and pure minors. */
+   CHANNEL() and DEVICE() work on both full dev_t and pure minors.
+
+   note that CHANNEL() and DEVICE() will always evaluate to value
+   values, since we only ever examine bits[1:0]. they wrap around. */
 
 #define NR_MINORS           (NR_CHANNELS * DEVS_PER_CHANNEL)
 #define CHANNEL(dev)        (((dev) >> 1) & 1)
@@ -138,7 +164,13 @@ static spinlock_t ide_lock;
 
 /* commands for BASE_CMDSTAT */
 
+#define BASE_CMD_READ28     0xC8    /* read dma (28-bit) */
+#define BASE_CMD_READ48     0x25    /* ........ (48-bit) */
+#define BASE_CMD_WRITE28    0xCA    /* write dma (28-bit) */
+#define BASE_CMD_WRITE48    0x35    /* ......... (48-bit) */
+
 #define BASE_CMD_IDENTIFY   0xEC    /* identify device */
+#define BASE_CMD_FLUSH      0xE7    /* flush cached writes to medium */
 
 /* offsets into the IDENTIFY DEVICE buffer */
 
@@ -159,10 +191,10 @@ static spinlock_t ide_lock;
 #define ATAPI_SIG_LBAMD     0x14
 #define ATAPI_SIG_LBAHI     0xEB
 
-/* compute the DEV bit for BASE_DRVHD
-   given a dev_t (or just the minor) */
+/* compute the BASE_DRVHD value given a dev_t
+   (or just the minor). bit 6 enables LBA */
 
-#define DEVSEL(dev)         (((dev) & 1) << 4)
+#define DEVSEL(dev)         (0x40 | (((dev) & 1) << 4))
 
 /* i/o ports (offsets from channel.dma) */
 
@@ -209,7 +241,7 @@ identify(dev_t dev)
          && INB(base + BASE_LBAHI) == ATAPI_SIG_LBAHI) return;
 
     /* IDENTIFY is always a PIO-mode command: we poll for the data. a drive
-       should de-assert BUSY and assert DRQ when the data is ready. if this
+       should de-assert BSY and assert DRQ when the data is ready. if this
        doesn't happen in a reasonable time, then it's wedged or not there. */
 
     timeout = time + TIMEOUT + 1;
@@ -286,6 +318,171 @@ init(int c, int bar, int dmaofs, int pif)
     chanp->dma = PCI_BAR(pci_read_conf(IDE_BDF, PCI_CONF_BAR4)) + dmaofs;
 }
 
+/* inspect the state of channel `c' to see if it's
+   time to take action and transition to a new state */
+
+static void
+advance(int c)      /* held: ide_lock */
+{
+    struct channel *chanp = &channel[c];
+    struct buf *bp;
+    int errno;
+
+again:
+    switch (chanp->state)
+    {
+    case STATE_IDLE:    /*************************************** IDLE ***/
+
+        /* the controller is idle, so look for something to do.
+           we do only two kinds of work: buf i/o and flushing.
+           a flush take priority over i/o requests, otherwise
+           we could place no bound on the its completion time */
+
+        if (chanp->flags & FLAG_FLUSH)
+        {
+            if (chanp->flags & FLAG_FLUSH0) {
+                chanp->flags &= ~FLAG_FLUSH0;
+                OUTB(chanp->base + BASE_DRVHD, DEVSEL(0));
+            } else {
+                chanp->flags &= ~FLAG_FLUSH1;
+                OUTB(chanp->base + BASE_DRVHD, DEVSEL(1));
+            }
+
+            OUTB(chanp->base + BASE_CMDSTAT, BASE_CMD_FLUSH);
+            chanp->state = STATE_FLUSH;
+        } else if (bp = TAILQ_FIRST(&chanp->requestq)) {
+            /* start a new i/o request. */
+
+            int cmd28, cmd48;
+            long sector;
+
+            /* we're going to busmaster FS_BLOCK_SIZE
+               bytes between the disk and bp->b_data */
+
+            chanp->prd.addr = VTOP((caddr_t) bp->b_data);
+            chanp->prd.count = 0x80000000 | FS_BLOCK_SIZE;
+            OUTL(chanp->dma + DMA_PRD, (int) &chanp->prd);
+            OUTB(chanp->dma + DMA_STAT, DMA_STAT_ERROR | DMA_STAT_INTR);
+
+            /* now, issue the command to the ATA disk */
+
+            sector = BLOCK_TO_SECTOR(bp->b_blkno);
+
+            cmd28 = (bp->b_flags & B_READ) ? BASE_CMD_READ28
+                                           : BASE_CMD_WRITE28;
+
+            cmd48 = (bp->b_flags & B_READ) ? BASE_CMD_READ48
+                                           : BASE_CMD_WRITE48;
+
+            if (USE_LBA48(sector)) {
+                OUTB(chanp->base + BASE_DRVHD, DEVSEL(bp->b_dev));
+                OUTB(chanp->base + BASE_COUNT, 0);
+                OUTB(chanp->base + BASE_LBALO, sector >> 24);
+                OUTB(chanp->base + BASE_LBAMD, sector >> 32);
+                OUTB(chanp->base + BASE_LBAHI, sector >> 40);
+                OUTB(chanp->base + BASE_COUNT, SECTORS_PER_BLOCK);
+                OUTB(chanp->base + BASE_LBALO, sector);
+                OUTB(chanp->base + BASE_LBAMD, sector >> 8);
+                OUTB(chanp->base + BASE_LBAHI, sector >> 16);
+                OUTB(chanp->base + BASE_CMDSTAT, cmd48);
+            } else {
+                OUTB(chanp->base + BASE_DRVHD, DEVSEL(bp->b_dev)
+                                               | ((sector >> 24) & 0x0F));
+
+                OUTB(chanp->base + BASE_COUNT, SECTORS_PER_BLOCK);
+                OUTB(chanp->base + BASE_LBALO, sector);
+                OUTB(chanp->base + BASE_LBAMD, sector >> 8);
+                OUTB(chanp->base + BASE_LBAHI, sector >> 16);
+                OUTB(chanp->base + BASE_CMDSTAT, cmd28);
+            }
+
+            /* engage bus mastering, and wait */
+
+            OUTB(chanp->dma + DMA_CMD,
+                 DMA_CMD_START | ((bp->b_flags & B_READ) ? DMA_CMD_DIR : 0));
+
+            chanp->state = STATE_IO;
+        }
+
+        break;
+
+    case STATE_IO:      /***************************************** IO ***/
+
+        /* the I/O request is complete if the drive has
+           interrupted (as reported by the DMA logic) */
+
+        if (INB(chanp->dma + DMA_STAT) & DMA_STAT_INTR) {
+            bp = TAILQ_FIRST(&chanp->requestq);
+
+            /* disengage bus mastering */
+
+            OUTB(chanp->dma + DMA_CMD, 0);
+
+            /* we make only a cursory inspection for errors.
+               no attempts to retry; userspace may retry if
+               it deems necessary. get working hardware. */
+
+            errno = 0;
+
+            if ( (INB(chanp->dma  + DMA_STAT)    & DMA_STAT_ERROR)
+              || (INB(chanp->base + BASE_CMDSTAT) & BASE_STAT_ERR))
+                errno = EIO;
+
+            /* if a write error occurs, there's no point
+               in trying to flush it to the medium... */
+
+            if (errno) bp->b_flags &= ~B_SYNC;
+
+            if (bp->b_flags & B_SYNC) {
+                /* this block is synchronous, so we must ensure it's
+                   flushed to the medium before we can report it done */
+
+                OUTB(chanp->base + BASE_DRVHD, DEVSEL(bp->b_dev));
+                OUTB(chanp->base + BASE_CMDSTAT, BASE_CMD_FLUSH);
+                chanp->state = STATE_SYNC;
+            } else {
+                /* the usual case. i/o is complete, remove it from
+                   the queue and return it to the buf i/o system */
+
+                TAILQ_REMOVE(&chanp->requestq, bp, b_avail_links);
+                chanp->state = STATE_IDLE;
+                release(&ide_lock);
+                iodone(bp, errno);
+                acquire(&ide_lock);
+                goto again;
+            }
+        }
+
+        break;
+
+    case STATE_SYNC:    /*************************************** SYNC ***/
+    case STATE_FLUSH:   /************************************** FLUSH ***/
+
+        /* BASE_CMD_FLUSH is complete once the BSY bit is clear */
+
+        if (INB(chanp->base + BASE_CMDSTAT) & BASE_STAT_BSY)
+            break;
+
+        /* the only difference is that STATE_SYNC indicates a flush
+           done on behalf of a specific buffer write; STATE_FLUSH is
+           a generic flush. we don't check for any errors because it
+           would be impossible to know which block caused the error. */
+
+        bp = 0;
+
+        if (chanp->state == STATE_SYNC) {
+            bp = TAILQ_FIRST(&chanp->requestq);
+            TAILQ_REMOVE(&chanp->requestq, bp, b_avail_links);
+        }
+
+        chanp->state = STATE_IDLE;
+        release(&ide_lock);
+        if (bp) iodone(bp, 0);
+        acquire(&ide_lock);
+        goto again;
+    }
+}
+
 /* configure the controller as a busmaster, find its channels'
    i/o ports, then probe the channels to find attached disks.
 
@@ -340,19 +537,49 @@ ideinit(void)
     printf("\n");
 }
 
+/* read the status registers; this silences device interrupts and
+   flushes posted memory writes. then try to advance the FSMs. */
+
 void
 ideisr(int irq)
 {
     acquire(&ide_lock);
 
-    /* read the status registers to silence device interrupts.
-       this also serves to ensure all memory writes are posted. */
-
     INB(channel[0].base + BASE_CMDSTAT);
     INB(channel[1].base + BASE_CMDSTAT);
+    advance(0); advance(1);
 
-    /* XXX process interrupt! */
+    release(&ide_lock);
+}
 
+/* check to see that the device is present and
+   the block in bounds, then queue the request. */
+
+void
+idestrategy(struct buf *bp)
+{
+    int c                   = CHANNEL(bp->b_dev);
+    struct channel *chanp   = &channel[c];
+    daddr_t size            = chanp->size[DEVICE(bp->b_dev)];
+
+    if (size == 0)
+        iodone(bp, ENODEV);
+    else if (bp->b_blkno >= size)
+        iodone(bp, EIO);
+    else {
+        acquire(&ide_lock);
+        TAILQ_INSERT_TAIL(&chanp->requestq, bp, b_avail_links);
+        advance(c);
+        release(&ide_lock);
+    }
+}
+
+void
+ideflush(void)
+{
+    acquire(&ide_lock);
+    channel[0].flags |= FLAG_FLUSH; advance(0);
+    channel[1].flags |= FLAG_FLUSH; advance(1);
     release(&ide_lock);
 }
 

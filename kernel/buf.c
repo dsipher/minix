@@ -37,6 +37,7 @@
 #include <sys/log.h>
 #include <sys/spin.h>
 #include <sys/proc.h>
+#include <sys/user.h>
 #include "config.h"
 
 /* we maintain a fixed number of buffers
@@ -146,15 +147,19 @@ iowait(struct buf *bp)
         sleep(bp, P_STATE_COMA, &buf_lock);
 
     release(&buf_lock);
+
+    if (bp->b_flags & B_ERROR)
+        u.u_error = bp->b_errno;
 }
 
 /* iodone() is usually (but not always) called from in interrupt
    context, from the bottom half of a device's strategy routine. */
 
 void
-iodone(struct buf *bp, int flags)
+iodone(struct buf *bp, int errno)
 {
-    bp->b_flags |= flags;
+    bp->b_errno = errno;
+    if (errno) bp->b_flags |= B_ERROR;
 
     /* the filesystem code sets B_CRITICAL on all i/o involving
        filesystem metadata. a panic is the only safe response. */
@@ -184,8 +189,8 @@ iodone(struct buf *bp, int flags)
         bp->b_flags &= ~(B_ASYNC | B_ERROR);
         brelse(bp, 0);
      } else {
-        /* otherwise, we know the owner is waiting for it in iowait().
-           the owner must do something appropriate with any B_ERROR. */
+        /* otherwise, we know the owner
+           is waiting for it in iowait() */
 
         acquire(&buf_lock);
         bp->b_done = 1;

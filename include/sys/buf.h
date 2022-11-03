@@ -59,6 +59,8 @@ struct buf
                         b_busy,         /* flag: someone is using buf */
                         b_wanted;       /* flag: someone else wants it */
 
+    int                 b_errno;        /* error to report to user */
+
     /* the actual block data is pointed to here; it is always
        located in the first 4G to make direct PCI DMA possible.
        we present several different views for convenience. */
@@ -151,10 +153,10 @@ extern struct buf *bread(dev_t dev, daddr_t blkno, int flags);
 
 extern void brelse(struct buf *bp, int flags);
 
-/* called by a device driver after completing i/o on a buf. if an error
-   occurred, bp->b_flags must have B_ERROR set (possibly via `flags') */
+/* called by a device driver after completing i/o on a buf.
+   `errno' is zero in the usual case when no error occurs */
 
-extern void iodone(struct buf *bp, int flags);
+extern void iodone(struct buf *bp, int errno);
 
 #endif /* _KERNEL */
 

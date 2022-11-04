@@ -45,10 +45,10 @@
 #include <errno.h>
 #include "config.h"
 
-/* we wait at most TIMEOUT + 1 seconds for a
-   command to complete, or we call it an error */
+/* we wait at most IDENTIFY_TIMEOUT + 1 jiffies for an
+   identify to complete, or we assume no disk present */
 
-#define TIMEOUT                 1
+#define IDENTIFY_TIMEOUT        10      /* 1/10th of a second */
 
 /* an IDE device works in 512-byte sectors.
    the kernel of course works in 4k blocks */
@@ -223,7 +223,7 @@ identify(dev_t dev)
 {
     struct channel *chanp;      /* handle to channel */
     unsigned short *ident;      /* identification sector */
-    time_t timeout;             /* deadline for timeout */
+    long timeout;               /* deadline for timeout */
     int base;                   /* base i/o of controller */
     unsigned long blocks;       /* computed size in blocks */
 
@@ -244,12 +244,12 @@ identify(dev_t dev)
        should de-assert BSY and assert DRQ when the data is ready. if this
        doesn't happen in a reasonable time, then it's wedged or not there. */
 
-    timeout = time + TIMEOUT + 1;
+    timeout = jiffies + IDENTIFY_TIMEOUT + 1;
 
-    while (time < timeout && (INB(base + BASE_CMDSTAT) & BASE_STAT_BSY)) ;
-    while (time < timeout && !(INB(base + BASE_CMDSTAT) & BASE_STAT_DRQ)) ;
+    while (jiffies < timeout && (INB(base + BASE_CMDSTAT) & BASE_STAT_BSY)) ;
+    while (jiffies < timeout && !(INB(base + BASE_CMDSTAT) & BASE_STAT_DRQ)) ;
 
-    if (time >= timeout || (INB(base + BASE_CMDSTAT) & BASE_STAT_ERR))
+    if (jiffies >= timeout || (INB(base + BASE_CMDSTAT) & BASE_STAT_ERR))
         return; /* error, not present, or not responding */
 
     /* read the identification sector data -> ident[] */

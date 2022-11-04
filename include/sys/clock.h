@@ -88,6 +88,10 @@ extern char lbolt;
 
 extern volatile time_t time;
 
+/* the number of jiffies since system power-on */
+
+extern volatile long jiffies;
+
 /* called by the BSP at boot time to
 
     (a) determine the APIC timer frequency
@@ -102,7 +106,7 @@ extern void clkinit(void);
 extern void udelay(int usec);
 
 /* the global timer ISR; update time-of-day
-   clock and fire off global events */
+   clock(s) and fire off global events */
 
 extern void pitisr(int irq);
 

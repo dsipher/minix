@@ -47,10 +47,11 @@
 
 char lbolt;
 
-/* the current time of day. read-only outside of this compilation unit.
-   no need to protect it with a lock since it's updated atomically. */
+/* these are read-only outside of this compilation unit. no need
+   to protect them with locsk since they're updated atomically. */
 
 volatile time_t time;
+volatile long jiffies;
 
 /* if the system console bell is ringing, this contains the
    number of ticks remaining before it should be turned off.
@@ -279,13 +280,13 @@ tmrinit(void)
     LAPIC_TIMER_ICR = (apics_per_sec / TICKS_PER_SEC) - (CURCPU * 512);
 }
 
-/* XXX */
-
 void
 pitisr(int irq)
 {
     static unsigned char ticks;
     struct callo *callo;
+
+    ++jiffies;
 
     /* update time of day. wake
        up lbolt every second. */

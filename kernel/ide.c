@@ -50,6 +50,10 @@
 
 #define IDENTIFY_TIMEOUT        10      /* 1/10th of a second */
 
+/* the number of times to try a block before giving up */
+
+#define MAX_TRIES               3
+
 /* an IDE device works in 512-byte sectors.
    the kernel of course works in 4k blocks */
 
@@ -290,6 +294,36 @@ identify(dev_t dev)
     printf(" %u blocks\n", blocks);
 }
 
+/* probe the channel for error conditions. if an error occurred,
+   log a message, reporting the error on block `bp' if supplied.
+   if `dma' is non-zero will also check for busmastering errors.
+   returns an appropriate value for errno (EIO or 0 on success). */
+
+static int  /* held: ide_lock */
+check_errors(dev_t dev, int dma, struct buf *bp)
+{
+    struct channel *chanp;
+    int errno = 0;
+    int status;
+    long blkno;
+
+    chanp = &channel[CHANNEL(dev)];
+
+    if (         (INB(chanp->base + BASE_CMDSTAT) & BASE_STAT_ERR)
+      || (dma && (INB(chanp->dma  + DMA_STAT)     & DMA_STAT_ERROR)))
+    {
+        status = INB(chanp->base + BASE_ERRFEAT);
+        blkno = bp ? bp->b_blkno : 0;
+        errno = EIO;
+
+        printf("ide %d.%d i/o error, blkno %D, status = %x\n", CHANNEL(dev),
+                                                               DEVICE(dev),
+                                                               blkno, status);
+    }
+
+    return errno;
+}
+
 /* initialize the struct for channel `c' by probing
    the PCI configuration space starting at BAR `bar'.
    `dmaofs' is the offset into the bus mastering i/o
@@ -418,18 +452,19 @@ again:
 
             OUTB(chanp->dma + DMA_CMD, 0);
 
-            /* we make only a cursory inspection for errors.
-               no attempts to retry; userspace may retry if
-               it deems necessary. get working hardware. */
+            /* try an operation up to MAX_TRIES times. we take no
+               corrective action on error; maybe we should (reset?) */
 
-            errno = 0;
+            errno = check_errors(bp->b_dev, 1, bp);
 
-            if ( (INB(chanp->dma  + DMA_STAT)    & DMA_STAT_ERROR)
-              || (INB(chanp->base + BASE_CMDSTAT) & BASE_STAT_ERR))
-                errno = EIO;
+            if (errno && ++bp->b_errcnt < MAX_TRIES)
+            {
+                chanp->state = STATE_IDLE;
+                goto again; /* try bp again */
+            }
 
-            /* if a write error occurs, there's no point
-               in trying to flush it to the medium... */
+            /* if we didn't successfully complete a write, there's
+               no point in trying to flush it to the medium... */
 
             if (errno) bp->b_flags &= ~B_SYNC;
 
@@ -463,9 +498,9 @@ again:
         if (INB(chanp->base + BASE_CMDSTAT) & BASE_STAT_BSY)
             break;
 
-        /* the only difference is that STATE_SYNC indicates a flush
-           done on behalf of a specific buffer write; STATE_FLUSH is
-           a generic flush. we don't check for any errors because it
+        /* the only difference between SYNC and FLUSH is that the former
+           is done on behalf of a specific buffer write, whereas a FLUSH
+           is a general flush. we don't check for any errors because it
            would be impossible to know which block caused the error. */
 
         bp = 0;
@@ -565,9 +600,10 @@ idestrategy(struct buf *bp)
     if (size == 0)
         iodone(bp, ENODEV);
     else if (bp->b_blkno >= size)
-        iodone(bp, EIO);
+        iodone(bp, ENXIO);
     else {
         acquire(&ide_lock);
+        bp->b_errcnt = 0;
         TAILQ_INSERT_TAIL(&chanp->requestq, bp, b_avail_links);
         advance(c);
         release(&ide_lock);

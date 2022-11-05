@@ -59,7 +59,8 @@ struct buf
                         b_busy,         /* flag: someone is using buf */
                         b_wanted;       /* flag: someone else wants it */
 
-    int                 b_errno;        /* error to report to user */
+    char                b_errno;        /* error to report to user */
+    char                b_errcnt;       /* retry count (for driver use) */
 
     /* the actual block data is pointed to here; it is always
        located in the first 4G to make direct PCI DMA possible.

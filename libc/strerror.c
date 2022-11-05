@@ -41,7 +41,7 @@ static const char * const errors[] =
     /*  3 */    0,
     /*  4 */    "interrupted system call",                  /* EINTR */
     /*  5 */    "input/output error",                       /* EIO */
-    /*  6 */    0,
+    /*  6 */    "no such device or address",                /* ENXIO */
     /*  7 */    0,
     /*  8 */    0,
     /*  9 */    "bad file descriptor",                      /* EBADF */

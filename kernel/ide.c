@@ -324,6 +324,32 @@ check_errors(dev_t dev, int dma, struct buf *bp)
     return errno;
 }
 
+/* prepare `chanp' for dma of `len' bytes to/from `buffer'. */
+
+#define PREPARE_DMA(chanp, buffer, len)        /* held: ide_lock */         \
+    do {                                                                    \
+        (chanp)->prd.addr = VTOP((caddr_t) (buffer));                       \
+        (chanp)->prd.count = 0x80000000 | (len);                            \
+        OUTL((chanp)->dma + DMA_PRD, (int) &chanp->prd);                    \
+        OUTB((chanp)->dma + DMA_STAT, DMA_STAT_ERROR | DMA_STAT_INTR);      \
+    } while (0)
+
+/* engage DMA on `chanp'. if `read' is true,
+   the direction is from to disk to memory. */
+
+#define ENGAGE_DMA(chanp, read)                /* held: ide_lock */         \
+    do {                                                                    \
+        OUTB((chanp)->dma + DMA_CMD,                                        \
+             DMA_CMD_START | ((read) ? DMA_CMD_DIR : 0));                   \
+    } while (0)
+
+/* disengage DMA on `chanp' */
+
+#define DISENGAGE_DMA(chanp)                   /* held: ide_lock */         \
+    do {                                                                    \
+        OUTB((chanp)->dma + DMA_CMD, 0);                                    \
+    } while (0)
+
 /* initialize the struct for channel `c' by probing
    the PCI configuration space starting at BAR `bar'.
    `dmaofs' is the offset into the bus mastering i/o
@@ -390,16 +416,7 @@ again:
             int cmd28, cmd48;
             long sector;
 
-            /* we're going to busmaster FS_BLOCK_SIZE
-               bytes between the disk and bp->b_data */
-
-            chanp->prd.addr = VTOP((caddr_t) bp->b_data);
-            chanp->prd.count = 0x80000000 | FS_BLOCK_SIZE;
-            OUTL(chanp->dma + DMA_PRD, (int) &chanp->prd);
-            OUTB(chanp->dma + DMA_STAT, DMA_STAT_ERROR | DMA_STAT_INTR);
-
-            /* now, issue the command to the ATA disk */
-
+            PREPARE_DMA(chanp, bp->b_data, FS_BLOCK_SIZE);
             sector = BLOCK_TO_SECTOR(bp->b_blkno);
 
             cmd28 = (bp->b_flags & B_READ) ? BASE_CMD_READ28
@@ -430,11 +447,7 @@ again:
                 OUTB(chanp->base + BASE_CMDSTAT, cmd28);
             }
 
-            /* engage bus mastering, and wait */
-
-            OUTB(chanp->dma + DMA_CMD,
-                 DMA_CMD_START | ((bp->b_flags & B_READ) ? DMA_CMD_DIR : 0));
-
+            ENGAGE_DMA(chanp, (bp->b_flags & B_READ));
             chanp->state = STATE_IO;
         }
 
@@ -446,16 +459,12 @@ again:
            interrupted (as reported by the DMA logic) */
 
         if (INB(chanp->dma + DMA_STAT) & DMA_STAT_INTR) {
+            DISENGAGE_DMA(chanp);
             bp = TAILQ_FIRST(&chanp->requestq);
-
-            /* disengage bus mastering */
-
-            OUTB(chanp->dma + DMA_CMD, 0);
+            errno = check_errors(bp->b_dev, 1, bp);
 
             /* try an operation up to MAX_TRIES times. we take no
                corrective action on error; maybe we should (reset?) */
-
-            errno = check_errors(bp->b_dev, 1, bp);
 
             if (errno && ++bp->b_errcnt < MAX_TRIES)
             {

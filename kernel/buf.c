@@ -158,18 +158,15 @@ iowait(struct buf *bp)
 void
 iodone(struct buf *bp, int errno)
 {
-    bp->b_errno = errno;
-    if (errno) bp->b_flags |= B_ERROR;
+    if (errno) {
+        bp->b_errno = errno;
+        bp->b_flags |= B_ERROR;
 
-    /* the filesystem code sets B_CRITICAL on all i/o involving
-       filesystem metadata. a panic is the only safe response. */
+        /* B_CRITICAL is set on bufs that hold mounted filesystem metadata.
+           we panic when an errors occurs lest we do further damage to the
+           filesystem. userland tools should be used for salvage/repair. */
 
-    if (bp->b_flags & B_ERROR) {
-        printf("i/o error: device %d/%d block %u\n", MAJOR(bp->b_dev),
-                                                     MINOR(bp->b_dev),
-                                                     bp->b_blkno);
-
-        if (bp->b_flags & B_CRITICAL) panic("B_CRITICAL");
+        if (bp->b_flags & B_CRITICAL) panic("critical buf");
     }
 
     if (bp->b_flags & B_READ)           /* a completed read means */
@@ -177,7 +174,7 @@ iodone(struct buf *bp, int errno)
     else                                /* a completed write means */
         bp->b_flags &= ~B_DIRTY;        /* the buf is no longer B_DIRTY. */
 
-    /* hygiene. don't keep stray flags around. */
+    /* hygiene: don't keep stray flags around. */
 
     bp->b_flags &= ~(B_READ | B_CRITICAL | B_SYNC);
 

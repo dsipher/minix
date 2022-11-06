@@ -23,6 +23,9 @@
 #define IPI_IRQ     29
 #define TMR_IRQ     30
 
+#define NBLKDEV     1
+#define NCHRDEV     1
+
 /* SiS SATA native-only controller at
    00:05.0. BIOS set for ATA (not AHCI) */
 

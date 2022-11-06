@@ -40,7 +40,7 @@ struct buf;
 
 extern void ideinit(void);                  /* initialize controller */
 extern void ideisr(int irq);                /* interrupt handler */
-extern void idestrategy(struct buf *bp);    /* read/write buf `bp' */
+extern void idestrat(struct buf *bp);       /* read/write buf `bp' */
 extern void ideflush(void);                 /* flush writes to disk */
 
 #endif /* _KERNEL */

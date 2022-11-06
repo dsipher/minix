@@ -36,7 +36,32 @@
 
 #include <sys/types.h>
 
-#define NODEV       ((dev_t) -1)        /* a non-existent device */
+struct buf; /* sys/buf.h */
+
+#define NODEV   ((dev_t) -1)        /* a non-existent device */
+
+/* we use the same struct for both bdevsw[] and cdevsw[] as
+   the kernel doesn't really distinguish between them, aside
+   from recognizing them as disjoint address spaces. */
+
+struct devsw
+{
+    /* boot-time driver initialization. called in the init process
+       with multi-tasking running but before exec'ing /bin/init */
+
+    void    (*d_init)(void);                    /* 0 = no init required */
+
+    /* block devices only: interface to the buffer cache (buf.c) */
+
+    void    (*d_strategy)(struct buf *bp);      /* 0 = can't be mounted */
+};
+
+#ifdef _KERNEL
+
+extern struct devsw bdevsw[];       /* these instances are populated */
+extern struct devsw cdevsw[];       /* in platform-specific config.c */
+
+#endif /* _KERNEL */
 
 #endif /* _SYS_DEV_H */
 

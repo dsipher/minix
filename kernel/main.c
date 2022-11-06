@@ -43,6 +43,7 @@
 #include <sys/utsname.h>
 #include <sys/spin.h>
 #include <sys/buf.h>
+#include <sys/dev.h>
 #include "config.h"
 
 caddr_t kernel_top;
@@ -73,19 +74,24 @@ idle(void)
    into userland /bin/init. we come alive holding the
    sched_lock: see child() in proc.c for more details. */
 
+#define DEVINIT(n, tab)                                                     \
+    do {                                                                    \
+        struct devsw    *_devsw = (tab);                                    \
+        int             _i      = (n);                                      \
+                                                                            \
+        for (; _i; --_i, ++_devsw)                                          \
+            if (_devsw->d_init)                                             \
+                _devsw->d_init();                                           \
+    } while (0)
+
 static void
 init(void)
 {
-    void (**init)(void);
-    int count = 0;
-
     release(&sched_lock);
     printf(".\n\n");
 
-    /* initialize device drivers */
-
-    for (init = inits; *init; ++init)
-        (*init)();
+    DEVINIT(NBLKDEV, bdevsw);
+    DEVINIT(NCHRDEV, cdevsw);
 
     for (;;) {
         sleep(&lbolt, P_STATE_COMA, 0);

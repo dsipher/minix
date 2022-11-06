@@ -21,6 +21,9 @@
 #define IPI_IRQ     29
 #define TMR_IRQ     30
 
+#define NBLKDEV     1
+#define NCHRDEV     1
+
 /* PIIX3 PCI IDE controller at 00:01.1,
    running in ISA compatibility mode. */
 

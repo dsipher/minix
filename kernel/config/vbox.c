@@ -10,7 +10,18 @@
 #include <sys/boot.h>
 #include <sys/ps2.h>
 #include <sys/ide.h>
+#include <sys/dev.h>
 #include "config.h"
+
+struct devsw bdevsw[NBLKDEV] =
+{
+    { ideinit,  idestrat }
+};
+
+struct devsw cdevsw[NCHRDEV] =
+{
+    { ps2init }
+};
 
 void (*isr[NIRQ])(int irq) =
 {
@@ -31,7 +42,5 @@ void (*isr[NIRQ])(int irq) =
     /* 28 */    0,              /* 29 */    ipiisr,
     /* 30 */    tmrisr
 };
-
-void (*inits[])() = { ps2init, ideinit, 0 };
 
 /* vi: set ts=4 expandtab: */

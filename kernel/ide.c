@@ -605,7 +605,7 @@ ideisr(int irq)
    the block in bounds, then queue the request. */
 
 void
-idestrategy(struct buf *bp)
+idestrat(struct buf *bp)
 {
     int c                   = CHANNEL(bp->b_dev);
     struct channel *chanp   = &channel[c];

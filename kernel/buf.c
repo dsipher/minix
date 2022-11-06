@@ -38,6 +38,7 @@
 #include <sys/spin.h>
 #include <sys/proc.h>
 #include <sys/user.h>
+#include <sys/dev.h>
 #include "config.h"
 
 /* we maintain a fixed number of buffers
@@ -210,7 +211,7 @@ bwrite(struct buf *bp, int flags)
     bp->b_errcnt = 0;
     bp->b_flags |= B_WRITE | flags;
     sync = !(bp->b_flags & B_ASYNC);
-    /* XXX: strategy */
+    bdevsw[MAJOR(bp->b_dev)].d_strategy(bp);
 
     if (sync) {
         iowait(bp);
@@ -231,8 +232,9 @@ bread(dev_t dev, daddr_t blkno, int flags)
     bp->b_done = 0;
     bp->b_errcnt = 0;
     bp->b_flags |= B_READ | flags;
-    /* XXX: strategy */
+    bdevsw[MAJOR(bp->b_dev)].d_strategy(bp);
     iowait(bp);
+
     return bp;
 }
 

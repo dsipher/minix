@@ -53,12 +53,12 @@ include				0040755 0 0
 		boot.h		0100644 0 0 include/sys/boot.h
 		buf.h		0100644 0 0 include/sys/buf.h
 		defs.h		0100644 0 0 include/sys/defs.h
+		dev.h  		0100644 0 0 include/sys/dev.h
 		fs.h		0100644 0 0 include/sys/fs.h
 		ide.h		0100644 0 0 include/sys/ide.h
 		io.h		0100644 0 0 include/sys/io.h
 		ioctl.h		0100644 0 0 include/sys/ioctl.h
 		list.h  	0100644 0 0 include/sys/list.h
-		param.h		0100644 0 0 include/sys/param.h
 		pci.h		0100644 0 0 include/sys/pci.h
 		queue.h		0100644 0 0 include/sys/queue.h
 		slist.h		0100644 0 0 include/sys/slist.h

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/param.h                                         ux/64 system header
+   sys/dev.h                                           ux/64 system header
 
 ******************************************************************************
 
@@ -31,13 +31,13 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_PARAM_H
-#define _SYS_PARAM_H
+#ifndef _SYS_DEV_H
+#define _SYS_DEV_H
 
 #include <sys/types.h>
 
 #define NODEV       ((dev_t) -1)        /* a non-existent device */
 
-#endif /* _SYS_PARAM_H */
+#endif /* _SYS_DEV_H */
 
 /* vi: set ts=4 expandtab: */

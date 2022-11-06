@@ -35,7 +35,7 @@
 #ifndef _SYS_BUF_H
 #define _SYS_BUF_H
 
-#include <sys/param.h>
+#include <sys/dev.h>
 #include <sys/types.h>
 #include <sys/tailq.h>
 #include <sys/fs.h>

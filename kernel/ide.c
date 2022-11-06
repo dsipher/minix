@@ -300,13 +300,13 @@ identify(dev_t dev)
    returns an appropriate value for errno (EIO or 0 on success). */
 
 static int  /* held: ide_lock */
-chkerr(struct buf *bp, int dma)
+chkerr(int c, struct buf *bp, int dma, char *note)
 {
     struct channel *chanp;
     int errno = 0;
     int status;
 
-    chanp = &channel[CHANNEL(bp->b_dev)];
+    chanp = &channel[c];
 
     if (         (INB(chanp->base + BASE_CMDSTAT) & BASE_STAT_ERR)
       || (dma && (INB(chanp->dma  + DMA_STAT)     & DMA_STAT_ERROR)))
@@ -314,8 +314,11 @@ chkerr(struct buf *bp, int dma)
         status = INB(chanp->base + BASE_ERRFEAT);
         errno = EIO;
 
-        printf("ide %d.%d i/o error, blkno %u, status = %x\n",
-               CHANNEL(bp->b_dev), DEVICE(bp->b_dev), bp->b_blkno, status);
+        if (bp)
+            printf("ide %d.%d %s error, blkno %u, status = %x\n",
+                    c, DEVICE(bp->b_dev), note, bp->b_blkno, status);
+        else
+            printf("ide %d %s error, status = %x\n", c, note, status);
     }
 
     return errno;
@@ -458,7 +461,9 @@ again:
         if (INB(chanp->dma + DMA_STAT) & DMA_STAT_INTR) {
             DISENGAGE_DMA(chanp);
             bp = TAILQ_FIRST(&chanp->requestq);
-            errno = chkerr(bp, 1);
+
+            errno = chkerr(CHANNEL(bp->b_dev), bp, 1,
+                           bp->b_flags & B_READ ? "read" : "write");
 
             /* try an operation up to MAX_TRIES times. we take no
                corrective action on error; maybe we should (reset?) */
@@ -506,11 +511,13 @@ again:
 
         /* the only difference between SYNC and FLUSH is that the former
            is done on behalf of a specific buffer write, whereas a FLUSH
-           is a general flush. we don't bother to check for errors, since
-           we can't reliably associate them with a buffer, and there's no
-           need to retry (another flush request will likely arrive soon) */
+           is a general flush. we check for errors and log them, but do
+           not attach them to `bp' (if we have one) because we can't be
+           certain `bp' is the block which caused the error. we also do
+           not retry; chances are another flush request will come soon. */
 
         bp = 0;
+        chkerr(c, 0, 0, "flush");
 
         if (chanp->state == STATE_SYNC) {
             bp = TAILQ_FIRST(&chanp->requestq);

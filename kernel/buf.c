@@ -207,6 +207,7 @@ bwrite(struct buf *bp, int flags)
     int sync;
 
     bp->b_done = 0;
+    bp->b_errcnt = 0;
     bp->b_flags |= B_WRITE | flags;
     sync = !(bp->b_flags & B_ASYNC);
     /* XXX: strategy */
@@ -228,6 +229,7 @@ bread(dev_t dev, daddr_t blkno, int flags)
         return bp;
 
     bp->b_done = 0;
+    bp->b_errcnt = 0;
     bp->b_flags |= B_READ | flags;
     /* XXX: strategy */
     iowait(bp);

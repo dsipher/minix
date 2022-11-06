@@ -612,7 +612,6 @@ idestrategy(struct buf *bp)
         iodone(bp, ENXIO);
     else {
         acquire(&ide_lock);
-        bp->b_errcnt = 0;
         TAILQ_INSERT_TAIL(&chanp->requestq, bp, b_avail_links);
         advance(c);
         release(&ide_lock);

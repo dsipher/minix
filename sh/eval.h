@@ -32,26 +32,42 @@
 
 *****************************************************************************/
 
-extern char *commandname;   /* currently executing command */
-extern int exitstatus;      /* exit status of last command */
-extern struct strlist *cmdenviron;  /* environment for builtin command */
+#ifndef EVAL_H
+#define EVAL_H
 
+union node; /* nodes.h */
 
-struct backcmd {        /* result of evalbackcmd */
-    int fd;         /* file descriptor to read from */
-    char *buf;      /* buffer */
-    int nleft;      /* number of chars in buffer */
-    struct job *jp;     /* job structure for command */
+extern char             *commandname;       /* currently executing command */
+extern int              exitstatus;         /* exit status of last command */
+extern struct strlist   *cmdenviron;    /* environment for builtin command */
+
+/* result of evalbackcmd */
+
+struct backcmd
+{
+    int         fd;             /* file descriptor to read from */
+    char        *buf;           /* buffer */
+    int         nleft;          /* number of chars in buffer */
+    struct job  *jp;            /* job structure for command */
 };
 
+extern void evalstring  (char *);
+extern void evaltree    (union node *, int);
+extern void evalbackcmd (union node *, struct backcmd *);
+extern int  evalcmd     (int argc, char **argv);
+extern int  bltincmd    (int argc, char **argv);
+extern int  breakcmd    (int argc, char **argv);
+extern int  returncmd   (int argc, char **argv);
+extern int  truecmd     (int argc, char **argv);
+extern int  execcmd     (int argc, char **argv);
 
-void evalstring(char *);
-union node; /* BLETCH for ansi C */
-void evaltree(union node *, int);
-void evalbackcmd(union node *, struct backcmd *);
+/* in_function returns nonzero if we are
+   currently evaluating a function */
 
-/* in_function returns nonzero if we are currently evaluating a function */
-#define in_function()   funcnest
 extern int funcnest;
+
+#define in_function()   funcnest
+
+#endif /* EVAL_H */
 
 /* vi: set ts=4 expandtab: */

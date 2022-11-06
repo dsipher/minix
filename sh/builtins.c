@@ -33,14 +33,11 @@
 *****************************************************************************/
 
 #include "shell.h"
+#include "eval.h"
 #include "builtins.h"
 
-int bltincmd();
-int breakcmd();
 int cdcmd();
 int dotcmd();
-int evalcmd();
-int execcmd();
 int exitcmd();
 int exportcmd();
 int getoptscmd();
@@ -50,12 +47,10 @@ int jobscmd();
 int localcmd();
 int pwdcmd();
 int readcmd();
-int returncmd();
 int setcmd();
 int setvarcmd();
 int shiftcmd();
 int trapcmd();
-int truecmd();
 int umaskcmd();
 int unsetcmd();
 int waitcmd();

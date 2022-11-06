@@ -300,25 +300,22 @@ identify(dev_t dev)
    returns an appropriate value for errno (EIO or 0 on success). */
 
 static int  /* held: ide_lock */
-check_errors(dev_t dev, int dma, struct buf *bp)
+chkerr(struct buf *bp, int dma)
 {
     struct channel *chanp;
     int errno = 0;
     int status;
-    long blkno;
 
-    chanp = &channel[CHANNEL(dev)];
+    chanp = &channel[CHANNEL(bp->b_dev)];
 
     if (         (INB(chanp->base + BASE_CMDSTAT) & BASE_STAT_ERR)
       || (dma && (INB(chanp->dma  + DMA_STAT)     & DMA_STAT_ERROR)))
     {
         status = INB(chanp->base + BASE_ERRFEAT);
-        blkno = bp ? bp->b_blkno : 0;
         errno = EIO;
 
-        printf("ide %d.%d i/o error, blkno %D, status = %x\n", CHANNEL(dev),
-                                                               DEVICE(dev),
-                                                               blkno, status);
+        printf("ide %d.%d i/o error, blkno %u, status = %x\n",
+               CHANNEL(bp->b_dev), DEVICE(bp->b_dev), bp->b_blkno, status);
     }
 
     return errno;
@@ -461,7 +458,7 @@ again:
         if (INB(chanp->dma + DMA_STAT) & DMA_STAT_INTR) {
             DISENGAGE_DMA(chanp);
             bp = TAILQ_FIRST(&chanp->requestq);
-            errno = check_errors(bp->b_dev, 1, bp);
+            errno = chkerr(bp, 1);
 
             /* try an operation up to MAX_TRIES times. we take no
                corrective action on error; maybe we should (reset?) */
@@ -509,8 +506,9 @@ again:
 
         /* the only difference between SYNC and FLUSH is that the former
            is done on behalf of a specific buffer write, whereas a FLUSH
-           is a general flush. we don't check for any errors because it
-           would be impossible to know which block caused the error. */
+           is a general flush. we don't bother to check for errors, since
+           we can't reliably associate them with a buffer, and there's no
+           need to retry (another flush request will likely arrive soon) */
 
         bp = 0;
 

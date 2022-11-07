@@ -1,0 +1,29 @@
+                                                -- vi: set ts=4 expandtab: --
+
+
+==== unify signed and unsigned integral comparisons  =========================
+
+    (a) classify condition codes according to whether
+        they can be combined in a single block or not
+    (b) change logic in bypass_succ() to consult the
+        above classes when deciding to bypass or not
+    (c) extend fold.c to evaluate both signed
+        and unsigned results simultaneously
+    (d) extend OPT_LIR_CMP to eliminate duplicate
+        comparisons of types that are simpatico
+
+    EXAMPLE: _add_reg in reg.s currently reads
+
+        L293:
+                movq 8(%r13),%rax
+                movl (%rax,%r12,4),%eax
+                cmpl %eax,%ebx
+                jz L291
+        L298:
+                cmpl %eax,%ebx
+                jb L295
+
+    the second comparison is not only unnecessary
+    but impedes further optimization of the loop.
+
+==============================================================================

@@ -50,7 +50,7 @@ struct buf *buf; /* buf[NBUF] */
    and buffers not b_busy are also in the bavailq. */
 
 struct bufq bavailq = TAILQ_HEAD_INITIALIZER(bavailq);
-struct bufq *bhashq; /* bhashq[NBUFH] */
+struct bufq *bhashq; /* bhashq[NBUFQ] */
 
 /* protects the global buffer data, and the b_wanted, b_busy, and b_done
    fields of buf. (the remaining fields are exclusively for the owner.) */
@@ -58,9 +58,9 @@ struct bufq *bhashq; /* bhashq[NBUFH] */
 static spinlock_t buf_lock;
 
 /* compute the hash bucket for `blkno'. we
-   recommend that NBUFH be a power of 2. */
+   recommend that NBUFQ be a power of 2. */
 
-#define BUFHASH(blkno)  ((blkno) % NBUFH)
+#define BUFHASH(blkno)  ((blkno) % NBUFQ)
 
 /* bhashq[] and buf[] have been allocated and
    zeroed by pginit(). we have four tasks:
@@ -86,7 +86,7 @@ void bufinit(void)
     int i, b;
     caddr_t data;
 
-    for (i = 0; i < NBUFH; ++i)
+    for (i = 0; i < NBUFQ; ++i)
         TAILQ_INIT(&bhashq[i]);
 
     for (i = 0; i < NBUF; ++i) {

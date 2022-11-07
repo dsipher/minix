@@ -448,7 +448,7 @@ pginit(void)
        so we need no padding between them. */
 
     size  = NPROC * sizeof(struct proc);
-    size += NBUFH * sizeof(struct bufq);
+    size += NBUFQ * sizeof(struct bufq);
     size += NBUF  * sizeof(struct buf);
     /* size += NMBUF + sizeof(struct mbuf); */
 
@@ -457,7 +457,7 @@ pginit(void)
     STOSQ((void *) addr, 0, size / 8);
 
     proc   = (struct proc *) PTOV(addr);  addr += NPROC * sizeof(struct proc);
-    bhashq = (struct bufq *) PTOV(addr);  addr += NBUFH * sizeof(struct bufq);
+    bhashq = (struct bufq *) PTOV(addr);  addr += NBUFQ * sizeof(struct bufq);
     buf    = (struct buf *)  PTOV(addr);  addr += NBUF  * sizeof(struct buf);
     /* mbuf = (struct mbuf *) addr;  addr += NMBUF * sizeof(struct mbuf); */
 

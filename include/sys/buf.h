@@ -128,7 +128,7 @@ struct buf
    must be exported so page.c can allocate them. */
 
 extern struct buf  *buf;        /* buf[NBUF] */
-extern struct bufq *bhashq;     /* bhashq[NBUFH] */
+extern struct bufq *bhashq;     /* bhashq[NBUFQ] */
 
 /* initialialize buffer cache */
 

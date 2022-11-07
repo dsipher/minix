@@ -62,6 +62,7 @@ include				0040755 0 0
 		dev.h  		0100644 0 0 include/sys/dev.h
 		fs.h		0100644 0 0 include/sys/fs.h
 		ide.h		0100644 0 0 include/sys/ide.h
+		inode.h 	0100644 0 0 include/sys/inode.h
 		io.h		0100644 0 0 include/sys/io.h
 		ioctl.h		0100644 0 0 include/sys/ioctl.h
 		list.h  	0100644 0 0 include/sys/list.h

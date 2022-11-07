@@ -41,6 +41,7 @@
 #include <sys/user.h>
 #include <sys/io.h>
 #include <sys/buf.h>
+#include <sys/inode.h>
 #include "config.h"
 
 /* compared to `modern' POSIX systems, memory management in ux/64
@@ -447,18 +448,22 @@ pginit(void)
        all of these structs are quadword-aligned,
        so we need no padding between them. */
 
-    size  = NPROC * sizeof(struct proc);
-    size += NBUFQ * sizeof(struct bufq);
-    size += NBUF  * sizeof(struct buf);
+    size  = NPROC   * sizeof(struct proc);
+    size += NBUFQ   * sizeof(struct bufq);
+    size += NBUF    * sizeof(struct buf);
+    size += NINODEQ * sizeof(struct inodeq);
+    size += NINODE  * sizeof(struct inode);
     /* size += NMBUF + sizeof(struct mbuf); */
 
     size = PAGE_UP(size);
-    addr = memall(size / PAGE_SIZE);
+    addr = PTOV(memall(size / PAGE_SIZE));
     STOSQ((void *) addr, 0, size / 8);
 
-    proc   = (struct proc *) PTOV(addr);  addr += NPROC * sizeof(struct proc);
-    bhashq = (struct bufq *) PTOV(addr);  addr += NBUFQ * sizeof(struct bufq);
-    buf    = (struct buf *)  PTOV(addr);  addr += NBUF  * sizeof(struct buf);
+    proc   = (struct proc *)   addr;  addr += NPROC   * sizeof(struct proc);
+    bhashq = (struct bufq *)   addr;  addr += NBUFQ   * sizeof(struct bufq);
+    buf    = (struct buf *)    addr;  addr += NBUF    * sizeof(struct buf);
+    inodeq = (struct inodeq *) addr;  addr += NINODEQ * sizeof(struct inodeq);
+    inode  = (struct inode *)  addr;  addr += NINODE  * sizeof(struct inode);
     /* mbuf = (struct mbuf *) addr;  addr += NMBUF * sizeof(struct mbuf); */
 
     /* we have to do some minimal configuration of proc[0]

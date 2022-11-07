@@ -15,6 +15,8 @@
 #define NBUF        8192
 #define NBUFQ       512
 #define NMBUF       1024
+#define NINODE      4096
+#define NINODEQ     256
 #define CONFIG      "FX160"
 #define NCPU        2
 

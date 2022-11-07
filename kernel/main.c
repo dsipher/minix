@@ -43,6 +43,7 @@
 #include <sys/utsname.h>
 #include <sys/spin.h>
 #include <sys/buf.h>
+#include <sys/inode.h>
 #include <sys/dev.h>
 #include "config.h"
 
@@ -142,6 +143,7 @@ main(void)
 
     pginit();
     bufinit();
+    inoinit();
     irqinit();
     clkinit();
 

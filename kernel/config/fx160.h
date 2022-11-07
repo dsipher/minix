@@ -11,6 +11,7 @@
    an ATOM 230 or a 330; to be safe we must choose NCPU == 2, which works
    for either. change and recompile to enable additional ATOM 330 cores. */
 
+#define NMOUNT      4
 #define NPROC       128
 #define NBUF        8192
 #define NBUFQ       512

@@ -70,7 +70,6 @@ struct buf
     {
         char            *b_data;        /* general use */
         daddr_t         *b_daddr;       /* indirect block */
-        struct filsys   *b_filsys;      /* superblock */
         struct dinode   *b_dino;        /* inode block */
     };
 

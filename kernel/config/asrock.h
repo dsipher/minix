@@ -9,6 +9,7 @@
 
 /* ASRock NetTop ION 330 */
 
+#define NMOUNT      4
 #define NPROC       128
 #define NBUF        8192
 #define NBUFQ       512

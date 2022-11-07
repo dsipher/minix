@@ -40,6 +40,16 @@
 #include <sys/types.h>
 #include <sys/tailq.h>
 
+/* mount structure. one allocated on every mount.
+   free entries are indicated by m_dev == NODEV */
+
+struct mount
+{
+    dev_t               m_dev;          /* device mounted */
+    struct filsys       m_super;        /* in-core superblock */
+    struct inode        *m_inode;       /* where mounted */
+};
+
 /* in-core inode: the image of an on-disk inode
    (i_dinode) augmented with runtime-only data.
    as the v7 sources say, the inode is the focus
@@ -96,6 +106,7 @@ struct inode
 #define I_DIRTY         0x00000001      /* inode has been updated */
 #define I_TEXT          0x00000002      /* set up for demand-paging */
 #define I_SPLIT         0x00000004      /* text image is multi-level */
+#define I_MOUNT         0x00000008      /* fs mounted on this inode */
 
 /* when text exceeds this size, i_text must be
    split (512 pointers per page * 4k = 2MB) */

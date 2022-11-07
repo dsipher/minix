@@ -47,8 +47,12 @@ struct inodeq *inodeq;          /* inodeq[NINODEQ] */
 
 static struct inodeq iavailq = TAILQ_HEAD_INITIALIZER(iavailq);
 
-/* protects inode queues, and the
-   i_busy/i_wanted fields in inode */
+/* table of mounted filesystems */
+
+static struct mount mount[NMOUNT];
+
+/* protects inode queues, i_busy/i_wanted
+   fields of inodes, and the mount table. */
 
 static spinlock_t inode_lock;
 
@@ -57,13 +61,17 @@ static spinlock_t inode_lock;
 
 #define INOHASH(ino)    ((ino) % NINODEQ)
 
-/* initialize inoq buckets, then initialize all inodes to an impossible
-   device, scatter them across the buckets, then put them on iavailq. */
+/* clear out the mount[] table. initialize inoq buckets, initialize all inodes
+   to belong to an impossible device, scatter them across the buckets, and put
+   them on iavailq. (as usual for initialization, we forego any locking) */
 
 void
 inoinit(void)
 {
     int i, b;
+
+    for (i = 0; i < NMOUNT; ++i)
+        mount[i].m_dev = NODEV;
 
     for (i = 0; i < NINODEQ; ++i)
         TAILQ_INIT(&inodeq[i]);

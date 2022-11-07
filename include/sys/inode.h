@@ -39,22 +39,32 @@
 #include <sys/fs.h>
 #include <sys/types.h>
 #include <sys/tailq.h>
+#include <sys/spin.h>
 
-/* mount structure. one allocated on every mount.
-   free entries are indicated by m_dev == NODEV */
+/* structure for mounts[] table. one entry per filesystem.
+
+   free entries are indicated by m_dev == NODEV (and m_inode == 0).
+
+   among used entries, no two entries can have the same m_dev, since we
+   don't permit a device to be mounted multiple times. similarly m_inode
+   is always unique: even if a mount point is completely covered, the
+   covering mount will be associated with the root inode of the covered.
+
+   mounts[0] is the root filesystem. it's special. its m_inode == 0. */
 
 struct mount
 {
     dev_t               m_dev;          /* device mounted */
-    struct filsys       m_super;        /* in-core superblock */
+    spinlock_t          m_lock;         /* protects m_filsys */
+    struct filsys       m_filsys;       /* in-core superblock */
     struct inode        *m_inode;       /* where mounted */
 };
 
 /* in-core inode: the image of an on-disk inode
    (i_dinode) augmented with runtime-only data.
-   as the v7 sources say, the inode is the focus
-   of all file activity in the system. like bufs,
-   inodes are cached, and using similar methods */
+   to paraphrase v7, the inode is the focus of
+   [most] i/o activity in the system. like bufs,
+   inodes are cached, and using similar methods. */
 
 TAILQ_HEAD(inodeq, inode);      /* struct inodeq */
 
@@ -103,7 +113,7 @@ struct inode
     TAILQ_ENTRY(inode)  i_avail_links;      /* iavailq */
 };
 
-#define I_DIRTY         0x00000001      /* inode has been updated */
+#define I_DIRTY         0x00000001      /* i_dinode has been changed */
 #define I_TEXT          0x00000002      /* set up for demand-paging */
 #define I_SPLIT         0x00000004      /* text image is multi-level */
 #define I_MOUNT         0x00000008      /* fs mounted on this inode */
@@ -115,7 +125,7 @@ struct inode
 
 #ifdef _KERNEL
 
-/* exposed to page.c */
+/* exposed for page.c */
 
 extern struct inode *inode;
 extern struct inodeq *inodeq;
@@ -123,6 +133,31 @@ extern struct inodeq *inodeq;
 /* initialize inode cache */
 
 extern void inoinit(void);
+
+/* return the struct mount associated with ip->i_dev
+   (i.e., the filesystem which containing the inode).
+   the client is free to use the mount, indefinitely,
+   provided that it:
+
+        (a) protects m_filsys with m_lock, and
+        (b) maintains its reference to `ip' */
+
+extern struct mount *getfs(struct inode *ip);
+
+/* each inode has multiple reference counts; the caller must announce his
+   intentions with a flag to iget() and pass the same flag back to iput()
+   to maintain the reference counts properly. */
+
+#define INODE_REF_R     0       /* we'll be reading only */
+#define INODE_REF_W     1       /* inode must be writable */
+#define INODE_REF_X     2       /* inode is for demand paging */
+
+/* return the in-core inode corresponding to the disk inode `ino' on `dev'.
+   `ref' is one of INODE_REF_* above. if the inode is not in memory, it is
+   read in from the device. if it is mounted on, indirection is performed.
+   the reference count(s) are incremented and the inode is returned locked. */
+
+extern struct inode *iget(dev_t dev, ino_t ino, int ref);
 
 #endif /* _KERNEL */
 

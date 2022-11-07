@@ -59,7 +59,7 @@ struct buf
                         b_busy,         /* flag: someone is using buf */
                         b_wanted;       /* flag: someone else wants it */
 
-    char                b_errno;        /* error to report to user */
+    char                b_errno;        /* result of last i/o operation */
     char                b_errcnt;       /* retry count (for driver use) */
 
     /* the actual block data is pointed to here; it is always
@@ -90,31 +90,28 @@ struct buf
 
 #define B_VALID         0x02
 
-/* this bit is set by the driver when an i/o error occurs */
-
-#define B_ERROR         0x04
-
 /* set on a buffer to indicate it should be placed at the head
    of the free list when it released, rather than the tail. it
    it is a performance heuristic used when the owner judges the
    block is unlikely to be used again soon. */
 
-#define B_AGE           0x08
+#define B_AGE           0x04
 
 /* indicates that the owner does not want the block after
-   i/o is done, so after completion it should be released */
+   i/o is done, so after completion it should be released.
+   this is currently only supported for write operations */
 
-#define B_ASYNC         0x10
+#define B_ASYNC         0x08
 
 /* set on a buffer on the bavailq when its contents are dirty,
    that is, must be written out before reusing the buffer. */
 
-#define B_DIRTY         0x20
+#define B_DIRTY         0x10
 
 /* synchronous write. when set, a write request can not be marked complete
   until the data is commited to the medium. not the opposite of B_ASYNC! */
 
-#define B_SYNC          0x40
+#define B_SYNC          0x20
 
 
 #ifdef _KERNEL
@@ -134,20 +131,21 @@ extern void bufinit(void);
 
 extern struct buf *getblk(dev_t dev, daddr_t blkno);
 
-/* synchronous write. initiate transfer and wait for its completion. here
-   in bwrite(), as well as in the following functions, `flags' are applied
-   to bp->b_flags before `bp' is processed. this is simply a convenience */
+/* write `buf' to disk and release ownership of it. if B_ASYNC is
+   set, returns immediately, otherwise waits for completion. as a
+   convenience `flags' are applied to bp->b_flags before processing.  */
 
-extern void bwrite(struct buf *bp, int flag);
+extern void bwrite(struct buf *bp, int flags);
 
-/* read in (if necessary) the block and return its buf. */
+/* read in (if necessary) the block and return its buf, locked.
+   if an error occurs, returns 0 (with u.u_errno set of course). */
 
-extern struct buf *bread(dev_t dev, daddr_t blkno, int flags);
+extern struct buf *bread(dev_t dev, daddr_t blkno);
 
 /* relinquish ownership a buffer. no immediate i/o is implied, but if
    marked B_DIRTY, the buf will be written out before it is reassigned. */
 
-extern void brelse(struct buf *bp, int flags);
+extern void brelse(struct buf *bp);
 
 /* called by a device driver after completing i/o on a buf.
    `errno' is zero in the usual case when no error occurs */

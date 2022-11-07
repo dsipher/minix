@@ -107,11 +107,10 @@ void bufinit(void)
     }
 }
 
-void brelse(struct buf *bp, int flags)
+void brelse(struct buf *bp)
 {
     acquire(&buf_lock);
 
-    bp->b_flags |= flags;
     bp->b_busy = 0;
 
     if (bp->b_wanted) {
@@ -149,7 +148,7 @@ iowait(struct buf *bp)
 
     release(&buf_lock);
 
-    if (bp->b_flags & B_ERROR)
+    if (bp->b_errno)
         u.u_errno = bp->b_errno;
 }
 
@@ -159,27 +158,23 @@ iowait(struct buf *bp)
 void
 iodone(struct buf *bp, int errno)
 {
-    if (errno) {
-        bp->b_errno = errno;
-        bp->b_flags |= B_ERROR;
-    }
-
-    if (bp->b_flags & B_READ)           /* a completed read means */
-        bp->b_flags |= B_VALID;         /* the data is now B_VALID. */
-    else                                /* a completed write means */
-        bp->b_flags &= ~B_DIRTY;        /* the buf is no longer B_DIRTY. */
+    if (!(bp->b_errno = errno))
+        if (bp->b_flags & B_READ)           /* a completed read means */
+            bp->b_flags |= B_VALID;         /* the data is now B_VALID. */
+        else                                /* a completed write means */
+            bp->b_flags &= ~B_DIRTY;        /* the buf is no longer B_DIRTY */
 
     /* hygiene: don't keep stray flags around. */
 
     bp->b_flags &= ~(B_READ | B_SYNC);
 
     if (bp->b_flags & B_ASYNC) {
-        /* async i/o means the owner doesn't want the buf anymore,
-           so we release it on his behalf. we must clear the error
-           flag, since there's no process to report the error to. */
+        /* async i/o means the owner doesn't want the buf
+           anymore, so we release it on his behalf. there
+           is no one to report any error to, so we don't. */
 
-        bp->b_flags &= ~(B_ASYNC | B_ERROR);
-        brelse(bp, 0);
+        bp->b_flags &= ~B_ASYNC;
+        brelse(bp);
      } else {
         /* otherwise, we know the owner
            is waiting for it in iowait() */
@@ -209,12 +204,12 @@ bwrite(struct buf *bp, int flags)
 
     if (sync) {
         iowait(bp);
-        brelse(bp, 0);
+        brelse(bp);
     }
 }
 
 struct buf *
-bread(dev_t dev, daddr_t blkno, int flags)
+bread(dev_t dev, daddr_t blkno)
 {
     struct buf *bp;
 
@@ -225,9 +220,15 @@ bread(dev_t dev, daddr_t blkno, int flags)
 
     bp->b_done = 0;
     bp->b_errcnt = 0;
-    bp->b_flags |= B_READ | flags;
+    bp->b_flags |= B_READ;
     bdevsw[MAJOR(bp->b_dev)].d_strategy(bp);
     iowait(bp);
+
+    if (bp->b_errno)
+    {
+        brelse(bp);
+        return 0;
+    }
 
     return bp;
 }

@@ -130,6 +130,8 @@ struct dinode
     daddr_t         di_addr[FS_INODE_BLOCKS];
 };
 
+#define FS_INODE_QWORDS         (sizeof(struct dinode) / 8)
+
 #define FS_INODES_PER_BLOCK     (FS_BLOCK_SIZE / sizeof(struct dinode))
 #define FS_BLOCKS_PER_BLOCK     (FS_BLOCK_SIZE / sizeof(daddr_t))
 #define FS_BITS_PER_BLOCK       (FS_BLOCK_SIZE * 8)

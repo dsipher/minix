@@ -72,8 +72,8 @@
 
 #define NAME_MAX    28                  /* dictated by fs; see <sys/fs.h> */
 
-#define OPEN_MAX    _POSIX_OPEN_MAX     /* these should be the same, and */
-#define STREAM_MAX  _POSIX_OPEN_MAX     /* must be == FOPEN_MAX (stdio.h) */
+#define OPEN_MAX    32                  /* these should be the same, and */
+#define STREAM_MAX  32                  /* must be == FOPEN_MAX (stdio.h) */
 
 #define PATH_MAX    _POSIX_PATH_MAX
 

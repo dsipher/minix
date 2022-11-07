@@ -82,7 +82,7 @@ typedef struct __iobuf
 #define _IOWRITING      0x100           /* currently buffering output */
 #define _IOAPPEND       0x200           /* open in append mode */
 
-#define FOPEN_MAX       16      /* must agree with STREAM_MAX (limits.h) */
+#define FOPEN_MAX       32      /* must agree with STREAM_MAX (limits.h) */
 
 extern FILE *__iotab[FOPEN_MAX];
 extern FILE __stdin, __stdout, __stderr;

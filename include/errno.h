@@ -44,6 +44,7 @@ extern int errno;
 #define EINTR       4       /* interrupted system call */
 #define EIO         5       /* input/output error */
 #define ENXIO       6       /* no such device or address */
+#define ENOEXEC     8       /* exec format error */
 #define EBADF       9       /* bad file descriptor */
 #define EAGAIN      11      /* resource temporarily unavailable */
 #define ENOMEM      12      /* out of memory */
@@ -53,8 +54,10 @@ extern int errno;
 #define ENODEV      19      /* no such device */
 #define ENOTDIR     20      /* not a directory */
 #define EINVAL      22      /* invalid argument */
+#define ENFILE      23      /* too many open files in system */
 #define EMFILE      24      /* too many open files */
 #define ENOTTY      25      /* not a typewriter */
+#define ETXTBSY     26      /* text file busy */
 #define EPIPE       32      /* broken pipe */
 #define EDOM        33      /* math argument out of domain of func */
 #define ERANGE      34      /* math result not representable */

@@ -43,7 +43,7 @@ static const char * const errors[] =
     /*  5 */    "input/output error",                       /* EIO */
     /*  6 */    "no such device or address",                /* ENXIO */
     /*  7 */    0,
-    /*  8 */    0,
+    /*  8 */    "exec format error",                        /* ENOEXEC */
     /*  9 */    "bad file descriptor",                      /* EBADF */
     /* 10 */    0,
     /* 11 */    "resource temporarily unavailable",         /* EAGAIN */
@@ -58,10 +58,10 @@ static const char * const errors[] =
     /* 20 */    "not a directory",                          /* ENOTDIR */
     /* 21 */    0,
     /* 22 */    "invalid argument",                         /* EINVAL */
-    /* 23 */    0,
+    /* 23 */    "too many open files in system",            /* ENFILE */
     /* 24 */    "too many open files",                      /* EMFILE */
     /* 25 */    "inappropriate ioctl",                      /* ENOTTY */
-    /* 26 */    0,
+    /* 26 */    "text file busy",                           /* ETXTBSY */
     /* 27 */    0,
     /* 28 */    0,
     /* 29 */    0,

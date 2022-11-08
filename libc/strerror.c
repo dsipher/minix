@@ -50,7 +50,7 @@ static const char * const errors[] =
     /* 12 */    "not enough space",                         /* ENOMEM */
     /* 13 */    "permission denied",                        /* EACCES */
     /* 14 */    "bad address",                              /* EFAULT */
-    /* 15 */    0,
+    /* 15 */    "block device required",                    /* ENOTBLK */
     /* 16 */    0,
     /* 17 */    "file exists",                              /* EEXIST */
     /* 18 */    0,

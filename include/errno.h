@@ -50,6 +50,7 @@ extern int errno;
 #define ENOMEM      12      /* out of memory */
 #define EACCES      13      /* permission denied */
 #define EFAULT      14      /* bad address */
+#define ENOTBLK     15      /* block device required */
 #define EEXIST      17      /* file exists */
 #define ENODEV      19      /* no such device */
 #define ENOTDIR     20      /* not a directory */

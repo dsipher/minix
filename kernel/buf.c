@@ -107,11 +107,12 @@ void bufinit(void)
     }
 }
 
-void brelse(struct buf *bp)
+void brelse(struct buf *bp, int flags)
 {
     acquire(&buf_lock);
 
     bp->b_busy = 0;
+    bp->b_flags |= flags;
 
     if (bp->b_wanted) {
         bp->b_wanted = 0;
@@ -122,6 +123,9 @@ void brelse(struct buf *bp)
        (which can only be true if bavailq is empty) */
 
     if (TAILQ_FIRST(&bavailq) == 0) wakeup(&bavailq);
+
+    /* and now put in block on at front or back
+       of the bavailq, depending on B_AGE */
 
     if (bp->b_flags & B_AGE) {
         bp->b_flags &= ~B_AGE;
@@ -174,7 +178,7 @@ iodone(struct buf *bp, int errno)
            is no one to report any error to, so we don't. */
 
         bp->b_flags &= ~B_ASYNC;
-        brelse(bp);
+        brelse(bp, 0);
      } else {
         /* otherwise, we know the owner
            is waiting for it in iowait() */
@@ -204,7 +208,7 @@ bwrite(struct buf *bp, int flags)
 
     if (sync) {
         iowait(bp);
-        brelse(bp);
+        brelse(bp, 0);
     }
 }
 
@@ -226,7 +230,7 @@ bread(dev_t dev, daddr_t blkno)
 
     if (bp->b_errno)
     {
-        brelse(bp);
+        brelse(bp, 0);
         return 0;
     }
 

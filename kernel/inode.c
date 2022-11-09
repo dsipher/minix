@@ -120,7 +120,7 @@ rwinode(struct inode *ip, int w)
             ip->i_flags &= ~I_DIRTY;
         } else {
             MOVSQ(&ip->i_dinode, buf->b_data + offset, FS_INODE_QWORDS);
-            brelse(buf);
+            brelse(buf, 0);
         }
 }
 

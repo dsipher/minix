@@ -143,9 +143,10 @@ extern void bwrite(struct buf *bp, int flags);
 extern struct buf *bread(dev_t dev, daddr_t blkno);
 
 /* relinquish ownership a buffer. no immediate i/o is implied, but if
-   marked B_DIRTY, the buf will be written out before it is reassigned. */
+   marked B_DIRTY, the buf will be written out before it is reassigned.
+   `flags' are applied to bp->b_flags before processing (a convenience) */
 
-extern void brelse(struct buf *bp);
+extern void brelse(struct buf *bp, int flags);
 
 /* called by a device driver after completing i/o on a buf.
    `errno' is zero in the usual case when no error occurs */

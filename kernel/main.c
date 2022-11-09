@@ -77,8 +77,8 @@ idle(void)
 
 #define DEVINIT(n, tab)                                                     \
     do {                                                                    \
-        struct devsw    *_devsw = (tab);                                    \
-        int             _i      = (n);                                      \
+        struct tab  *_devsw = (tab);                                        \
+        int         _i      = (n);                                          \
                                                                             \
         for (; _i; --_i, ++_devsw)                                          \
             if (_devsw->d_init)                                             \

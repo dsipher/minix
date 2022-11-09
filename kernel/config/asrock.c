@@ -13,12 +13,12 @@
 #include <sys/dev.h>
 #include "config.h"
 
-struct devsw bdevsw[NBLKDEV] =
+struct bdevsw bdevsw[NBLKDEV] =
 {
     { ideinit,  idestrat }
 };
 
-struct devsw cdevsw[NCHRDEV] =
+struct cdevsw cdevsw[NCHRDEV] =
 {
     { ps2init }
 };

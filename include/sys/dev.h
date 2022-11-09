@@ -40,26 +40,27 @@ struct buf; /* sys/buf.h */
 
 #define NODEV   ((dev_t) -1)        /* a non-existent device */
 
-/* we use the same struct for both bdevsw[] and cdevsw[] as
-   the kernel doesn't really distinguish between them, aside
-   from recognizing them as disjoint address spaces. */
+/* classic device switches: one for block devices (which can be
+   mounted) and one for character devices (read: everything else) */
 
-struct devsw
+struct bdevsw
 {
     /* boot-time driver initialization. called in the init process
        with multi-tasking running but before exec'ing /bin/init */
 
     void    (*d_init)(void);                    /* 0 = no init required */
+    void    (*d_strategy)(struct buf *bp);      /* read/write buffers */
+};
 
-    /* block devices only: interface to the buffer cache (buf.c) */
-
-    void    (*d_strategy)(struct buf *bp);      /* 0 = can't be mounted */
+struct cdevsw
+{
+    void    (*d_init)(void);                    /* same as bdevsw.d_init */
 };
 
 #ifdef _KERNEL
 
-extern struct devsw bdevsw[];       /* these instances are populated */
-extern struct devsw cdevsw[];       /* in platform-specific config.c */
+extern struct bdevsw bdevsw[];      /* these instances are populated */
+extern struct cdevsw cdevsw[];      /* in platform-specific config.c */
 
 #endif /* _KERNEL */
 

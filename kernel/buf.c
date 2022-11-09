@@ -162,12 +162,6 @@ iodone(struct buf *bp, int errno)
     if (errno) {
         bp->b_errno = errno;
         bp->b_flags |= B_ERROR;
-
-        /* B_CRITICAL is set on bufs that hold mounted filesystem metadata.
-           we panic when an errors occurs lest we do further damage to the
-           filesystem. userland tools should be used for salvage/repair. */
-
-        if (bp->b_flags & B_CRITICAL) panic("critical buf");
     }
 
     if (bp->b_flags & B_READ)           /* a completed read means */
@@ -177,7 +171,7 @@ iodone(struct buf *bp, int errno)
 
     /* hygiene: don't keep stray flags around. */
 
-    bp->b_flags &= ~(B_READ | B_CRITICAL | B_SYNC);
+    bp->b_flags &= ~(B_READ | B_SYNC);
 
     if (bp->b_flags & B_ASYNC) {
         /* async i/o means the owner doesn't want the buf anymore,

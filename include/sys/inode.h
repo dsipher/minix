@@ -127,6 +127,10 @@ struct inode
 
 #ifdef _KERNEL
 
+/* system root directory */
+
+extern struct inode *rootdir;
+
 /* exposed for page.c */
 
 extern struct inode *inode;

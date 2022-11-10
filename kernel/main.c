@@ -47,7 +47,8 @@
 #include <sys/dev.h>
 #include "config.h"
 
-caddr_t kernel_top;
+struct inode *rootdir;      /* system root directory */
+caddr_t kernel_top;         /* top of kernel image */
 
 /* used to keep CPUs in lockstep during boot */
 
@@ -93,6 +94,11 @@ init(void)
 
     DEVINIT(NBLKDEV, bdevsw);
     DEVINIT(NCHRDEV, cdevsw);
+
+    mount(boot_config.rootdev, 0);
+    if (u.u_errno) panic("root fs");
+    rootdir = iget(boot_config.rootdev, FS_ROOT_INO, 0);
+    irelse(rootdir); /* we don't need it right now */
 
     for (;;) {
         sleep(&lbolt, P_STATE_COMA, 0);

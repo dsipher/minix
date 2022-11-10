@@ -145,7 +145,7 @@ busy:
     release(&inode_lock);
 
     if (ip) ++(ip->i_refs);     /* we've kept a reference, */
-    bwrite(super, 0);           /* and updated the superblock */
+    bwrite(super, B_SYNC);      /* and updated the superblock */
 }
 
 struct mount *

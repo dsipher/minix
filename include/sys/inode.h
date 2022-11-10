@@ -155,7 +155,8 @@ extern struct mount *getfs(struct inode *ip);
 /* return the in-core inode corresponding to the disk inode `ino' on `dev'.
    `ref' is one of INODE_REF_* above. if the inode is not in memory, it is
    read in from the device. if it is mounted on, indirection is performed.
-   the reference count(s) are incremented and the inode is returned locked. */
+   the reference count(s) are incremented and the inode is returned locked.
+   on error, returns null with u.u_errno set accordingly. */
 
 extern struct inode *iget(dev_t dev, ino_t ino, int ref);
 

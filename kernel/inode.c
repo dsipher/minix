@@ -39,6 +39,7 @@
 #include <sys/user.h>
 #include <sys/buf.h>
 #include <sys/io.h>
+#include <sys/proc.h>
 #include <errno.h>
 #include "config.h"
 
@@ -61,8 +62,8 @@ static struct inodeq iavailq = TAILQ_HEAD_INITIALIZER(iavailq);
 
 static struct mount mounts[NMOUNT];
 
-/* protects inode queues, the shared fields of struct inode
-   (i_*_links, i_dev, i_ino, i_busy, i_wanted) and mounts[] */
+/* protects inode queues, the shared fields
+   of struct inode and (partially) mounts[] */
 
 static spinlock_t inode_lock;
 
@@ -122,6 +123,133 @@ rwinode(struct inode *ip, int w)
             MOVSQ(&ip->i_dinode, buf->b_data + offset, FS_INODE_QWORDS);
             brelse(buf, 0);
         }
+}
+
+struct inode *
+iget(dev_t dev, ino_t ino, int ref)
+{
+    struct inode *ip;
+    struct mount *mnt;
+    int ob, b;  /* buckets */
+
+    acquire(&inode_lock);
+
+loop:
+    b = INOHASH(ino);
+
+    for (ip = TAILQ_FIRST(&inodeq[b]); ip; ip = TAILQ_NEXT(ip, i_hash_links))
+    {
+        if (ip->i_dev == dev && ip->i_ino == ino)
+        {
+            /* if the inode is in the cache, but it
+               is busy, we have to wait our turn */
+
+            if (ip->i_busy) {
+                ip->i_wanted = 1;
+                sleep(ip, P_STATE_COMA, &inode_lock);
+                goto loop;
+            }
+
+            /* if it's in the cache, but a mount point, then we really
+               mean we want the root inode of the mounted filesystem */
+
+            if (ip->i_flags & I_MOUNT) {
+                for (mnt = mounts; mnt; ++mnt)
+                    if (mnt->m_inode == ip)
+                    {
+                        dev = mnt->m_dev;
+                        ino = FS_ROOT_INO;
+                        goto loop;
+                    }
+
+                panic("iget");
+            }
+
+            /* an inode can't be used for writing
+               and demand paging at the same time */
+
+            if ((ref == INODE_REF_X && ip->i_wrefs)
+             || (ref == INODE_REF_W && ip->i_xrefs))
+            {
+                u.u_errno = ETXTBSY;
+                release(&inode_lock);
+                return 0;
+            }
+
+            /* looks like it's ours for the taking.
+               if it's on the iavailq, get it off */
+
+            if (ip->i_refs == 0)
+                TAILQ_REMOVE(&iavailq, ip, i_avail_links);
+
+            ip->i_busy = 1;
+            ++(ip->i_refs);
+            release(&inode_lock);
+            goto success;
+        }
+    }
+
+    /* fall through; the inode isn't in the cache, so we need to grab
+       one from the iavailq, reassign it, and load it in from disk. */
+
+    ip = TAILQ_FIRST(&iavailq);
+
+    if (ip == 0) {              /* unlike the buffer cache, we don't block */
+        u.u_errno = ENFILE;     /* and wait for a free inode: bufs churn, */
+        release(&inode_lock);   /* but we could wait indefinitely for an */
+        return 0;               /* inode. no problem if NINODE is right! */
+    }
+
+    TAILQ_REMOVE(&iavailq, ip, i_avail_links);
+
+    /* XXX if I_TEXT, zap the i_text */
+
+    /* since we're re-assigning the inode, we
+       must shift it into its new hash bucket */
+
+    ob = INOHASH(ip->i_ino);
+    TAILQ_REMOVE(&inodeq[ob], ip, i_hash_links);
+    TAILQ_INSERT_HEAD(&inodeq[b], ip, i_hash_links);
+
+    /* now initialize the inode and take ownership. */
+
+    ip->i_dev = dev;
+    ip->i_ino = ino;
+    ip->i_flags = 0;
+    ip->i_busy = 1;         /* i_wanted is already 0, and so are */
+    ip->i_refs = 1;         /* i_wrefs/i_xrefs, unless we goofed */
+
+    release(&inode_lock);
+    rwinode(ip, 0);
+
+    /* if there was an error reading the inode from disk, we disassociate
+       `ip' from it (so no one will grab it and mistakenly think it holds
+       valid data) then put it back on the free list and error out. */
+
+    if (u.u_errno) {
+        acquire(&inode_lock);
+        ip->i_dev = ENODEV;
+        ip->i_busy = 0;
+        ip->i_refs = 0;
+
+        if (ip->i_wanted) {
+            ip->i_wanted = 0;
+            wakeup(ip);
+        }
+
+        TAILQ_INSERT_HEAD(&iavailq, ip, i_avail_links);
+        release(&inode_lock);
+        return 0;
+    }
+
+success:
+    switch (ref)
+    {
+    case INODE_REF_W:   ++(ip->i_wrefs); break;
+    case INODE_REF_X:   ++(ip->i_xrefs); break;
+    }
+
+    return ip;
 }
 
 /* clear out mounts[] table. initialize inoq buckets, initialize all inodes

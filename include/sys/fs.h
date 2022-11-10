@@ -88,6 +88,8 @@ struct filsys
     short           s_boot_magic;       /* FS_BOOT_MAGIC */
 };
 
+#define FS_FILSYS_QWORDS    (sizeof(struct filsys) / 8)
+
 #define FS_SUPER_MAGIC      0xABE01E50
 #define FS_SUPER_MAGIC2     (short) 0x87CD  /* homage to OS-9/6809 */
 #define FS_BOOT_MAGIC       (short) 0xAA55  /* BIOS boot signature */

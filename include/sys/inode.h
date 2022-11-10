@@ -143,6 +143,11 @@ extern void inoinit(void);
 
 extern struct mount *getfs(struct inode *ip);
 
+/* mount the filesystem on block device `dev' onto directory `ip'. the caller
+   must own `ip'. [as special case, `ip' may be null, when mounting root.] */
+
+extern void mount(dev_t dev, struct inode *ip);
+
 /* each inode has multiple reference counts; the caller must announce his
    intentions with a flag to iget() and pass the same flag back to iput()
    to maintain the reference counts properly. */

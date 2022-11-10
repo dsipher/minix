@@ -35,6 +35,7 @@
 #include <sys/inode.h>
 #include <sys/dev.h>
 #include <sys/spin.h>
+#include <sys/clock.h>
 #include <sys/log.h>
 #include <sys/user.h>
 #include <sys/buf.h>
@@ -53,17 +54,16 @@ struct inodeq *inodeq;          /* inodeq[NINODEQ] */
 
 static struct inodeq iavailq = TAILQ_HEAD_INITIALIZER(iavailq);
 
-/* mounted filesystems. as mentioned below, this is protected
-   by inode_lock, but the locking protocol is quite loose. in
-   particular, entries associated with any referenced inodes
-   are guaranteed to be undisturbed (they can't be unmounted).
-   this is why, e.g., we can hand out entry pointers to clients
-   via getfs() even though they have no access to inode_lock. */
+/* mounted filesystems. as mentioned below, this is protected by
+   inode_lock when adding and removing entries. because existing
+   entries are guaranteed to remain undisturbed as long as any
+   inode on the filesystem is referenced (i.e., the filesystem
+   busy) it's safe to hand out pointers into mounts[] via getfs() */
 
 static struct mount mounts[NMOUNT];
 
 /* protects inode queues, the shared fields
-   of struct inode and (partially) mounts[] */
+   of struct inode and changes to mounts[] */
 
 static spinlock_t inode_lock;
 
@@ -72,8 +72,81 @@ static spinlock_t inode_lock;
 
 #define INOHASH(ino)    ((ino) % NINODEQ)
 
-/* the caller holds a reference to `ip'. as such, it
-   is safe for us to scan mounts[] without locking. */
+/* the caller must ensure that `ip' (if provided) is a directory,
+   and that the process has permission to mount (i.e., is root). */
+
+void
+mount(dev_t dev, struct inode *ip)
+{
+    struct mount *mnt;
+    struct mount *new;
+    struct buf *super;
+    struct filsys *filsys;
+    int i;
+
+    /* bread() will have a Bad Time(tm) if the
+       device major runs off the end of bdevsw[] */
+
+    if (MAJOR(dev) >= NBLKDEV) {
+        u.u_errno = ENXIO;
+        return;
+    }
+
+    /* read the super block and make sure it smells right */
+
+    super = bread(dev, FS_SUPER_BLOCK);
+    if (u.u_errno) return;
+
+    filsys = (struct filsys *) (super->b_data + FS_SUPER_OFFSET);
+
+    if (    filsys->s_magic      != FS_SUPER_MAGIC
+        ||  filsys->s_magic2     != FS_SUPER_MAGIC2
+        ||  filsys->s_boot_magic != FS_BOOT_MAGIC )
+    {
+        brelse(super, 0);
+        u.u_errno = EINVAL;
+        return;
+    }
+
+    /* looks like a valid filesystem; find a vacant entry in mounts[]. while
+       we're at it, make sure we're not colliding with an existing entry. */
+
+    new = 0;
+    acquire(&inode_lock);
+
+    for (mnt = mounts, i = 0; i < NMOUNT; ++i, ++mnt)
+        if (mnt->m_dev == NODEV) {
+            if (new == 0)
+                new = mnt;
+        } else {
+            if (mnt->m_dev == dev || mnt->m_inode == ip)
+            {
+busy:
+                release(&inode_lock);
+                brelse(super, 0);
+                u.u_errno = EBUSY;
+                return;
+            }
+        }
+
+    if (new == 0) goto busy;    /* no empty slots */
+
+    /* looks good. update the superblock to reflect the
+       mount action and populate the mounts[] entry. */
+
+    filsys->s_mtime = time;
+
+    new->m_dev = dev;
+    new->m_inode = ip;
+    new->m_bhint = 0;
+    new->m_ihint = 0;
+    MOVSQ(&new->m_filsys, filsys, FS_FILSYS_QWORDS);
+
+    release(&inode_lock);
+
+    if (ip) ++(ip->i_refs);     /* we've kept a reference, */
+    bwrite(super, 0);           /* and updated the superblock */
+}
 
 struct mount *
 getfs(struct inode *ip)
@@ -81,9 +154,13 @@ getfs(struct inode *ip)
     struct mount *mnt;
     int i;
 
+    acquire(&inode_lock);
+
     for (mnt = mounts, i = 0; i < NMOUNT; ++i, ++mnt)
-        if (mnt->m_dev == ip->i_dev)
+        if (mnt->m_dev == ip->i_dev) {
+            release(&inode_lock);
             return mnt;
+        }
 
     /* no one should ever be holding an inode
        that is not on a mounted filesystem... */
@@ -265,7 +342,7 @@ loop:
 
     if (u.u_errno) {
         acquire(&inode_lock);
-        ip->i_dev = ENODEV;
+        ip->i_dev = NODEV;
         ip->i_busy = 0;
         ip->i_refs = 0;
 

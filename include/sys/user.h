@@ -70,6 +70,7 @@ struct user
                     u_sys_r13 /* 0x0230 */, u_sys_r14 /* 0x0238 */,
                     u_sys_r15 /* 0x0240 */, u_sys_rip /* 0x0248 */ ;
 
+    struct inode    *u_cdir;        /* current directory */
 };
 
 extern struct user u;           /* exported from locore.s */

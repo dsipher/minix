@@ -89,16 +89,21 @@ idle(void)
 static void
 init(void)
 {
+    dev_t rootdev = boot_config.rootdev;
+
     release(&sched_lock);
     printf(".\n\n");
 
     DEVINIT(NBLKDEV, bdevsw);
     DEVINIT(NCHRDEV, cdevsw);
 
+    /* mount the root filesystem. grab a reference to
+       its root directory for future name lookups. */
+
     mount(boot_config.rootdev, 0);
     if (u.u_errno) panic("root fs");
-    rootdir = iget(boot_config.rootdev, FS_ROOT_INO, 0);
-    irelse(rootdir); /* we don't need it right now */
+    rootdir  = iget(rootdev, FS_ROOT_INO, 0); irelse(rootdir);
+    u.u_cdir = iget(rootdev, FS_ROOT_INO, 0); irelse(u.u_cdir);
 
     for (;;) {
         sleep(&lbolt, P_STATE_COMA, 0);

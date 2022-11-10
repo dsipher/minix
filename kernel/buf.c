@@ -102,7 +102,7 @@ void bufinit(void)
         data = pgall(0);
         buf[i].b_data = (char *) data;
 
-        if (data == 0 || VTOP(data) >= 0x100000000 /* 4GB */)
+        if (data == 0 || PHYS(data) >= 0x100000000 /* 4GB */)
             panic("bufinit");
     }
 }

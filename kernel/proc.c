@@ -163,7 +163,7 @@ newproc(void (*entry)(void))
        failing; we know there's a mapping */
 
     pte = findpte(p->p_ptl3, USER_ADDR, 0);
-    p_u = (struct user *) PTOV(PTE_ADDR(*pte));
+    p_u = (struct user *) VIRT(PTE_ADDR(*pte));
     p->p_u = p_u;
     p_u->u_procp = p;
 

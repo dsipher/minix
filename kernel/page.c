@@ -115,7 +115,7 @@ pgfree(caddr_t a)
     int color;
 
     color = PAGE_COLOR(a);
-    p = (struct free_page *) PTOV(a);
+    p = (struct free_page *) VIRT(a);
 
     acquire(&page_lock);
     SLIST_INSERT_HEAD(&free_pages[color], p, link);
@@ -303,10 +303,10 @@ findpte(pte_t *ptl3, caddr_t vaddr, int create)
                 table = (pte_t *) pgall(0);
                 if (table == 0) return 0;
                 STOSQ(table, 0, PAGE_SIZE / 8);
-                *pte = VTOP((caddr_t) table) | PTE_U | PTE_W | PTE_P;
+                *pte = PHYS((caddr_t) table) | PTE_U | PTE_W | PTE_P;
             }
         } else
-            table = (pte_t *) PTOV(PTE_ADDR(*pte));
+            table = (pte_t *) VIRT(PTE_ADDR(*pte));
 
         --ptl;
     }
@@ -321,7 +321,7 @@ mapin(caddr_t addr, pte_t *ptl3, caddr_t vaddr, int flags)
     pte_t *pte;
 
     if (pte = findpte(ptl3, vaddr, 1)) {
-        *pte = VTOP(addr) | flags | PTE_P;
+        *pte = PHYS(addr) | flags | PTE_P;
         return 1;
     }
 
@@ -374,14 +374,14 @@ ptcopy0(pte_t *pt, int ptl)
             if (*pte & PTE_SHARED) { *new_pte = *pte; continue; }
 
             child = PTE_ADDR(*pte);
-            child = (caddr_t) ptcopy0((pte_t *) PTOV(child), ptl - 1);
+            child = (caddr_t) ptcopy0((pte_t *) VIRT(child), ptl - 1);
 
             if (child == 0) {
                 ptfree0(new_pt, ptl);
                 return (pte_t *) 0;
             }
 
-            *new_pte = VTOP(child) | PTE_FLAGS(*pte);
+            *new_pte = PHYS(child) | PTE_FLAGS(*pte);
         }
     }
 
@@ -403,7 +403,7 @@ ptfree0(pte_t *pt, int ptl)
     for (i = 0, pte = pt; i < PTES_PER_PAGE; ++i, ++pte)
         if ((*pte & (PTE_P | PTE_SHARED)) == PTE_P) {
             child = PTE_ADDR(*pte);
-            if (ptl) ptfree0((pte_t *) PTOV(child), ptl - 1);
+            if (ptl) ptfree0((pte_t *) VIRT(child), ptl - 1);
             pgfree(child);
         }
 
@@ -456,7 +456,7 @@ pginit(void)
     /* size += NMBUF + sizeof(struct mbuf); */
 
     size = PAGE_UP(size);
-    addr = PTOV(memall(size / PAGE_SIZE));
+    addr = VIRT(memall(size / PAGE_SIZE));
     STOSQ((void *) addr, 0, size / 8);
 
     proc   = (struct proc *)   addr;  addr += NPROC   * sizeof(struct proc);
@@ -472,8 +472,8 @@ pginit(void)
 
     if (procall() != &proc[0]) panic("proc0");
     u.u_procp = &proc[0];
-    proc[0].p_ptl3 = (pte_t *) PTOV(PTL3_ADDR);
-    proc[0].p_u = (struct user *) PTOV(USER_ADDR);
+    proc[0].p_ptl3 = (pte_t *) VIRT(PTL3_ADDR);
+    proc[0].p_u = (struct user *) VIRT(USER_ADDR);
 
     /* build the free_pages[] lists from the remaining RAM
        in the e820_map[]. we skip the pages occupied by the

@@ -61,11 +61,10 @@
 
 #define PHYSICAL_BASE   0xFFFFFF8000000000L     /* last 512GB */
 
-/* convert a physical address to a virtual address or vice-versa.
-   an address already in the desired class is left unchanged. */
+/* force an address to its virtual or physical representation. */
 
-#define PTOV(a)         ((a) | PHYSICAL_BASE)
-#define VTOP(a)         ((a) & ~PHYSICAL_BASE)
+#define VIRT(a)         ((a) | PHYSICAL_BASE)
+#define PHYS(a)         ((a) & ~PHYSICAL_BASE)
 
 /* regardless of the amount of RAM, we always map at least the first
    4GB of physical address space, because we need to access the local

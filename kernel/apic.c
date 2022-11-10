@@ -38,8 +38,8 @@
 /* the APICs technically has a floating base
    addresses, but in practice they're fixed. */
 
-volatile unsigned *lapic  = (volatile unsigned *) PTOV(0xFEE00000);
-volatile unsigned *ioapic = (volatile unsigned *) PTOV(0xFEC00000);
+volatile unsigned *lapic  = (volatile unsigned *) VIRT(0xFEE00000);
+volatile unsigned *ioapic = (volatile unsigned *) VIRT(0xFEC00000);
 
 /* accesses to the I/O APIC must be atomic */
 

@@ -328,7 +328,7 @@ chkerr(int c, struct buf *bp, int dma, char *note)
 
 #define PREPARE_DMA(chanp, buffer, len)        /* held: ide_lock */         \
     do {                                                                    \
-        (chanp)->prd.addr = VTOP((caddr_t) (buffer));                       \
+        (chanp)->prd.addr = PHYS((caddr_t) (buffer));                       \
         (chanp)->prd.count = 0x80000000 | (len);                            \
         OUTL((chanp)->dma + DMA_PRD, (int) &chanp->prd);                    \
         OUTB((chanp)->dma + DMA_STAT, DMA_STAT_ERROR | DMA_STAT_INTR);      \

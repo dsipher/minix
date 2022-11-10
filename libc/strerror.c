@@ -51,7 +51,7 @@ static const char * const errors[] =
     /* 13 */    "permission denied",                        /* EACCES */
     /* 14 */    "bad address",                              /* EFAULT */
     /* 15 */    "block device required",                    /* ENOTBLK */
-    /* 16 */    0,
+    /* 16 */    "device or resource busy",                  /* EBUSY */
     /* 17 */    "file exists",                              /* EEXIST */
     /* 18 */    0,
     /* 19 */    "no such device",                           /* ENODEV */
@@ -63,7 +63,7 @@ static const char * const errors[] =
     /* 25 */    "inappropriate ioctl",                      /* ENOTTY */
     /* 26 */    "text file busy",                           /* ETXTBSY */
     /* 27 */    0,
-    /* 28 */    0,
+    /* 28 */    "no space left on device",                  /* ENOSPC */
     /* 29 */    0,
     /* 30 */    0,
     /* 31 */    0,

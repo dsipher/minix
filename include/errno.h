@@ -51,6 +51,7 @@ extern int errno;
 #define EACCES      13      /* permission denied */
 #define EFAULT      14      /* bad address */
 #define ENOTBLK     15      /* block device required */
+#define EBUSY       16      /* device or resource busy */
 #define EEXIST      17      /* file exists */
 #define ENODEV      19      /* no such device */
 #define ENOTDIR     20      /* not a directory */
@@ -59,6 +60,7 @@ extern int errno;
 #define EMFILE      24      /* too many open files */
 #define ENOTTY      25      /* not a typewriter */
 #define ETXTBSY     26      /* text file busy */
+#define ENOSPC      28      /* no space left on device */
 #define EPIPE       32      /* broken pipe */
 #define EDOM        33      /* math argument out of domain of func */
 #define ERANGE      34      /* math result not representable */

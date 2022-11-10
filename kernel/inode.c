@@ -125,6 +125,37 @@ rwinode(struct inode *ip, int w)
         }
 }
 
+/* free the cached text associated with the inode, if any.
+   resets I_TEXT and I_SPLIT flags. caller must own `ip'. */
+
+static void
+xfree0(caddr_t *pages)
+{
+    int i;
+
+    for (i = 0; i < PTES_PER_PAGE; ++i)
+        if (pages[i])
+            pgfree(pages[i]);
+}
+
+static void
+xfree(struct inode *ip)
+{
+    int i;
+
+    if (ip->i_flags & I_TEXT) {
+        if (ip->i_flags & I_SPLIT)
+            for (i = 0; i < PTES_PER_PAGE; ++i)
+                if (ip->i_text[i])
+                    xfree0((caddr_t *) (ip->i_text[i]));
+
+        xfree0(ip->i_text);
+        pgfree((caddr_t) ip->i_text);
+    }
+
+    ip->i_flags &= ~(I_TEXT | I_SPLIT);
+}
+
 struct inode *
 iget(dev_t dev, ino_t ino, int ref)
 {
@@ -185,6 +216,12 @@ loop:
             ip->i_busy = 1;
             ++(ip->i_refs);
             release(&inode_lock);
+
+            /* if we're going to be writing,
+               any cache must be invalidated */
+
+            if (ref == INODE_REF_W) xfree(ip);
+
             goto success;
         }
     }
@@ -202,8 +239,6 @@ loop:
 
     TAILQ_REMOVE(&iavailq, ip, i_avail_links);
 
-    /* XXX if I_TEXT, zap the i_text */
-
     /* since we're re-assigning the inode, we
        must shift it into its new hash bucket */
 
@@ -211,15 +246,17 @@ loop:
     TAILQ_REMOVE(&inodeq[ob], ip, i_hash_links);
     TAILQ_INSERT_HEAD(&inodeq[b], ip, i_hash_links);
 
-    /* now initialize the inode and take ownership. */
+    /* now initialize the inode and take ownership. i_wanted,
+       i_wrefs, and i_xrefs are already 0, unless we goofed */
 
     ip->i_dev = dev;
     ip->i_ino = ino;
-    ip->i_flags = 0;
-    ip->i_busy = 1;         /* i_wanted is already 0, and so are */
-    ip->i_refs = 1;         /* i_wrefs/i_xrefs, unless we goofed */
+    ip->i_busy = 1;
+    ip->i_refs = 1;
+    ip->i_flags &= I_TEXT | I_SPLIT;    /* zap all except these ... */
 
     release(&inode_lock);
+    xfree(ip);                          /* ... zaps I_TEXT and I_SPLIT */
     rwinode(ip, 0);
 
     /* if there was an error reading the inode from disk, we disassociate

@@ -164,6 +164,11 @@ extern void mount(dev_t dev, struct inode *ip);
 
 extern struct inode *iget(dev_t dev, ino_t ino, int ref);
 
+/* acquire or relinquish ownership of inode `ip'. */
+
+extern void ilock(struct inode *ip);
+extern void irelse(struct inode *ip);
+
 #endif /* _KERNEL */
 
 #endif /* _SYS_INODE_H */

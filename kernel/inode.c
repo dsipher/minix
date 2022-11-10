@@ -366,6 +366,33 @@ success:
     return ip;
 }
 
+void
+ilock(struct inode *ip)
+{
+    acquire(&inode_lock);
+
+    while (ip->i_busy) {
+        ip->i_wanted = 1;
+        sleep(&ip, P_STATE_COMA, &inode_lock);
+    }
+
+    release(&inode_lock);
+}
+
+void
+irelse(struct inode *ip)
+{
+    acquire(&inode_lock);
+
+    if (ip->i_wanted) {
+        ip->i_wanted = 0;
+        wakeup(&ip);
+    }
+
+    ip->i_busy = 0;
+    release(&inode_lock);
+}
+
 /* clear out mounts[] table. initialize inoq buckets, initialize all inodes
    to belong to an impossible device, scatter them across the buckets, and
    put them on iavailq (as usual for initialization, we forego any locking) */

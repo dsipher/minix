@@ -79,6 +79,7 @@ struct boot_config
     pte_t   *entry_ptl3;                /* ............... page tables */
     void    (*traphook)(void);          /* kernel trap handler (locore) */
     void    (*irqhook)(void);           /* kernel irq handler (locore) */
+    dev_t   rootdev;                    /* root filesystem device */
 };
 
 extern struct boot_config boot_config;      /* exported by locore.s */

@@ -364,6 +364,10 @@ entry_ptl3:         .quad   PTL3                / page tables
 traphook:           .quad   0                   / kernel trap handler
 irqhook:            .quad   0                   / kernel irq handler
 
+rootdev:            .byte   0                   / root device MINOR
+                    .byte   0                   / root device MAJOR
+                    .short  0                   / root device (pad)
+
 //////////////////////////////////////////////////////////////////////////////
 
 / the default kernel to boot.

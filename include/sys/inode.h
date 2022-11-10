@@ -47,17 +47,19 @@
 
    among used entries, no two entries can have the same m_dev, since we
    don't permit a device to be mounted multiple times. similarly m_inode
-   is always unique: even if a mount point is completely covered, the
-   covering mount will be associated with the root inode of the covered.
+   is always unique: two filesystems can't be mounted on the same inode.
 
    mounts[0] is the root filesystem. it's special. its m_inode == 0. */
 
 struct mount
 {
     dev_t               m_dev;          /* device mounted */
-    spinlock_t          m_lock;         /* protects m_filsys */
-    struct filsys       m_filsys;       /* in-core superblock */
     struct inode        *m_inode;       /* where mounted */
+
+    spinlock_t          m_lock;         /* protects remaining fields */
+    daddr_t             m_bhint;        /* block allocation hint */
+    ino_t               m_ihint;        /* inode allocation hint */
+    struct filsys       m_filsys;       /* in-core superblock */
 };
 
 /* in-core inode: the image of an on-disk inode
@@ -137,10 +139,7 @@ extern void inoinit(void);
 /* return the struct mount associated with ip->i_dev
    (i.e., the filesystem which containing the inode).
    the client is free to use the mount, indefinitely,
-   provided that it:
-
-        (a) protects m_filsys with m_lock, and
-        (b) maintains its reference to `ip' */
+   provided that it maintains its reference to `ip' */
 
 extern struct mount *getfs(struct inode *ip);
 

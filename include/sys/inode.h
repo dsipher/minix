@@ -55,23 +55,10 @@ struct mount
 {
     dev_t               m_dev;          /* device mounted */
     struct inode        *m_inode;       /* where mounted */
-
-    /* m_lock protects the remaining fields, at least, ultimately. the
-       read-only fields of m_filsys (filesystem parameters like s_blocks)
-       need no protection. M_BALLOC and M_IALLOC protect m_bhint/m_ihint
-       (respectively) as well as their related fields in m_filsys. */
-
-    spinlock_t          m_lock;         /* protects remaining fields */
-    char                m_flags;        /* see M_* below */
     daddr_t             m_bhint;        /* block allocation hint */
     ino_t               m_ihint;        /* inode allocation hint */
     struct filsys       m_filsys;       /* in-core superblock */
 };
-
-#define M_DIRTY         0x00000001      /* m_filsys has been updated */
-#define M_BALLOC        0x00000002      /* balloc() in progress (fs.c) */
-#define M_IALLOC        0x00000004      /* ialloc() .................. */
-#define M_WANTED        0x00000008      /* someone wants M_[BI]ALLOC */
 
 /* in-core inode: the image of an on-disk inode
    (i_dinode) augmented with runtime-only data.

@@ -70,6 +70,7 @@ struct buf
     {
         char            *b_data;        /* general use */
         daddr_t         *b_daddr;       /* indirect block */
+        unsigned long   *b_qwords;      /* as quadwords */
         struct dinode   *b_dino;        /* inode block */
     };
 

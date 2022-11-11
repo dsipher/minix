@@ -36,6 +36,7 @@
 
 #include <limits.h>
 #include <sys/types.h>
+#include <sys/systm.h>
 
 #define FS_BLOCK_SIZE       4096
 #define FS_BLOCK_SHIFT      12
@@ -88,7 +89,7 @@ struct filsys
     short           s_boot_magic;       /* FS_BOOT_MAGIC */
 };
 
-#define FS_FILSYS_QWORDS    (sizeof(struct filsys) / 8)
+#define FS_FILSYS_QWORDS    (sizeof(struct filsys) / sizeof(long))
 
 #define FS_SUPER_MAGIC      0xABE01E50
 #define FS_SUPER_MAGIC2     (short) 0x87CD  /* homage to OS-9/6809 */
@@ -132,11 +133,12 @@ struct dinode
     daddr_t         di_addr[FS_INODE_BLOCKS];
 };
 
-#define FS_INODE_QWORDS         (sizeof(struct dinode) / 8)
+#define FS_INODE_QWORDS         (sizeof(struct dinode) / sizeof(long))
 
 #define FS_INODES_PER_BLOCK     (FS_BLOCK_SIZE / sizeof(struct dinode))
 #define FS_BLOCKS_PER_BLOCK     (FS_BLOCK_SIZE / sizeof(daddr_t))
-#define FS_BITS_PER_BLOCK       (FS_BLOCK_SIZE * 8)
+#define FS_QWORDS_PER_BLOCK     (FS_BLOCK_SIZE / sizeof(long))
+#define FS_BITS_PER_BLOCK       (FS_BLOCK_SIZE * BITS_PER_BYTE)
 
 /* how many bytes can be stored in the direct blocks, or
    per indirect block, double-indirect, triple-indirect ... */

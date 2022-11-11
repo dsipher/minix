@@ -34,7 +34,10 @@
 #ifndef _SYS_SYSTM_H
 #define _SYS_SYSTM_H
 
-#define BITS_PER_QWORD      64
+#define BITS_PER_BYTE       8
+#define BITS_PER_QWORD      (sizeof(long) * BITS_PER_BYTE)
+
+#define WHOLE(a, b)         (((a) + (b) - 1) / (b))     /* ceil(a/b) */
 
 #endif /* _SYS_SYSTM_H */
 

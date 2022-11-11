@@ -136,6 +136,16 @@
                                                 : rdi, rsi, rcx, mem );     \
                             } while (0)
 
+#define BSFQ(qword)     ({                                                  \
+                                unsigned long _q = (qword);                 \
+                                int _bit;                                   \
+                                                                            \
+                                __asm("\tbsfq %rax, %rax" : rax=_q          \
+                                                          : rax=_bit );     \
+                                                                            \
+                                (_bit);                                     \
+                        })
+
 #endif /* _SYS_IO_H */
 
 /* vi: set ts=4 expandtab: */

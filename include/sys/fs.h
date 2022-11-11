@@ -185,6 +185,18 @@ struct direct
     char        d_name[NAME_MAX];
 };
 
+#ifdef _KERNEL
+
+struct mount;   /* sys/inode.h */
+
+/* allocate a block or inode on the filesystem associated with the
+   mount point `mnt'. return the block/inode number or 0 on error. */
+
+extern daddr_t  balloc(struct mount *mnt);
+extern ino_t    ialloc(struct mount *mnt);
+
+#endif /* _KERNEL */
+
 #endif /* _SYS_FS_H */
 
 /* vi: set ts=4 expandtab: */

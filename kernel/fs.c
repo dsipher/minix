@@ -36,14 +36,18 @@
 #include <sys/buf.h>
 #include <sys/log.h>
 #include <sys/io.h>
+#include <sys/spin.h>
 #include <sys/user.h>
+#include <sys/proc.h>
+#include <sys/inode.h>
 #include <sys/systm.h>
+#include <errno.h>
 
 /* scan a filesystem bitmap on `dev' which starts at `map' and spans
    `size' bits for a free bit (==1). the bit is reset and its index
    is returned. `hint' indicates where to start the scan: if non-zero,
    the scan will wrap if/when it reaches the end of the map. returns
-   0 if there are no free bits, or an error occurs (u.u_errno != 0).
+   0 if there are no free bits (ENOSPC) or some other error occurs.
 
    (we can use this for both block maps and inode maps because daddr_t
    and ino_t have the same type (`unsigned') and use 0 as sentinel.) */
@@ -121,9 +125,61 @@ alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
         ++count;
     }
 
-    /* no free bits in the map. whomp-whomp. */
+    /* no free bits */
 
+    u.u_errno = ENOSPC;
     return 0;
 }
+
+/* the logic for balloc() and ialloc() is nearly identical.
+   we don't attempt simultaneous scans of the bitmaps, not
+   because it's racy, but because it's counterproductive */
+
+#define ALLOC(FLAG, MAP, SIZE, HINT, FREE)                      \
+    {                                                           \
+        unsigned n;                                             \
+                                                                \
+        acquire(&mnt->m_lock);                                  \
+                                                                \
+        while (mnt->m_flags & FLAG) {                           \
+            mnt->m_flags |= M_WANTED;                           \
+            sleep(mnt, P_STATE_COMA, &mnt->m_lock);             \
+        }                                                       \
+                                                                \
+        mnt->m_flags |= FLAG;                                   \
+        release(&mnt->m_lock);                                  \
+                                                                \
+        n = alloc(  mnt->m_dev,                                 \
+                    MAP(mnt->m_filsys),                         \
+                    mnt->m_filsys.SIZE,                         \
+                    mnt->HINT               );                  \
+                                                                \
+        acquire(&mnt->m_lock);                                  \
+                                                                \
+        if (n) {  /* success */                                 \
+            mnt->HINT = n;                                      \
+            --mnt->m_filsys.FREE;                               \
+            mnt->m_flags |= M_DIRTY;                            \
+        }                                                       \
+                                                                \
+        if (mnt->m_flags & M_WANTED) wakeup(mnt);               \
+        mnt->m_flags &= ~(M_WANTED | FLAG);                     \
+                                                                \
+        release(&mnt->m_lock);                                  \
+                                                                \
+        return n;                                               \
+    }
+
+daddr_t balloc(struct mount *mnt)   ALLOC(  M_BALLOC,           \
+                                            FS_BMAP_START,      \
+                                            s_blocks,           \
+                                            m_bhint,            \
+                                            s_free_blocks       )
+
+ino_t   ialloc(struct mount *mnt)   ALLOC(  M_IALLOC,           \
+                                            FS_IMAP_START,      \
+                                            s_inodes,           \
+                                            m_ihint,            \
+                                            s_free_inodes       )
 
 /* vi: set ts=4 expandtab: */

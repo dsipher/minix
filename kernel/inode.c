@@ -374,7 +374,7 @@ ilock(struct inode *ip)
 
     while (ip->i_busy) {
         ip->i_wanted = 1;
-        sleep(&ip, P_STATE_COMA, &inode_lock);
+        sleep(ip, P_STATE_COMA, &inode_lock);
     }
 
     release(&inode_lock);
@@ -387,7 +387,7 @@ irelse(struct inode *ip)
 
     if (ip->i_wanted) {
         ip->i_wanted = 0;
-        wakeup(&ip);
+        wakeup(ip);
     }
 
     ip->i_busy = 0;

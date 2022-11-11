@@ -79,11 +79,9 @@ struct filsys
     daddr_t         s_imap_blocks;      /* ................... inode map */
     daddr_t         s_inode_blocks;     /* number of blocks used for inodes */
     daddr_t         s_blocks;           /* total blocks on device */
-    daddr_t         s_free_blocks;      /* ... and how many are free */
     ino_t           s_inodes;           /* total number of inodes */
-    ino_t           s_free_inodes;      /* ... and how many are free */
 
-    int             s_reserved[2];      /* padding; must be zero */
+    int             s_reserved[4];      /* padding; must be zero */
 
     short           s_magic2;           /* FS_SUPER_MAGIC2 */
     short           s_boot_magic;       /* FS_BOOT_MAGIC */

@@ -163,7 +163,6 @@ ialloc(struct dinode *di)
     if (nr_inodes == fs.s_inodes)
         error(0, "out of inodes");
 
-    --fs.s_free_inodes;
     memset(di, 0, sizeof(struct dinode));
     return nr_inodes++;
 }
@@ -177,7 +176,6 @@ balloc(void)
     if (nr_blocks == fs.s_blocks)
         error(0, "out of blocks");
 
-    --fs.s_free_blocks;
     return nr_blocks++;
 }
 
@@ -456,8 +454,6 @@ main(int argc, char **argv)
     fs.s_bmap_blocks = BITMAP_BLOCKS(nr_blocks);
     fs.s_imap_blocks = BITMAP_BLOCKS(nr_inodes);
     fs.s_inode_blocks = nr_inodes / FS_INODES_PER_BLOCK;
-    fs.s_free_inodes = nr_inodes - 1;
-    fs.s_free_blocks = nr_blocks - FS_DATA_START(fs);
 
     /* from here on out, nr_inodes and nr_blocks
        count the number of allocated items */

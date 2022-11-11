@@ -390,10 +390,9 @@ s_bmap_blocks:      .int        0
 s_imap_blocks:      .int        0
 s_inode_blocks:     .int        0
 s_blocks:           .int        0
-s_free_blocks:      .int        0
 s_inodes:           .int        0
-s_free_inodes:      .int        0
 s_reserved:         .quad       0
+                    .quad       0
 s_magic2:           .short      0
 s_bios_magic:       .short      0
 

@@ -135,7 +135,7 @@ alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
    we don't attempt simultaneous scans of the bitmaps, not
    because it's racy, but because it's counterproductive */
 
-#define ALLOC(FLAG, MAP, SIZE, HINT, FREE)                      \
+#define ALLOC(FLAG, MAP, SIZE, HINT)                            \
     {                                                           \
         unsigned n;                                             \
                                                                 \
@@ -158,7 +158,6 @@ alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
                                                                 \
         if (n) {  /* success */                                 \
             mnt->HINT = n;                                      \
-            --mnt->m_filsys.FREE;                               \
             mnt->m_flags |= M_DIRTY;                            \
         }                                                       \
                                                                 \
@@ -173,13 +172,11 @@ alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
 daddr_t balloc(struct mount *mnt)   ALLOC(  M_BALLOC,           \
                                             FS_BMAP_START,      \
                                             s_blocks,           \
-                                            m_bhint,            \
-                                            s_free_blocks       )
+                                            m_bhint             )
 
 ino_t   ialloc(struct mount *mnt)   ALLOC(  M_IALLOC,           \
                                             FS_IMAP_START,      \
                                             s_inodes,           \
-                                            m_ihint,            \
-                                            s_free_inodes       )
+                                            m_ihint,            )
 
 /* vi: set ts=4 expandtab: */

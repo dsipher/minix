@@ -332,9 +332,21 @@ loop:
     ip->i_busy = 1;
     ip->i_refs = 1;
     ip->i_flags &= I_TEXT | I_SPLIT;    /* zap all except these ... */
-
     release(&inode_lock);
     xfree(ip);                          /* ... zaps I_TEXT and I_SPLIT */
+
+    /* and now read in the inode from disk. this may seem a
+       waste of time if the inode has just been allocated and
+       its data is going to be zapped, but:
+
+            (a) the overhead of the data copy is minimal,
+                since the size of dinode is pretty small AND
+            (b) a new inode is going to be written out to
+                disk in short order, so we'll have to read
+                its containing block into the cache anyway.
+
+       for this reason we always read in the existing inode. */
+
     rwinode(ip, 0);
 
     /* if there was an error reading the inode from disk, we disassociate

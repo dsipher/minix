@@ -67,6 +67,7 @@ include				0040755 0 0
 		ioctl.h		0100644 0 0 include/sys/ioctl.h
 		list.h  	0100644 0 0 include/sys/list.h
 		log.h		0100644 0 0 include/sys/log.h
+		mutex.h		0100644 0 0 include/sys/mutex.h
 		page.h		0100644 0 0 include/sys/page.h
 		pci.h		0100644 0 0 include/sys/pci.h
 		proc.h		0100644 0 0 include/sys/proc.h

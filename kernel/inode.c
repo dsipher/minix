@@ -138,6 +138,7 @@ busy:
 
     new->m_dev = dev;
     new->m_inode = ip;
+    new->m_flags = 0;
     new->m_bhint = 0;
     new->m_ihint = 0;
     MOVSQ(&new->m_filsys, filsys, FS_FILSYS_QWORDS);

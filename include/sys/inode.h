@@ -39,7 +39,7 @@
 #include <sys/fs.h>
 #include <sys/types.h>
 #include <sys/tailq.h>
-#include <sys/spin.h>
+#include <sys/mutex.h>
 
 /* structure for mounts[] table. one entry per filesystem.
 
@@ -55,9 +55,16 @@ struct mount
 {
     dev_t               m_dev;          /* device mounted */
     struct inode        *m_inode;       /* where mounted */
-    daddr_t             m_bhint;        /* block allocation hint */
-    ino_t               m_ihint;        /* inode allocation hint */
     struct filsys       m_filsys;       /* in-core superblock */
+
+    /* the mutexes are used to prevent us from attempting to alloc()
+       on the same bitmap on the same device at the same time. there
+       are no races associated with doing so; it's counterproductive */
+
+    struct mutex        m_balloc;       /* block allocation mutex */
+    struct mutex        m_ialloc;       /* inode ................ */
+    daddr_t             m_bhint;        /* hint for block allocation */
+    ino_t               m_ihint;        /* ........ inode .......... */
 };
 
 /* in-core inode: the image of an on-disk inode

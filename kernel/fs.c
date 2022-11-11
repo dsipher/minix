@@ -41,16 +41,15 @@
 #include <sys/proc.h>
 #include <sys/inode.h>
 #include <sys/systm.h>
+#include <sys/mutex.h>
+#include <sys/io.h>
 #include <errno.h>
 
 /* scan a filesystem bitmap on `dev' which starts at `map' and spans
    `size' bits for a free bit (==1). the bit is reset and its index
    is returned. `hint' indicates where to start the scan: if non-zero,
    the scan will wrap if/when it reaches the end of the map. returns
-   0 if there are no free bits (ENOSPC) or some other error occurs.
-
-   (we can use this for both block maps and inode maps because daddr_t
-   and ino_t have the same type (`unsigned') and use 0 as sentinel.) */
+   0 if there are no free bits (ENOSPC) or some other error occurs. */
 
 static unsigned
 alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
@@ -62,7 +61,7 @@ alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
     unsigned        index   = (hint % FS_BITS_PER_BLOCK) / BITS_PER_QWORD;
     daddr_t         blocks  = WHOLE(size, FS_BITS_PER_BLOCK);
     daddr_t         count;
-    struct buf      *buf;
+    struct buf      *bp;
     unsigned long   word;
     unsigned        bit;
 
@@ -83,12 +82,12 @@ alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
         /* read in the block and scan for the
            first set bit, one word at a time */
 
-        buf = bread(dev, map + blkno);
-        if (buf == 0) return 0;
+        bp = bread(dev, map + blkno);
+        if (bp == 0) return 0;
 
         for (; index < FS_QWORDS_PER_BLOCK; ++index)
         {
-            word = buf->b_qwords[index];
+            word = bp->b_qwords[index];
             if (word == 0) continue;
 
             /* welp, we have at least one free bit. BSFQ() will give us
@@ -96,13 +95,9 @@ alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
                from the beginning of the map, AFTER resetting the bit */
 
             bit = BSFQ(word);
-            word &= ~(1L << bit);
+            word &= ~(1UL << bit);
             bit += index * BITS_PER_QWORD;
             bit += blkno * FS_BITS_PER_BLOCK;
-
-            /* bit 0 should never be free in bmap or imap */
-
-            if (bit == 0) panic("alloc");
 
             /* false positive: we saw a `free' bit beyond the end of the
                bitmap (i.e., in the trailing junk bits in the block after
@@ -112,14 +107,13 @@ alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
 
             /* success. update the bitmap. */
 
-            buf->b_qwords[index] = word;
-            bwrite(buf, B_SYNC);
-            if (u.u_errno) return 0;
+            bp->b_qwords[index] = word;
+            bwrite(bp, B_ASYNC);
 
             return bit;
         }
 
-        brelse(buf, 0);
+        brelse(bp, 0);
         index = 0;
         ++blkno;
         ++count;
@@ -129,6 +123,58 @@ alloc(dev_t dev, daddr_t map, unsigned size, unsigned hint)
 
     u.u_errno = ENOSPC;
     return 0;
+}
+
+/* free `bit' in the map starting at `map' on `dev'.
+   this is obviously faster and simpler than alloc() */
+
+static void
+free(dev_t dev, daddr_t map, unsigned bit)
+{
+    daddr_t         blkno   = bit / FS_BITS_PER_BLOCK;
+    unsigned        index   = (bit % FS_BITS_PER_BLOCK) / BITS_PER_QWORD;
+    struct buf      *bp;
+
+    bit %= BITS_PER_QWORD;
+    bp = bread(dev, map + blkno);
+    if (bp == 0) return;
+
+    bp->b_qwords[index] |= (1UL << bit);
+    bwrite(bp, B_ASYNC);
+}
+
+/* in balloc() and bfree() we update mnt->m_balloc with no
+   locking protocol. the hint is just a hint, and if it's
+   out of date (or even invalid, which won't happen because
+   the updates happen to be atomic) no real harm is done. */
+
+struct buf *
+balloc(struct mount *mnt)
+{
+    struct buf *bp = 0;
+    daddr_t blkno;
+
+    down(&mnt->m_balloc);
+
+    blkno = alloc(mnt->m_dev, FS_BMAP_START(mnt->m_filsys),
+                  mnt->m_filsys.s_blocks, mnt->m_bhint);
+
+    up(&mnt->m_balloc);
+
+    if (blkno) {
+        mnt->m_bhint = blkno;
+        bp = getblk(mnt->m_dev, blkno);
+        STOSQ(bp->b_data, 0, FS_QWORDS_PER_BLOCK);
+    }
+
+    return bp;
+}
+
+void
+bfree(struct mount *mnt, daddr_t blkno)
+{
+    free(mnt->m_dev, FS_BMAP_START(mnt->m_filsys), blkno);
+    mnt->m_bhint = blkno;
 }
 
 /* vi: set ts=4 expandtab: */

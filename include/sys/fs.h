@@ -183,6 +183,21 @@ struct direct
     char        d_name[NAME_MAX];
 };
 
+#ifdef _KERNEL
+
+struct mount;   /* sys/inode.h */
+
+/* allocate a block from the filesystem on `mnt'. returns the
+   locked buffer with its contents zeroed, or null on error. */
+
+extern struct buf *balloc(struct mount *mnt);
+
+/* free a block, returning it to the free block pool on `mnt' */
+
+extern void bfree(struct mount *mnt, daddr_t blkno);
+
+#endif /* _KERNEL */
+
 #endif /* _SYS_FS_H */
 
 /* vi: set ts=4 expandtab: */

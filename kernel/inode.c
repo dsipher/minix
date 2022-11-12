@@ -344,8 +344,112 @@ found:
 etxtbsy:
     u.u_errno = ETXTBSY;
 error:
-    /* iput(ip, 0); XXX */
+    iput(ip, 0, 0);
     return 0;
+}
+
+void
+itrunc(struct inode *ip)
+{
+    panic("itrunc"); /* XXX */
+}
+
+void
+iput(struct inode *ip, int ref, int flags)
+{
+    struct mount *mnt;
+    struct inode *root;
+    ino_t free_ino;
+
+recurse: /* see #5 */
+
+    free_ino = 0;
+    ip->i_flags |= flags;
+
+    /* 1. if this is the last reference, free the inode's storage.
+
+       tricky. ordinarily, refs can't be relied on without inode_lock,
+       but when nlink == 0 and refs == 1, we know that this is the last
+       reference to `ip', and crucially, we also know that no one else
+       can bind a new reference to `ip': the inode is not referenced in
+       memory (save by us, refs == 1); the only disk references will be
+       in directory entries (but there are none, nlink == 0) or in the
+       free inode bitmap (but obviously we're not free... yet). there
+       is no other way to find one's way to this inode, so we're safe.
+
+       why not just acquire inode_lock? because we need to itrunc(). */
+
+    if (ip->i_dinode.di_nlink == 0 && ip->i_refs == 1)
+    {
+        itrunc(ip);                 /* zap associated storage */
+
+        /* races, races. we can't free the inode in its filesystem
+           bitmap yet, or we'll invalidate what we just said above.
+           we have to remember to do it right before we return. BUT
+           by that time we'll no longer own `ip', so in [very rare]
+           circumstances the filesystem it is on might be unmounted.
+           solely to avoid this, grab a ref to the root of the fs. */
+
+        mnt = getfs(ip);
+        root = iget(mnt->m_dev, FS_ROOT_INO, 0);
+        irelse(root);
+        free_ino = ip->i_ino;  /* sentinel */
+    }
+
+    /* 2. if the inode has been updated, sync its on-disk counterpart */
+
+    if (ip->i_flags & I_DIRTY)
+    {
+        time_t t = time; /* it's too volatile */
+
+        if (ip->i_flags & I_ATIME) ip->i_dinode.di_atime = t;
+        if (ip->i_flags & I_MTIME) ip->i_dinode.di_mtime = t;
+        if (ip->i_flags & I_CTIME) ip->i_dinode.di_ctime = t;
+
+        rwinode(ip, 1);
+    }
+
+    /* 3. decrement ancillary reference counts. the caller must call
+          iput() with the same `ref' argument it passed to iget(). */
+
+    switch (ref)
+    {
+    case INODE_REF_W:   --(ip->i_wrefs); break;
+    case INODE_REF_X:   --(ip->i_xrefs); break;
+    }
+
+    /* 4. decrement main reference count, put back on the iavailq
+          if no more in-memory references. relinquish ownership. */
+
+    acquire(&inode_lock);
+
+    if (--(ip->i_refs) == 0)
+        TAILQ_INSERT_TAIL(&iavailq, ip, i_avail_links);
+
+    ip->i_busy = 0;
+
+    if (ip->i_wanted) {
+        ip->i_wanted = 0;
+        wakeup(ip);
+    }
+
+    release(&inode_lock);
+
+    /* 5. finally, if we zapped the inode, free it in its bitmap. see
+          the body of #1 above for the reasoning behind the gymnastics. */
+
+    if (free_ino) {
+        ifree(mnt, free_ino);
+        ilock(root);
+
+        /* unnecessary cleverness, or perhaps
+           a missing compiler optimization.  */
+
+        ip = root;      /* iput(root, 0, 0); */
+        flags = 0;
+        ref = 0;
+        goto recurse;
+    }
 }
 
 void

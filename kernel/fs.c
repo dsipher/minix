@@ -177,4 +177,10 @@ bfree(struct mount *mnt, daddr_t blkno)
     mnt->m_bhint = blkno;
 }
 
+void
+ifree(struct mount *mnt, ino_t ino)
+{
+    panic("ifree"); /* XXX */
+}
+
 /* vi: set ts=4 expandtab: */

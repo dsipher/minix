@@ -196,6 +196,10 @@ extern struct buf *balloc(struct mount *mnt);
 
 extern void bfree(struct mount *mnt, daddr_t blkno);
 
+/* free an inode, returning it to the free inode pool on `mnt' */
+
+extern void ifree(struct mount *mnt, ino_t ino);
+
 #endif /* _KERNEL */
 
 #endif /* _SYS_FS_H */

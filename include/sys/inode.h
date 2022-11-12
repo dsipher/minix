@@ -197,6 +197,19 @@ extern struct inode *iget(dev_t dev, ino_t ino, int ref);
 extern void ilock(struct inode *ip);
 extern void irelse(struct inode *ip);
 
+/* free all disk storage associated with an inode,
+   and set its size to 0. caller must own `ip'. */
+
+extern void itrunc(struct inode *ip);
+
+/* caller owns `ip'. decrement reference count(s) of `ip' (per `ref') and
+   relinquish ownership. if the inode is marked dirty, it is written out.
+   if this was the last reference to the inode exist (in-core or on-disk)
+   then the on-disk inode and any associated on-disk storage is freed. as
+   a convenience, `flags' are applied to ip->i_flags before processing. */
+
+extern void iput(struct inode *ip, int ref, int flags);
+
 #endif /* _KERNEL */
 
 #endif /* _SYS_INODE_H */

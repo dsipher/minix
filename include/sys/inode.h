@@ -54,6 +54,7 @@
 struct mount
 {
     dev_t               m_dev;          /* device mounted */
+    unsigned            m_refs;         /* getfs() reference count */
     struct inode        *m_inode;       /* where mounted */
     struct filsys       m_filsys;       /* in-core superblock */
 
@@ -164,12 +165,15 @@ extern struct inodeq *inodeq;
 
 extern void inoinit(void);
 
-/* return the struct mount associated with ip->i_dev
-   (i.e., the filesystem which containing the inode).
-   the client is free to use the mount, indefinitely,
-   provided that it maintains its reference to `ip' */
+/* return the struct mount associated with ip->i_dev (i.e., the
+   filesystem which contains the inode). the filesystem can not
+   be unmounted before the caller issues a matching putfs(). */
 
 extern struct mount *getfs(struct inode *ip);
+
+/* release a reference to a filesystem returned by getfs() */
+
+extern void putfs(struct mount *mnt);
 
 /* mount the filesystem on block device `dev' onto directory `ip'. the caller
    must own `ip'. [as special case, `ip' may be null, when mounting root.] */

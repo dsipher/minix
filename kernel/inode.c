@@ -54,16 +54,12 @@ struct inodeq *inodeq;          /* inodeq[NINODEQ] */
 
 static struct inodeq iavailq = TAILQ_HEAD_INITIALIZER(iavailq);
 
-/* mounted filesystems. as mentioned below, this is protected by
-   inode_lock when adding and removing entries. because existing
-   entries are guaranteed to remain undisturbed as long as any
-   inode on the filesystem is referenced (i.e., the filesystem
-   busy) it's safe to hand out pointers into mounts[] via getfs() */
+/* mounted filesystems. */
 
 static struct mount mounts[NMOUNT];
 
-/* protects inode queues, the shared fields
-   of struct inode and changes to mounts[] */
+/* protects inode queues, selected fields
+   of struct inode and mounts[] entries */
 
 static spinlock_t inode_lock;
 
@@ -140,6 +136,7 @@ busy:
     new->m_inode = ip;
     new->m_bhint = 0;
     new->m_ihint = 0;
+    new->m_refs = 1;
     MOVSQ(&new->m_filsys, filsys, FS_FILSYS_QWORDS);
 
     if (ip) {
@@ -151,9 +148,6 @@ busy:
     bwrite(super, B_ASYNC);
 }
 
-/* we assume the entry exists, since no one should ever be
-   holding an inode that is not on a mounted filesystem. */
-
 struct mount *
 getfs(struct inode *ip)
 {
@@ -164,9 +158,21 @@ getfs(struct inode *ip)
 
     for (mnt = mounts, i = 0; i < NMOUNT; ++i, ++mnt)
         if (mnt->m_dev == ip->i_dev) {
+            ++(mnt->m_refs);
             release(&inode_lock);
             return mnt;
         }
+
+    /* should never get here; the entry MUST exist, since no one will
+       ever be holding an inode that is not on a mounted filesystem. */
+}
+
+void
+putfs(struct mount *mnt)
+{
+    acquire(&inode_lock);
+    --(mnt->m_refs);
+    release(&inode_lock);
 }
 
 /* read/write ip->i_dinode from/to the underlying device. the
@@ -196,6 +202,8 @@ rwinode(struct inode *ip, int w)
             brelse(buf, 0);
             ip->i_flags |= I_VALID;
         }
+
+    putfs(mnt);
 }
 
 /* free the cached text pages associated with the inode, if
@@ -357,13 +365,9 @@ itrunc(struct inode *ip)
 void
 iput(struct inode *ip, int ref, int flags)
 {
-    struct mount *mnt;
-    struct inode *root;
-    ino_t free_ino;
+    struct mount *mnt = 0;
+    ino_t ino = ip->i_ino;
 
-recurse: /* see #5 */
-
-    free_ino = 0;
     ip->i_flags |= flags;
 
     /* 1. if this is the last reference, free the inode's storage.
@@ -381,19 +385,8 @@ recurse: /* see #5 */
 
     if (ip->i_dinode.di_nlink == 0 && ip->i_refs == 1)
     {
-        itrunc(ip);                 /* zap associated storage */
-
-        /* races, races. we can't free the inode in its filesystem
-           bitmap yet, or we'll invalidate what we just said above.
-           we have to remember to do it right before we return. BUT
-           by that time we'll no longer own `ip', so in [very rare]
-           circumstances the filesystem it is on might be unmounted.
-           solely to avoid this, grab a ref to the root of the fs. */
-
-        mnt = getfs(ip);
-        root = iget(mnt->m_dev, FS_ROOT_INO, 0);
-        irelse(root);
-        free_ino = ip->i_ino;  /* sentinel */
+        itrunc(ip);             /* zap associated storage */
+        mnt = getfs(ip);        /* for freeing in step #5 */
     }
 
     /* 2. if the inode has been updated, sync its on-disk counterpart */
@@ -435,20 +428,12 @@ recurse: /* see #5 */
 
     release(&inode_lock);
 
-    /* 5. finally, if we zapped the inode, free it in its bitmap. see
-          the body of #1 above for the reasoning behind the gymnastics. */
+    /* 5. finally, if we zapped the inode, free it in its bitmap. we have to
+          save this step for last, otherwise the logic of step #1 implodes */
 
-    if (free_ino) {
-        ifree(mnt, free_ino);
-        ilock(root);
-
-        /* unnecessary cleverness, or perhaps
-           a missing compiler optimization.  */
-
-        ip = root;      /* iput(root, 0, 0); */
-        flags = 0;
-        ref = 0;
-        goto recurse;
+    if (mnt) {
+        ifree(mnt, ino);
+        putfs(mnt);
     }
 }
 

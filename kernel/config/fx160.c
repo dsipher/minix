@@ -15,7 +15,7 @@
 
 struct bdevsw bdevsw[NBLKDEV] =
 {
-    { ideinit,  idestrat }
+    { ideinit,  idestrat,   ideflush,   nulldev,    nulldev }
 };
 
 struct cdevsw cdevsw[NCHRDEV] =

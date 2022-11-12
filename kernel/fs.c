@@ -43,6 +43,7 @@
 #include <sys/systm.h>
 #include <sys/mutex.h>
 #include <sys/io.h>
+#include <sys/dev.h>
 #include <errno.h>
 
 /* scan a filesystem bitmap on `dev' which starts at `map' and spans
@@ -167,12 +168,15 @@ balloc(struct mount *mnt)
         STOSQ(bp->b_data, 0, FS_QWORDS_PER_BLOCK);
     }
 
+    bdevsw[MAJOR(mnt->m_dev)].d_alloc(mnt->m_dev, blkno);
+
     return bp;
 }
 
 void
 bfree(struct mount *mnt, daddr_t blkno)
 {
+    bdevsw[MAJOR(mnt->m_dev)].d_free(mnt->m_dev, blkno);
     free(mnt->m_dev, FS_BMAP_START(mnt->m_filsys), blkno);
     mnt->m_bhint = blkno;
 }

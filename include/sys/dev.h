@@ -66,9 +66,11 @@ struct bdevsw
 
     void    (*d_flush)(void);
 
-    /* tell `dev' that `blkno' holds no useful data (for SSD). */
+    /* tell `dev' that `blkno' has been allocated or freed, respectively.
+       provided for SSD devices so they can TRIM blocks if they wish. */
 
-    void    (*d_trim)(dev_t dev, daddr_t blkno);
+    void    (*d_alloc)(dev_t dev, daddr_t blkno);
+    void    (*d_free)(dev_t dev, daddr_t blkno);
 };
 
 struct cdevsw

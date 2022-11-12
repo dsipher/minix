@@ -46,10 +46,21 @@ struct buf; /* sys/buf.h */
 struct bdevsw
 {
     /* boot-time driver initialization. called in the init process
-       with multi-tasking running but before exec'ing /bin/init */
+       with multi-tasking running but before exec'ing /bin/init. */
 
-    void    (*d_init)(void);                    /* 0 = no init required */
-    void    (*d_strategy)(struct buf *bp);      /* read/write buffers */
+    void    (*d_init)(void);
+
+    /* the classic interface to the buffer cache. */
+
+    void    (*d_strategy)(struct buf *bp);
+
+    /* initiate flush of all device-cached writes to medium. */
+
+    void    (*d_sync)(void);
+
+    /* tell `dev' that `blkno' holds no useful data (for SSD). */
+
+    void    (*d_trim)(dev_t dev, daddr_t blkno);
 };
 
 struct cdevsw

@@ -64,7 +64,7 @@ struct bdevsw
 
     /* initiate flush of all device-cached writes to medium. */
 
-    void    (*d_sync)(void);
+    void    (*d_flush)(void);
 
     /* tell `dev' that `blkno' holds no useful data (for SSD). */
 

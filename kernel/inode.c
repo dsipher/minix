@@ -201,8 +201,8 @@ rwinode(struct inode *ip, int w)
         }
 }
 
-/* free the cached text associated with the inode, if any.
-   resets I_TEXT and I_SPLIT flags. caller must own `ip'. */
+/* free the cached text pages associated with the inode, if
+   any. resets I_TEXT and I_SPLIT flags. caller owns `ip'. */
 
 static void
 xfree0(caddr_t *pages)
@@ -235,146 +235,7 @@ xfree(struct inode *ip)
 struct inode *
 iget(dev_t dev, ino_t ino, int ref)
 {
-    struct inode *ip;
-    struct mount *mnt;
-    int ob, b;  /* buckets */
-
-    acquire(&inode_lock);
-
-loop:
-    b = INOHASH(ino);
-
-    for (ip = TAILQ_FIRST(&inodeq[b]); ip; ip = TAILQ_NEXT(ip, i_hash_links))
-    {
-        if (ip->i_dev == dev && ip->i_ino == ino)
-        {
-            /* if the inode is in the cache, but it
-               is busy, we have to wait our turn */
-
-            if (ip->i_busy) {
-                ip->i_wanted = 1;
-                sleep(ip, P_STATE_COMA, &inode_lock);
-                goto loop;
-            }
-
-            /* if it's in the cache, but a mount point, then we really
-               mean we want the root inode of the mounted filesystem */
-
-            if (ip->i_flags & I_MOUNT) {
-                for (mnt = mounts; mnt; ++mnt)
-                    if (mnt->m_inode == ip)
-                    {
-                        dev = mnt->m_dev;
-                        ino = FS_ROOT_INO;
-                        goto loop;
-                    }
-
-                panic("iget");
-            }
-
-            /* an inode can't be used for writing
-               and demand paging at the same time */
-
-            if ((ref == INODE_REF_X && ip->i_wrefs)
-             || (ref == INODE_REF_W && ip->i_xrefs))
-            {
-                u.u_errno = ETXTBSY;
-                release(&inode_lock);
-                return 0;
-            }
-
-            /* looks like it's ours for the taking.
-               if it's on the iavailq, get it off */
-
-            if (ip->i_refs == 0)
-                TAILQ_REMOVE(&iavailq, ip, i_avail_links);
-
-            ip->i_busy = 1;
-            ++(ip->i_refs);
-            release(&inode_lock);
-
-            /* if we're going to be writing,
-               any cache must be invalidated */
-
-            if (ref == INODE_REF_W) xfree(ip);
-
-            goto success;
-        }
-    }
-
-    /* fall through; the inode isn't in the cache, so we need to grab
-       one from the iavailq, reassign it, and load it in from disk. */
-
-    ip = TAILQ_FIRST(&iavailq);
-
-    if (ip == 0) {              /* unlike the buffer cache, we don't block */
-        u.u_errno = ENFILE;     /* and wait for a free inode: bufs churn, */
-        release(&inode_lock);   /* but we could wait indefinitely for an */
-        return 0;               /* inode. no problem if NINODE is right! */
-    }
-
-    TAILQ_REMOVE(&iavailq, ip, i_avail_links);
-
-    /* since we're re-assigning the inode, we
-       must shift it into its new hash bucket */
-
-    ob = INOHASH(ip->i_ino);
-    TAILQ_REMOVE(&inodeq[ob], ip, i_hash_links);
-    TAILQ_INSERT_HEAD(&inodeq[b], ip, i_hash_links);
-
-    /* now initialize the inode and take ownership. i_wanted,
-       i_wrefs, and i_xrefs are already 0, unless we goofed */
-
-    ip->i_dev = dev;
-    ip->i_ino = ino;
-    ip->i_busy = 1;
-    ip->i_refs = 1;
-    ip->i_flags &= I_TEXT | I_SPLIT;    /* zap all except these ... */
-    release(&inode_lock);
-    xfree(ip);                          /* ... zaps I_TEXT and I_SPLIT */
-
-    /* and now read in the inode from disk. this may seem a
-       waste of time if the inode has just been allocated and
-       its data is going to be zapped, but:
-
-            (a) the overhead of the data copy is minimal,
-                since the size of dinode is pretty small AND
-            (b) a new inode is going to be written out to
-                disk in short order, so we'll have to read
-                its containing block into the cache anyway.
-
-       for this reason we always read in the existing inode. */
-
-    rwinode(ip, 0);
-
-    /* if there was an error reading the inode from disk, we disassociate
-       `ip' from it (so no one will grab it and mistakenly think it holds
-       valid data) then put it back on the free list and error out. */
-
-    if (u.u_errno) {
-        acquire(&inode_lock);
-        ip->i_dev = NODEV;
-        ip->i_busy = 0;
-        ip->i_refs = 0;
-
-        if (ip->i_wanted) {
-            ip->i_wanted = 0;
-            wakeup(ip);
-        }
-
-        TAILQ_INSERT_HEAD(&iavailq, ip, i_avail_links);
-        release(&inode_lock);
-        return 0;
-    }
-
-success:
-    switch (ref)
-    {
-    case INODE_REF_W:   ++(ip->i_wrefs); break;
-    case INODE_REF_X:   ++(ip->i_xrefs); break;
-    }
-
-    return ip;
+    /* XXX */
 }
 
 void

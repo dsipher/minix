@@ -57,7 +57,7 @@ struct mount
     struct inode        *m_inode;       /* where mounted */
     struct filsys       m_filsys;       /* in-core superblock */
 
-    /* the mutexes are used to prevent us from attempting to alloc()
+    /* these mutexes are used to prevent us from attempting alloc()
        on the same bitmap on the same device at the same time. there
        are no races associated with doing so; it's counterproductive */
 
@@ -70,34 +70,40 @@ struct mount
 /* in-core inode: the image of an on-disk inode
    (i_dinode) augmented with runtime-only data.
    to paraphrase v7, the inode is the focus of
-   [most] i/o activity in the system. like bufs,
-   inodes are cached, and using similar methods. */
+   filesystem activity in the kernel. like bufs,
+   inodes are cached in a [broadly] similar way */
 
 TAILQ_HEAD(inodeq, inode);      /* struct inodeq */
 
 struct inode
 {
-    dev_t               i_dev;          /* dev/ino pair uniquely */
-    ino_t               i_ino;          /* identifies this inode */
-    int                 i_flags;        /* I_* below */
-    struct dinode       i_dinode;       /* copy of on-disk data */
+    /* fields marked (L) can only be changed while holding inode_lock.
+       ............. (O) ................... by the current owner. */
+
+    dev_t               i_dev;          /* (L) dev/ino pair uniquely */
+    ino_t               i_ino;          /* (L) identifies this inode */
+    int                 i_flags;        /* (O) I_* below */
+    struct dinode       i_dinode;       /* (O) copy of on-disk data */
 
     /* the usual busy/wanted synchronization protocol. these fields
        are unique in that they may be manipulated when merely holding
        the ino_lock rather than having full ownership of the inode */
 
-    char                i_busy;         /* inode is in use */
-    char                i_wanted;       /* someone else wants it */
+    char                i_busy;         /* (L) inode is in use */
+    char                i_wanted;       /* (L) someone else wants it */
 
     /* i_refs is a count of in-memory references to this inode.
-       i_wrefs counts how many of those are mutable, i.e., how
-       many open files with write access this inode. i_xrefs is
-       a count of processes which are using this inode as text.
-       note that i_wrefs != 0 --> i_xrefs == 0, and vice versa */
 
-    short               i_refs;         /* total ref count */
-    short               i_wrefs;        /* write references */
-    short               i_xrefs;        /* text references */
+       i_wrefs counts how many references are mutable, i.e., how
+       many are open files with write access this inode. i_xrefs
+       is a count of processes which are using this inode as text.
+
+       we only track i_wrefs/i_xrefs carefully for regular files,
+       since only such files can serve as demand-paging storage. */
+
+    short               i_refs;         /* (L) total ref count */
+    short               i_wrefs;        /* (O) write references */
+    short               i_xrefs;        /* (O) text references */
 
     /* these fields are only valid when the inode is set up as
        the backing store for a process image (I_TEXT). i_text
@@ -108,22 +114,35 @@ struct inode
        the pages referred to by i_text are owned by this inode
        (not any struct buf or any process using the text.) */
 
-    struct exec         *i_exec;
-    caddr_t             *i_text;
+    struct exec         *i_exec;            /* (O) points to i_text */
+    caddr_t             *i_text;            /* (O) index of text pages */
+
+    /* we protect directory content operations (name lookup, unlink, etc.)
+       with a mutex, to keep such operations atomic and avoid nasty races.
+       ownership protects acquisition, but it can be released without. */
+
+    struct mutex        i_lookup;           /* (O) down() (-) up() */
 
     /* inodes are always in a hash bucket, hashed by i_number.
        when i_refs == 0, the inode is also in the iavailq, as
        it is available to be reassigned if needed. (contrast
        with struct bufs, which are on bavailq when not BUSY) */
 
-    TAILQ_ENTRY(inode)  i_hash_links;       /* ihashq */
-    TAILQ_ENTRY(inode)  i_avail_links;      /* iavailq */
+    TAILQ_ENTRY(inode)  i_hash_links;       /* (L) ihashq */
+    TAILQ_ENTRY(inode)  i_avail_links;      /* (L) iavailq */
 };
 
-#define I_DIRTY         0x00000001      /* i_dinode has been changed */
-#define I_TEXT          0x00000002      /* set up for demand-paging */
-#define I_SPLIT         0x00000004      /* text image is multi-level */
-#define I_MOUNT         0x00000008      /* fs mounted on this inode */
+#define I_VALID         0x00000001      /* i_dinode is valid */
+
+#define I_ATIME         0x00000002      /* inode has been `accessed' */
+#define I_CTIME         0x00000004      /* inode has been `changed' */
+#define I_MTIME         0x00000008      /* inode has been `modified' */
+
+#define I_TEXT          0x00000010      /* set up for demand-paging */
+#define I_SPLIT         0x00000020      /* text image is multi-level */
+#define I_MOUNT         0x00000040      /* fs mounted on this inode */
+
+#define I_DIRTY         (I_ATIME | I_CTIME | I_MTIME)
 
 /* when text exceeds this size, i_text must be
    split (512 pointers per page * 4k = 2MB) */

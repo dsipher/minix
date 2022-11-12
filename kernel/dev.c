@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/dev.h                                           ux/64 system header
+   dev.c                                                      ux/64 kernel
 
 ******************************************************************************
 
@@ -31,58 +31,11 @@
 
 *****************************************************************************/
 
-#ifndef _SYS_DEV_H
-#define _SYS_DEV_H
+#include <sys/dev.h>
+#include <sys/user.h>
+#include <errno.h>
 
-#include <sys/types.h>
-
-struct buf; /* sys/buf.h */
-
-#define NODEV   ((dev_t) -1)        /* a non-existent device */
-
-/* to put in devsw entries that have nothing to do, or
-   those which should produce an error when triggered.
-   we purposely do not prototype these so the compiler
-   will not look at the types (arguments) too closely. */
-
-extern void nulldev();              /* no error */
-extern void enodev();               /* raise ENODEV */
-
-/* classic device switches: one for block devices (which can be
-   mounted) and one for character devices (read: everything else) */
-
-struct bdevsw
-{
-    /* boot-time driver initialization. called in the init process
-       with multi-tasking running but before exec'ing /bin/init. */
-
-    void    (*d_init)(void);
-
-    /* the classic interface to the buffer cache. */
-
-    void    (*d_strategy)(struct buf *bp);
-
-    /* initiate flush of all device-cached writes to medium. */
-
-    void    (*d_sync)(void);
-
-    /* tell `dev' that `blkno' holds no useful data (for SSD). */
-
-    void    (*d_trim)(dev_t dev, daddr_t blkno);
-};
-
-struct cdevsw
-{
-    void    (*d_init)(void);                    /* same as bdevsw.d_init */
-};
-
-#ifdef _KERNEL
-
-extern struct bdevsw bdevsw[];      /* these instances are populated */
-extern struct cdevsw cdevsw[];      /* in platform-specific config.c */
-
-#endif /* _KERNEL */
-
-#endif /* _SYS_DEV_H */
+void nulldev()  { /* success */ }
+void enodev()   { u.u_errno = ENODEV; }
 
 /* vi: set ts=4 expandtab: */

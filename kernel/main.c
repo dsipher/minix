@@ -81,9 +81,7 @@ idle(void)
         struct tab  *_devsw = (tab);                                        \
         int         _i      = (n);                                          \
                                                                             \
-        for (; _i; --_i, ++_devsw)                                          \
-            if (_devsw->d_init)                                             \
-                _devsw->d_init();                                           \
+        for (; _i; --_i, ++_devsw) _devsw->d_init();                        \
     } while (0)
 
 static void

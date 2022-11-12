@@ -109,11 +109,6 @@ struct buf
 
 #define B_DIRTY         0x10
 
-/* synchronous write. when set, a write request can not be marked complete
-  until the data is commited to the medium. not the opposite of B_ASYNC! */
-
-#define B_SYNC          0x20
-
 
 #ifdef _KERNEL
 

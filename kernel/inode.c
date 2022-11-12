@@ -145,7 +145,7 @@ busy:
     release(&inode_lock);
 
     if (ip) ++(ip->i_refs);     /* we've kept a reference, */
-    bwrite(super, B_SYNC);      /* and updated the superblock */
+    bwrite(super, B_ASYNC);     /* and updated the superblock */
 }
 
 struct mount *
@@ -194,8 +194,7 @@ rwinode(struct inode *ip, int w)
     if (buf)
         if (w) {
             MOVSQ(buf->b_data + offset, &ip->i_dinode, FS_INODE_QWORDS);
-            bwrite(buf, B_SYNC);
-            ip->i_flags &= ~I_DIRTY;
+            bwrite(buf, B_ASYNC);
         } else {
             MOVSQ(&ip->i_dinode, buf->b_data + offset, FS_INODE_QWORDS);
             brelse(buf, 0);

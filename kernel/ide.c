@@ -121,8 +121,7 @@ static spinlock_t ide_lock;
 
 #define STATE_IDLE      0           /* waiting for work */
 #define STATE_IO        1           /* doing i/o on head of requestq */
-#define STATE_SYNC      2           /* syncing write of head of requestq */
-#define STATE_FLUSH     3           /* performing flush */
+#define STATE_FLUSH     2           /* performing flush */
 
 /* channel flags */
 
@@ -474,34 +473,19 @@ again:
                 goto again; /* try bp again */
             }
 
-            /* if we didn't successfully complete a write, there's
-               no point in trying to flush it to the medium... */
+            /* i/o is complete, remove it from the
+               queue and return it to the owner */
 
-            if (errno) bp->b_flags &= ~B_SYNC;
-
-            if (bp->b_flags & B_SYNC) {
-                /* this block is synchronous, so we must ensure it's
-                   flushed to the medium before we can report it done */
-
-                OUTB(chanp->base + BASE_DRVHD, DEVSEL(bp->b_dev));
-                OUTB(chanp->base + BASE_CMDSTAT, BASE_CMD_FLUSH);
-                chanp->state = STATE_SYNC;
-            } else {
-                /* the usual case. i/o is complete, remove it from
-                   the queue and return it to the buf i/o system */
-
-                TAILQ_REMOVE(&chanp->requestq, bp, b_avail_links);
-                chanp->state = STATE_IDLE;
-                release(&ide_lock);
-                iodone(bp, errno);
-                acquire(&ide_lock);
-                goto again;
-            }
+            TAILQ_REMOVE(&chanp->requestq, bp, b_avail_links);
+            chanp->state = STATE_IDLE;
+            release(&ide_lock);
+            iodone(bp, errno);
+            acquire(&ide_lock);
+            goto again;
         }
 
         break;
 
-    case STATE_SYNC:    /*************************************** SYNC ***/
     case STATE_FLUSH:   /************************************** FLUSH ***/
 
         /* BASE_CMD_FLUSH is complete once the BSY bit is clear */
@@ -509,25 +493,12 @@ again:
         if (INB(chanp->base + BASE_CMDSTAT) & BASE_STAT_BSY)
             break;
 
-        /* the only difference between SYNC and FLUSH is that the former
-           is done on behalf of a specific buffer write, whereas a FLUSH
-           is a general flush. we check for errors and log them, but do
-           not attach them to `bp' (if we have one) because we can't be
-           certain `bp' is the block which caused the error. we also do
-           not retry; chances are another flush request will come soon. */
+        /* we check for errors and log them, but [usually] have no
+           means to determine which buf failed to make it to disk.
+           we don't retry; another flush request will come soon. */
 
-        bp = 0;
         chkerr(c, 0, 0, "flush");
-
-        if (chanp->state == STATE_SYNC) {
-            bp = TAILQ_FIRST(&chanp->requestq);
-            TAILQ_REMOVE(&chanp->requestq, bp, b_avail_links);
-        }
-
         chanp->state = STATE_IDLE;
-        release(&ide_lock);
-        if (bp) iodone(bp, 0);
-        acquire(&ide_lock);
         goto again;
     }
 }

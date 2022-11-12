@@ -170,7 +170,7 @@ iodone(struct buf *bp, int errno)
 
     /* hygiene: don't keep stray flags around. */
 
-    bp->b_flags &= ~(B_READ | B_SYNC);
+    bp->b_flags &= ~B_READ;
 
     if (bp->b_flags & B_ASYNC) {
         /* async i/o means the owner doesn't want the buf

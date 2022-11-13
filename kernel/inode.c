@@ -276,8 +276,16 @@ retry:
             if (++(ip->i_refs) == 1) /* was available */
                 TAILQ_REMOVE(&iavailq, ip, i_avail_links);
 
+            /* seize ownership: streamlined, inlined ilock() */
+
+            while (ip->i_busy) {
+                ip->i_wanted = 0;
+                sleep(ip, P_STATE_COMA, &inode_lock);
+            }
+
+            ip->i_busy = 1;
             release(&inode_lock);
-            ilock(ip);
+
             goto found;
         }
     }
@@ -301,8 +309,8 @@ retry:
     ip->i_dev = dev;
     ip->i_ino = ino;
     ip->i_flags &= (I_TEXT | I_SPLIT);      /* see xfree() just below */
-    ip->i_refs = 1;                         /* (i_wanted/i_xrefs/i_wrefs */
-    ip->i_busy = 1;                         /* must all already be zero) */
+    ip->i_refs = 1;  /* ref and */          /* (i_wanted/i_xrefs/i_wrefs */
+    ip->i_busy = 1;  /* lock it */          /* must all already be zero) */
 
     TAILQ_INSERT_HEAD(&inodeq[b], ip, i_hash_links);
     release(&inode_lock);
@@ -341,8 +349,8 @@ found:
     case INODE_REF_W:   if (ip->i_xrefs) goto etxtbsy;
                         ++(ip->i_wrefs);
 
-                        /* if this was previously (but not currently)
-                           used for demand paging, invalidate cache */
+                        /* if this was previously used for demand
+                           paging, we must toss the cached pages */
 
                         xfree(ip);
     }
@@ -365,8 +373,8 @@ itrunc(struct inode *ip)
 void
 iput(struct inode *ip, int ref, int flags)
 {
-    struct mount *mnt = 0;
-    ino_t ino = ip->i_ino;
+    struct mount *mnt = 0;      /* used in step #5 ... */
+    ino_t ino = ip->i_ino;      /* ... if we free inode */
 
     ip->i_flags |= flags;
 
@@ -381,7 +389,7 @@ iput(struct inode *ip, int ref, int flags)
        free inode bitmap (but obviously we're not free... yet). there
        is no other way to find one's way to this inode, so we're safe.
 
-       why not just acquire inode_lock? because we need to itrunc(). */
+       all this because we can't itrunc() while holding inode_lock */
 
     if (ip->i_dinode.di_nlink == 0 && ip->i_refs == 1)
     {
@@ -412,20 +420,20 @@ iput(struct inode *ip, int ref, int flags)
     }
 
     /* 4. decrement main reference count, put back on the iavailq
-          if no more in-memory references. relinquish ownership. */
+          if no more in-memory references. relinquish ownership.
+          this is irelse() inlined, with a bit more work to do */
 
     acquire(&inode_lock);
 
     if (--(ip->i_refs) == 0)
         TAILQ_INSERT_TAIL(&iavailq, ip, i_avail_links);
 
-    ip->i_busy = 0;
-
     if (ip->i_wanted) {
         ip->i_wanted = 0;
         wakeup(ip);
     }
 
+    ip->i_busy = 0;
     release(&inode_lock);
 
     /* 5. finally, if we zapped the inode, free it in its bitmap. we have to
@@ -437,6 +445,9 @@ iput(struct inode *ip, int ref, int flags)
     }
 }
 
+/* ilock() and irelse() are primarily for external use.
+   internally, we tend to inline these (e.g., iget/iput) */
+
 void
 ilock(struct inode *ip)
 {
@@ -447,6 +458,7 @@ ilock(struct inode *ip)
         sleep(ip, P_STATE_COMA, &inode_lock);
     }
 
+    ip->i_busy = 1;
     release(&inode_lock);
 }
 

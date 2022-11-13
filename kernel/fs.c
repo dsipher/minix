@@ -184,7 +184,8 @@ bfree(struct mount *mnt, daddr_t blkno)
 void
 ifree(struct mount *mnt, ino_t ino)
 {
-    panic("ifree"); /* XXX */
+    free(mnt->m_dev, FS_IMAP_START(mnt->m_filsys), ino);
+    mnt->m_ihint = ino;
 }
 
 /* vi: set ts=4 expandtab: */

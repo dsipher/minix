@@ -237,6 +237,46 @@ xfree(struct inode *ip)
     ip->i_flags &= ~(I_TEXT | I_SPLIT);
 }
 
+/* `primitive' forms of ilock() and irelse(). */
+
+#define ILOCK(ip)                       /* held: inode_lock */              \
+    do {                                                                    \
+        while ((ip)->i_busy) {                                              \
+            (ip)->i_wanted = 1;                                             \
+            sleep((ip), P_STATE_COMA, &inode_lock);                         \
+        }                                                                   \
+                                                                            \
+        (ip)->i_busy = 1;                                                   \
+    } while (0)
+
+#define IRELSE(ip)                      /* held: inode_lock */              \
+    do {                                                                    \
+        if ((ip)->i_wanted)                                                 \
+            wakeup(ip);                                                     \
+                                                                            \
+        (ip)->i_wanted = 0;                                                 \
+        (ip)->i_busy = 0;                                                   \
+    } while (0)
+
+/* wrapped versions of ILOCK() and IRELSE().
+   these are primarily for external use. */
+
+void
+ilock(struct inode *ip)
+{
+    acquire(&inode_lock);
+    ILOCK(ip);
+    release(&inode_lock);
+}
+
+void
+irelse(struct inode *ip)
+{
+    acquire(&inode_lock);
+    IRELSE(ip);
+    release(&inode_lock);
+}
+
 struct inode *
 iget(dev_t dev, ino_t ino, int ref)
 {
@@ -276,14 +316,7 @@ retry:
             if (++(ip->i_refs) == 1) /* was available */
                 TAILQ_REMOVE(&iavailq, ip, i_avail_links);
 
-            /* seize ownership: streamlined, inlined ilock() */
-
-            while (ip->i_busy) {
-                ip->i_wanted = 0;
-                sleep(ip, P_STATE_COMA, &inode_lock);
-            }
-
-            ip->i_busy = 1;
+            ILOCK(ip);
             release(&inode_lock);
 
             goto found;
@@ -419,21 +452,15 @@ iput(struct inode *ip, int ref, int flags)
     case INODE_REF_X:   --(ip->i_xrefs); break;
     }
 
-    /* 4. decrement main reference count, put back on the iavailq
-          if no more in-memory references. relinquish ownership.
-          this is irelse() inlined, with a bit more work to do */
+    /* 4. decrement main reference count, put back on
+          the iavailq if no more in-memory references. */
 
     acquire(&inode_lock);
 
     if (--(ip->i_refs) == 0)
         TAILQ_INSERT_TAIL(&iavailq, ip, i_avail_links);
 
-    if (ip->i_wanted) {
-        ip->i_wanted = 0;
-        wakeup(ip);
-    }
-
-    ip->i_busy = 0;
+    IRELSE(ip);
     release(&inode_lock);
 
     /* 5. finally, if we zapped the inode, free it in its bitmap. we have to
@@ -443,37 +470,6 @@ iput(struct inode *ip, int ref, int flags)
         ifree(mnt, ino);
         putfs(mnt);
     }
-}
-
-/* ilock() and irelse() are primarily for external use.
-   internally, we tend to inline these (e.g., iget/iput) */
-
-void
-ilock(struct inode *ip)
-{
-    acquire(&inode_lock);
-
-    while (ip->i_busy) {
-        ip->i_wanted = 1;
-        sleep(ip, P_STATE_COMA, &inode_lock);
-    }
-
-    ip->i_busy = 1;
-    release(&inode_lock);
-}
-
-void
-irelse(struct inode *ip)
-{
-    acquire(&inode_lock);
-
-    if (ip->i_wanted) {
-        ip->i_wanted = 0;
-        wakeup(ip);
-    }
-
-    ip->i_busy = 0;
-    release(&inode_lock);
 }
 
 /* clear out mounts[] table. initialize inoq buckets, initialize all inodes

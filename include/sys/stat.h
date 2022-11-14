@@ -138,6 +138,8 @@ struct stat
     unsigned long   __pad[3];
 };
 
+#ifndef _KERNEL
+
 /* get file status */
 
 extern int stat(const char *path, struct stat *buf);
@@ -159,6 +161,8 @@ int mknod(const char *path, mode_t mode, dev_t dev);
 /* set and get the file mode creation mask */
 
 extern mode_t umask(mode_t cmask);
+
+#endif /* _KERNEL */
 
 #endif /* _SYS_STAT_H */
 

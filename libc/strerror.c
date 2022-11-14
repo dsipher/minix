@@ -62,7 +62,7 @@ static const char * const errors[] =
     /* 24 */    "too many open files",                      /* EMFILE */
     /* 25 */    "inappropriate ioctl",                      /* ENOTTY */
     /* 26 */    "text file busy",                           /* ETXTBSY */
-    /* 27 */    0,
+    /* 27 */    "file too large",                           /* EFBIG */
     /* 28 */    "no space left on device",                  /* ENOSPC */
     /* 29 */    0,
     /* 30 */    0,

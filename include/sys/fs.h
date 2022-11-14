@@ -187,17 +187,16 @@ struct direct
 
 struct mount;   /* sys/inode.h */
 
-/* allocate a block from the filesystem on `mnt'. returns the
-   locked buffer with its contents zeroed, or null on error. */
+/* allocate a block (inode) from the filesystem on `mnt'. returns
+   locked buf (inode) with its contents zeroed, or null on error.
+   in the case of ialloc(), `ref' is passed through to iget(). */
 
 extern struct buf *balloc(struct mount *mnt);
+extern struct inode *ialloc(struct mount *mnt, int ref);
 
-/* free a block, returning it to the free block pool on `mnt' */
+/* free a block (inode), returning it to the free pool on `mnt' */
 
 extern void bfree(struct mount *mnt, daddr_t blkno);
-
-/* free an inode, returning it to the free inode pool on `mnt' */
-
 extern void ifree(struct mount *mnt, ino_t ino);
 
 #endif /* _KERNEL */

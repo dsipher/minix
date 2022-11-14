@@ -59,8 +59,8 @@ struct mount
     struct filsys       m_filsys;       /* in-core superblock */
 
     /* these mutexes are used to prevent us from attempting alloc()
-       on the same bitmap on the same device at the same time. there
-       are no races associated with doing so; it's counterproductive */
+       on the same bitmap on the same device at the same time. not
+       because it would result in races- it's just counterproductive. */
 
     struct mutex        m_balloc;       /* block allocation mutex */
     struct mutex        m_ialloc;       /* inode ................ */

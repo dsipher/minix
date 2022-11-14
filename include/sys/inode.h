@@ -214,6 +214,15 @@ extern void itrunc(struct inode *ip);
 
 extern void iput(struct inode *ip, int ref, int flags);
 
+/* map an offset `fileofs' into a file `ip' to its block number on the
+   device. if `w' is specified, then new blocks are allocated as needed
+   (data blocks as well as indirect blocks). returns the device block
+   number, or 0 if an error occurred or (if `w' is not specified) the
+   file does not have `fileofs' mapped. if `blkofs' is not null, it is
+   filled with the offset into the block corresponding to `fileofs'. */
+
+extern daddr_t imap(struct inode *ip, off_t fileofs, int *blkofs, int w);
+
 #endif /* _KERNEL */
 
 #endif /* _SYS_INODE_H */

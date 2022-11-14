@@ -539,6 +539,126 @@ iput(struct inode *ip, int ref, int flags)
     }
 }
 
+#define IMAP0(SIZE)     do {                                        \
+                            if (offset > SIZE) {                    \
+                                ++indirect;                         \
+                                offset -= SIZE;                     \
+                            }                                       \
+                        } while (0)
+
+daddr_t imap(struct inode *ip, off_t fileofs, int *blkofs, int w)
+{
+    unsigned long   offset;
+    struct mount    *mnt;
+    daddr_t         *blknop, blkno;
+    int             index;
+    int             indirect;
+    struct buf      *bp, *newbp;
+
+    /* negative offsets are illegal here. we use the unsigned
+       equivalent to make later divisions MUCH more efficient. */
+
+    offset = fileofs;
+
+    if (offset >= FS_MAX_FILE_SIZE)
+    {
+        u.u_errno = EFBIG;
+        return 0;
+    }
+
+    /* we do this as a convenience to the caller.
+       it otherwise has no bearing on our work */
+
+    if (blkofs) *blkofs = offset & (FS_BLOCK_SIZE - 1);
+
+    /* treating each element of di_addr[] as the root of separate
+       trees (of varying heights), decide which tree `offset' is
+       in and modify it to be an offset into that tree. */
+
+    mnt = getfs(ip);
+    indirect = 0;
+
+    if (offset < FS_DIRECT_BYTES)
+        index = offset >> FS_BLOCK_SHIFT;
+    else {
+        IMAP0(FS_DIRECT_BYTES);
+        IMAP0(FS_INDIRECT_BYTES);
+        IMAP0(FS_DOUBLE_BYTES);
+        index = FS_INDIRECT_BLOCK + (indirect - 1);
+    }
+
+    /* now, descend the tree to the interior node which
+       points to the leaf we want, allocating intermediate
+       interior nodes as necessary (and if `w' specified). */
+
+    blknop = &(ip->i_dinode.di_addr[index]);
+    bp = 0;
+
+    while (indirect)
+    {
+        blkno = *blknop;
+
+        if (blkno == 0) {
+            if (!w) goto out;
+            newbp = balloc(mnt);
+            if (newbp == 0) goto out;
+            *blknop = newbp->b_blkno;
+            ip->i_flags |= I_CTIME;
+
+            if (bp) {
+                brelse(bp, B_DIRTY);
+                bp = newbp;
+            }
+        } else {
+            if (bp) brelse(bp, 0);
+            bp = bread(ip->i_dev, blkno);
+
+            if (bp == 0) {
+                blkno = 0;
+                goto out;
+            }
+        }
+
+        switch (indirect)
+        {
+        case 1:     index = offset / FS_BLOCK_SIZE;
+                    break;
+        case 2:     index = offset / FS_INDIRECT_BYTES;
+                    offset -= index * FS_INDIRECT_BYTES;
+                    break;
+        case 3:     index = offset / FS_DOUBLE_BYTES;
+                    offset -= index * FS_DOUBLE_BYTES;
+                    break;
+        }
+
+        blknop = &(bp->b_daddr[index]);
+        --indirect;
+    }
+
+    /* blknop now points to the leaf daddr_t. if
+       that leaf is located in an indirect block,
+       then `bp' is that block (it's 0 otherwise). */
+
+    if (*blknop == 0 && w)
+    {
+        newbp = balloc(mnt);
+
+        if (newbp) {
+            *blknop = newbp->b_blkno;
+            brelse(newbp, B_DIRTY);
+            if (bp) bp->b_flags |= B_DIRTY;
+            ip->i_flags |= I_CTIME;
+        }
+    }
+
+    blkno = *blknop;
+
+out:
+    if (bp) brelse(bp, 0);
+    putfs(mnt);
+    return blkno;
+}
+
 /* clear out mounts[] table. initialize inoq buckets, initialize all inodes
    to belong to an impossible device, scatter them across the buckets, and
    put them on iavailq (as usual for initialization, we forego any locking) */

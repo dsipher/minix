@@ -471,6 +471,23 @@ itrunc(struct inode *ip)
 }
 
 void
+iupdat(struct inode *ip)
+{
+    time_t t;
+
+    if (ip->i_flags & I_DIRTY)
+    {
+        t = time;   /* it's not THAT volatile */
+
+        if (ip->i_flags & I_ATIME) ip->i_dinode.di_atime = t;
+        if (ip->i_flags & I_MTIME) ip->i_dinode.di_mtime = t;
+        if (ip->i_flags & I_CTIME) ip->i_dinode.di_ctime = t;
+
+        rwinode(ip, 1);     /* resets I_DIRTY for us */
+    }
+}
+
+void
 iput(struct inode *ip, int ref, int flags)
 {
     struct mount *mnt;          /* used in step #6 ... */
@@ -497,18 +514,9 @@ iput(struct inode *ip, int ref, int flags)
         ip->i_flags & ~I_DIRTY;     /* don't bother updating it (next) */
     }
 
-    /* 3. if the inode has been updated, sync its on-disk counterpart */
+    /* 3. last chance to commit any changes to disk */
 
-    if (ip->i_flags & I_DIRTY)
-    {
-        time_t t = time; /* it's too volatile */
-
-        if (ip->i_flags & I_ATIME) ip->i_dinode.di_atime = t;
-        if (ip->i_flags & I_MTIME) ip->i_dinode.di_mtime = t;
-        if (ip->i_flags & I_CTIME) ip->i_dinode.di_ctime = t;
-
-        rwinode(ip, 1);
-    }
+    iupdat(ip);
 
     /* 4. decrement ancillary reference counts. the caller must call
           iput() with the same `ref' argument it passed to iget(). */

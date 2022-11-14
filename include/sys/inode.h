@@ -206,6 +206,11 @@ extern void irelse(struct inode *ip);
 
 extern void itrunc(struct inode *ip);
 
+/* if the inode is dirty, update its on-disk image
+   and mark it clean. the caller must own `ip'. */
+
+extern void iupdat(struct inode *ip);
+
 /* caller owns `ip'. decrement reference count(s) of `ip' (per `ref') and
    relinquish ownership. if the inode is marked dirty, it is written out.
    if this was the last reference to the inode exist (in-core or on-disk)

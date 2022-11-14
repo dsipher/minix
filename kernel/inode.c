@@ -406,31 +406,31 @@ itrunc(struct inode *ip)
 void
 iput(struct inode *ip, int ref, int flags)
 {
-    struct mount *mnt = 0;      /* used in step #5 ... */
-    ino_t ino = ip->i_ino;      /* ... if we free inode */
+    struct mount *mnt;          /* used in step #6 ... */
+    ino_t ino;                  /* ... if we free inode */
+    int last_ref;               /* we hold the last ref */
 
     ip->i_flags |= flags;
 
-    /* 1. if this is the last reference, free the inode's storage.
+    /* 1. first, determine if we hold the last reference to this inode,
+          either in-memory or on-disk. it can be shown that, if this is
+          true now, it will remain so even after inode_lock is released. */
 
-       tricky. ordinarily, refs can't be relied on without inode_lock,
-       but when nlink == 0 and refs == 1, we know that this is the last
-       reference to `ip', and crucially, we also know that no one else
-       can bind a new reference to `ip': the inode is not referenced in
-       memory (save by us, refs == 1); the only disk references will be
-       in directory entries (but there are none, nlink == 0) or in the
-       free inode bitmap (but obviously we're not free... yet). there
-       is no other way to find one's way to this inode, so we're safe.
+    acquire(&inode_lock);
+    last_ref = (ip->i_dinode.di_nlink == 0) && (ip->i_refs == 1);
+    release(&inode_lock);
 
-       all this because we can't itrunc() while holding inode_lock */
+    /* 2. if we have the last reference, nuke any allocated storage */
 
-    if (ip->i_dinode.di_nlink == 0 && ip->i_refs == 1)
+    if (last_ref)
     {
-        itrunc(ip);             /* zap associated storage */
-        mnt = getfs(ip);        /* for freeing in step #5 */
+        itrunc(ip);                 /* zap associated storage. */
+        mnt = getfs(ip);            /* stash important details ... */
+        ino = ip->i_ino;            /* ... for freeing in step #6 */
+        ip->i_flags & ~I_DIRTY;     /* don't bother updating it (next) */
     }
 
-    /* 2. if the inode has been updated, sync its on-disk counterpart */
+    /* 3. if the inode has been updated, sync its on-disk counterpart */
 
     if (ip->i_flags & I_DIRTY)
     {
@@ -443,7 +443,7 @@ iput(struct inode *ip, int ref, int flags)
         rwinode(ip, 1);
     }
 
-    /* 3. decrement ancillary reference counts. the caller must call
+    /* 4. decrement ancillary reference counts. the caller must call
           iput() with the same `ref' argument it passed to iget(). */
 
     switch (ref)
@@ -452,7 +452,7 @@ iput(struct inode *ip, int ref, int flags)
     case INODE_REF_X:   --(ip->i_xrefs); break;
     }
 
-    /* 4. decrement main reference count, put back on
+    /* 5. decrement main reference count, put back on
           the iavailq if no more in-memory references. */
 
     acquire(&inode_lock);
@@ -463,10 +463,10 @@ iput(struct inode *ip, int ref, int flags)
     IRELSE(ip);
     release(&inode_lock);
 
-    /* 5. finally, if we zapped the inode, free it in its bitmap. we have to
-          save this step for last, otherwise the logic of step #1 implodes */
+    /* 6. finally, if we had the last ref, free inode in its bitmap.
+          (must be done last, or the assertion in #1 would be false.) */
 
-    if (mnt) {
+    if (last_ref) {
         ifree(mnt, ino);
         putfs(mnt);
     }

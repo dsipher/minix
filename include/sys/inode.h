@@ -201,7 +201,7 @@ extern struct inode *iget(dev_t dev, ino_t ino, int ref);
 extern void ilock(struct inode *ip);
 extern void irelse(struct inode *ip);
 
-/* free all disk storage associated with an inode,
+/* free any disk storage associated with an inode,
    and set its size to 0. caller must own `ip'. */
 
 extern void itrunc(struct inode *ip);

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   ino.c                                                      ux/64 kernel
+   inode.c                                                    ux/64 kernel
 
 ******************************************************************************
 
@@ -41,6 +41,7 @@
 #include <sys/buf.h>
 #include <sys/io.h>
 #include <sys/proc.h>
+#include <sys/stat.h>
 #include <errno.h>
 #include "config.h"
 
@@ -397,10 +398,76 @@ error:
     return 0;
 }
 
+/* the algorithm for itrunc() is lifted with little change from v7.
+   for this reason, the blocks of the file are removed in reverse
+   order, which had benefits on the original filesystem. for ux/64,
+   with bitmaps and typically SSD storage, order is unimportant. */
+
+static void itrunc0(struct mount *mnt, daddr_t bn, int f1, int f2)
+{
+    struct buf *bp;
+    daddr_t *bap;
+    daddr_t nb;
+    int i;
+
+    for (i = (FS_BLOCKS_PER_BLOCK - 1); i >= 0; --i)
+    {
+        if (bp == 0) {
+            bp = bread(mnt->m_dev, bn);
+            if (bp == 0) return; /* uhoh */
+            bap = bp->b_daddr;
+        }
+
+        nb = bap[i];
+        if (nb == 0) continue;
+
+        if (f1) {
+            brelse(bp, 0);
+            bp = 0;
+            itrunc0(mnt, nb, f2, 0);
+        } else
+            bfree(mnt, nb);
+    }
+
+    if (bp) brelse(bp, 0);
+    bfree(mnt, bn);
+}
+
 void
 itrunc(struct inode *ip)
 {
-    panic("itrunc"); /* XXX */
+    struct mount *mnt;
+    daddr_t bn;
+    int i;
+
+    /* truncating anything other than a directory
+       or a regular file is a no-op (not an error) */
+
+    if ( !S_ISDIR(ip->i_dinode.di_mode)
+      && !S_ISREG(ip->i_dinode.di_mode)) return;
+
+    mnt = getfs(ip);
+
+    for (i = (FS_INODE_BLOCKS - 1); i >= 0; --i)
+    {
+        bn = ip->i_dinode.di_addr[i];
+        if (bn == 0) continue;
+
+        switch (i)
+        {
+        default:                    bfree(mnt, bn);             break;
+        case FS_INDIRECT_BLOCK:     itrunc0(mnt, bn, 0, 0);     break;
+        case FS_DOUBLE_BLOCK:       itrunc0(mnt, bn, 1, 0);     break;
+        case FS_TRIPLE_BLOCK:       itrunc0(mnt, bn, 1, 1);     break;
+        }
+
+        ip->i_dinode.di_addr[i] = 0;
+    }
+
+    ip->i_dinode.di_size = 0;
+    ip->i_flags |= I_MTIME | I_CTIME;
+
+    putfs(mnt);
 }
 
 void

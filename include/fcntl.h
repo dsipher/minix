@@ -41,12 +41,7 @@
 typedef __mode_t mode_t;
 #endif /* __MODE_T */
 
-/* create a new file or
-   rewrite an existing one */
-
-int creat(const char *path, mode_t mode);
-
-/* open a file */
+/* `oflags' for open() */
 
 #define O_RDONLY    00000000
 #define O_WRONLY    00000001
@@ -60,9 +55,7 @@ int creat(const char *path, mode_t mode);
 
 #define O_ACCMODE   (O_WRONLY | O_RDWR)
 
-int open(const char *path, int oflag, ...);
-
-/* file control */
+/* `cmd' for fcntl() */
 
 #define F_DUPFD     0       /* duplicate file descriptor */
 #define F_GETFD     1       /* get descriptor flags (FD_*) */
@@ -72,7 +65,24 @@ int open(const char *path, int oflag, ...);
 
 #define FD_CLOEXEC  1       /* close-on-exec: for F_SETFD/F_GETFD */
 
+
+#ifndef _KERNEL
+
+/* create a new file or
+   rewrite an existing one */
+
+int creat(const char *path, mode_t mode);
+
+/* open a file */
+
+int open(const char *path, int oflag, ...);
+
+/* file control */
+
 int fcntl(int fildes, int cmd, ...);
+
+#endif /* _KERNEL */
+
 
 #endif /* _FCNTL_H */
 

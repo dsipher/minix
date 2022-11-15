@@ -148,7 +148,15 @@ struct inode
 /* when text exceeds this size, i_text must be
    split (512 pointers per page * 4k = 2MB) */
 
-#define MAX_UNSPLIT_TEXT    (1 << 21)   /* 2MB */
+#define I_MAX_FLAT_TEXT     (1 << 21)   /* 2MB */
+
+/* maximum size of split (two-level) text.
+   512 pointers to pages of 512 pointers per
+   page --> 512 * 512 * 4k = 1GB. we simply
+   refuse to run binaries larger than this */
+
+#define I_MAX_SPLIT_TEXT    (1 << 30)   /* 1GB */
+
 
 #ifdef _KERNEL
 
@@ -228,7 +236,16 @@ extern void iput(struct inode *ip, int ref, int flags);
 
 extern daddr_t imap(struct inode *ip, off_t fileofs, int *blkofs, int w);
 
+/* check permissions on an inode `ip' (owned by caller).
+   `amode' is a bitwise-OR of R_OK, W_OK, or X_OK. if
+   access is denied, returns false, u.u_errno == EACCES.
+   otherwise true is returned. the effective uid/gid are
+   used to determine access unless `real' is non-zero. */
+
+extern int access(struct inode *ip, int amode, int real);
+
 #endif /* _KERNEL */
+
 
 #endif /* _SYS_INODE_H */
 

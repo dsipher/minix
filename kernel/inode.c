@@ -43,6 +43,7 @@
 #include <sys/proc.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <unistd.h>
 #include "config.h"
 
 /* allocated and zeroed at boot by pginit() in page.c */
@@ -665,6 +666,52 @@ out:
     if (bp) brelse(bp, 0);
     putfs(mnt);
     return blkno;
+}
+
+/* not coincidentally, the *_OK macros from unistd.h line up exactly
+   with the mode bits in the least-significant 3 bits, and groups of
+   mode bits can be easily shifted into that position. this alignment
+   is of course inherited from v7, and is true on every half-witted
+   posix system, though posix itself refused to define their values. */
+
+int access(struct inode *ip, int amode, int real)
+{
+    uid_t uid = real ? CURPROC->p_uid : CURPROC->p_euid;
+    gid_t gid = real ? CURPROC->p_gid : CURPROC->p_egid;
+    mode_t m = ip->i_dinode.di_mode;
+
+    /* we can't have a file open for writing and
+       demand-paging at the same time, root or no */
+
+    if (    ((amode & W_OK) && ip->i_xrefs)
+         || ((amode & X_OK) && ip->i_wrefs) )
+    {
+        u.u_errno = ETXTBSY;
+        return 0;
+    }
+
+    /* root can do anything else. this includes executing files
+       that do not have an execute bit set. (of course, if it is
+       an invalid binary it will fail for other reasons.) this
+       is historical behavior, and allowed by posix. */
+
+    if (uid == 0) return 1;
+
+    /* otherwise figure out which set of bits applies, and mask */
+
+    if (uid == ip->i_dinode.di_uid)
+        amode <<= 6;    /* consult owner bits */
+    else if (gid == ip->i_dinode.di_gid)
+        amode <<= 3;    /* ....... group bits */
+    else
+        /* default to `other' bits */ ;
+
+    if ((amode & m) == amode)
+        return 1;
+    else {
+        u.u_errno = EACCES;
+        return 0;
+    }
 }
 
 /* clear out mounts[] table. initialize inoq buckets, initialize all inodes

@@ -55,7 +55,11 @@ struct proc
     char                p_age;          /* 0x0017: ticks since last run */
     char                p_ticks;        /* 0x0018: ticks until preempted */
     void                *p_chan;        /* 0x0020: sleep channel */
-    TAILQ_ENTRY(proc)   p_qlinks;       /* 0x0028: idleq/sleepq/readyq */
+    uid_t               p_uid;          /* 0x0028: (real) user id */
+    gid_t               p_gid;          /* 0x002C: ..... group .. */
+    uid_t               p_euid;         /* 0x0030: effective user id */
+    gid_t               p_egid;         /* 0x0034: ........ group .. */
+    TAILQ_ENTRY(proc)   p_qlinks;       /* 0x0038: idleq/sleepq/readyq */
 };
 
 /* process states are represented as a bitset so we can refer to groups

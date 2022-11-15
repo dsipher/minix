@@ -668,6 +668,15 @@ out:
     return blkno;
 }
 
+struct buf *bmap(struct inode *ip, off_t fileofs, int *blkofs, int w)
+{
+    daddr_t blkno;
+
+    blkno = imap(ip, fileofs, blkofs, w);
+    if (blkno == 0) return 0;
+    return bread(ip->i_dev, blkno);
+}
+
 /* not coincidentally, the *_OK macros from unistd.h line up exactly
    with the mode bits in the least-significant 3 bits, and groups of
    mode bits can be easily shifted into that position. this alignment

@@ -38,9 +38,6 @@
 #include <sys/types.h>
 #include <sys/systm.h>
 
-#define FS_BLOCK_SIZE       4096
-#define FS_BLOCK_SHIFT      12
-
 /* the ux/64 filesystem is fairly conventional, with 4k blocks. we
    choose this value to match our page size, which simplifies the vm
    system. as a bonus, it is the native sector size of modern disks.
@@ -61,6 +58,12 @@
 #define FS_BLOCK_SHIFT      12
 
 #define FS_ROOT_INO         1
+
+/* for a given file offset, determine its virtual
+   block number and its offset into that block. */
+
+#define FS_BLOCK_NUM(ofs)   ((ofs) >> FS_BLOCK_SHIFT)
+#define FS_BLOCK_OFS(ofs)   ((ofs) & (FS_BLOCK_SIZE - 1))
 
 /* the superblock data starts at offset FS_SUPER_OFFSET in block 0.
    (the rest of the block is reserved for use by the boot code.) */
@@ -186,6 +189,9 @@ struct direct
 #ifdef _KERNEL
 
 struct mount;   /* sys/inode.h */
+struct inode;
+
+struct buf;     /* sys/buf.h */
 
 /* allocate a block (inode) from the filesystem on `mnt'. returns
    locked buf (inode) with its contents zeroed, or null on error.
@@ -198,6 +204,24 @@ extern struct inode *ialloc(struct mount *mnt, int ref);
 
 extern void bfree(struct mount *mnt, daddr_t blkno);
 extern void ifree(struct mount *mnt, ino_t ino);
+
+/* scan the directory inode `dp' (must be owned by the caller)
+   for the next component of `path'. if the component is not
+   found and `creat' is non-zero, then create a new entry.
+
+   *path is advanced to the beginning of the next directory
+   component (or the terminating NUL at the end of the path).
+
+   on success, true is returned and u.u_scanbp holds the buf
+   containing the struct direct and u.u_scanofs is its offset
+   into the buf. if the file was created, the direct's ino_t
+   will be zero and it it must be filled in by the caller.
+   brelse() must always be called on u.u_scanbp.
+
+   on failure, 0 is returned, u.u_errno is set accordingly,
+   and the u. fields are invalid and may be disregarded. */
+
+extern int scandir(struct inode *dp, char **path, int creat);
 
 #endif /* _KERNEL */
 

@@ -214,4 +214,160 @@ ifree(struct mount *mnt, ino_t ino)
     mnt->m_ihint = ino;
 }
 
+/* optimized comparison for struct direct names */
+
+#define NAMECMP(a, b)   ({  long    *_a     = (long *)  ((a).d_name);   \
+                            int     *_a2    = (int *)   ((a).d_name);   \
+                            long    *_b     = (long *)  ((b).d_name);   \
+                            int     *_b2    = (int *)   ((b).d_name);   \
+                                                                        \
+                            (       _a[0]   ==  _b[0]                   \
+                                &&  _a[1]   ==  _b[1]                   \
+                                &&  _a[2]   ==  _b[2]                   \
+                                &&  _a2[6]  ==  _b2[6]  );              })
+
+/* ... and an optimized copy */
+
+#define NAMECPY(a, b)   do {                                            \
+                            long    *_a     = (long *)  ((a).d_name);   \
+                            int     *_a2    = (int *)   ((a).d_name);   \
+                            long    *_b     = (long *)  ((b).d_name);   \
+                            int     *_b2    = (int *)   ((b).d_name);   \
+                                                                        \
+                            _a[0]   =  _b[0];                           \
+                            _a[1]   =  _b[1];                           \
+                            _a[2]   =  _b[2];                           \
+                            _a2[6]  =  _b2[6];                          \
+                        } while (0)
+
+/* ... and an optimized zero */
+
+#define NAMEZERO(a)     do {                                            \
+                            long    *_a     = (long *)  ((a).d_name);   \
+                            int     *_a2    = (int *)   ((a).d_name);   \
+                                                                        \
+                            _a[0] = _a[1] = _a[2] = _a2[6] = 0;         \
+                        } while (0)
+
+/* find file offset `ofs' in block `bp' as a struct direct */
+
+#define DIRECT(bp, ofs) ((struct direct *) ((bp)->b_data + FS_BLOCK_OFS(ofs)))
+
+int
+scandir(struct inode *dp, char **path, int creat)
+{
+    /* for NAMECMP() to be most efficient, the struct directs must be
+       quadword aligned. future versions of the compiler will likely
+       quadword align non-scalar locals by default, so we can skip
+       the trickery. (very near future versions of cc1 will also do
+       better zeroing of locals, and NAMEZERO() will go away, too.) */
+
+    union
+    {
+        struct direct name;
+        long x; /* align */
+    } d;
+
+    off_t offset;               /* into the directory file */
+    off_t empty;                /* offset of last empty entry */
+    struct buf *bp;             /* current directory block */
+    struct direct *direct;      /* working entry */
+
+    /* pull the next component from `path' into d.name.d_name.
+       ignore characters beyond NAME_MAX; zero pad if short.
+       if it's empty, nice try luser. gobble up trailing /s. */
+
+    {
+        char *cp;
+        int idx;
+
+        cp = *path;
+
+        if (*cp == 0) {
+            u.u_errno = ENOENT;
+            return 0;
+        }
+
+        NAMEZERO(d.name);
+
+        for (idx = 0; *cp && *cp != '/'; ++idx, ++cp)
+            if (idx < NAME_MAX)
+                d.name.d_name[idx] = *cp;
+
+        while (*cp == '/') ++cp;
+
+        *path = cp;
+    }
+
+    /* loop through the directory looking for the component
+       name. record any empty slots we come across in case
+       we need to create the entry later. */
+
+    dp->i_flags |= I_ATIME;         /* we're reading it, right? */
+
+    offset = 0;                     /* start ... at the beginning */
+    empty = -1;                     /* haven't seen a vacancy yet */
+    bp = 0;
+
+    for (offset = 0;
+         offset < dp->i_dinode.di_size;
+         offset += sizeof(struct direct))
+    {
+        if (FS_BLOCK_OFS(offset) == 0)      /* at block boundaries */
+        {                                   /* read in next block */
+            if (bp) brelse(bp, 0);
+            bp = bmap(dp, offset, 0, 0);
+            if (bp == 0) return 0;
+        }
+
+        direct = DIRECT(bp, offset);
+
+        if (direct->d_ino == 0)     /* if the slot is vacant, record */
+        {                           /* its location for later reference */
+            if (empty == -1)
+                empty = offset;
+
+            continue;
+        }
+
+        if (NAMECMP(*direct, d.name))
+        {
+            u.u_scanbp = bp;
+            u.u_scanofs = FS_BLOCK_OFS(offset);
+
+            return 1;   /* jackpot */
+        }
+    }
+
+    /* fall through: no match. if creat, then either use a previously
+       discovered vacant slot or extend the directory as needed to make
+       a new entry, then copy the name into it. leave d->d_ino zeroed;
+       the caller will know it's a new entry and it must be filled in */
+
+    if (bp) brelse(bp, 0);
+
+    if (creat)
+    {
+        if (empty == -1) {
+            empty = offset; /* extend directory by one slot */
+            dp->i_dinode.di_size += sizeof(struct direct);
+            dp->i_flags |= I_CTIME;
+        }
+
+        bp = bmap(dp, empty, 0, 1);
+        if (bp == 0) return 0;
+
+        u.u_scanbp = bp;
+        u.u_scanofs = FS_BLOCK_OFS(empty);
+        direct = DIRECT(bp, empty);
+        NAMECPY(*direct, d.name);
+        dp->i_flags |= I_MTIME;
+
+        return 1;
+    } else {
+        u.u_errno = ENOENT;
+        return 0;
+    }
+}
+
 /* vi: set ts=4 expandtab: */

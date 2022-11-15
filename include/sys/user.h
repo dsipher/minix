@@ -60,8 +60,9 @@ struct user
     struct proc     *u_procp;       /* 0x0200: associated struct proc */
     unsigned char   u_locks;        /* 0x0208: depth of `cli' nesting */
     unsigned char   u_errno;        /* 0x0209: errno to return to user */
+    unsigned short  u_scanofs;      /* 0x020A: [see scandir() in fs.c] */
 
-                                    /* (0x020A .. 0x20F available) */
+                                    /* (0x020C .. 0x20F available) */
 
     /* save area for swtch() */
 
@@ -70,7 +71,8 @@ struct user
                     u_sys_r13 /* 0x0230 */, u_sys_r14 /* 0x0238 */,
                     u_sys_r15 /* 0x0240 */, u_sys_rip /* 0x0248 */ ;
 
-    struct inode    *u_cdir;        /* current directory */
+    struct inode    *u_cdir;        /* 0x0250: current directory */
+    struct buf      *u_scanbp;      /* 0x0258: [see scandir() in fs.c] */
 };
 
 extern struct user u;           /* exported from locore.s */

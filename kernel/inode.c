@@ -211,7 +211,7 @@ rwinode(struct inode *ip, int w)
    any. resets I_TEXT and I_SPLIT flags. caller owns `ip'. */
 
 static void
-xfree0(caddr_t *pages)
+xrelse0(caddr_t *pages)
 {
     int i;
 
@@ -221,7 +221,7 @@ xfree0(caddr_t *pages)
 }
 
 static void
-xfree(struct inode *ip)
+xrelse(struct inode *ip)
 {
     int i;
 
@@ -229,9 +229,9 @@ xfree(struct inode *ip)
         if (ip->i_flags & I_SPLIT)
             for (i = 0; i < PTES_PER_PAGE; ++i)
                 if (ip->i_text[i])
-                    xfree0((caddr_t *) (ip->i_text[i]));
+                    xrelse0((caddr_t *) (ip->i_text[i]));
 
-        xfree0(ip->i_text);
+        xrelse0(ip->i_text);
         pgfree((caddr_t) ip->i_text);
     }
 
@@ -342,7 +342,7 @@ retry:
 
     ip->i_dev = dev;
     ip->i_ino = ino;
-    ip->i_flags &= (I_TEXT | I_SPLIT);      /* see xfree() just below */
+    ip->i_flags &= (I_TEXT | I_SPLIT);      /* see xrelse() just below */
     ip->i_refs = 1;  /* ref and */          /* (i_wanted/i_xrefs/i_wrefs */
     ip->i_busy = 1;  /* lock it */          /* must all already be zero) */
 
@@ -352,7 +352,7 @@ retry:
     /* toss any stale cached text pages.
        zaps I_TEXT, I_SPLIT if kept above. */
 
-    xfree(ip);
+    xrelse(ip);
 
 found:
 
@@ -386,7 +386,7 @@ found:
                         /* if this was previously used for demand
                            paging, we must toss the cached pages */
 
-                        xfree(ip);
+                        xrelse(ip);
     }
 
     return ip;

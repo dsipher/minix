@@ -75,13 +75,24 @@ typedef __pid_t pid_t;
 #define STDOUT_FILENO   1
 #define STDERR_FILENO   2
 
-/* determine the accessibility of
-   a file (by the current user) */
+/* for lseek() et al. */
+
+#define SEEK_SET    __SEEK_SET      /* offset is absolute */
+#define SEEK_CUR    __SEEK_CUR      /* offset from current position */
+#define SEEK_END    __SEEK_END      /* offset from end of file */
+
+/* `amode' for access() */
 
 #define F_OK  0     /* exists */
 #define X_OK  1     /* executable */
 #define W_OK  2     /* writeable */
 #define R_OK  4     /* readable */
+
+
+#ifndef _KERNEL
+
+/* determine the accessibility of
+   a file (by the current user) */
 
 extern int access(const char *path, int amode);
 
@@ -165,10 +176,6 @@ extern int isatty(int fildes);
 
 /* move the read/write file offset */
 
-#define SEEK_SET    __SEEK_SET      /* offset is absolute */
-#define SEEK_CUR    __SEEK_CUR      /* offset from current position */
-#define SEEK_END    __SEEK_END      /* offset from end of file */
-
 extern off_t lseek(int fildes, off_t offset, int whence);
 
 /* create an inter-process channel */
@@ -200,6 +207,9 @@ extern int  optind;         /* next index of argv[] to process */
 extern int  opterr;         /* (flag) print option error diagnostics */
 
 extern int getopt(int argc, char * const argv[], const char *optstring);
+
+#endif /* _KERNEL */
+
 
 #endif /* _UNISTD_H */
 

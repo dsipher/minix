@@ -70,8 +70,8 @@ struct user
                     u_sys_r15 /* 0x0240 */, u_sys_rip /* 0x0248 */ ;
 
     struct inode    *u_cdir;        /* 0x0250: current directory */
-    struct buf      *u_scanbp;      /* 0x0258: [see scandir() in fs.c] */
-    off_t           u_scanofs;      /* 0x0260: [.....................] */
+    struct buf      *u_scanbp;      /* 0x0258: [see scan() in fs.c] */
+    off_t           u_scanofs;      /* 0x0260: [..................] */
 };
 
 extern struct user u;           /* exported from locore.s */

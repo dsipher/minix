@@ -211,24 +211,6 @@ extern struct inode *ialloc(struct mount *mnt, int ref);
 extern void bfree(struct mount *mnt, daddr_t blkno);
 extern void ifree(struct mount *mnt, ino_t ino);
 
-/* scan the directory inode `dp' (must be owned by the caller)
-   for the next component of `path'. if the component is not
-   found and `creat' is non-zero, then create a new entry.
-
-   *path is advanced to the beginning of the next directory
-   component (or the terminating NUL at the end of the path).
-
-   on success, true is returned and u.u_scanbp holds the buf
-   containing the struct direct and u.u_scanofs is its offset
-   into the directory. if the file was created, the struct
-   direct's di_ino will be zero and it it must be filled in
-   by the caller. brelse() must always be called on u.u_scanbp.
-
-   on failure, 0 is returned, u.u_errno is set accordingly,
-   and the u. fields are invalid and may be disregarded. */
-
-extern int scandir(struct inode *dp, char **path, int creat);
-
 #endif /* _KERNEL */
 
 #endif /* _SYS_FS_H */

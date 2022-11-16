@@ -173,11 +173,11 @@ extern struct inodeq *inodeq;
 
 extern void inoinit(void);
 
-/* return the struct mount associated with ip->i_dev (i.e., the
-   filesystem which contains the inode). the filesystem can not
-   be unmounted before the caller issues a matching putfs(). */
+/* return the struct mount associated with `dev'. if successful,
+   the filesystem can not be unmounted before the caller issues
+   a matching putfs(). returns 0 if no mount on `dev' exists. */
 
-extern struct mount *getfs(struct inode *ip);
+extern struct mount *getfs(dev_t dev);
 
 /* release a reference to a filesystem returned by getfs() */
 

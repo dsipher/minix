@@ -151,7 +151,7 @@ busy:
 }
 
 struct mount *
-getfs(struct inode *ip)
+getfs(dev_t dev)
 {
     struct mount *mnt;
     int i;
@@ -159,14 +159,16 @@ getfs(struct inode *ip)
     acquire(&inode_lock);
 
     for (mnt = mounts, i = 0; i < NMOUNT; ++i, ++mnt)
-        if (mnt->m_dev == ip->i_dev) {
+        if (mnt->m_dev == dev) {
             ++(mnt->m_refs);
-            release(&inode_lock);
-            return mnt;
+            goto out;
         }
 
-    /* should never get here; the entry MUST exist, since no one will
-       ever be holding an inode that is not on a mounted filesystem. */
+    mnt = 0; /* no match */
+
+out:
+    release(&inode_lock);
+    return mnt;
 }
 
 void
@@ -188,7 +190,7 @@ rwinode(struct inode *ip, int w)
     int offset;                 /* ... offset in that block */
     struct buf *buf;            /* our handle to that block */
 
-    mnt = getfs(ip);
+    mnt = getfs(ip->i_dev);
 
     blkno = FS_ITOD(mnt->m_filsys, ip->i_ino);
     offset = FS_ITOO(mnt->m_filsys, ip->i_ino);
@@ -447,7 +449,7 @@ itrunc(struct inode *ip)
     if ( !S_ISDIR(ip->i_dinode.di_mode)
       && !S_ISREG(ip->i_dinode.di_mode)) return;
 
-    mnt = getfs(ip);
+    mnt = getfs(ip->i_dev);
 
     for (i = (FS_INODE_BLOCKS - 1); i >= 0; --i)
     {
@@ -510,7 +512,7 @@ iput(struct inode *ip, int ref, int flags)
     if (last_ref)
     {
         itrunc(ip);                 /* zap associated storage. */
-        mnt = getfs(ip);            /* stash important details ... */
+        mnt = getfs(ip->i_dev);     /* stash important details ... */
         ino = ip->i_ino;            /* ... for freeing in step #6 */
         ip->i_flags & ~I_DIRTY;     /* don't bother updating it (next) */
     }
@@ -579,7 +581,7 @@ struct buf *bmap(struct inode *ip, off_t fileofs, int w)
        trees (of varying heights), decide which tree `offset' is
        in and modify it to be an offset into that tree. */
 
-    mnt = getfs(ip);
+    mnt = getfs(ip->i_dev);
     indirect = 0;
 
     if (offset < FS_DIRECT_BYTES)

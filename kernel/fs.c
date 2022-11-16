@@ -344,8 +344,11 @@ scandir(struct inode *dp, char **path, int creat)
 
     if (creat)
     {
+        /* if we didn't encounter an empty slot,
+           extend the directory to make one. */
+
         if (empty == -1) {
-            empty = offset; /* extend directory by one slot */
+            empty = offset;
             dp->i_dinode.di_size += sizeof(struct direct);
             dp->i_flags |= I_CTIME;
         }
@@ -357,7 +360,9 @@ scandir(struct inode *dp, char **path, int creat)
         u.u_scanofs = empty;
         direct = FS_DIRECT(bp, empty);
         NAMECPY(*direct, d.name);
+
         dp->i_flags |= I_MTIME;
+        bp->b_flags |= B_DIRTY;
 
         return 1;
     } else {

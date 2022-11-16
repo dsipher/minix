@@ -312,7 +312,7 @@ scandir(struct inode *dp, char **path, int creat)
         if (FS_BLOCK_OFS(offset) == 0)      /* at block boundaries */
         {                                   /* read in next block */
             if (bp) brelse(bp, 0);
-            bp = bmap(dp, offset, 0, 0);
+            bp = bmap(dp, offset, 0);
             if (bp == 0) return 0;
         }
 
@@ -353,7 +353,7 @@ scandir(struct inode *dp, char **path, int creat)
             dp->i_flags |= I_CTIME;
         }
 
-        bp = bmap(dp, empty, 0, 1);
+        bp = bmap(dp, empty, 1);
         if (bp == 0) return 0;
 
         u.u_scanbp = bp;

@@ -229,12 +229,10 @@ extern void iput(struct inode *ip, int ref, int flags);
 
 /* map an offset `fileofs' into a file `ip' to its block number on the
    device. if `w' is specified, then new blocks are allocated as needed
-   (data blocks as well as indirect blocks). returns the buf, or null
-   if an error occurred or (if `w' is not specified) the file does not
-   have `fileofs' mapped. if `blkofs' is not null, it is filled with
-   the offset into the block corresponding to `fileofs'. */
+   (data blocks and indirect blocks). returns the buf, or null if an
+   error occurs or (if `w' is not specified) `fileofs' is not mapped. */
 
-extern struct buf *bmap(struct inode *ip, off_t fileofs, int *blkofs, int w);
+extern struct buf *bmap(struct inode *ip, off_t fileofs, int w);
 
 /* check permissions on an inode `ip' (owned by caller).
    `amode' is a bitwise-OR of R_OK, W_OK, or X_OK. if

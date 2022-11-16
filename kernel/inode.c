@@ -555,7 +555,7 @@ iput(struct inode *ip, int ref, int flags)
                             }                                       \
                         } while (0)
 
-struct buf *bmap(struct inode *ip, off_t fileofs, int *blkofs, int w)
+struct buf *bmap(struct inode *ip, off_t fileofs, int w)
 {
     unsigned long   offset;
     struct mount    *mnt;
@@ -574,11 +574,6 @@ struct buf *bmap(struct inode *ip, off_t fileofs, int *blkofs, int w)
         u.u_errno = EFBIG;
         return 0;
     }
-
-    /* we do this as a convenience to the caller.
-       it otherwise has no bearing on our work */
-
-    if (blkofs) *blkofs = offset & (FS_BLOCK_SIZE - 1);
 
     /* treating each element of di_addr[] as the root of separate
        trees (of varying heights), decide which tree `offset' is

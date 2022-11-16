@@ -333,7 +333,7 @@ scandir(struct inode *dp, char **path, int creat)
         if (NAMECMP(*direct, d.name))
         {
             u.u_scanbp = bp;
-            u.u_scanofs = FS_BLOCK_OFS(offset);
+            u.u_scanofs = offset;
 
             return 1;   /* jackpot */
         }
@@ -358,7 +358,7 @@ scandir(struct inode *dp, char **path, int creat)
         if (bp == 0) return 0;
 
         u.u_scanbp = bp;
-        u.u_scanofs = FS_BLOCK_OFS(empty);
+        u.u_scanofs = empty;
         direct = DIRECT(bp, empty);
         NAMECPY(*direct, d.name);
         dp->i_flags |= I_MTIME;

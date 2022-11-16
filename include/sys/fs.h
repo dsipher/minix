@@ -214,9 +214,9 @@ extern void ifree(struct mount *mnt, ino_t ino);
 
    on success, true is returned and u.u_scanbp holds the buf
    containing the struct direct and u.u_scanofs is its offset
-   into the buf. if the file was created, the direct's ino_t
-   will be zero and it it must be filled in by the caller.
-   brelse() must always be called on u.u_scanbp.
+   into the directory. if the file was created, the struct
+   direct's ino_t will be zero and it it must be filled in by
+   the caller. brelse() must always be called on u.u_scanbp.
 
    on failure, 0 is returned, u.u_errno is set accordingly,
    and the u. fields are invalid and may be disregarded. */

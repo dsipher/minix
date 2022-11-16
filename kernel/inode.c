@@ -548,14 +548,14 @@ iput(struct inode *ip, int ref, int flags)
     }
 }
 
-#define IMAP0(SIZE)     do {                                        \
+#define BMAP0(SIZE)     do {                                        \
                             if (offset > SIZE) {                    \
                                 ++indirect;                         \
                                 offset -= SIZE;                     \
                             }                                       \
                         } while (0)
 
-daddr_t imap(struct inode *ip, off_t fileofs, int *blkofs, int w)
+struct buf *bmap(struct inode *ip, off_t fileofs, int *blkofs, int w)
 {
     unsigned long   offset;
     struct mount    *mnt;
@@ -590,9 +590,9 @@ daddr_t imap(struct inode *ip, off_t fileofs, int *blkofs, int w)
     if (offset < FS_DIRECT_BYTES)
         index = offset >> FS_BLOCK_SHIFT;
     else {
-        IMAP0(FS_DIRECT_BYTES);
-        IMAP0(FS_INDIRECT_BYTES);
-        IMAP0(FS_DOUBLE_BYTES);
+        BMAP0(FS_DIRECT_BYTES);
+        BMAP0(FS_INDIRECT_BYTES);
+        BMAP0(FS_DOUBLE_BYTES);
         index = FS_INDIRECT_BLOCK + (indirect - 1);
     }
 
@@ -664,17 +664,14 @@ daddr_t imap(struct inode *ip, off_t fileofs, int *blkofs, int w)
 
 out:
     if (bp) brelse(bp, 0);
+
+    if (blkno)
+        bp = bread(mnt->m_dev, blkno);
+    else
+        bp = 0;
+
     putfs(mnt);
-    return blkno;
-}
-
-struct buf *bmap(struct inode *ip, off_t fileofs, int *blkofs, int w)
-{
-    daddr_t blkno;
-
-    blkno = imap(ip, fileofs, blkofs, w);
-    if (blkno == 0) return 0;
-    return bread(ip->i_dev, blkno);
+    return bp;
 }
 
 /* not coincidentally, the *_OK macros from unistd.h line up exactly

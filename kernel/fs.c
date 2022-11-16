@@ -249,10 +249,6 @@ ifree(struct mount *mnt, ino_t ino)
                             _a[0] = _a[1] = _a[2] = _a2[6] = 0;         \
                         } while (0)
 
-/* find file offset `ofs' in block `bp' as a struct direct */
-
-#define DIRECT(bp, ofs) ((struct direct *) ((bp)->b_data + FS_BLOCK_OFS(ofs)))
-
 int
 scandir(struct inode *dp, char **path, int creat)
 {
@@ -320,7 +316,7 @@ scandir(struct inode *dp, char **path, int creat)
             if (bp == 0) return 0;
         }
 
-        direct = DIRECT(bp, offset);
+        direct = FS_DIRECT(bp, offset);
 
         if (direct->d_ino == 0)     /* if the slot is vacant, record */
         {                           /* its location for later reference */
@@ -359,7 +355,7 @@ scandir(struct inode *dp, char **path, int creat)
 
         u.u_scanbp = bp;
         u.u_scanofs = empty;
-        direct = DIRECT(bp, empty);
+        direct = FS_DIRECT(bp, empty);
         NAMECPY(*direct, d.name);
         dp->i_flags |= I_MTIME;
 

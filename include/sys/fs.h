@@ -186,6 +186,12 @@ struct direct
     char        d_name[NAME_MAX];
 };
 
+/* given a directory offset `ofs' and the block in that directory `bp'
+   containing that offset, return a handle to the struct direct there. */
+
+#define FS_DIRECT(bp, ofs)  ((struct direct *) ((bp)->b_data                \
+                                                 + FS_BLOCK_OFS(ofs)))
+
 #ifdef _KERNEL
 
 struct mount;   /* sys/inode.h */

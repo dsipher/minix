@@ -132,8 +132,8 @@ extern struct buf *getblk(dev_t dev, daddr_t blkno);
 
 extern void bwrite(struct buf *bp, int flags);
 
-/* read in (if necessary) the block and return its buf, locked.
-   if an error occurs, returns 0 (with u.u_errno set of course). */
+/* read in (if necessary) the block and return its buf. if
+   an error occurs, returns 0 (with u.u_errno set of course). */
 
 extern struct buf *bread(dev_t dev, daddr_t blkno);
 

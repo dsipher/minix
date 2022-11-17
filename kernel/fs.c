@@ -44,6 +44,7 @@
 #include <sys/mutex.h>
 #include <sys/io.h>
 #include <sys/dev.h>
+#include <sys/stat.h>
 #include <errno.h>
 
 /* scan a filesystem bitmap on `dev' which starts at `map' and spans
@@ -212,121 +213,6 @@ ifree(struct mount *mnt, ino_t ino)
 {
     free(mnt->m_dev, FS_IMAP_START(mnt->m_filsys), ino);
     mnt->m_ihint = ino;
-}
-
-/* scan the directory inode `dp' (must be owned by the caller)
-   for the next component of `path' (which can not be empty).
-   if the component is not found and `creat' is non-zero, then
-   create a new entry. *path is advanced to the beginning of
-   the next directory component (or the terminating NUL).
-
-   on success, true is returned and u.u_scanbp holds the buf
-   containing the struct direct and u.u_scanofs is its offset
-   into the directory. if the file was created, the struct
-   direct's di_ino will be zero and it it must be filled in
-   by the caller. brelse() must always be called on u.u_scanbp.
-
-   on failure, 0 is returned, u.u_errno is set accordingly,
-   and the u. fields are invalid and may be disregarded. */
-
-static int
-scan(struct inode *dp, char **path, int creat)
-{
-    struct direct name;         /* the current component */
-    off_t offset;               /* into the directory file */
-    off_t empty;                /* offset of last empty entry */
-    struct buf *bp;             /* current directory block */
-    struct direct *entry;       /* working entry */
-    char *cp;                   /* for extracting ... */
-    int i;                      /* ... path component */
-
-    /* extract the next component from `path' into name.d_name.
-       ignore characters beyond NAME_MAX; zero pad if short. */
-
-    cp = *path;
-
-    FS_ZERO_DIRECT(name);
-
-    for (i = 0; *cp && *cp != '/'; ++i, ++cp)
-        if (i < NAME_MAX)
-            name.d_name[i] = *cp;
-
-    *path = cp;
-
-    /* loop through the directory looking for the component
-       name. record any empty slots we come across in case
-       we need to create the entry later. */
-
-    dp->i_flags |= I_ATIME;         /* we're reading it, right? */
-
-    offset = 0;                     /* start ... at the beginning */
-    empty = -1;                     /* haven't seen a vacancy yet */
-    bp = 0;
-
-    for (offset = 0;
-         offset < dp->i_dinode.di_size;
-         offset += sizeof(struct direct))
-    {
-        if (FS_BLOCK_OFS(offset) == 0)      /* at block boundaries */
-        {                                   /* read in next block */
-            if (bp) brelse(bp, 0);
-            bp = bmap(dp, offset, 0);
-            if (bp == 0) return 0;
-        }
-
-        entry = FS_DIRECT(bp, offset);
-
-        if (entry->d_ino == 0)      /* if the slot is vacant, record */
-        {                           /* its location for later reference */
-            if (empty == -1)
-                empty = offset;
-
-            continue;
-        }
-
-        if (FS_CMP_DIRECT(*entry, name))
-        {
-            u.u_scanbp = bp;
-            u.u_scanofs = offset;
-
-            return 1;   /* jackpot */
-        }
-    }
-
-    /* fall through: no match. if creat, then either use a previously
-       discovered vacant slot or extend the directory as needed to make
-       a new entry, then copy the name into it. leave d->d_ino zeroed;
-       the caller will know it's a new entry and it must be filled in */
-
-    if (bp) brelse(bp, 0);
-
-    if (creat)
-    {
-        /* if we didn't encounter an empty slot,
-           extend the directory to make one. */
-
-        if (empty == -1) {
-            empty = offset;
-            dp->i_dinode.di_size += sizeof(struct direct);
-            dp->i_flags |= I_CTIME;
-        }
-
-        bp = bmap(dp, empty, 1);
-        if (bp == 0) return 0;
-
-        u.u_scanbp = bp;
-        u.u_scanofs = empty;
-        entry = FS_DIRECT(bp, empty);
-        FS_COPY_DIRECT(*entry, name);
-
-        dp->i_flags |= I_MTIME;
-        bp->b_flags |= B_DIRTY;
-
-        return 1;
-    } else {
-        u.u_errno = ENOENT;
-        return 0;
-    }
 }
 
 /* vi: set ts=4 expandtab: */

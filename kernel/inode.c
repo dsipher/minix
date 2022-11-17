@@ -281,6 +281,15 @@ irelse(struct inode *ip)
     release(&inode_lock);
 }
 
+void
+idup(struct inode *ip)
+{
+    acquire(&inode_lock);
+    ILOCK(ip);
+    ++ip->i_refs;
+    release(&inode_lock);
+}
+
 struct inode *
 iget(dev_t dev, ino_t ino, int ref)
 {

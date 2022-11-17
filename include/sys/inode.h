@@ -209,6 +209,10 @@ extern struct inode *iget(dev_t dev, ino_t ino, int ref);
 extern void ilock(struct inode *ip);
 extern void irelse(struct inode *ip);
 
+/* acquire ownership of inode `ip' and increment its reference count. */
+
+extern void idup(struct inode *ip);
+
 /* free any disk storage associated with an inode,
    and set its size to 0. caller must own `ip'. */
 

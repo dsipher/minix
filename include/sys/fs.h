@@ -182,15 +182,53 @@ struct dinode
 
 struct direct
 {
-    ino_t       d_ino;                  /* 0 == unused entry */
-    char        d_name[NAME_MAX];
+    union
+    {
+        struct
+        {
+            ino_t       d_ino;              /* 0 == unused entry */
+            char        d_name[NAME_MAX];   /* NUL padded (not terminated) */
+        };
+
+        long    d_qwords[4];
+        int     d_dwords[8];
+    };
 };
+
+/* zero a struct direct. very efficient. */
+
+#define FS_ZERO_DIRECT(d)                                                   \
+    do {                                                                    \
+        (d).d_qwords[0] = 0;                                                \
+        (d).d_qwords[1] = 0;                                                \
+        (d).d_qwords[2] = 0;                                                \
+        (d).d_qwords[3] = 0;                                                \
+    } while (0)
+
+/* copy the d_name field from `src' to `dst'. */
+
+#define FS_COPY_DIRECT(dst, src)                                            \
+    do {                                                                    \
+        (dst).d_dwords[1] = (src).d_dwords[1];                              \
+        (dst).d_qwords[1] = (src).d_qwords[1];                              \
+        (dst).d_qwords[2] = (src).d_qwords[2];                              \
+        (dst).d_qwords[3] = (src).d_qwords[3];                              \
+    } while (0)
+
+/* compare two d_name fields for equality. true if identical.
+   this should be very fast, it's branch-predictor-friendly */
+
+#define FS_CMP_DIRECT(a, b)     (   (a).d_dwords[1] == (b).d_dwords[1]      \
+                                &&  (a).d_qwords[1] == (b).d_qwords[1]      \
+                                &&  (a).d_qwords[2] == (b).d_qwords[2]      \
+                                &&  (a).d_qwords[3] == (b).d_qwords[3]      )
 
 /* given a directory offset `ofs' and the block in that directory `bp'
    containing that offset, return a handle to the struct direct there. */
 
 #define FS_DIRECT(bp, ofs)  ((struct direct *) ((bp)->b_data                \
                                                  + FS_BLOCK_OFS(ofs)))
+
 
 #ifdef _KERNEL
 

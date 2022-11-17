@@ -215,11 +215,10 @@ ifree(struct mount *mnt, ino_t ino)
 }
 
 /* scan the directory inode `dp' (must be owned by the caller)
-   for the next component of `path'. if the component is not
-   found and `creat' is non-zero, then create a new entry.
-
-   *path is advanced to the beginning of the next directory
-   component (or the terminating NUL at the end of the path).
+   for the next component of `path' (which can not be empty).
+   if the component is not found and `creat' is non-zero, then
+   create a new entry. *path is advanced to the beginning of
+   the next directory component (or the terminating NUL).
 
    on success, true is returned and u.u_scanbp holds the buf
    containing the struct direct and u.u_scanofs is its offset
@@ -230,83 +229,29 @@ ifree(struct mount *mnt, ino_t ino)
    on failure, 0 is returned, u.u_errno is set accordingly,
    and the u. fields are invalid and may be disregarded. */
 
-/* optimized comparison for struct direct names */
-
-#define NAMECMP(a, b)   ({  long    *_a     = (long *)  ((a).d_name);   \
-                            int     *_a2    = (int *)   ((a).d_name);   \
-                            long    *_b     = (long *)  ((b).d_name);   \
-                            int     *_b2    = (int *)   ((b).d_name);   \
-                                                                        \
-                            (       _a[0]   ==  _b[0]                   \
-                                &&  _a[1]   ==  _b[1]                   \
-                                &&  _a[2]   ==  _b[2]                   \
-                                &&  _a2[6]  ==  _b2[6]  );              })
-
-/* ... and an optimized copy */
-
-#define NAMECPY(a, b)   do {                                            \
-                            long    *_a     = (long *)  ((a).d_name);   \
-                            int     *_a2    = (int *)   ((a).d_name);   \
-                            long    *_b     = (long *)  ((b).d_name);   \
-                            int     *_b2    = (int *)   ((b).d_name);   \
-                                                                        \
-                            _a[0]   =  _b[0];                           \
-                            _a[1]   =  _b[1];                           \
-                            _a[2]   =  _b[2];                           \
-                            _a2[6]  =  _b2[6];                          \
-                        } while (0)
-
-/* ... and an optimized zero */
-
-#define NAMEZERO(a)     do {                                            \
-                            long    *_a     = (long *)  ((a).d_name);   \
-                            int     *_a2    = (int *)   ((a).d_name);   \
-                                                                        \
-                            _a[0] = _a[1] = _a[2] = _a2[6] = 0;         \
-                        } while (0)
-
 static int
 scan(struct inode *dp, char **path, int creat)
 {
-    /* for NAMECMP() to be most efficient, the struct directs must be
-       quadword aligned. future versions of the compiler will likely
-       quadword align non-scalar locals by default, so we can skip
-       the trickery. (very near future versions of cc1 will also do
-       better zeroing of locals, and NAMEZERO() will go away, too.) */
-
-    union
-    {
-        struct direct name;
-        long x; /* align */
-    } d;
-
+    struct direct name;         /* the current component */
     off_t offset;               /* into the directory file */
     off_t empty;                /* offset of last empty entry */
     struct buf *bp;             /* current directory block */
-    struct direct *direct;      /* working entry */
+    struct direct *entry;       /* working entry */
+    char *cp;                   /* for extracting ... */
+    int i;                      /* ... path component */
 
-    /* pull the next component from `path' into d.name.d_name.
+    /* extract the next component from `path' into name.d_name.
        ignore characters beyond NAME_MAX; zero pad if short. */
 
-    {
-        char *cp;
-        int idx;
+    cp = *path;
 
-        cp = *path;
+    FS_ZERO_DIRECT(name);
 
-        if (*cp == 0) {
-            u.u_errno = ENOENT;
-            return 0;
-        }
+    for (i = 0; *cp && *cp != '/'; ++i, ++cp)
+        if (i < NAME_MAX)
+            name.d_name[i] = *cp;
 
-        NAMEZERO(d.name);
-
-        for (idx = 0; *cp && *cp != '/'; ++idx, ++cp)
-            if (idx < NAME_MAX)
-                d.name.d_name[idx] = *cp;
-
-        *path = cp;
-    }
+    *path = cp;
 
     /* loop through the directory looking for the component
        name. record any empty slots we come across in case
@@ -329,9 +274,9 @@ scan(struct inode *dp, char **path, int creat)
             if (bp == 0) return 0;
         }
 
-        direct = FS_DIRECT(bp, offset);
+        entry = FS_DIRECT(bp, offset);
 
-        if (direct->d_ino == 0)     /* if the slot is vacant, record */
+        if (entry->d_ino == 0)      /* if the slot is vacant, record */
         {                           /* its location for later reference */
             if (empty == -1)
                 empty = offset;
@@ -339,7 +284,7 @@ scan(struct inode *dp, char **path, int creat)
             continue;
         }
 
-        if (NAMECMP(*direct, d.name))
+        if (FS_CMP_DIRECT(*entry, name))
         {
             u.u_scanbp = bp;
             u.u_scanofs = offset;
@@ -371,8 +316,8 @@ scan(struct inode *dp, char **path, int creat)
 
         u.u_scanbp = bp;
         u.u_scanofs = empty;
-        direct = FS_DIRECT(bp, empty);
-        NAMECPY(*direct, d.name);
+        entry = FS_DIRECT(bp, empty);
+        FS_COPY_DIRECT(*entry, name);
 
         dp->i_flags |= I_MTIME;
         bp->b_flags |= B_DIRTY;

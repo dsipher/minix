@@ -100,8 +100,8 @@ init(void)
 
     mount(boot_config.rootdev, 0);
     if (u.u_errno) panic("root fs");
-    rootdir  = iget(rootdev, FS_ROOT_INO, 0); irelse(rootdir);
-    u.u_cdir = iget(rootdev, FS_ROOT_INO, 0); irelse(u.u_cdir);
+    rootdir  = iget(rootdev, FS_ROOT_INO); irelse(rootdir);
+    u.u_cdir = iget(rootdev, FS_ROOT_INO); irelse(u.u_cdir);
 
     for (;;) {
         sleep(&lbolt, P_STATE_COMA, 0);

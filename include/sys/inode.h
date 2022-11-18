@@ -213,12 +213,11 @@ extern struct inode *iref(struct inode *ip, int ref);
                             } while (0)
 
 /* return the in-core inode corresponding to the disk inode `ino' on `dev'.
-   `ref' is one of INODE_REF_* above. if the inode is not in memory, it is
-   read in from the device. if it is mounted on, indirection is performed.
-   the reference count(s) are incremented and the inode is returned locked.
-   on error, returns null with u.u_errno set accordingly. */
+   if the inode is not in memory, it is read in from the device. if it is
+   mounted on, indirection is performed. the inode is returned locked. on
+   error, returns null with u.u_errno set accordingly. */
 
-extern struct inode *iget(dev_t dev, ino_t ino, int ref);
+extern struct inode *iget(dev_t dev, ino_t ino);
 
 /* acquire or relinquish ownership of inode `ip'. */
 
@@ -239,13 +238,13 @@ extern void itrunc(struct inode *ip);
 
 extern void iupdat(struct inode *ip);
 
-/* caller owns `ip'. decrement reference count(s) of `ip' (per `ref') and
-   relinquish ownership. if the inode is marked dirty, it is written out.
-   if this was the last reference to the inode exist (in-core or on-disk)
-   then the on-disk inode and any associated on-disk storage is freed. as
-   a convenience, `flags' are applied to ip->i_flags before processing. */
+/* caller owns `ip'. decrement reference count of `ip' and relinquish
+   ownership. if the inode is marked dirty, it is written out. if this
+   was the last reference to the inode (either in-core or on-disk) then
+   the on-disk inode and any associated on-disk storage is freed. as a
+   convenience, `flags' are applied to ip->i_flags before processing. */
 
-extern void iput(struct inode *ip, int ref, int flags);
+extern void iput(struct inode *ip, int flags);
 
 /* map an offset `fileofs' into a file `ip' to its block number on the
    device. if `w' is specified, then new blocks are allocated as needed

@@ -182,12 +182,11 @@ bfree(struct mount *mnt, daddr_t blkno)
     mnt->m_bhint = blkno;
 }
 
-/* ialloc() and ifree() are almost exact analogs of
-   balloc() and bfree(), except there are no driver
-   hooks for inodes and inodes need a `ref' arg. */
+/* ialloc() and ifree() are almost exact analogs of balloc()
+   and bfree(), except there are no driver hooks for inodes. */
 
 struct inode *
-ialloc(struct mount *mnt, int ref)
+ialloc(struct mount *mnt)
 {
     struct inode *ip = 0;
     ino_t ino;
@@ -201,7 +200,7 @@ ialloc(struct mount *mnt, int ref)
 
     if (ino) {
         mnt->m_ihint = ino;
-        ip = iget(mnt->m_dev, ino, ref);
+        ip = iget(mnt->m_dev, ino);
         STOSQ(&ip->i_dinode, 0, FS_INODE_QWORDS);
     }
 

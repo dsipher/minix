@@ -311,13 +311,13 @@ iref(struct inode *ip, int ref)
     return ip;
 
 etxtbsy:
-    iput(ip, 0, 0);
+    iput(ip, 0);
     u.u_errno = ETXTBSY;
     return 0;
 }
 
 struct inode *
-iget(dev_t dev, ino_t ino, int ref)
+iget(dev_t dev, ino_t ino)
 {
     struct inode *ip;
     struct mount *mnt;
@@ -406,15 +406,12 @@ found:
             /* looks like rwinode() failed. it
                has already set u_errno for us */
 
-            iput(ip, 0, 0);
+            iput(ip, 0);
             return 0;
         }
     }
 
-    /* 4. finally, increment the other reference counts and enforce
-          the mutual exclusion of write access and demand paging. */
-
-    return iref(ip, ref);
+    return ip;
 }
 
 /* the algorithm for itrunc() is lifted with little change from v7.
@@ -507,9 +504,9 @@ iupdat(struct inode *ip)
 }
 
 void
-iput(struct inode *ip, int ref, int flags)
+iput(struct inode *ip, int flags)
 {
-    struct mount *mnt;          /* used in step #6 ... */
+    struct mount *mnt;          /* used in step #5 ... */
     ino_t ino;                  /* ... if we free inode */
     int last_ref;               /* we hold the last ref */
 
@@ -529,7 +526,7 @@ iput(struct inode *ip, int ref, int flags)
     {
         itrunc(ip);                 /* zap associated storage. */
         mnt = getfs(ip->i_dev);     /* stash important details ... */
-        ino = ip->i_ino;            /* ... for freeing in step #6 */
+        ino = ip->i_ino;            /* ... for freeing in step #5 */
         ip->i_flags & ~I_DIRTY;     /* don't bother updating it (next) */
     }
 
@@ -537,12 +534,7 @@ iput(struct inode *ip, int ref, int flags)
 
     iupdat(ip);
 
-    /* 4. decrement ancillary reference counts. the caller must call
-          iput() with the same `ref' argument it passed to iget(). */
-
-    IUNREF(ip, ref);
-
-    /* 5. decrement main reference count, put back on
+    /* 4. decrement main reference count, put back on
           the iavailq if no more in-memory references. */
 
     acquire(&inode_lock);
@@ -553,7 +545,7 @@ iput(struct inode *ip, int ref, int flags)
     IRELSE(ip);
     release(&inode_lock);
 
-    /* 6. finally, if we had the last ref, free inode in its bitmap.
+    /* 5. finally, if we had the last ref, free inode in its bitmap.
           (must be done last, or the assertion in #1 would be false.) */
 
     if (last_ref) {

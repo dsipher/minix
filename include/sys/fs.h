@@ -238,11 +238,10 @@ struct inode;
 struct buf;     /* sys/buf.h */
 
 /* allocate a block (inode) from the filesystem on `mnt'. returns
-   buf (locked inode) with its contents zeroed, or null on error.
-   in the case of ialloc(), `ref' is passed through to iget(). */
+   buf (locked inode) with its contents zeroed, or null on error. */
 
 extern struct buf *balloc(struct mount *mnt);
-extern struct inode *ialloc(struct mount *mnt, int ref);
+extern struct inode *ialloc(struct mount *mnt);
 
 /* free a block (inode), returning it to the free pool on `mnt' */
 

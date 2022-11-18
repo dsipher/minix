@@ -188,13 +188,29 @@ extern void putfs(struct mount *mnt);
 
 extern void mount(dev_t dev, struct inode *ip);
 
-/* each inode has multiple reference counts; the caller must announce his
-   intentions with a flag to iget() and pass the same flag back to iput()
-   to maintain the reference counts properly. */
+/* each inode has auxiliary reference counts, which are only applicable to
+   regular files. if the owner of an inode has opened the file for writing
+   or demand paging, it must announce this intention with a call to iref().
+   on success, the reference counts are updated and the inode is returned
+   still locked; otherwise `ip' is iput() and null is returned. the point
+   of these auxiliary counts is to prevent concurrent writing and demand
+   paging from the same file, hence the only possible error is ETXTBSY. */
 
 #define INODE_REF_R     0       /* we'll be reading only */
 #define INODE_REF_W     1       /* inode must be writable */
 #define INODE_REF_X     2       /* inode is for demand paging */
+
+extern struct inode *iref(struct inode *ip, int ref);
+
+/* prior [successful] calls to iref() must be paired with IUNREF().
+   this is inlined since it constant-folds into a simple decrement. */
+
+#define IUNREF(ip, ref)    do {                                             \
+                                if ((ref) == INODE_REF_W)                   \
+                                    --(ip)->i_wrefs;                        \
+                                if ((ref) == INODE_REF_X)                   \
+                                    --(ip)->i_xrefs;                        \
+                            } while (0)
 
 /* return the in-core inode corresponding to the disk inode `ino' on `dev'.
    `ref' is one of INODE_REF_* above. if the inode is not in memory, it is

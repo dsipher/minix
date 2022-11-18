@@ -291,6 +291,32 @@ idup(struct inode *ip)
 }
 
 struct inode *
+iref(struct inode *ip, int ref)
+{
+    switch (ref)
+    {
+    case INODE_REF_X:   if (ip->i_wrefs) goto etxtbsy;
+                        ++(ip->i_xrefs);
+                        break;
+
+    case INODE_REF_W:   if (ip->i_xrefs) goto etxtbsy;
+                        ++(ip->i_wrefs);
+
+                        /* if this was previously used for demand
+                           paging, we must toss the cached pages */
+
+                        xrelse(ip);
+    }
+
+    return ip;
+
+etxtbsy:
+    iput(ip, 0, 0);
+    u.u_errno = ETXTBSY;
+    return 0;
+}
+
+struct inode *
 iget(dev_t dev, ino_t ino, int ref)
 {
     struct inode *ip;
@@ -376,38 +402,19 @@ found:
     if ((ip->i_flags & I_VALID) == 0) {
         rwinode(ip, 0);
 
-        if ((ip->i_flags & I_VALID) == 0)
+        if ((ip->i_flags & I_VALID) == 0) {
             /* looks like rwinode() failed. it
                has already set u_errno for us */
 
-            goto error;
+            iput(ip, 0, 0);
+            return 0;
+        }
     }
 
     /* 4. finally, increment the other reference counts and enforce
           the mutual exclusion of write access and demand paging. */
 
-    switch (ref)
-    {
-    case INODE_REF_X:   if (ip->i_wrefs) goto etxtbsy;
-                        ++(ip->i_xrefs);
-                        break;
-
-    case INODE_REF_W:   if (ip->i_xrefs) goto etxtbsy;
-                        ++(ip->i_wrefs);
-
-                        /* if this was previously used for demand
-                           paging, we must toss the cached pages */
-
-                        xrelse(ip);
-    }
-
-    return ip;
-
-etxtbsy:
-    u.u_errno = ETXTBSY;
-error:
-    iput(ip, 0, 0);
-    return 0;
+    return iref(ip, ref);
 }
 
 /* the algorithm for itrunc() is lifted with little change from v7.
@@ -533,11 +540,7 @@ iput(struct inode *ip, int ref, int flags)
     /* 4. decrement ancillary reference counts. the caller must call
           iput() with the same `ref' argument it passed to iget(). */
 
-    switch (ref)
-    {
-    case INODE_REF_W:   --(ip->i_wrefs); break;
-    case INODE_REF_X:   --(ip->i_xrefs); break;
-    }
+    IUNREF(ip, ref);
 
     /* 5. decrement main reference count, put back on
           the iavailq if no more in-memory references. */

@@ -215,13 +215,19 @@ struct direct
         (dst).d_qwords[3] = (src).d_qwords[3];                              \
     } while (0)
 
-/* compare two d_name fields for equality. true if identical.
-   this should be very fast, it's branch-predictor-friendly */
+/* compare two d_name fields for equality. true if identical. this is
+   very fast and branch-predictor-friendly in the typical case (when
+   searching through a list where the first few entries do not match). */
 
 #define FS_CMP_DIRECT(a, b)     (   (a).d_dwords[1] == (b).d_dwords[1]      \
                                 &&  (a).d_qwords[1] == (b).d_qwords[1]      \
                                 &&  (a).d_qwords[2] == (b).d_qwords[2]      \
                                 &&  (a).d_qwords[3] == (b).d_qwords[3]      )
+
+/* true if a.d_name is '.' or '..' (respectively) */
+
+#define FS_DIRECT_DOT(a)        ((a).d_dwords[1] == '.')
+#define FS_DIRECT_DOTDOT(a)     ((a).d_dwords[1] == '..')
 
 /* given a directory offset `ofs' and the block in that directory `bp'
    containing that offset, return a handle to the struct direct there. */

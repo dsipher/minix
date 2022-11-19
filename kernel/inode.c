@@ -683,7 +683,7 @@ out:
    is of course inherited from v7, and is true on every half-witted
    posix system, though posix itself refused to define their values. */
 
-int access(struct inode *ip, int amode, int real)
+void access(struct inode *ip, int amode, int real)
 {
     uid_t uid = real ? CURPROC->p_uid : CURPROC->p_euid;
     gid_t gid = real ? CURPROC->p_gid : CURPROC->p_egid;
@@ -696,7 +696,7 @@ int access(struct inode *ip, int amode, int real)
          || ((amode & X_OK) && ip->i_wrefs) )
     {
         u.u_errno = ETXTBSY;
-        return 0;
+        return;
     }
 
     /* root can do anything else. this includes executing files
@@ -704,7 +704,7 @@ int access(struct inode *ip, int amode, int real)
        an invalid binary it will fail for other reasons.) this
        is historical behavior, and allowed by posix. */
 
-    if (uid == 0) return 1;
+    if (uid == 0) return;
 
     /* otherwise figure out which set of bits applies, and mask */
 
@@ -715,12 +715,8 @@ int access(struct inode *ip, int amode, int real)
     else
         /* default to `other' bits */ ;
 
-    if ((amode & m) == amode)
-        return 1;
-    else {
+    if ((amode & m) != amode)
         u.u_errno = EACCES;
-        return 0;
-    }
 }
 
 /* clear out mounts[] table. initialize inoq buckets, initialize all inodes

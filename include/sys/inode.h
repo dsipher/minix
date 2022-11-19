@@ -255,13 +255,12 @@ extern void iput(struct inode *ip, int flags);
 
 extern struct buf *bmap(struct inode *ip, off_t fileofs, int w);
 
-/* check permissions on an inode `ip' (owned by caller).
-   `amode' is a bitwise-OR of R_OK, W_OK, or X_OK. if
-   access is denied, returns false, u.u_errno == EACCES.
-   otherwise true is returned. the effective uid/gid are
-   used to determine access unless `real' is non-zero. */
+/* check permissions on an inode `ip' (owned by caller). `amode' is
+   a bitwise-OR of R_OK, W_OK, or X_OK. if ANY of the requested modes
+   is not permitted the user, u.u_errno is set to EACCES. the effective
+   uid/gid are used to determine privileges unless `real' is true. */
 
-extern int access(struct inode *ip, int amode, int real);
+extern void access(struct inode *ip, int amode, int real);
 
 #endif /* _KERNEL */
 

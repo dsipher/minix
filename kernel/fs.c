@@ -282,4 +282,61 @@ scan(struct inode *dp, char **path)
     return 0;
 }
 
+/* create new directory entry in `dp' for `name' which references `ip'.
+   the caller must own `dp' and `ip'. if successful, ip->di_nlink will
+   be incremented; otherwise u.u_errno will be set.
+
+   creat() depends heavily on scan(). before calling creat():
+
+            1. scan() for `name' must have been called on `dp',
+            2. that scan must have yielded a NOT FOUND result,
+            3. that call must have been the last call to scan()
+               in this process context,
+            4. the ownership of `dp' can not have been yielded
+               between the call to scan() and the call to creat(),
+            5. no other changes to `dp' can have been made that
+               would invalidate the scan() results.
+
+   in other words, one calls scan() then creat() almost immediately
+   after. in practice this fits naturally into the filesystem logic.
+   it is designed this way to avoid duplicating work. */
+
+static void
+creat(struct inode *dp, char *name, struct inode *ip)
+{
+    struct direct   *entry;     /* empty entry in directory */
+    struct buf      *bp;        /* buf containing entry */
+    off_t           offset;     /* offset of `entry' in `dp' */
+
+    offset = u.u_vacancy;
+    bp = bmap(dp, offset, 1);
+    if (bp == 0) return;
+    entry = FS_DIRECT(bp, offset);
+    FS_FILL_DNAME(*entry, name);
+
+    /* trailing slashes are fine on the last component
+       of a path only if it is a directory. per posix */
+
+    if ((*name == '/') && !S_ISDIR(ip->i_dinode.di_mode))
+    {
+        u.u_errno = ENOTDIR;
+        return;
+    }
+
+    /* if the vacancy was at the end of the
+       directory, then we just extended it */
+
+    if (offset == dp->i_dinode.di_size)
+    {
+        dp->i_dinode.di_size += sizeof(struct direct);
+        dp->i_flags |= I_CTIME;
+    }
+
+    entry->d_ino = ip->i_ino;
+    ++(ip->i_dinode.di_nlink);
+    ip->i_flags |= I_CTIME;
+    dp->i_flags |= I_MTIME;
+    bwrite(bp, B_ASYNC);
+}
+
 /* vi: set ts=4 expandtab: */

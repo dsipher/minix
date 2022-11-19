@@ -26,4 +26,22 @@
     the second comparison is not only unnecessary
     but impedes further optimization of the loop.
 
+==== avoid division insns when dividend is constant  =========================
+
+    per "Division by Invariant Integers using Multiplication",
+                                Granlund and Montgomery (1994).
+
+    EXAMPLE: _numxwidth in ls.s currently reads:
+
+                ...
+        L494:
+                incl %esi
+                movl $10,%ecx
+                xorl %edx,%edx
+                divq %rcx
+
+                ...
+
+    this division by 10 is better done by the methods of the above paper.
+
 ==============================================================================

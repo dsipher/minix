@@ -205,9 +205,19 @@ struct direct
         (d).d_qwords[3] = 0;                                                \
     } while (0)
 
-/* copy the d_name field from `src' to `dst'. */
+/* zero the d_name field of a struct direct. */
 
-#define FS_COPY_DIRECT(dst, src)                                            \
+#define FS_ZERO_DNAME(d)                                                    \
+    do {                                                                    \
+        (d).d_dwords[1] = 0;                                                \
+        (d).d_qwords[1] = 0;                                                \
+        (d).d_qwords[2] = 0;                                                \
+        (d).d_qwords[3] = 0;                                                \
+    } while (0)
+
+/* copy the d_name field from struct direct `src' to `dst'. */
+
+#define FS_COPY_DNAME(dst, src)                                             \
     do {                                                                    \
         (dst).d_dwords[1] = (src).d_dwords[1];                              \
         (dst).d_qwords[1] = (src).d_qwords[1];                              \
@@ -215,19 +225,35 @@ struct direct
         (dst).d_qwords[3] = (src).d_qwords[3];                              \
     } while (0)
 
+/* extract a component of path `s' into the d_name of `d'.
+   the d_name is truncated to NAME_MAX and/or zero-filled
+   as appropriate. `s' is updated to point to the beginning
+   of the next path component (or the terminating NUL). */
+
+#define FS_FILL_DNAME(d, s)                                                 \
+    do {                                                                    \
+        int _i;                                                             \
+                                                                            \
+        FS_ZERO_DNAME(d);                                                   \
+                                                                            \
+        for (_i = 0; *(s) && *(s) != '/'; ++_i, ++(s))                      \
+            if (_i < NAME_MAX)                                              \
+                (d).d_name[_i] = *(s);                                      \
+    } while (0)
+
 /* compare two d_name fields for equality. true if identical. this is
    very fast and branch-predictor-friendly in the typical case (when
    searching through a list where the first few entries do not match). */
 
-#define FS_CMP_DIRECT(a, b)     (   (a).d_dwords[1] == (b).d_dwords[1]      \
+#define FS_CMP_DNAME(a, b)      (   (a).d_dwords[1] == (b).d_dwords[1]      \
                                 &&  (a).d_qwords[1] == (b).d_qwords[1]      \
                                 &&  (a).d_qwords[2] == (b).d_qwords[2]      \
                                 &&  (a).d_qwords[3] == (b).d_qwords[3]      )
 
 /* true if a.d_name is '.' or '..' (respectively) */
 
-#define FS_DIRECT_DOT(a)        ((a).d_dwords[1] == '.')
-#define FS_DIRECT_DOTDOT(a)     ((a).d_dwords[1] == '..')
+#define FS_DNAME_DOT(a)         ((a).d_dwords[1] == '.')
+#define FS_DNAME_DOTDOT(a)      ((a).d_dwords[1] == '..')
 
 /* given a directory offset `ofs' and the block in that directory `bp'
    containing that offset, return a handle to the struct direct there. */

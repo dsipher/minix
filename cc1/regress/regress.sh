@@ -71,7 +71,7 @@ TESTS="		ar cpp directive evaluate input macro token vstring	\
 		ed_getnum ed_getone ed_getpat ed_getptr ed_getrhs 	\
 		ed_gettxt ed_ins ed_join ed_makepat ed_maksub 		\
 		ed_matchs ed_move ed_omatch ed_optpat ed_set		\
-        	ed_setbuf ed_subst ed_sys ed_unmkpat			"
+        	ed_setbuf ed_subst ed_sys ed_unmkpat ld ls		"
 
 do_stage()	# ( $compiler, $cflags, $stage )
 {

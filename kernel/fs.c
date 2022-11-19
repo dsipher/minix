@@ -214,4 +214,72 @@ ifree(struct mount *mnt, ino_t ino)
     mnt->m_ihint = ino;
 }
 
+/* scan directory `dp' (locked by caller) for the next component of `path'.
+
+   if the entry is FOUND in `dp', then the return value is non-null. in this
+   case u.u_scanbp holds the buf which contains the desired directory entry,
+   which is returned to the caller. `*path' is updated to point just past the
+   component just processed. u.u_vacancy is invalid. the caller must dispose
+   of u.u_scanbp properly when ready.
+
+   if the entry is NOT FOUND in `dp', then the return value is null. u.u_errno
+   is zero, u.u_scanbp is invalid, and u.u_vacancy indicates the offset of the
+   first unoccupied entry in the directory (which may be dp->i_size if no free
+   entries were spotted). `*path' is NOT advanced past the component.
+
+   if an error occurred, null is returned. only u.u_errno is valid.
+
+   the caller must ensure `dp' is a directory and the user has credentials. */
+
+static struct direct *
+scan(struct inode *dp, char **path)
+{
+    struct direct   name;           /* the component we're looking for */
+    struct direct   *entry;         /* actual entry under consideration */
+    char            *next = *path;  /* beginning of next path component */
+    off_t           vacancy = -1;   /* offset of first vacant slot */
+    off_t           offset = 0;     /* current position in `dp' */
+    struct buf      *bp = 0;        /* block containing offset */
+
+    FS_FILL_DNAME(name, next);
+    dp->i_flags |= I_ATIME;
+
+    for (; offset < dp->i_dinode.di_size; offset += sizeof(struct direct))
+    {
+        if (FS_BLOCK_OFS(offset) == 0)          /* next directory block */
+        {
+            if (bp) brelse(bp, 0);
+            bp = bmap(dp, offset, 0);
+            if (bp == 0) break;
+        }
+
+        entry = FS_DIRECT(bp, offset);
+
+        if (entry->d_ino == 0)                  /* vacant slot */
+        {
+            if (vacancy == -1)
+                vacancy = offset;
+
+            continue;
+        }
+
+        if (FS_CMP_DNAME(*entry, name))         /* success */
+        {
+            u.u_scanbp = bp;
+            *path = next;
+            return entry;
+        }
+    }
+
+    /* we either ran off the end or we encountered an error. in the latter
+       case, u.u_vacancy will be invalid, but the caller should know that. */
+
+    if (bp) brelse(bp, 0);
+
+    u.u_vacancy = (vacancy == -1) ? dp->i_dinode.di_size
+                                  : vacancy;
+
+    return 0;
+}
+
 /* vi: set ts=4 expandtab: */

@@ -72,6 +72,7 @@ struct user
     struct inode    *u_cdir;        /* 0x0250: current directory */
     struct buf      *u_scanbp;      /* 0x0258: [see scan() in fs.c] */
     off_t           u_vacancy;      /* 0x0260: [..................] */
+    struct inode    *u_nameidp;     /* 0x0268: [see namei() ......] */
 };
 
 extern struct user u;           /* exported from locore.s */

@@ -233,12 +233,15 @@ struct direct
 #define FS_FILL_DNAME(d, s)                                                 \
     do {                                                                    \
         int _i;                                                             \
+        char *_s = (s);                                                     \
                                                                             \
         FS_ZERO_DNAME(d);                                                   \
                                                                             \
-        for (_i = 0; *(s) && *(s) != '/'; ++_i, ++(s))                      \
+        for (_i = 0; *_s && *_s != '/'; ++_i, ++_s)                         \
             if (_i < NAME_MAX)                                              \
-                (d).d_name[_i] = *(s);                                      \
+                (d).d_name[_i] = *_s;                                       \
+                                                                            \
+        (s) = _s;                                                           \
     } while (0)
 
 /* compare two d_name fields for equality. true if identical. this is

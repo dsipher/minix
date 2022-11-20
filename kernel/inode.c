@@ -352,6 +352,12 @@ retry:
             if (++(ip->i_refs) == 1) /* was available */
                 TAILQ_REMOVE(&iavailq, ip, i_avail_links);
 
+            /* shuffle this inode to the head of its hash
+               queue to keep the queue in MRU order */
+
+            TAILQ_REMOVE(&inodeq[b], ip, i_hash_links);
+            TAILQ_INSERT_HEAD(&inodeq[b], ip, i_hash_links);
+
             ILOCK(ip);
             release(&inode_lock);
 

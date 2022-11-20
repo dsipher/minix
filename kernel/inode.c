@@ -559,23 +559,23 @@ iput(struct inode *ip, int flags)
 
 #define BMAP0(SIZE)     do {                                        \
                             if (offset > SIZE) {                    \
-                                ++indirect;                         \
+                                ++depth;                            \
                                 offset -= SIZE;                     \
                             }                                       \
                         } while (0)
 
 struct buf *bmap(struct inode *ip, off_t offset)
 {
-    /* the offset arithmetic here is much more
-       efficient if the offset is unsigned */
+    /* the offset arithmetic here is much
+       more efficient if it is is unsigned */
 
     unsigned long   uoffset = offset;
 
     struct mount    *mnt;
-    daddr_t         *blknop, blkno;
+    daddr_t         *blknop;
     int             index;
-    int             indirect;
-    struct buf      *bp, *newbp;
+    int             depth;
+    struct buf      *bp, *nextbp;
 
     /* since uoffset is unsigned, this catches not only
        offsets that are too large, but negative ones */
@@ -591,7 +591,7 @@ struct buf *bmap(struct inode *ip, off_t offset)
        in and modify it to be an offset into that tree. */
 
     mnt = getfs(ip->i_dev);
-    indirect = 0;
+    depth = 0;
 
     if (uoffset < FS_DIRECT_BYTES)
         index = uoffset >> FS_BLOCK_SHIFT;
@@ -599,42 +599,38 @@ struct buf *bmap(struct inode *ip, off_t offset)
         BMAP0(FS_DIRECT_BYTES);
         BMAP0(FS_INDIRECT_BYTES);
         BMAP0(FS_DOUBLE_BYTES);
-        index = FS_INDIRECT_BLOCK + (indirect - 1);
+        index = FS_INDIRECT_BLOCK + (depth - 1);
     }
 
-    /* now, descend the tree to the interior node which
-       points to the leaf we want, allocating intermediate
-       interior nodes as necessary (and if `w' specified). */
+    /* now, descend the tree to the leaf we want,
+       allocating blocks as necessary to get there. */
 
     blknop = &(ip->i_dinode.di_addr[index]);
     bp = 0;
 
-    while (indirect)
+    for (;;)
     {
-        blkno = *blknop;
+        if (*blknop == 0) {
+            nextbp = balloc(mnt);
 
-        if (blkno == 0) {
-            newbp = balloc(mnt);
-            if (newbp == 0) goto out;
-            *blknop = newbp->b_blkno;
-            ip->i_flags |= I_CTIME;
-
-            if (bp) {
-                brelse(bp, B_DIRTY);
-                bp = newbp;
+            if (nextbp) {
+                *blknop = nextbp->b_blkno;
+                if (bp) bwrite(bp, B_ASYNC);
+                ip->i_flags |= I_CTIME;
             }
         } else {
+            nextbp = bread(ip->i_dev, *blknop);
             if (bp) brelse(bp, 0);
-            bp = bread(ip->i_dev, blkno);
-
-            if (bp == 0) {
-                blkno = 0;
-                goto out;
-            }
         }
 
-        switch (indirect)
+        if ((bp = nextbp) == 0)
+            /* error */
+            goto out;
+
+        switch (depth)
         {
+        case 0:     goto out;
+
         case 1:     index = uoffset / FS_BLOCK_SIZE;
                     break;
         case 2:     index = uoffset / FS_INDIRECT_BYTES;
@@ -646,35 +642,10 @@ struct buf *bmap(struct inode *ip, off_t offset)
         }
 
         blknop = &(bp->b_daddr[index]);
-        --indirect;
+        --depth;
     }
-
-    /* blknop now points to the leaf daddr_t. if
-       that leaf is located in an indirect block,
-       then `bp' is that block (it's 0 otherwise). */
-
-    if (*blknop == 0)
-    {
-        newbp = balloc(mnt);
-
-        if (newbp) {
-            *blknop = newbp->b_blkno;
-            brelse(newbp, B_DIRTY);
-            if (bp) bp->b_flags |= B_DIRTY;
-            ip->i_flags |= I_CTIME;
-        }
-    }
-
-    blkno = *blknop;
 
 out:
-    if (bp) brelse(bp, 0);
-
-    if (blkno)
-        bp = bread(mnt->m_dev, blkno);
-    else
-        bp = 0;
-
     putfs(mnt);
     return bp;
 }

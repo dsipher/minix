@@ -292,30 +292,25 @@ idup(struct inode *ip)
     return ip;
 }
 
-struct inode *
+void
 iref(struct inode *ip, int ref)
 {
     switch (ref)
     {
-    case INODE_REF_X:   if (ip->i_wrefs) goto etxtbsy;
-                        ++(ip->i_xrefs);
+    case INODE_REF_X:   if (ip->i_wrefs)
+                            u.u_errno = ETXTBSY;
+                        else
+                            ++(ip->i_xrefs);
+
                         break;
 
-    case INODE_REF_W:   if (ip->i_xrefs) goto etxtbsy;
-                        ++(ip->i_wrefs);
-
-                        /* if this was previously used for demand
-                           paging, we must toss the cached pages */
-
-                        xrelse(ip);
+    case INODE_REF_W:   if (ip->i_xrefs)
+                            u.u_errno = ETXTBSY;
+                        else {
+                            ++(ip->i_wrefs);
+                            xrelse(ip);
+                        }
     }
-
-    return ip;
-
-etxtbsy:
-    iput(ip, 0);
-    u.u_errno = ETXTBSY;
-    return 0;
 }
 
 struct inode *

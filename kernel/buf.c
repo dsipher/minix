@@ -124,14 +124,23 @@ void brelse(struct buf *bp, int flags)
 
     if (TAILQ_FIRST(&bavailq) == 0) wakeup(&bavailq);
 
-    /* and now put in block on at front or back
-       of the bavailq, depending on B_AGE */
+    /* if B_AGE, then we artifically age the buf,
+       it goes to the head of the available queue.
+
+       if not, the buf is expected to be used again,
+       so we put it on the tail of the available queue
+       and shuffle it to the head of its hash queue. */
 
     if (bp->b_flags & B_AGE) {
         bp->b_flags &= ~B_AGE;
         TAILQ_INSERT_HEAD(&bavailq, bp, b_avail_links);
-    } else
+    } else {
+        int b = BUFHASH(bp->b_blkno);
+
+        TAILQ_REMOVE(&bhashq[b], bp, b_hash_links);
+        TAILQ_INSERT_HEAD(&bhashq[b], bp, b_hash_links);
         TAILQ_INSERT_TAIL(&bavailq, bp, b_avail_links);
+    }
 
     release(&buf_lock);
 }

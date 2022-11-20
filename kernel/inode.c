@@ -558,35 +558,37 @@ iput(struct inode *ip, int flags)
                             }                                       \
                         } while (0)
 
-struct buf *bmap(struct inode *ip, off_t fileofs, int w)
+struct buf *bmap(struct inode *ip, off_t offset)
 {
-    unsigned long   offset;
+    /* the offset arithmetic here is much more
+       efficient if the offset is unsigned */
+
+    unsigned long   uoffset = offset;
+
     struct mount    *mnt;
     daddr_t         *blknop, blkno;
     int             index;
     int             indirect;
     struct buf      *bp, *newbp;
 
-    /* negative offsets are illegal here. we use the unsigned
-       equivalent to make later divisions MUCH more efficient. */
+    /* since uoffset is unsigned, this catches not only
+       offsets that are too large, but negative ones */
 
-    offset = fileofs;
-
-    if (offset >= FS_MAX_FILE_SIZE)
+    if (uoffset >= FS_MAX_FILE_SIZE)
     {
         u.u_errno = EFBIG;
         return 0;
     }
 
     /* treating each element of di_addr[] as the root of separate
-       trees (of varying heights), decide which tree `offset' is
+       trees (of varying heights), decide which tree `uoffset' is
        in and modify it to be an offset into that tree. */
 
     mnt = getfs(ip->i_dev);
     indirect = 0;
 
-    if (offset < FS_DIRECT_BYTES)
-        index = offset >> FS_BLOCK_SHIFT;
+    if (uoffset < FS_DIRECT_BYTES)
+        index = uoffset >> FS_BLOCK_SHIFT;
     else {
         BMAP0(FS_DIRECT_BYTES);
         BMAP0(FS_INDIRECT_BYTES);
@@ -606,7 +608,6 @@ struct buf *bmap(struct inode *ip, off_t fileofs, int w)
         blkno = *blknop;
 
         if (blkno == 0) {
-            if (!w) goto out;
             newbp = balloc(mnt);
             if (newbp == 0) goto out;
             *blknop = newbp->b_blkno;
@@ -628,13 +629,13 @@ struct buf *bmap(struct inode *ip, off_t fileofs, int w)
 
         switch (indirect)
         {
-        case 1:     index = offset / FS_BLOCK_SIZE;
+        case 1:     index = uoffset / FS_BLOCK_SIZE;
                     break;
-        case 2:     index = offset / FS_INDIRECT_BYTES;
-                    offset -= index * FS_INDIRECT_BYTES;
+        case 2:     index = uoffset / FS_INDIRECT_BYTES;
+                    uoffset -= index * FS_INDIRECT_BYTES;
                     break;
-        case 3:     index = offset / FS_DOUBLE_BYTES;
-                    offset -= index * FS_DOUBLE_BYTES;
+        case 3:     index = uoffset / FS_DOUBLE_BYTES;
+                    uoffset -= index * FS_DOUBLE_BYTES;
                     break;
         }
 
@@ -646,7 +647,7 @@ struct buf *bmap(struct inode *ip, off_t fileofs, int w)
        that leaf is located in an indirect block,
        then `bp' is that block (it's 0 otherwise). */
 
-    if (*blknop == 0 && w)
+    if (*blknop == 0)
     {
         newbp = balloc(mnt);
 

@@ -245,12 +245,14 @@ extern void iupdat(struct inode *ip);
 
 extern void iput(struct inode *ip, int flags);
 
-/* map an offset `fileofs' into a file `ip' to its block number on the
-   device. if `w' is specified, then new blocks are allocated as needed
-   (data blocks and indirect blocks). returns the buf, or null if an
-   error occurs or (if `w' is not specified) `fileofs' is not mapped. */
+/* return the buf which holds `offset' in a file `ip'.
+   new blocks are allocated as needed (both indirect
+   and data blocks). returns null if an error occurs.
 
-extern struct buf *bmap(struct inode *ip, off_t fileofs, int w);
+   n.b. bmap() pays no mind to ip->di_size, and will
+   map any position 0 <= `offset' < FS_MAX_FILE_SIZE. */
+
+extern struct buf *bmap(struct inode *ip, off_t offset);
 
 /* check permissions on an inode `ip' (owned by caller). `amode' is
    a bitwise-OR of R_OK, W_OK, or X_OK. if ANY of the requested modes

@@ -249,7 +249,7 @@ scan(struct inode *dp, char **path)
         if (FS_BLOCK_OFS(offset) == 0)          /* next directory block */
         {
             if (bp) brelse(bp, 0);
-            bp = bmap(dp, offset, 0);
+            bp = bmap(dp, offset);
             if (bp == 0) break;
         }
 
@@ -309,7 +309,7 @@ creat(struct inode *dp, char *name, struct inode *ip)
     off_t           offset;     /* offset of `entry' in `dp' */
 
     offset = u.u_vacancy;
-    bp = bmap(dp, offset, 1);
+    bp = bmap(dp, offset);
     if (bp == 0) return;
     entry = FS_DIRECT(bp, offset);
     FS_FILL_DNAME(*entry, name);

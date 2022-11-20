@@ -168,6 +168,7 @@ balloc(struct mount *mnt)
         mnt->m_bhint = blkno;
         bp = getblk(mnt->m_dev, blkno);
         STOSQ(bp->b_data, 0, FS_QWORDS_PER_BLOCK);
+        bp->b_flags |= B_DIRTY;
     }
 
     bdevsw[MAJOR(mnt->m_dev)].d_alloc(mnt->m_dev, blkno);
@@ -203,6 +204,7 @@ ialloc(struct mount *mnt)
         mnt->m_ihint = ino;
         ip = iget(mnt->m_dev, ino);
         STOSQ(&ip->i_dinode, 0, FS_INODE_QWORDS);
+        ip->i_flags |= I_ATIME | I_CTIME | I_MTIME;
     }
 
     return ip;

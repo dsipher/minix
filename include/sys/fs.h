@@ -283,6 +283,12 @@ extern struct inode *ialloc(struct mount *mnt);
 extern void bfree(struct mount *mnt, daddr_t blkno);
 extern void ifree(struct mount *mnt, ino_t ino);
 
+/* internal version of open(). functions more or less as specified
+   by posix. returns the inode of the opened file (locked) or null
+   if an error is encountered. */
+
+extern struct inode *open(char *path, int oflags, mode_t mode);
+
 #endif /* _KERNEL */
 
 #endif /* _SYS_FS_H */

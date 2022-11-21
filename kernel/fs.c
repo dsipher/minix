@@ -46,6 +46,7 @@
 #include <sys/dev.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <errno.h>
 
 /* scan a filesystem bitmap on `dev' which starts at `map' and spans
@@ -327,15 +328,12 @@ creat(struct inode *dp, char *name, struct inode *ip)
        directory, then we just extended it */
 
     if (offset == dp->i_dinode.di_size)
-    {
         dp->i_dinode.di_size += sizeof(struct direct);
-        dp->i_flags |= I_CTIME;
-    }
 
     entry->d_ino = ip->i_ino;
     ++(ip->i_dinode.di_nlink);
     ip->i_flags |= I_CTIME;
-    dp->i_flags |= I_MTIME;
+    dp->i_flags |= I_CTIME | I_MTIME;
     bwrite(bp, B_ASYNC);
 }
 
@@ -502,6 +500,120 @@ error:
     NAMEI_IPUT(dp);
     NAMEI_IPUT(pdp);
     return 0;
+}
+
+struct inode *
+open(char *path, int oflags, mode_t mode)
+{
+    struct mount    *mnt = 0;      /* for inode allocation */
+    struct inode    *ip = 0;       /* the inode of interest */
+    struct inode    *dp = 0;       /* parent directory */
+    int             amode;         /* R_OK, W_OK for access() */
+
+    /* make note of whether we're reading, writing or both.
+
+       ordinarily we don't bother to check for invalid arguments,
+       leaving it to the system call handlers to do that, but since
+       we must to inspect this argument anyway, we validate it too. */
+
+    switch (oflags & O_ACCMODE)
+    {
+    case O_RDWR:        amode = W_OK | R_OK;    break;
+    case O_WRONLY:      amode = W_OK;           break;
+
+    case O_RDONLY:      amode = R_OK;
+
+                        if ((oflags & O_TRUNC) == 0)
+                            break;
+                        else
+                            /* fallthru to error. posix leaves this up
+                               to us, but we say O_TRUNC plus O_RDONLY
+                               is an invalid combination. */ ;
+
+    default:            u.u_errno = EINVAL;
+                        return 0;
+    }
+
+    /* find the file */
+
+    ip = namei(&path);
+    dp = u.u_nameidp;
+    if (u.u_errno) return 0;
+
+    if (ip) {
+        /* the file exists. we fail if:
+
+            (a) O_EXCL is specified (since this is what O_EXCL is for)
+            (b) the file is a directory and write access is requested;
+            (c) the user lacks permissions required for access requested. */
+
+        if (O_EXCL) { u.u_errno = EEXIST; goto error; }
+
+        if (S_ISDIR(ip->i_dinode.di_mode) && (amode & W_OK))
+        {
+            u.u_errno = EISDIR;
+            goto error;
+        }
+
+        access(ip, amode, 0);
+        if (u.u_errno) goto error;
+
+        /* itrunc() only works on regular files and directories. it ignores
+           other file types. users can't truncate directories, but the logic
+           above ensures that (O_TRUNC && S_ISDIR(ip)) is impossible here. */
+
+        if (oflags & O_TRUNC)
+        {
+            itrunc(ip);
+            if (u.u_errno) goto error;
+        }
+    } else {
+        /* file does NOT exist. we'll create the file unless:
+
+            (a) the user didn't specify O_CREAT (that's what O_CREAT is for);
+            (b) the user lacks write permissions in the parent directory. */
+
+        if ((oflags & O_CREAT) == 0) { u.u_errno = ENOENT; goto error; }
+
+        access(dp, W_OK, 0);
+        if (u.u_errno) goto error;
+
+        mnt = getfs(dp->i_dev);
+        ip = ialloc(mnt);
+        if (ip == 0) goto error;
+
+        ip->i_dinode.di_uid = CURPROC->p_uid;
+        ip->i_dinode.di_gid = CURPROC->p_gid;
+        ip->i_dinode.di_mode = S_IFREG | (mode & ~(u.u_mask));
+        ip->i_flags |= I_ATIME | I_MTIME;
+
+        creat(dp, path, ip);
+        if (u.u_errno) goto error;
+    }
+
+out:
+
+    /* we must announce any intention to write.
+       (always succeeds on newly-created files.) */
+
+    if (ip && (amode & W_OK))
+    {
+        iref(ip, INODE_REF_W);
+        if (u.u_errno) goto error;
+    }
+
+    if (mnt) putfs(mnt);
+    if (dp) iput(dp, 0);
+    return ip;
+
+error:
+    if (ip)
+    {
+        iput(ip, 0);
+        ip = 0;
+    }
+
+    goto out;
 }
 
 /* vi: set ts=4 expandtab: */

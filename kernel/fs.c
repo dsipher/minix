@@ -345,7 +345,7 @@ creat(struct inode *dp, char *name, struct inode *ip)
         if the path does not exist, null is returned.
         if the path does exist, its inode is returned.
 
-        in either case, u.u_nameidp may be non-zero; it
+        in either case, u.u_nameidp MAY be non-zero; it
         holds the inode of the directory in which the
         sought path was (or should have been) found.
 
@@ -440,77 +440,65 @@ search:
         }
     }
 
-    /* no longer needed. normal descent (only) will assign a new parent.
-       when we process `special' directories `.' and `..', the notion of
-       parenthood becomes muddy and locking would be messy. luckily, we
-       never need to know parents in these situations; in fact, lack of
-       parent signals to the caller how to report erroroneous requests. */
+    /* no longer needed. `dp' will either be promoted to the
+      parent position (normal descent only), or discarded. */
 
     NAMEI_IPUT(pdp);
 
-    /* `.' is a no-op. we don't even consult its inode number. its
-       presence as an entry in the directory is mostly vestigial. */
+    /* a self-referential `..' entry is only found at the root of
+       a filesystem. if it's not THE root of the filesystem, then
+       we must ascend through a mount point. `..' here then means
+       the parent of the covered inode, so we switch out `dp' and
+       repeat the search for `..'. */
 
-    if (FS_DNAME_DOT(*entry)) { brelse(u.u_scanbp, 0); goto next; }
-
-    /* ascent via `..' is what wrecks our world. we can't hold the current
-       directory lock while ascending or we risk deadlocking against any
-       normally-descending processes. we need to employ alternative locks. */
-
-    if (FS_DNAME_DOTDOT(*entry))
+    if (    dp != rootdir                   /* not at THE root */
+         && dp->i_ino == entry->d_ino       /* self-referential */
+         && FS_DNAME_DOTDOT(*entry) )       /* `..' */
     {
-        /* '..' is not self-referential, so we're not ascending through
-           a mount point. here `dp' is a child, and we want to acquire
-           its parent. we must release the lock on the child first. the
-           entry can't disappear because we're holding the buf it's in,
-           and the fs won't disappear because we reference the child. */
-
-        if (dp->i_ino != entry->d_ino)
-        {
-            struct inode *tmp;
-
-            tmp = dp; irelse(tmp);
-            dp = iget(tmp->i_dev, entry->d_ino);
-            ilock(tmp); iput(tmp, 0);
-
-            brelse(u.u_scanbp, 0);
-            if (u.u_errno) goto error;
-
-            goto next;
-        }
-
-        /* `..' crosses filesystems. (maybe.) here synchronization
-           relies not on inodes and bufs but on the mount instead. */
-
         mnt = getfs(dp->i_dev);
         brelse(u.u_scanbp, 0);
-
-        /* `..' from the root of the root fs goes nowhere */
-
-        if (mnt->m_inode == 0) {
-            putfs(mnt);
-            goto next;
-        }
-
-        /* we really are traversing up across a mount point.
-           what `..' really means here is the parent of the
-           covered inode; so we grab the covered inode, and
-           repeat the search for `..' in that directory. */
-
-        NAMEI_IPUT(dp);
+        iput(dp, 0);
         dp = idup(mnt->m_inode);
         putfs(mnt);
+
         this -= 2;
         goto search;
     }
 
-    /* the usual case: a normal descent to an entry. we hold
-       the parent directory locked while we acquire the child. */
+    /* a self-referential entry is usually `.', but this could also be
+       `..' at the root of THE filesystem. either way, it's a no-op. */
 
-    pdp = dp;  /* promote to parent */
+    if (dp->i_ino == entry->d_ino) { brelse(u.u_scanbp, 0); goto next; }
+
+    /* a non-self-referential `..' requires special handling. we can't
+       hold the `parent' (which is really the child) locked because we
+       run the risk of deadlock (it violates the normal locking order).
+
+       so we grab the mount `dp' is on to keep its filesystem from being
+       unmounted from under us, and then release `dp'. we still hold the
+       buf containing `entry' so, crucially, the iget() is still atomic */
+
+    if (FS_DNAME_DOTDOT(*entry))
+    {
+        mnt = getfs(dp->i_dev);
+        iput(dp, 0);
+        dp = iget(mnt->m_dev, entry->d_ino);
+        brelse(u.u_scanbp, 0);
+        putfs(mnt);
+
+        if (u.u_errno)  goto error;
+                else    goto next;
+    }
+
+    /* the usual case: a normal descent to an entry. we promote `dp'
+       to parent directory [still locked] and acquire the child. */
+
+    pdp = dp;
     dp = iget(pdp->i_dev, entry->d_ino);
     brelse(u.u_scanbp, 0);
-    if (u.u_errno == 0) goto next;
+
+    if (u.u_errno == 0)     goto next;
+                else        /* fallthru */ ;
 
 error:
     NAMEI_IPUT(dp);

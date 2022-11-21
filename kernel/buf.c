@@ -119,11 +119,6 @@ void brelse(struct buf *bp, int flags)
         wakeup(bp);
     }
 
-    /* wake up anyone waiting for ANY free block
-       (which can only be true if bavailq is empty) */
-
-    if (TAILQ_FIRST(&bavailq) == 0) wakeup(&bavailq);
-
     /* if B_AGE, then we artifically age the buf,
        it goes to the head of the available queue.
 
@@ -291,16 +286,12 @@ retry:
         return bp;
     }
 
-    /* not in the cache, so we need to grab an available block and
-       reassign it. in the highly unlikely event that there are no
-       available blocks, sleep on the bavailq and retry on wakeup */
+    /* not in the cache, so we need to grab an available block
+       and reassign it. if there are no available blocks, panic.
+       (NBUF would have to be absurdly low for this to happen.) */
 
     bp = TAILQ_FIRST(&bavailq);
-
-    if (bp == 0) {
-        sleep(&bavailq, P_STATE_COMA, &buf_lock);
-        goto retry;
-    }
+    if (bp == 0) panic("getblk");
 
     /* claim ownership of the block for ourselves. if it's got data
        that must to be written to disk, our success is short-lived:

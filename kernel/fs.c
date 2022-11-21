@@ -356,15 +356,13 @@ creat(struct inode *dp, char *name, struct inode *ip)
         if u.u_nameidp is not null, it is guaranteed that creat()
         may be called on it. it was the most recently scan()ed.
 
+   `*path' is moved forward as namei() progresses. in particular, if
+   the final component does not exist, `*path' names this component.
+
    this code is gnarly. this is an unfortunate consequence of subtle corner
    cases which seem to be inherent in the design of the unix filesystem. */
 
-#define NAMEI_IPUT(ip)      do {                                            \
-                                if (ip) {                                   \
-                                    iput((ip), 0);                          \
-                                    (ip) = 0;                               \
-                                }                                           \
-                            } while (0)
+#define NAMEI_IPUT(ip)  do { if (ip) { iput((ip), 0); (ip) = 0; } } while (0)
 
 static struct inode *
 namei(char **path)

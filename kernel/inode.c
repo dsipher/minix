@@ -672,14 +672,19 @@ void access(struct inode *ip, int amode, int real)
         return;
     }
 
-    /* root can do anything else. this includes executing files
-       that do not have an execute bit set. (of course, if it is
-       an invalid binary it will fail for other reasons.) this
-       is historical behavior, and allowed by posix. */
+    /* root can execute anything with any x bit set,
+       and can read or write regardless of mode. */
 
-    if (uid == 0) return;
+    if (uid == 0)
+    {
+        if ((amode & X_OK) && ((m & (S_IXUSR | S_IXGRP | S_IXOTH)) == 0))
+            u.u_errno = EACCES;
 
-    /* otherwise figure out which set of bits applies, and mask */
+        return;
+    }
+
+    /* for other users, figure out which
+       set of bits applies, and mask. */
 
     if (uid == ip->i_dinode.di_uid)
         amode <<= 6;    /* consult owner bits */

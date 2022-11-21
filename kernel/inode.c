@@ -558,9 +558,9 @@ iput(struct inode *ip, int flags)
 }
 
 #define BMAP0(SIZE)     do {                                        \
-                            if (offset > SIZE) {                    \
+                            if (uoffset >= SIZE) {                  \
                                 ++depth;                            \
-                                offset -= SIZE;                     \
+                                uoffset -= SIZE;                    \
                             }                                       \
                         } while (0)
 

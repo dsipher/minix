@@ -214,7 +214,7 @@ rwinode(struct inode *ip, int w)
    any. resets I_TEXT and I_SPLIT flags. caller owns `ip'. */
 
 static void
-xrelse0(caddr_t *pages)
+xfree0(caddr_t *pages)
 {
     int i;
 
@@ -224,7 +224,7 @@ xrelse0(caddr_t *pages)
 }
 
 static void
-xrelse(struct inode *ip)
+xfree(struct inode *ip)
 {
     int i;
 
@@ -232,9 +232,9 @@ xrelse(struct inode *ip)
         if (ip->i_flags & I_SPLIT)
             for (i = 0; i < PTES_PER_PAGE; ++i)
                 if (ip->i_text[i])
-                    xrelse0((caddr_t *) (ip->i_text[i]));
+                    xfree0((caddr_t *) (ip->i_text[i]));
 
-        xrelse0(ip->i_text);
+        xfree0(ip->i_text);
         pgfree((caddr_t) ip->i_text);
     }
 
@@ -308,7 +308,7 @@ iref(struct inode *ip, int ref)
                             u.u_errno = ETXTBSY;
                         else {
                             ++(ip->i_wrefs);
-                            xrelse(ip);
+                            xfree(ip);
                         }
     }
 }
@@ -383,7 +383,7 @@ retry:
 
     ip->i_dev = dev;
     ip->i_ino = ino;
-    ip->i_flags &= (I_TEXT | I_SPLIT);      /* see xrelse() just below */
+    ip->i_flags &= (I_TEXT | I_SPLIT);      /* see xfree() just below */
     ip->i_refs = 1;  /* ref and */          /* (i_wanted/i_xrefs/i_wrefs */
     ip->i_busy = 1;  /* lock it */          /* must all already be zero) */
 
@@ -393,7 +393,7 @@ retry:
     /* toss any stale cached text pages.
        zaps I_TEXT, I_SPLIT if kept above. */
 
-    xrelse(ip);
+    xfree(ip);
 
 found:
 

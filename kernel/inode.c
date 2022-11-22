@@ -210,17 +210,17 @@ rwinode(struct inode *ip, int w)
     putfs(mnt);
 }
 
-/* free the cached text pages associated with the inode, if
-   any. resets I_TEXT and I_SPLIT flags. caller owns `ip'. */
+/* free the text pages associated with the inode, if any.
+   resets I_TEXT and I_SPLIT flags. caller must own `ip'. */
 
 static void
-xfree0(caddr_t *pages)
+xfree0(xte_t *table)
 {
     int i;
 
-    for (i = 0; i < PTES_PER_PAGE; ++i)
-        if (pages[i])
-            pgfree(pages[i]);
+    for (i = 0; i < XTES_PER_PAGE; ++i)
+        if (table[i])
+            pgfree((caddr_t) table[i]);
 }
 
 static void
@@ -230,9 +230,9 @@ xfree(struct inode *ip)
 
     if (ip->i_flags & I_TEXT) {
         if (ip->i_flags & I_SPLIT)
-            for (i = 0; i < PTES_PER_PAGE; ++i)
+            for (i = 0; i < XTES_PER_PAGE; ++i)
                 if (ip->i_text[i])
-                    xfree0((caddr_t *) (ip->i_text[i]));
+                    xfree0((xte_t *) (ip->i_text[i]));
 
         xfree0(ip->i_text);
         pgfree((caddr_t) ip->i_text);

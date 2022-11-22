@@ -68,6 +68,39 @@ struct mount
     ino_t               m_ihint;        /* ........ inode .......... */
 };
 
+/* when an inode is set up for demand-paging, the backing pages
+   (if present in ram) are owned by the inode, and indexed by a
+   pseudo page-table structure (i_text). all processes backed by
+   the inode reference the same text pages in their page tables
+   (mapped read-only and shared). the pages remain attached to
+   the inode as a cache even when no processes are using it until
+   the inode is freed (no more refs in memory or disk), ages out,
+   is opened for writing, or is purged via the sync() system call.
+
+   the pseudo-page table entries are called text table entries
+   (XTEs); an XTE is a kernel virtual address (0 if not present).
+   the tables themselves are either one-level (i.e., linear) for
+   small binaries (<= XTE_MAX_LINEAR) or two-level (up to a 1GB).
+   [we refuse to run binaries that would require more levels.]
+
+   the XTE_* macros mirror the PTE_* macros, for [hopefully]
+   obvious reasons. we redefine them here simply for clarity. */
+
+typedef unsigned long xte_t;
+
+#define XTES_PER_PAGE       PTES_PER_PAGE
+#define XTE_INDEX(xtl, v)   PTE_INDEX((xtl), (v))
+
+/* when a_text exceeds this size, i_text
+   must be two-tier (indicated by I_SPLIT) */
+
+#define XTE_MAX_LINEAR      (1 << 21)   /* 2MB */
+
+/* maximum size of I_SPLIT text. 512 pointers to pages
+   of 512 pointers per page --> 512 * 512 * 4k = 1GB. */
+
+#define XTE_MAX_SPLIT       (1 << 30)   /* 1GB */
+
 /* in-core inode: the image of an on-disk inode
    (i_dinode) augmented with runtime-only data.
    to paraphrase v7, the inode is the focus of
@@ -106,17 +139,10 @@ struct inode
     short               i_wrefs;        /* (O) write references */
     short               i_xrefs;        /* (O) text references */
 
-    /* these fields are only valid when the inode is set up as
-       the backing store for a process image (I_TEXT). i_text
-       is a map, like a page table, of pages which hold loaded,
-       shareable text pages. when a_text is <= MAX_UNSPLIT_TEXT,
-       i_text is a linear array. otherwise it's two-tiered.
+    /* only valid when set up for demand paging (I_TEXT). */
 
-       the pages referred to by i_text are owned by this inode
-       (not any struct buf or any process using the text.) */
-
-    struct exec         *i_exec;            /* (O) points to i_text */
-    caddr_t             *i_text;            /* (O) index of text pages */
+    xte_t               *i_text;            /* (O) index of text pages */
+    struct exec         *i_exec;            /* (O) points to first page */
 
     /* we protect directory content operations (name lookup, unlink, etc.)
        with a mutex, to keep such operations atomic and avoid nasty races.
@@ -144,18 +170,6 @@ struct inode
 #define I_MOUNT         0x00000040      /* fs mounted on this inode */
 
 #define I_DIRTY         (I_ATIME | I_CTIME | I_MTIME)
-
-/* when text exceeds this size, i_text must be
-   split (512 pointers per page * 4k = 2MB) */
-
-#define I_MAX_FLAT_TEXT     (1 << 21)   /* 2MB */
-
-/* maximum size of split (two-level) text.
-   512 pointers to pages of 512 pointers per
-   page --> 512 * 512 * 4k = 1GB. we simply
-   refuse to run binaries larger than this */
-
-#define I_MAX_SPLIT_TEXT    (1 << 30)   /* 1GB */
 
 
 #ifdef _KERNEL

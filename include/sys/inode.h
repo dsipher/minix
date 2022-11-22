@@ -202,27 +202,6 @@ extern void putfs(struct mount *mnt);
 
 extern void mount(dev_t dev, struct inode *ip);
 
-/* each inode has auxiliary reference counts, which are only applicable to
-   regular files. if the owner of an inode has opened the file for writing
-   or demand paging, it must announce this intention with a call to iref().
-   on success, the counts are updated. otherwise u.u_errno = ETXTBSY. */
-
-#define INODE_REF_R     0       /* we'll be reading only */
-#define INODE_REF_W     1       /* inode must be writable */
-#define INODE_REF_X     2       /* inode is for demand paging */
-
-extern void iref(struct inode *ip, int ref);
-
-/* prior [successful] calls to iref() must be paired with IUNREF().
-   this is inlined since it constant-folds into a simple decrement. */
-
-#define IUNREF(ip, ref)    do {                                             \
-                                if ((ref) == INODE_REF_W)                   \
-                                    --(ip)->i_wrefs;                        \
-                                if ((ref) == INODE_REF_X)                   \
-                                    --(ip)->i_xrefs;                        \
-                            } while (0)
-
 /* return the in-core inode corresponding to the disk inode `ino' on `dev'.
    if the inode is not in memory, it is read in from the device. if it is
    mounted on, indirection is performed. the inode is returned locked. on

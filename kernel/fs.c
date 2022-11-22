@@ -593,14 +593,8 @@ open(char *path, int oflags, mode_t mode)
 
 out:
 
-    /* we must announce any intention to write.
-       (always succeeds on newly-created files.) */
-
     if (ip && (amode & W_OK))
-    {
-        iref(ip, INODE_REF_W);
-        if (u.u_errno) goto error;
-    }
+        ++(ip->i_wrefs);
 
     if (mnt) putfs(mnt);
     if (dp) iput(dp, 0);

@@ -292,27 +292,6 @@ idup(struct inode *ip)
     return ip;
 }
 
-void
-iref(struct inode *ip, int ref)
-{
-    switch (ref)
-    {
-    case INODE_REF_X:   if (ip->i_wrefs)
-                            u.u_errno = ETXTBSY;
-                        else
-                            ++(ip->i_xrefs);
-
-                        break;
-
-    case INODE_REF_W:   if (ip->i_xrefs)
-                            u.u_errno = ETXTBSY;
-                        else {
-                            ++(ip->i_wrefs);
-                            xfree(ip);
-                        }
-    }
-}
-
 struct inode *
 iget(dev_t dev, ino_t ino)
 {

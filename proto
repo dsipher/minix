@@ -79,6 +79,7 @@ include				0040755 0 0
 		stat.h		0100644 0 0 include/sys/stat.h
 		systm.h		0100644 0 0 include/sys/systm.h
 		tailq.h		0100644 0 0 include/sys/tailq.h
+		trap.h		0100644 0 0 include/sys/trap.h
 		types.h		0100644 0 0 include/sys/types.h
 		user.h		0100644 0 0 include/sys/user.h
 		utsname.h	0100644 0 0 include/sys/utsname.h

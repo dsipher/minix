@@ -11,8 +11,9 @@ all:	kernel
 clean:
 	rm -f *.o *.lst config.[ch] kernel
 
-OBJS= 	locore.o apic.o buf.o clock.o config.o cons.o dev.o fs.o ide.o \
-	inode.o log.o main.o mutex.o page.o pci.o proc.o ps2.o utsname.o
+OBJS= 	locore.o apic.o buf.o clock.o config.o cons.o 	\
+	dev.o fs.o ide.o inode.o log.o main.o mutex.o 	\
+	page.o pci.o proc.o ps2.o trap.o utsname.o
 
 config.h config.c:
 	cp config/$(CONFIG).c config.c
@@ -37,6 +38,7 @@ page.o:		page.c 		config.h
 pci.o:		pci.c		config.h
 proc.o:		proc.c 		config.h
 ps2.o:		ps2.c		config.h
+trap.o:		trap.c		config.h
 utsname.o:	utsname.c 	config.h
 
 kernel: $(OBJS)

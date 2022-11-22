@@ -883,7 +883,7 @@ trap_14:            pushq $14                   / page fault
 trap_15:            pushq $0                    / (reserved)
                     pushq $15
 
-trap:               jmp *trap(%rip)
+trap:               jmp *traphook(%rip)
 
 trap_16:            pushq $0                    / x87 fp exception
                     pushq $16

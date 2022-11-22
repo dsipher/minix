@@ -39,6 +39,7 @@
 #include <sys/proc.h>
 #include <sys/io.h>
 #include <sys/apic.h>
+#include <sys/trap.h>
 #include <sys/clock.h>
 #include <sys/utsname.h>
 #include <sys/spin.h>
@@ -126,6 +127,7 @@ main(void)
     kernel_top = PAGE_UP(kernel_top);           /* (must be whole pages) */
 
     boot_config.irqhook = irqhook;
+    boot_config.traphook = traphook;
 
     /* zap the u. area and do minimal setup: we need u_locks because
        we'll access spinlocks. though we're identity-mapped right now,

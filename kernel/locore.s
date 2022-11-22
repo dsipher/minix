@@ -133,6 +133,48 @@ _irqhook:           pushq %rax              / save volatile GP regs:
 
 //////////////////////////////////////////////////////////////////////////////
 /
+/ traps are processed nearly identically to irqs.
+/
+/ the differences are:  (a) interrupts are not disabled
+/                       (b) the local APIC is not involved
+/                       (c) an error code is on the stack
+/                       (d) we dispatch to traps[], not isr[]
+/
+/ these are details. the main thrust of the logic is the same.
+
+.globl _traphook
+.globl _tsr
+
+_traphook:          pushq %rax
+                    pushq %rcx
+                    pushq %rdx
+                    pushq %rsi
+                    pushq %rdi
+                    pushq %r8
+                    pushq %r9
+                    pushq %r10
+                    pushq %r11
+
+                    movq 80(%rsp), %rsi         / error code
+                    movq 72(%rsp), %rdi         / trap number
+                    call *_tsr(,%rdi,8)         / call tsr(trapno, code)
+
+                    call _preempt
+
+                    popq %r11
+                    popq %r10
+                    popq %r9
+                    popq %r8
+                    popq %rdi
+                    popq %rsi
+                    popq %rdx
+                    popq %rcx
+                    popq %rax
+                    addq $16, %rsp              / discard trapno and code
+                    iret
+
+//////////////////////////////////////////////////////////////////////////////
+/
 / void swtch(struct proc *to);
 /
 / called with the scheduler lock held and thus with interrupts disabled.

@@ -56,7 +56,7 @@ static const char * const errors[] =
     /* 18 */    0,
     /* 19 */    "no such device",                           /* ENODEV */
     /* 20 */    "not a directory",                          /* ENOTDIR */
-    /* 21 */    0,
+    /* 21 */    "is a directory",                           /* EISDIR */
     /* 22 */    "invalid argument",                         /* EINVAL */
     /* 23 */    "too many open files in system",            /* ENFILE */
     /* 24 */    "too many open files",                      /* EMFILE */

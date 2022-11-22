@@ -55,6 +55,7 @@ extern int errno;
 #define EEXIST      17      /* file exists */
 #define ENODEV      19      /* no such device */
 #define ENOTDIR     20      /* not a directory */
+#define EISDIR      21      /* is a directory */
 #define EINVAL      22      /* invalid argument */
 #define ENFILE      23      /* too many open files in system */
 #define EMFILE      24      /* too many open files */

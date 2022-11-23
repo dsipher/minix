@@ -96,14 +96,11 @@ void bufinit(void)
         TAILQ_INSERT_TAIL(&bhashq[b], &buf[i], b_hash_links);
         TAILQ_INSERT_TAIL(&bavailq, &buf[i], b_avail_links);
 
-        /* (a) there must BE a free page for the data and
-           (b) its physical address must be < 4GB for DMA */
-
         data = pgall(0);
         buf[i].b_data = (char *) data;
 
-        if (data == 0 || PHYS(data) >= 0x100000000 /* 4GB */)
-            panic("bufinit");
+        if (data == 0 || !DMABLE(data))     /* we must have a page and */
+            panic("bufinit");               /* it must be DMA eligible */
     }
 }
 

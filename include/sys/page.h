@@ -73,6 +73,10 @@
 
 #define MIN_PHYSICAL    0x0000000100000000L     /* 4GB */
 
+/* true if the address is accessible to 32-bit PCI busmasters */
+
+#define DMABLE(p)       (PHYS(p) < MIN_PHYSICAL)
+
 /* the base of the conventional ISA bus window. addresses
    between here and FIRST_FREE are left mapped for I/O. */
 

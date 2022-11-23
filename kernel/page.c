@@ -42,6 +42,7 @@
 #include <sys/io.h>
 #include <sys/buf.h>
 #include <sys/inode.h>
+#include <errno.h>
 #include "config.h"
 
 /* compared to `modern' POSIX systems, memory management in ux/64
@@ -74,6 +75,7 @@ pgall(caddr_t hint)
     acquire(&page_lock);
 
     if (nr_free_pages == 0) {
+        u.u_errno = ENOMEM;
         a = 0;
         goto out;
     }

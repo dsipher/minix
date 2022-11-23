@@ -148,9 +148,9 @@ typedef unsigned long pte_t;
 extern void pginit(void);
 
 /* allocate a page and return its kernel virtual address. if there
-   are no more free pages, return 0. if the caller knows the user
-   address that will be assigned to the page, it should pass that
-   in as `hint', which will influence the page color chosen. if
+   are no free pages, return 0 (ENOMEM). if the caller knows the
+   user address that will be assigned to the page, it should pass
+   that as `hint', which will influence the page color chosen. if
    not known (or not for a user process), specify a 0 `hint'. */
 
 extern caddr_t pgall(caddr_t hint);

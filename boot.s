@@ -160,6 +160,8 @@ ZMAGIC              =   0x17B81EEB  / expected kernel a.out magic
 E820_SMAP           =   0x534D4150  / cookie for BIOS E820 functions
 IA32_EFER           =   0xC0000080  / extended feature enable MSR
 IA32_STAR           =   0xC0000081  / SYSCALL/SYSRET selectors MSR
+IA32_LSTAR          =   0xC0000082  / SYSCALL 64-bit entry point
+IA32_FMASK          =   0xC0000084  / SYSCALL RFLAGS bitmask
 
 KERNEL_STACK        =   0x00102000  / top of stack - must agree with page.h
 
@@ -363,6 +365,7 @@ entry:              .quad   KERNEL_ADDR         / kernel entry point
 entry_ptl3:         .quad   PTL3                / page tables
 traphook:           .quad   0                   / kernel trap handler
 irqhook:            .quad   0                   / kernel irq handler
+syshook:            .quad   0                   / kernel SYSCALL handler
 
 rootdev:            .byte   0                   / root device MINOR
                     .byte   0                   / root device MAJOR
@@ -817,8 +820,23 @@ prot_64:            xorl %eax, %eax             / reload segments. this is
                     movq star(%rip), %rax
                     wrmsr
 
+                    xorl %edx, %edx
+
+                    movl $IA32_LSTAR, %ecx      / set SYSCALL handler
+                    movl $sys, %eax
+                    wrmsr
+
+                    movl $IA32_FMASK, %ecx      / on SYSCALL
+                    movl $0xFFFFF9FF, %eax      / set IF=0 DF=0
+                    wrmsr
+
                     lidt idt_48(%rip)
                     jmp *entry(%rip)
+
+/ we bounce SYSCALL to the kernel handler with interrupts disabled
+/ and the direction flag cleared (per setting of IA32_FMASK above).
+
+sys:                jmp *syshook(%rip)
 
 / our agreement with the kernel on traps is that we'll pass
 / control to traphook with the error code and trap number

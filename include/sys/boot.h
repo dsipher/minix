@@ -77,8 +77,13 @@ struct boot_config
 {
     void    (*entry)(void);             /* AP kernel entry function */
     pte_t   *entry_ptl3;                /* ............... page tables */
-    void    (*traphook)(void);          /* kernel trap handler (locore) */
-    void    (*irqhook)(void);           /* kernel irq handler (locore) */
+
+    /* kernel handlers for traps, IRQs, and SYSCALL (in locore) */
+
+    void    (*traphook)(void);
+    void    (*irqhook)(void);
+    void    (*syshook)(void);
+
     dev_t   rootdev;                    /* root filesystem device */
 };
 

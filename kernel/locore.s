@@ -74,6 +74,17 @@ U_SCANBP    =   _u + 0x0258
 U_VACANCY   =   _u + 0x0260
 U_NAMEIDP   =   _u + 0x0268
 
+U_RIP       =   _u + 0x0270
+U_RFLAGS    =   _u + 0x0278
+U_RSP       =   _u + 0x0280
+U_RAX       =   _u + 0x0288
+U_RDI       =   _u + 0x0290
+U_RSI       =   _u + 0x0298
+U_RDX       =   _u + 0x02A0
+U_R10       =   _u + 0x02A8
+U_R8        =   _u + 0x02B0
+U_R9        =   _u + 0x02B8
+
 //////////////////////////////////////////////////////////////////////////////
 /
 / data passed in from the boot block

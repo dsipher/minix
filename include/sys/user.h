@@ -74,6 +74,28 @@ struct user
     struct buf      *u_scanbp;      /* 0x0258: [see scan() in fs.c] */
     off_t           u_vacancy;      /* 0x0260: [..................] */
     struct inode    *u_nameidp;     /* 0x0268: [see namei() ......] */
+
+    /* user state preserved by SYSCALL. */
+
+    unsigned long           u_rip,          /* 0x0270 (via %rcx) */
+                            u_rflags,       /* 0x0278 (via %r11) */
+                            u_rsp,          /* 0x0280 */
+                            u_rax;          /* 0x0288 */
+
+    union
+    {
+        unsigned long       u_arg[6];
+
+        struct
+        {
+            unsigned long   u_rdi,          /* 0x0290, u_arg[0] */
+                            u_rsi,          /* 0x0298, u_arg[1] */
+                            u_rdx,          /* 0x02A0, u_arg[2] */
+                            u_r10,          /* 0x02A8, u_arg[3] */
+                            u_r8,           /* 0x02B0, u_arg[4] */
+                            u_r9;           /* 0x02B8, u_arg[5] */
+        };
+    };
 };
 
 extern struct user u;           /* exported from locore.s */

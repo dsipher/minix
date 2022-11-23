@@ -77,6 +77,7 @@ include				0040755 0 0
 		spin.h		0100644 0 0 include/sys/spin.h
 		stailq.h	0100644 0 0 include/sys/stailq.h
 		stat.h		0100644 0 0 include/sys/stat.h
+		sys.h		0100644 0 0 include/sys/sys.h
 		systm.h		0100644 0 0 include/sys/systm.h
 		tailq.h		0100644 0 0 include/sys/tailq.h
 		trap.h		0100644 0 0 include/sys/trap.h

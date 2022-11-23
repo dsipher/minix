@@ -52,7 +52,9 @@ P_FLAG_SSE  =   0x02
 / definitions pertaining to the u. area; see sys/user.h.
 
 .globl _u
-_u = 0x00100000                 / USER_ADDR from sys/page.h
+
+_u              = 0x00100000    / USER_ADDR from sys/page.h
+KERNEL_STACK    = 0x00102000    / KERNEL_STACK ............
 
 U_FXSAVE    =   _u + 0x0000
 U_PROCP     =   _u + 0x0200
@@ -181,6 +183,50 @@ _traphook:          pushq %rax
                     popq %rax
                     addq $16, %rsp              / discard trapno and code
                     iret
+
+//////////////////////////////////////////////////////////////////////////////
+/
+/ system call entry. boot trampolines SYSCALLs directly here, IF=0, DF=0.
+/ we preserve the user state in the u. area and let sys() do the dispatch.
+/ as usual we preserve only kernel-volatile regs; swtch() handles the rest.
+
+.globl _sys
+.globl _syshook
+
+_syshook:           movq %rcx, U_RIP
+                    movq %r11, U_RFLAGS
+                    movq %rsp, U_RSP
+                    movq %rax, U_RAX
+                    movq %rdi, U_RDI
+                    movq %rsi, U_RSI
+                    movq %rdx, U_RDX
+                    movq %r10, U_R10
+                    movq %r8, U_R8
+                    movq %r9, U_R9
+
+                    xorl %eax, %eax             / user space shouldn't
+                    movw %ax, %ds               / mess with these, and
+                    movw %ax, %es               / their values should
+                    movw %ax, %fs               / be ignored, but let's
+                    movw %ax, %gs               / sanitize them anyway.
+
+                    movq $KERNEL_STACK, %rsp    / switch to kernel stack
+                    sti                         / now safe to re-enable
+                    call _sys                   / dispatch system call
+
+                    cli
+                    movq U_R9, %r9
+                    movq U_R8, %r8
+                    movq U_R10, %r10
+                    movq U_RDX, %rdx
+                    movq U_RSI, %rsi
+                    movq U_RDI, %rdi
+                    movq U_RAX, %rax
+                    movq U_RSP, %rsp
+                    movq U_RFLAGS, %r11
+                    movq U_RIP, %rcx
+
+                    sysret
 
 //////////////////////////////////////////////////////////////////////////////
 /

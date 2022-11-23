@@ -92,7 +92,8 @@
    process KERNEL_STACK. it is not a coincidence that USER_ADDR is
    FIRST_FREE: the bootstrapping process relies on this. see page.c.
 
-   KERNEL_STACK must agree with the value found in the TSS (in boot.s) */
+   KERNEL_STACK must agree with the value found in the TSS
+   (in boot.s) and set during system call entry (in locore.s) */
 
 #define USER_ADDR       0x0000000000100000L    /* 1MB = FIRST_FREE */
 #define USER_PAGES      2                      /* 8K of user area */

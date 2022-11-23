@@ -46,6 +46,7 @@
 #include <sys/buf.h>
 #include <sys/inode.h>
 #include <sys/dev.h>
+#include <sys/sys.h>
 #include "config.h"
 
 struct inode *rootdir;      /* system root directory */
@@ -128,6 +129,7 @@ main(void)
 
     boot_config.irqhook = irqhook;
     boot_config.traphook = traphook;
+    boot_config.syshook = syshook;
 
     /* zap the u. area and do minimal setup: we need u_locks because
        we'll access spinlocks. though we're identity-mapped right now,

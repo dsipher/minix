@@ -170,8 +170,6 @@ _traphook:          pushq %rax
                     movq 72(%rsp), %rdi         / trap number
                     call *_tsr(,%rdi,8)         / call tsr(trapno, code)
 
-                    call _preempt
-
                     popq %r11
                     popq %r10
                     popq %r9

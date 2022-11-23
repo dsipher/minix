@@ -66,6 +66,7 @@ extern int errno;
 #define EPIPE       32      /* broken pipe */
 #define EDOM        33      /* math argument out of domain of func */
 #define ERANGE      34      /* math result not representable */
+#define ENOSYS      38      /* function not implemented */
 
 #endif /* _ERRNO_H */
 

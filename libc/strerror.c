@@ -69,7 +69,11 @@ static const char * const errors[] =
     /* 31 */    0,
     /* 32 */    "broken pipe",                              /* EPIPE */
     /* 33 */    "argument not in domain",                   /* EDOM */
-    /* 34 */    "result out of range"                       /* ERANGE */
+    /* 34 */    "result out of range",                      /* ERANGE */
+    /* 35 */    0,
+    /* 36 */    0,
+    /* 37 */    0,
+    /* 38 */    "function not implemented"                  /* ENOSYS */
 };
 
 #define NR_ERRORS (sizeof(errors) / sizeof(*errors))

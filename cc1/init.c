@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   init.c                                                 ux/64 c compiler
+   init.c                                                 minix c compiler
 
 ******************************************************************************
 
@@ -450,7 +450,7 @@ void init_bss(struct symbol *sym)
        symbol; .lcomm does not, but can't be aligned.
        we must use .local followed by .comm.
 
-       ux/64 as does not automatically export .bss, so
+       minix as does not automatically export .bss, so
        .globl is required. as a favor to us for now, it
        ignores .local and accepts .comm as a synonym for
        .bss; once we ditch gas we can simplify all this. */

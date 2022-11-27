@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# memset.s                                             ux/64 standard library
+# memset.s                                             minix standard library
 #
 #         derived from public-domain version by J.T. Conklin <jtc@netbsd.org>
 #  and Open/NetBSD adaptation by Frank van der Linden <fvdl@wasabisytems.com>

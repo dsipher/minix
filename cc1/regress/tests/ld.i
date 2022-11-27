@@ -1,6 +1,6 @@
 # 1 "ld.c"
 
-# 39 "/home/charles/xcc/ux64/include/sys/defs.h"
+# 39 "/home/charles/xcc/minix/include/sys/defs.h"
 typedef unsigned long   __caddr_t;
 typedef unsigned        __daddr_t;
 typedef unsigned        __dev_t;
@@ -15,7 +15,7 @@ typedef long            __ssize_t;
 typedef long            __time_t;
 typedef unsigned        __uid_t;
 typedef char            *__va_list;
-# 48 "/home/charles/xcc/ux64/include/stdio.h"
+# 48 "/home/charles/xcc/minix/include/stdio.h"
 typedef __off_t fpos_t;
 
 
@@ -133,11 +133,11 @@ extern int pclose(FILE *stream);
 
 
 extern FILE *fdopen(int fildes, const char *mode);
-# 45 "/home/charles/xcc/ux64/include/stdarg.h"
+# 45 "/home/charles/xcc/minix/include/stdarg.h"
 typedef __va_list va_list;
-# 41 "/home/charles/xcc/ux64/include/fcntl.h"
+# 41 "/home/charles/xcc/minix/include/fcntl.h"
 typedef __mode_t mode_t;
-# 74 "/home/charles/xcc/ux64/include/fcntl.h"
+# 74 "/home/charles/xcc/minix/include/fcntl.h"
 int creat(const char *path, mode_t mode);
 
 
@@ -147,7 +147,7 @@ int open(const char *path, int oflag, ...);
 
 
 int fcntl(int fildes, int cmd, ...);
-# 44 "/home/charles/xcc/ux64/include/string.h"
+# 44 "/home/charles/xcc/minix/include/string.h"
 extern void *memmove(void *, const void *, size_t);
 extern void *memset(void *, int, size_t);
 extern void *memchr(const void *, int, size_t);
@@ -167,7 +167,7 @@ extern char *strrchr(const char *, int);
 
 
 extern char *strdup(const char *s);
-# 53 "/home/charles/xcc/ux64/include/stdlib.h"
+# 53 "/home/charles/xcc/minix/include/stdlib.h"
 extern void (*__exit_cleanup)(void);
 extern void __stdio_cleanup(void);
 
@@ -215,7 +215,7 @@ int putenv(char *string);
 
 
 int system(const char *command);
-# 48 "/home/charles/xcc/ux64/include/unistd.h"
+# 48 "/home/charles/xcc/minix/include/unistd.h"
 typedef __ssize_t ssize_t;
 
 
@@ -237,7 +237,7 @@ typedef __off_t off_t;
 
 
 typedef __pid_t pid_t;
-# 97 "/home/charles/xcc/ux64/include/unistd.h"
+# 97 "/home/charles/xcc/minix/include/unistd.h"
 extern int access(const char *path, int amode);
 
 
@@ -351,9 +351,9 @@ extern int  optind;
 extern int  opterr;
 
 extern int getopt(int argc, char * const argv[], const char *optstring);
-# 39 "/home/charles/xcc/ux64/include/errno.h"
+# 39 "/home/charles/xcc/minix/include/errno.h"
 extern int errno;
-# 41 "/home/charles/xcc/ux64/include/sys/types.h"
+# 41 "/home/charles/xcc/minix/include/sys/types.h"
 typedef __caddr_t caddr_t;
 
 
@@ -365,7 +365,7 @@ typedef __daddr_t daddr_t;
 
 
 typedef __dev_t dev_t;
-# 74 "/home/charles/xcc/ux64/include/sys/types.h"
+# 74 "/home/charles/xcc/minix/include/sys/types.h"
 typedef __ino_t ino_t;
 
 
@@ -377,9 +377,9 @@ typedef __ino_t ino_t;
 
 
 typedef __nlink_t nlink_t;
-# 109 "/home/charles/xcc/ux64/include/sys/types.h"
+# 109 "/home/charles/xcc/minix/include/sys/types.h"
 typedef __time_t time_t;
-# 74 "/home/charles/xcc/ux64/include/sys/fs.h"
+# 74 "/home/charles/xcc/minix/include/sys/fs.h"
 struct filsys
 {
     int             s_magic;
@@ -398,7 +398,7 @@ struct filsys
     short           s_magic2;
     short           s_boot_magic;
 };
-# 115 "/home/charles/xcc/ux64/include/sys/fs.h"
+# 115 "/home/charles/xcc/minix/include/sys/fs.h"
 struct dinode
 {
     mode_t          di_mode;
@@ -420,7 +420,7 @@ struct dinode
 
     daddr_t         di_addr[19];
 };
-# 183 "/home/charles/xcc/ux64/include/sys/fs.h"
+# 183 "/home/charles/xcc/minix/include/sys/fs.h"
 struct direct
 {
     union
@@ -435,7 +435,7 @@ struct direct
         int     d_dwords[8];
     };
 };
-# 50 "/home/charles/xcc/ux64/include/ar.h"
+# 50 "/home/charles/xcc/minix/include/ar.h"
 typedef long armag_t;
 
 
@@ -450,7 +450,7 @@ struct ar_hdr
     time_t      ar_date;
     off_t       ar_size;
 };
-# 43 "/home/charles/xcc/ux64/include/a.out.h"
+# 43 "/home/charles/xcc/minix/include/a.out.h"
 struct exec
 {
     unsigned a_magic;
@@ -467,7 +467,7 @@ struct exec
 
     unsigned a_reserved[2];
 };
-# 135 "/home/charles/xcc/ux64/include/a.out.h"
+# 135 "/home/charles/xcc/minix/include/a.out.h"
 struct nlist
 {
     unsigned n_stridx : 24;
@@ -498,7 +498,7 @@ struct reloc
 
     unsigned r_offset;
 };
-# 111 "/home/charles/xcc/ux64/include/sys/stat.h"
+# 111 "/home/charles/xcc/minix/include/sys/stat.h"
 struct stat
 {
     dev_t           st_dev;
@@ -552,9 +552,9 @@ int mknod(const char *path, mode_t mode, dev_t dev);
 
 
 extern mode_t umask(mode_t cmask);
-# 46 "/home/charles/xcc/ux64/include/stddef.h"
+# 46 "/home/charles/xcc/minix/include/stddef.h"
 typedef long ptrdiff_t;
-# 47 "/home/charles/xcc/ux64/include/crc32c.h"
+# 47 "/home/charles/xcc/minix/include/crc32c.h"
 extern unsigned (*crc32c)(unsigned crc, const void *buf, size_t len);
 # 51 "ld.c"
 char            *aout = "a.out";

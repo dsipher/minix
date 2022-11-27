@@ -1,11 +1,11 @@
 # cross.sh - make cross-building environment
 #
-# the end result is a set of tools in $ROOT/ux64/bin which
-# can then be used by build.sh to cross-build a ux/64 image.
+# the end result is a set of tools in $ROOT/minix/bin which
+# can then be used by build.sh to cross-build a minix image.
 
 ROOT=~/xcc
 LINUX=$ROOT/linux
-UX64=$ROOT/ux64
+UX64=$ROOT/minix
 
 set -e
 rm -rf $ROOT
@@ -33,7 +33,7 @@ cc -DAS=\"/usr/bin/as\" -DLD=\"/usr/bin/ld\" -DROOT=\"$LINUX\" \
 	mv crt0.o libc.a $LINUX/lib)
 
 # 2. using the host toolchain built in the previous step,
-# build the toolchain which generates binaries for ux/64.
+# build the toolchain which generates binaries for minix.
 
 make clean
 

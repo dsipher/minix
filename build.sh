@@ -1,13 +1,13 @@
 # build.sh - basic build script to create a fresh
-# installation of ux/64 on $DEVICE of $BLOCKS blocks.
+# installation of minix on $DEVICE of $BLOCKS blocks.
 
 # relies on tools built in $TOOLS by cross.sh.
 
 # this, like cross.sh, is a throwaway which will be
-# discarded once ux/64 is minimally self-hosting.
+# discarded once minix is minimally self-hosting.
 
 HOST=~/xcc/linux
-TOOLS=~/xcc/ux64
+TOOLS=~/xcc/minix
 DEVICE=$1
 BLOCKS=25600
 

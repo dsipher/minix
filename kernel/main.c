@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   main.c                                                     ux/64 kernel
+   main.c                                                     minix kernel
 
 ******************************************************************************
 
@@ -161,7 +161,7 @@ main(void)
     clkinit();
 
     /* the BSP APIC ID must be 0. this is a simplifying assumption we
-       use everywhere, and it's true every `reasonable' system. (ux/64
+       use everywhere, and it's true every `reasonable' system. (minix
        is not 100% symmetric; in particular, the BSP fields all IRQs.) */
 
     if (CURCPU != 0) panic("bsp");

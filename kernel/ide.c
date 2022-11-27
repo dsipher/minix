@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   ide.c                                                      ux/64 kernel
+   ide.c                                                      minix kernel
 
 ******************************************************************************
 
@@ -83,7 +83,7 @@ struct channel
     /* at startup, we probe the bus and populate the size
        for each device. if size == 0, then the device is
        either not present or it's unsupported. (n.b.: the
-       the size is in ux/64 blocks, not sectors, so a disk
+       the size is in minix blocks, not sectors, so a disk
        whose size is not a multiple of 4k is truncated.) */
 
     daddr_t size[DEVS_PER_CHANNEL];

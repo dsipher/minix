@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   error.c (routines for printing error messages)               ux/64 yacc
+   error.c (routines for printing error messages)               minix yacc
 
 ******************************************************************************
 

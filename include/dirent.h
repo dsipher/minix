@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   dirent.h                                            ux/64 system header
+   dirent.h                                            minix system header
 
 ******************************************************************************
 
@@ -46,7 +46,7 @@ typedef __ino_t ino_t;
 struct dirent
 {
     ino_t           d_ino;          /* inode associated with entry */
-    int             __pad0;         /* (high bits of ino_t, n/a in ux/64) */
+    int             __pad0;         /* (high bits of ino_t, n/a in minix) */
     long            __pad1;         /* (linux calls this d_off) */
     unsigned short  d_reclen;       /* length of this dirent struct */
     char            d_name[];       /* NUL-terminated name of entry */

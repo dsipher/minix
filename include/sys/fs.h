@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/fs.h                                            ux/64 system header
+   sys/fs.h                                            minix system header
 
 ******************************************************************************
 
@@ -38,7 +38,7 @@
 #include <sys/types.h>
 #include <sys/systm.h>
 
-/* the ux/64 filesystem is fairly conventional, with 4k blocks. we
+/* the minix filesystem is fairly conventional, with 4k blocks. we
    choose this value to match our page size, which simplifies the vm
    system. as a bonus, it is the native sector size of modern disks.
 

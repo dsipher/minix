@@ -1,6 +1,6 @@
 # 1 "run.c"
 
-# 39 "/home/charles/xcc/ux64/include/sys/defs.h"
+# 39 "/home/charles/xcc/minix/include/sys/defs.h"
 typedef unsigned long   __caddr_t;
 typedef unsigned        __daddr_t;
 typedef unsigned        __dev_t;
@@ -15,7 +15,7 @@ typedef long            __ssize_t;
 typedef long            __time_t;
 typedef unsigned        __uid_t;
 typedef char            *__va_list;
-# 48 "/home/charles/xcc/ux64/include/stdio.h"
+# 48 "/home/charles/xcc/minix/include/stdio.h"
 typedef __off_t fpos_t;
 
 
@@ -133,7 +133,7 @@ extern int pclose(FILE *stream);
 
 
 extern FILE *fdopen(int fildes, const char *mode);
-# 44 "/home/charles/xcc/ux64/include/ctype.h"
+# 44 "/home/charles/xcc/minix/include/ctype.h"
 extern char __ctype[];
 
 
@@ -157,7 +157,7 @@ extern int isupper(int);
 extern int isxdigit(int);
 extern int tolower(int);
 extern int toupper(int);
-# 40 "/home/charles/xcc/ux64/include/setjmp.h"
+# 40 "/home/charles/xcc/minix/include/setjmp.h"
 typedef long jmp_buf[16];
 
 
@@ -167,7 +167,7 @@ typedef long jmp_buf[16];
 
 extern int __setjmp(jmp_buf);
 extern void longjmp(jmp_buf, int);
-# 42 "/home/charles/xcc/ux64/include/math.h"
+# 42 "/home/charles/xcc/minix/include/math.h"
 extern double __huge_val;
 
 extern double __double_2_n969;
@@ -268,7 +268,7 @@ extern double sin(double x);
 
 extern double atan(double x);
 extern double atan2(double y, double x);
-# 44 "/home/charles/xcc/ux64/include/string.h"
+# 44 "/home/charles/xcc/minix/include/string.h"
 extern void *memmove(void *, const void *, size_t);
 extern void *memset(void *, int, size_t);
 extern void *memchr(const void *, int, size_t);
@@ -288,7 +288,7 @@ extern char *strrchr(const char *, int);
 
 
 extern char *strdup(const char *s);
-# 53 "/home/charles/xcc/ux64/include/stdlib.h"
+# 53 "/home/charles/xcc/minix/include/stdlib.h"
 extern void (*__exit_cleanup)(void);
 extern void __stdio_cleanup(void);
 
@@ -336,7 +336,7 @@ int putenv(char *string);
 
 
 int system(const char *command);
-# 41 "/home/charles/xcc/ux64/include/time.h"
+# 41 "/home/charles/xcc/minix/include/time.h"
 typedef __time_t time_t;
 
 
@@ -420,7 +420,7 @@ extern void tzset(void);
 
 
 int nanosleep(const struct timespec *rqtp, struct timespec *rtmp);
-# 44 "/home/charles/xcc/ux64/include/assert.h"
+# 44 "/home/charles/xcc/minix/include/assert.h"
 extern void __assert(const char *e, const char *file, int line);
 # 33 "awk.h"
 typedef double	Awkfloat;

@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   utsname.c                                                  ux/64 kernel
+   utsname.c                                                  minix kernel
 
 ******************************************************************************
 
@@ -36,9 +36,9 @@
 
 struct utsname utsname =
 {
-    /* sysname */       "ux/64",
+    /* sysname */       "Minix",
     /* nodename */      "(noname)",
-    /* release */       "0.1",
+    /* release */       "5.0.0",
     /* version */       "(" CONFIG " " __DATE__ " " __TIME__ ")",
     /* machine */       "x86_64"
 };

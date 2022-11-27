@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   modf.c                                           ux/64 standard library
+   modf.c                                           minix standard library
 
     derived from SUNPRO libm, Copyright (C) 1993 by Sun Microsystems, Inc.
   Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.

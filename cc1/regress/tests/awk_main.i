@@ -2,7 +2,7 @@
 
 # 31 "main.c"
 const char	*version = "version 20121220";
-# 39 "/home/charles/xcc/ux64/include/sys/defs.h"
+# 39 "/home/charles/xcc/minix/include/sys/defs.h"
 typedef unsigned long   __caddr_t;
 typedef unsigned        __daddr_t;
 typedef unsigned        __dev_t;
@@ -17,7 +17,7 @@ typedef long            __ssize_t;
 typedef long            __time_t;
 typedef unsigned        __uid_t;
 typedef char            *__va_list;
-# 48 "/home/charles/xcc/ux64/include/stdio.h"
+# 48 "/home/charles/xcc/minix/include/stdio.h"
 typedef __off_t fpos_t;
 
 
@@ -135,7 +135,7 @@ extern int pclose(FILE *stream);
 
 
 extern FILE *fdopen(int fildes, const char *mode);
-# 44 "/home/charles/xcc/ux64/include/ctype.h"
+# 44 "/home/charles/xcc/minix/include/ctype.h"
 extern char __ctype[];
 
 
@@ -159,7 +159,7 @@ extern int isupper(int);
 extern int isxdigit(int);
 extern int tolower(int);
 extern int toupper(int);
-# 53 "/home/charles/xcc/ux64/include/stdlib.h"
+# 53 "/home/charles/xcc/minix/include/stdlib.h"
 extern void (*__exit_cleanup)(void);
 extern void __stdio_cleanup(void);
 
@@ -207,7 +207,7 @@ int putenv(char *string);
 
 
 int system(const char *command);
-# 44 "/home/charles/xcc/ux64/include/string.h"
+# 44 "/home/charles/xcc/minix/include/string.h"
 extern void *memmove(void *, const void *, size_t);
 extern void *memset(void *, int, size_t);
 extern void *memchr(const void *, int, size_t);
@@ -227,7 +227,7 @@ extern char *strrchr(const char *, int);
 
 
 extern char *strdup(const char *s);
-# 41 "/home/charles/xcc/ux64/include/signal.h"
+# 41 "/home/charles/xcc/minix/include/signal.h"
 typedef __pid_t pid_t;
 
 
@@ -273,7 +273,7 @@ extern void __sigreturn(void);
 extern int __sigaction(int, const struct sigaction *, struct sigaction *);
 extern int sigaction(int, const struct sigaction *, struct sigaction *);
 extern int sigemptyset(sigset_t *);
-# 44 "/home/charles/xcc/ux64/include/assert.h"
+# 44 "/home/charles/xcc/minix/include/assert.h"
 extern void __assert(const char *e, const char *file, int line);
 # 33 "awk.h"
 typedef double	Awkfloat;

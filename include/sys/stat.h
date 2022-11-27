@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   sys/stat.h                                          ux/64 system header
+   sys/stat.h                                          minix system header
 
 ******************************************************************************
 
@@ -105,7 +105,7 @@ typedef __uid_t uid_t;
 #endif /* __UID_T */
 
 /* the seemingly excessive padding here is used to match the
-   Linux ABI as best we can; some ux/64 types have different
+   Linux ABI as best we can; some minix types have different
    sizes, and we don't support some of the fields. */
 
 struct stat

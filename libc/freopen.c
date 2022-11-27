@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   freopen.c                                        ux/64 standard library
+   freopen.c                                        minix standard library
 
 ******************************************************************************
 
@@ -50,7 +50,7 @@
    the file does not exist. The reason is given in fopen.c.
 
    (n.b. this comment, like that in fopen.c, is not applicable.
-   ux/64 does indeed support O_CREAT so we should use it - cey) */
+   minix does indeed support O_CREAT so we should use it - cey) */
 
 FILE *freopen(const char *name, const char *mode, FILE *stream)
 {

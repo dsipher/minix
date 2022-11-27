@@ -1,6 +1,6 @@
 # 1 "ls.c"
 
-# 39 "/home/charles/xcc/ux64/include/sys/defs.h"
+# 39 "/home/charles/xcc/minix/include/sys/defs.h"
 typedef unsigned long   __caddr_t;
 typedef unsigned        __daddr_t;
 typedef unsigned        __dev_t;
@@ -15,7 +15,7 @@ typedef long            __ssize_t;
 typedef long            __time_t;
 typedef unsigned        __uid_t;
 typedef char            *__va_list;
-# 48 "/home/charles/xcc/ux64/include/stdio.h"
+# 48 "/home/charles/xcc/minix/include/stdio.h"
 typedef __off_t fpos_t;
 
 
@@ -133,7 +133,7 @@ extern int pclose(FILE *stream);
 
 
 extern FILE *fdopen(int fildes, const char *mode);
-# 44 "/home/charles/xcc/ux64/include/string.h"
+# 44 "/home/charles/xcc/minix/include/string.h"
 extern void *memmove(void *, const void *, size_t);
 extern void *memset(void *, int, size_t);
 extern void *memchr(const void *, int, size_t);
@@ -153,7 +153,7 @@ extern char *strrchr(const char *, int);
 
 
 extern char *strdup(const char *s);
-# 41 "/home/charles/xcc/ux64/include/sys/types.h"
+# 41 "/home/charles/xcc/minix/include/sys/types.h"
 typedef __caddr_t caddr_t;
 
 
@@ -228,7 +228,7 @@ typedef __time_t time_t;
 
 
 typedef __uid_t uid_t;
-# 111 "/home/charles/xcc/ux64/include/sys/stat.h"
+# 111 "/home/charles/xcc/minix/include/sys/stat.h"
 struct stat
 {
     dev_t           st_dev;
@@ -282,9 +282,9 @@ int mknod(const char *path, mode_t mode, dev_t dev);
 
 
 extern mode_t umask(mode_t cmask);
-# 46 "/home/charles/xcc/ux64/include/stddef.h"
+# 46 "/home/charles/xcc/minix/include/stddef.h"
 typedef long ptrdiff_t;
-# 53 "/home/charles/xcc/ux64/include/stdlib.h"
+# 53 "/home/charles/xcc/minix/include/stdlib.h"
 extern void (*__exit_cleanup)(void);
 extern void __stdio_cleanup(void);
 
@@ -332,7 +332,7 @@ int putenv(char *string);
 
 
 int system(const char *command);
-# 97 "/home/charles/xcc/ux64/include/unistd.h"
+# 97 "/home/charles/xcc/minix/include/unistd.h"
 extern int access(const char *path, int amode);
 
 
@@ -446,7 +446,7 @@ extern int  optind;
 extern int  opterr;
 
 extern int getopt(int argc, char * const argv[], const char *optstring);
-# 46 "/home/charles/xcc/ux64/include/dirent.h"
+# 46 "/home/charles/xcc/minix/include/dirent.h"
 struct dirent
 {
     ino_t           d_ino;
@@ -496,7 +496,7 @@ void rewinddir(DIR *dirp);
 
 
 int closedir(DIR *dirp);
-# 49 "/home/charles/xcc/ux64/include/time.h"
+# 49 "/home/charles/xcc/minix/include/time.h"
 struct tm
 {
     int tm_sec;
@@ -572,7 +572,7 @@ extern void tzset(void);
 
 
 int nanosleep(const struct timespec *rqtp, struct timespec *rtmp);
-# 51 "/home/charles/xcc/ux64/include/pwd.h"
+# 51 "/home/charles/xcc/minix/include/pwd.h"
 struct passwd
 {
     char    *pw_name;
@@ -603,7 +603,7 @@ extern struct passwd *getpwent(void);
 
 
 extern void endpwent(void);
-# 46 "/home/charles/xcc/ux64/include/grp.h"
+# 46 "/home/charles/xcc/minix/include/grp.h"
 struct group
 {
     char    *gr_name;
@@ -631,9 +631,9 @@ extern void setgrent(void);
 
 
 extern void endgrent(void);
-# 39 "/home/charles/xcc/ux64/include/errno.h"
+# 39 "/home/charles/xcc/minix/include/errno.h"
 extern int errno;
-# 74 "/home/charles/xcc/ux64/include/fcntl.h"
+# 74 "/home/charles/xcc/minix/include/fcntl.h"
 int creat(const char *path, mode_t mode);
 
 
@@ -643,7 +643,7 @@ int open(const char *path, int oflag, ...);
 
 
 int fcntl(int fildes, int cmd, ...);
-# 37 "/home/charles/xcc/ux64/include/termios.h"
+# 37 "/home/charles/xcc/minix/include/termios.h"
 typedef unsigned char cc_t;
 typedef unsigned int speed_t;
 typedef unsigned int tcflag_t;
@@ -667,7 +667,7 @@ struct winsize
     unsigned short  ws_xpixel;
     unsigned short  ws_ypixel;
 };
-# 37 "/home/charles/xcc/ux64/include/sys/ioctl.h"
+# 37 "/home/charles/xcc/minix/include/sys/ioctl.h"
 extern int ioctl(int fildes, int cmd, void *arg);
 # 67 "ls.c"
 char l_ifmt[] = "0pcCd?bB-?l?s???";

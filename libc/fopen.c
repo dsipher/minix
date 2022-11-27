@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   fopen.c                                          ux/64 standard library
+   fopen.c                                          minix standard library
 
 ******************************************************************************
 
@@ -55,7 +55,7 @@
    necessary. another problem is O_APPEND, for which the same holds. when
    "a" open-mode is used, we lseek() to the end before every write().
 
-   NB the above is N/A to ux/64. should rewrite to use O_CREAT et al. - cey */
+   NB the above is N/A to minix. should rewrite to use O_CREAT et al. - cey */
 
 FILE *fopen(const char *name, const char *mode)
 {

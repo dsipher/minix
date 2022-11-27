@@ -1,6 +1,6 @@
 /*****************************************************************************
 
-   inode.c                                                    ux/64 kernel
+   inode.c                                                    minix kernel
 
 ******************************************************************************
 
@@ -398,7 +398,7 @@ found:
 
 /* the algorithm for itrunc() is lifted with little change from v7.
    for this reason, the blocks of the file are removed in reverse
-   order, which had benefits on the original filesystem. for ux/64,
+   order, which had benefits on the original filesystem. for minix,
    with bitmaps and typically SSD storage, order is unimportant. */
 
 static void itrunc0(struct mount *mnt, daddr_t bn, int f1, int f2)

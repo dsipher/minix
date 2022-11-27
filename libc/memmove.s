@@ -5,7 +5,7 @@
 #                                  derived from NetBSD's bcopy.S for AMD64 by
 #                     Wolfgang Solfrank (ws@tools.de), dsl@netbsd.org, et al.
 #
-#             FIXME: replace with version derived from MINIX or COHERENT libc
+#           FIXME: replace with version derived from MINIX 2 or COHERENT libc
 #
 ##############################################################################
 

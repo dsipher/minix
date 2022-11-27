@@ -5,7 +5,7 @@
 ******************************************************************************
 
    Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
-   derived from MINIX, Copyright (c) 1987, 1997 by Prentice Hall.
+   derived from MINIX 2, Copyright (c) 1987, 1997 by Prentice Hall.
 
    Redistribution and use of the MINIX operating system in source and
    binary forms, with or without modification, are permitted provided

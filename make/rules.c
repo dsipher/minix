@@ -4,7 +4,7 @@
 
 ******************************************************************************
 
-   derived from MINIX make, Copyright (c) 1987, 1997 by Prentice Hall,
+   derived from MINIX 2 make, Copyright (c) 1987, 1997 by Prentice Hall,
    itself derived from Neil Russell's public domain make (USENET 1986)
 
    Redistribution and use of the MINIX operating system in source and

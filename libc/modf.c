@@ -5,7 +5,7 @@
     derived from SUNPRO libm, Copyright (C) 1993 by Sun Microsystems, Inc.
   Copyright (c) 2021, 2022 Charles E. Youse. see LICENSE for more details.
 
-           FIXME: replace with version derived from MINIX or COHERENT libc
+         FIXME: replace with version derived from MINIX 2 or COHERENT libc
 
 *****************************************************************************/
 

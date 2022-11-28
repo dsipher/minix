@@ -4,7 +4,7 @@
 
 ******************************************************************************
 
-   Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
+   Copyright (c) 2021-2023 by Charles E. Youse (charles@gnuless.org).
    derived from COHERENT, Copyright (c) 1977-1995 by Robert Swartz.
 
    Redistribution and use in source and binary forms, with or without

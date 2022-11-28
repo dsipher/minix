@@ -4,7 +4,7 @@
 
 ******************************************************************************
 
-   Copyright (c) 2021, 2022, Charles E. Youse (charles@gnuless.org).
+   Copyright (c) 2021-2023 by Charles E. Youse (charles@gnuless.org).
    derived from John Gilmore's public domain tar (USENET, Nov 1987)
 
    Redistribution and use in source and binary forms, with or without

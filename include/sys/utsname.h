@@ -56,6 +56,7 @@ extern int uname(struct utsname *);
 
 #else
 
+extern char *copyright;
 extern struct utsname utsname;
 
 #endif /* _KERNEL */

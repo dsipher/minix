@@ -34,9 +34,12 @@
 #include <sys/utsname.h>
 #include "config.h"
 
+char *copyright = "Copyright (c) 2021-2023 by "
+                  "Charles E. Youse (charles@gnuless.org).";
+
 struct utsname utsname =
 {
-    /* sysname */       "Minix",
+    /* sysname */       "MINIX",
     /* nodename */      "(noname)",
     /* release */       "5.0.0",
     /* version */       "(" CONFIG " " __DATE__ " " __TIME__ ")",

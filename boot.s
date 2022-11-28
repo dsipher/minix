@@ -342,7 +342,7 @@ bad_fs_msg:         .ascii "invalid filesystem"
                     .byte 0
 
 banner_msg:         .byte 13, 10, 10
-                    .ascii "Minix auto-boot in 3 seconds"
+                    .ascii "MINIX auto-boot in 3 seconds"
                     .byte 13, 10
                     .ascii "(press a key for boot prompt)"
                     .byte 13, 10

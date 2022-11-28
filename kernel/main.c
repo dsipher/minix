@@ -147,12 +147,13 @@ main(void)
 
     cninit();
 
-    printf("\n%s %s %s [%d text/%d data/%d bss]\n", utsname.sysname,
-                                                    utsname.release,
-                                                    utsname.version,
-                                                    KERNEL_EXEC->a_text,
-                                                    KERNEL_EXEC->a_data,
-                                                    KERNEL_EXEC->a_bss);
+    printf("\n%s %s %s [kernel %d/%d/%d]\n%s\n\n", utsname.sysname,
+                                                   utsname.release,
+                                                   utsname.version,
+                                                   KERNEL_EXEC->a_text,
+                                                   KERNEL_EXEC->a_data,
+                                                   KERNEL_EXEC->a_bss,
+                                                   copyright);
 
     pginit();
     bufinit();
